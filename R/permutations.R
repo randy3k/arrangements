@@ -13,7 +13,7 @@ Permutations <- R6::R6Class(
         f = NULL,
         replace = NULL,
         initialize = function(n, r=n, x=NULL, f=NULL, replace = FALSE) {
-            self$n <- as.integer(n)
+            self$n <- n
             self$r <- r
             self$x <- x
             self$f <- f
@@ -125,11 +125,7 @@ next_permutations <- function(n, r, d, state, x, f, replace, type) {
 
 #' @export
 permutations <- function(n, r=n, x=NULL, f=NULL, replace=FALSE, type = 'r') {
-    if (is.null(f) && !is.null(x)) {
-        n <- length(x)
-    } else if (!is.null(f)) {
-        n <- sum(f)
-    }
+    n <- check_nrxf(n, r, x, f, replace)
     P <- try(npermutations(n, r, f, replace), silent = TRUE)
     if (inherits(P, "try-error")) stop("too many results, use `ipermutations`")
     next_permutations(n, r, P, NULL, x, f, replace, type)
@@ -138,6 +134,7 @@ permutations <- function(n, r=n, x=NULL, f=NULL, replace=FALSE, type = 'r') {
 
 #' @export
 ipermutations <- function(n, r=n, x=NULL, f=NULL, replace = FALSE) {
+    n <- check_nrxf(n, r, x, f, replace)
     Permutations$new(n, r, x, f, replace)
 }
 

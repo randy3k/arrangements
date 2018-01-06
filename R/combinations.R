@@ -13,7 +13,7 @@ Combinations <- R6::R6Class(
         f = NULL,
         replace = NULL,
         initialize = function(n, r, x=NULL, f=NULL, replace = FALSE) {
-            self$n <- as.integer(n)
+            self$n <- n
             self$r <- r
             self$x <- x
             self$f <- f
@@ -121,11 +121,7 @@ next_combinations <- function(n, r, d, state, x, f, replace, type) {
 
 #' @export
 combinations <- function(n, r, x=NULL, f=NULL, replace=FALSE, type = 'r') {
-    if (is.null(f) && !is.null(x)) {
-        n <- length(x)
-    } else if (!is.null(f)) {
-        n <- sum(f)
-    }
+    n <- check_nrxf(n, r, x, f, replace)
     P <- try(ncombinations(n, r, f, replace), silent = TRUE)
     if (inherits(P, "try-error")) stop("too many results, use `icombinations`")
     next_combinations(n, r, P, NULL, x, f, replace, type)
@@ -134,6 +130,7 @@ combinations <- function(n, r, x=NULL, f=NULL, replace=FALSE, type = 'r') {
 
 #' @export
 icombinations <- function(n, r, x=NULL, f=NULL, replace = FALSE) {
+    n <- check_nrxf(n, r, x, f, replace)
     Combinations$new(n, r, x, f, replace)
 }
 
