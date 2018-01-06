@@ -1,0 +1,6 @@
+.Rproj.user
+.Rhistory
+*.o
+*.so
+*.a
+*.d
