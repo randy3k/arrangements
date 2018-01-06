@@ -26,7 +26,7 @@ Permutations <- R6::R6Class(
         },
         collect = function(type = 'r') {
             P <- try(npermutations(self$n, self$r, self$f, self$replace), silent = TRUE)
-            if (inherits(P, "try-error")) stop("too many results, use `ipermutations`")
+            if (inherits(P, "try-error")) stop("too many results")
             out <- self$getnext(P, type, drop = FALSE)
             self$reset()
             out
@@ -73,7 +73,7 @@ next_permutations <- function(n, r, d, state, x, f, replace, type) {
     if (d > 1) {
         if ((type != 'l' && is.null(r) && d * r > .Machine$integer.max) ||
                 (type == 'l' && d > .Machine$integer.max)) {
-            stop("too many results, use `ipermutations`")
+            stop("too many results")
         }
     }
     if (!is.null(f)) {
@@ -127,7 +127,7 @@ next_permutations <- function(n, r, d, state, x, f, replace, type) {
 permutations <- function(n, r=n, x=NULL, f=NULL, replace=FALSE, type = 'r') {
     n <- check_nrxf(n, r, x, f, replace)
     P <- try(npermutations(n, r, f, replace), silent = TRUE)
-    if (inherits(P, "try-error")) stop("too many results, use `ipermutations`")
+    if (inherits(P, "try-error")) stop("too many results")
     next_permutations(n, r, P, NULL, x, f, replace, type)
 }
 

@@ -22,7 +22,7 @@ Partitions <- R6::R6Class(
         },
         collect = function(type = 'r') {
             P <- try(npartitions(self$n, self$m), silent = TRUE)
-            if (inherits(P, "try-error")) stop("too many results, use `ipartitions`")
+            if (inherits(P, "try-error")) stop("too many results")
             out <- self$getnext(P, type, drop = FALSE)
             self$reset()
             out
@@ -70,7 +70,7 @@ next_partitions <- function(n, m, d, state, descending, type) {
         if ((type != 'l' && is.null(m) && d * n > .Machine$integer.max) ||
                 (type != 'l' && !is.null(m) && d * m > .Machine$integer.max) ||
                 (type == 'l' && d > .Machine$integer.max)) {
-            stop("too many results, use `ipartitions`")
+            stop("too many results")
         }
     }
 
@@ -135,7 +135,7 @@ next_partitions <- function(n, m, d, state, descending, type) {
 #' @export
 partitions <- function(n, m=NULL, descending = FALSE, type = 'r') {
     P <- try(npartitions(n, m), silent = TRUE)
-    if (inherits(P, "try-error")) stop("too many results, use `ipartitions`")
+    if (inherits(P, "try-error")) stop("too many results")
     next_partitions(n, m, P, NULL, descending, type)
 }
 
