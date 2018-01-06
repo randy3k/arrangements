@@ -161,6 +161,7 @@ SEXP next_permutations(SEXP _n, SEXP _d, SEXP state, SEXP labels, SEXP f, SEXP _
     } else {
         // type == "list"
         result = PROTECT(Rf_allocVector(VECSXP, d));
+        nprotect++;
         if (ltype == INTSXP) {
             labels_intp = INTEGER(labels);
         } else if (ltype == REALSXP) {

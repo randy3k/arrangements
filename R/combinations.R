@@ -77,7 +77,15 @@ next_combinations <- function(n, r, d, state, x, f, replace, type) {
     }
 
     if (replace) {
-        NULL
+        out <- .Call(
+            "next_replace_combinations",
+            PACKAGE = "arrangements",
+            as.integer(n),
+            as.integer(r),
+            as.integer(d),
+            state,
+            x,
+            type)
     } else if (is.null(f)) {
         out <- .Call(
             "next_combinations",
@@ -89,7 +97,16 @@ next_combinations <- function(n, r, d, state, x, f, replace, type) {
             x,
             type)
     } else {
-        NULL
+        out <- .Call(
+            "next_multiset_combinations",
+            PACKAGE = "arrangements",
+            as.integer(n),
+            as.integer(r),
+            as.integer(d),
+            state,
+            x,
+            f,
+            type)
     }
 
     if (!is.null(out)) {
@@ -131,7 +148,7 @@ ncombinations <- function(n, r, f=NULL, replace=FALSE, bigz=FALSE) {
         } else if (is.null(f)) {
             out <- gmp::chooseZ(n, r)
         } else {
-            NULL
+            out <- .Call("ncomb_f_bigz", PACKAGE = "arrangements", as.integer(f), as.integer(r))
         }
 
     } else {
@@ -140,7 +157,7 @@ ncombinations <- function(n, r, f=NULL, replace=FALSE, bigz=FALSE) {
         } else if (is.null(f)) {
             out <- choose(n, r)
         } else {
-            NULL
+            out <- .Call("ncomb_f", PACKAGE = "arrangements", as.integer(f), as.integer(r))
         }
     }
     convertz(out, bigz)
