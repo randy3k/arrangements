@@ -25,8 +25,14 @@ Permutations <- R6::R6Class(
             private$null_pending <- FALSE
         },
         collect = function(type = 'r') {
-            P <- try(npermutations(self$n, self$r, self$f, self$replace), silent = TRUE)
-            if (inherits(P, "try-error")) stop("too many results")
+            P <- tryCatch(ncombinations(self$n, self$r, self$x, self$f, self$replace),
+                error = function(e) {
+                    if (startsWith(e$message, "integer overflow")) {
+                        stop("too many results")
+                    } else {
+                        stop(e)
+                    }
+            })
             out <- self$getnext(P, type, drop = FALSE)
             self$reset()
             out
@@ -125,23 +131,30 @@ next_permutations <- function(n, r, d, state, x, f, replace, type) {
 
 #' @export
 permutations <- function(n, r=n, x=NULL, f=NULL, replace=FALSE, type = 'r') {
-    n <- check_nrxf(n, r, x, f, replace)
-    P <- try(npermutations(n, r, f, replace), silent = TRUE)
-    if (inherits(P, "try-error")) stop("too many results")
+    n <- check_nrxf(n, r, x, f, !replace)
+    P <- tryCatch(ncombinations(n, r, x, f, replace),
+        error = function(e) {
+            if (startsWith(e$message, "integer overflow")) {
+                stop("too many results")
+            } else {
+                stop(e)
+            }
+    })
     next_permutations(n, r, P, NULL, x, f, replace, type)
 }
 
 
 #' @export
 ipermutations <- function(n, r=n, x=NULL, f=NULL, replace = FALSE) {
-    n <- check_nrxf(n, r, x, f, replace)
+    n <- check_nrxf(n, r, x, f, !replace)
     Permutations$new(n, r, x, f, replace)
 }
 
 #' @export
-npermutations <- function(n, r=n, f=NULL, replace=FALSE, bigz=FALSE) {
-    if (missing(n) && !is.null(f)) {
-        n <- sum(f)
+npermutations <- function(n, r=n, x=NULL, f=NULL, replace=FALSE, bigz=FALSE) {
+    n <- check_nrxf(n, r, x, f, FALSE)
+    if (n < r) {
+        out <- 0
     }
     if (bigz) {
         if (replace) {

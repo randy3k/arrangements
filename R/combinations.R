@@ -25,8 +25,14 @@ Combinations <- R6::R6Class(
             private$null_pending <- FALSE
         },
         collect = function(type = 'r') {
-            P <- try(ncombinations(self$n, self$r, self$f, self$replace), silent = TRUE)
-            if (inherits(P, "try-error")) stop("too many results")
+            P <- tryCatch(ncombinations(self$n, self$r, self$x, self$f, self$replace),
+                error = function(e) {
+                    if (startsWith(e$message, "integer overflow")) {
+                        stop("too many results")
+                    } else {
+                        stop(e)
+                    }
+            })
             out <- self$getnext(P, type, drop = FALSE)
             self$reset()
             out
@@ -121,23 +127,30 @@ next_combinations <- function(n, r, d, state, x, f, replace, type) {
 
 #' @export
 combinations <- function(n, r, x=NULL, f=NULL, replace=FALSE, type = 'r') {
-    n <- check_nrxf(n, r, x, f, replace)
-    P <- try(ncombinations(n, r, f, replace), silent = TRUE)
-    if (inherits(P, "try-error")) stop("too many results")
+    n <- check_nrxf(n, r, x, f, !replace)
+    P <- tryCatch(ncombinations(n, r, x, f, replace),
+        error = function(e) {
+            if (startsWith(e$message, "integer overflow")) {
+                stop("too many results")
+            } else {
+                stop(e)
+            }
+    })
     next_combinations(n, r, P, NULL, x, f, replace, type)
 }
 
 
 #' @export
 icombinations <- function(n, r, x=NULL, f=NULL, replace = FALSE) {
-    n <- check_nrxf(n, r, x, f, replace)
+    n <- check_nrxf(n, r, x, f, !replace)
     Combinations$new(n, r, x, f, replace)
 }
 
 #' @export
-ncombinations <- function(n, r, f=NULL, replace=FALSE, bigz=FALSE) {
-    if (missing(n) && !is.null(f)) {
-        n <- sum(f)
+ncombinations <- function(n, r, x=NULL, f=NULL, replace=FALSE, bigz=FALSE) {
+    n <- check_nrxf(n, r, x, f, FALSE)
+    if (n < r) {
+        out <- 0
     }
     if (bigz) {
         if (replace) {

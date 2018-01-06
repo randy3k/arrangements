@@ -11,9 +11,9 @@ Partitions <- R6::R6Class(
         m = NULL,
         descending = NULL,
         initialize = function(n, m=NULL, descending = FALSE) {
-            self$n <- as.integer(n)
+            self$n <- n
             self$m <- m
-            self$descending <- as.integer(descending)
+            self$descending <- descending
             self$reset()
         },
         reset = function() {
@@ -21,8 +21,13 @@ Partitions <- R6::R6Class(
             private$null_pending <- FALSE
         },
         collect = function(type = 'r') {
-            P <- try(npartitions(self$n, self$m), silent = TRUE)
-            if (inherits(P, "try-error")) stop("too many results")
+            P <- tryCatch(npartitions(self$n, self$m), error = function(e) {
+                if (startsWith(e$message, "integer overflow")) {
+                    stop("too many results")
+                } else {
+                    stop(e)
+                }
+            })
             out <- self$getnext(P, type, drop = FALSE)
             self$reset()
             out
@@ -134,8 +139,13 @@ next_partitions <- function(n, m, d, state, descending, type) {
 
 #' @export
 partitions <- function(n, m=NULL, descending = FALSE, type = 'r') {
-    P <- try(npartitions(n, m), silent = TRUE)
-    if (inherits(P, "try-error")) stop("too many results")
+    P <- tryCatch(npartitions(n, m), error = function(e) {
+        if (startsWith(e$message, "integer overflow")) {
+            stop("too many results")
+        } else {
+            stop(e)
+        }
+    })
     next_partitions(n, m, P, NULL, descending, type)
 }
 
@@ -148,14 +158,18 @@ ipartitions <- function(n, m=NULL, descending = FALSE) {
 
 #' @export
 npartitions <- function(n, m=NULL, bigz=FALSE) {
+    (n > 0 && n %% 1 == 0) || stop("n should be a positive integer")
     if (is.null(m)) {
-        if (n > 120) {
+        if (n > 120L) {
             out <- gmp::as.bigz(.Call("npart_bigz", PACKAGE = "arrangements", as.integer(n)))
         } else {
             out <- .Call("npart", PACKAGE = "arrangements", as.integer(n))
         }
     } else {
-        if (n > 158) {
+        (m > 0 && m %% 1 == 0) || stop("m should be a positive integer")
+        if (n < m) {
+            out <- 0
+        } else if (n > 158L) {
             out <- gmp::as.bigz(
                 .Call("nfixedpart_bigz", PACKAGE = "arrangements", as.integer(n), as.integer(m)))
         } else {

@@ -4,11 +4,11 @@ convertz <- function(z, bigz){
     } else if (abs(z) < .Machine$integer.max) {
         return(as.integer(z))
     } else {
-        stop("integer overflow, consider using big interger")
+        stop("integer overflow, consider using big integer")
     }
 }
 
-check_nrxf <- function(n, r, x, f, replace){
+check_nrxf <- function(n, r, x, f, check_r_le_n){
     if (missing(n)) {
         if (is.null(f) && !is.null(x)) {
             n <- length(x)
@@ -22,7 +22,7 @@ check_nrxf <- function(n, r, x, f, replace){
             stop("n does not equal to sum(f)")
         }
     }
-    if (!replace && r > n) {
+    if (check_r_le_n && r > n) {
         stop("r is greater than n")
     } else if (r < 0) {
         stop("r should be non-negative")

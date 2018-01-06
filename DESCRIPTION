@@ -10,6 +10,11 @@ Description: One paragraph description of what the package does as one or more f
 License: GPL (>= 2)
 Imports: R6,
     gmp
+Suggests:
+    foreach,
+    testthat,
+    knitr,
+    rmarkdown
 LinkingTo: Rcpp
 NeedsCompilation: yes
 SystemRequirements: gmp (>= 4.2.3)
