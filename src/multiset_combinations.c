@@ -38,7 +38,7 @@ SEXP next_multiset_combinations(SEXP _n, SEXP _r, SEXP _d, SEXP state, SEXP labe
 
     if (ms == R_UnboundValue) {
         if (state == R_NilValue) {
-            mp = (unsigned int*) malloc(r * sizeof(int));
+            mp = (unsigned int*) malloc(n * sizeof(int));
         } else {
             ms = PROTECT(Rf_allocVector(INTSXP, n));
             Rf_defineVar(Rf_install("m"), ms, state);
