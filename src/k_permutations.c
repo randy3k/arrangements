@@ -218,6 +218,52 @@ SEXP next_k_permutations(SEXP _n, SEXP _r, SEXP _d, SEXP state, SEXP labels, SEX
     return result;
 }
 
+double _npr(size_t n, size_t r) {
+    double out;
+    size_t i;
+    if (n < r) {
+        return 0;
+    }
+    out = 1;
+    for(i=0; i<r; i++) {
+        out = out * (n - i);
+    }
+    return out;
+}
+
+SEXP npr(SEXP _n, SEXP _r) {
+    size_t n = Rf_asInteger(_n);
+    size_t r = Rf_asInteger(_r);
+    return Rf_ScalarReal(_npr(n, r));
+}
+
+char* _npr_bigz(size_t n, size_t r) {
+    char* out;
+    size_t i;
+    if (n < r) {
+        out = (char*) malloc(sizeof(char));
+        out[0] = '0';
+    }
+    mpz_t p;
+    mpz_init_set_ui(p, 1);
+    for(i=0; i<r; i++) {
+        mpz_mul_ui(p, p, n - i);
+    }
+    out = mpz_get_str(NULL, 10, p);
+    mpz_clear(p);
+    return out;
+}
+
+SEXP npr_bigz(SEXP _n, SEXP _r) {
+    size_t n = Rf_asInteger(_n);
+    size_t r = Rf_asInteger(_r);
+    char* c = _npr_bigz(n, r);
+    SEXP out = Rf_mkString(c);
+    free(c);
+    return out;
+}
+
+
 double _nperm_f(int* f, size_t flen, size_t r) {
     int n = 0;
     int i, j, k;

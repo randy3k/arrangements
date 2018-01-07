@@ -7,8 +7,8 @@ test_that("Permutations - npermutations", {
     expect_error(npermutations(x = LETTERS[1:13]), "integer overflow")
     expect_equal(npermutations(13, bigz = TRUE), gmp::as.bigz("6227020800"))
     expect_equal(npermutations(0), 1)
-    expect_error(npermutations(-1), "positive integer")
-    expect_error(npermutations(1.5), "positive integer")
+    expect_error(npermutations(-1), "non-negative")
+    expect_error(npermutations(1.5), "non-negative")
 })
 
 test_that("Permutations - permutations", {
@@ -29,14 +29,14 @@ test_that("Permutations - permutations", {
     expect_equal(perm[[1]], 1:5)
     expect_equal(perm[[120]], 5:1)
 
-    perm <- permutations(x=LETTERS[1:5])
+    perm <- permutations(x = LETTERS[1:5])
     expect_equal(nrow(perm), 120)
     expect_equal(ncol(perm), 5)
-    expect_equal(perm[1,], LETTERS[1:5])
-    expect_equal(perm[120,], LETTERS[5:1])
+    expect_equal(perm[1, ], LETTERS[1:5])
+    expect_equal(perm[120, ], LETTERS[5:1])
 
-    expect_error(permutations(-1), "positive integer")
-    expect_error(permutations(1.5), "positive integer")
+    expect_error(permutations(-1), "non-negative")
+    expect_error(permutations(1.5), "non-negative")
     expect_equal(dim(permutations(0)), c(0, 0))
 })
 
@@ -66,6 +66,79 @@ test_that("Permutations - ipermutations", {
     expect_equal(length(iperm$getnext(10, type = "l")), 8)
     expect_equal(iperm$getnext(type = "l"), NULL)
 
-    expect_error(ipermutations(-1), "positive integer")
-    expect_error(ipermutations(1.5), "positive integer")
+    expect_error(ipermutations(-1), "non-negative")
+    expect_error(ipermutations(1.5), "non-negative")
+})
+
+
+context("Multiset Permutations")
+
+test_that("Multiset Permutations - npermutations", {
+    expect_equal(npermutations(f = c(3, 1, 3)), 140)
+    expect_equal(npermutations(x = LETTERS[1:3], f = c(3, 1, 3)), 140)
+    expect_error(npermutations(f = c(10, 5, 10)), "integer overflow")
+    expect_error(npermutations(x = LETTERS[1:3], f = c(10, 5, 10)), "integer overflow")
+    expect_equal(npermutations(f = c(10, 5, 10), bigz = TRUE), gmp::as.bigz("9816086280"))
+    expect_equal(npermutations(f = c(0, 0, 0)), 1)
+    expect_error(npermutations(f = c(2, -1, 0)), "non-negative")
+    expect_error(npermutations(f = c(2, 2, 1.5)), "non-negative")
+})
+
+test_that("Multiset Permutations - permutations", {
+    perm <- permutations(f = c(3, 1, 3))
+    expect_equal(nrow(perm), 140)
+    expect_equal(ncol(perm), 7)
+    expect_equal(perm[1, ], c(1, 1, 1, 2, 3, 3, 3))
+    expect_equal(perm[140, ], c(3, 3, 3, 2, 1, 1, 1))
+
+    perm <- permutations(f = c(3, 1, 3), type = "c")
+    expect_equal(ncol(perm), 140)
+    expect_equal(nrow(perm), 7)
+    expect_equal(perm[, 1], c(1, 1, 1, 2, 3, 3, 3))
+    expect_equal(perm[, 140], c(3, 3, 3, 2, 1, 1, 1))
+
+    perm <- permutations(f = c(3, 1, 3), type = "l")
+    expect_equal(length(perm), 140)
+    expect_equal(perm[[1]], c(1, 1, 1, 2, 3, 3, 3))
+    expect_equal(perm[[140]], c(3, 3, 3, 2, 1, 1, 1))
+
+    perm <- permutations(x = LETTERS[1:5], f = c(3, 1, 3))
+    expect_equal(nrow(perm), 140)
+    expect_equal(ncol(perm), 7)
+    expect_equal(perm[1, ], LETTERS[c(1, 1, 1, 2, 3, 3, 3)])
+    expect_equal(perm[140, ], LETTERS[c(3, 3, 3, 2, 1, 1, 1)])
+
+    expect_error(permutations(f = c(2, -1, 0)), "non-negative")
+    expect_error(permutations(f = c(2, 2, 1.5)), "non-negative")
+    expect_equal(dim(permutations(f = c(0, 0, 0))), c(0, 0))
+})
+
+test_that("Multiset Permutations - ipermutations", {
+    iperm <- ipermutations(f = c(3, 1, 3))
+    perm <- permutations(f = c(3, 1, 3))
+    expect_equal(iperm$collect(), perm)
+    expect_equal(iperm$getnext(), c(1, 1, 1, 2, 3, 3, 3))
+    expect_equal(iperm$getnext(), c(1, 1, 1, 3, 2, 3, 3))
+    iperm$getnext(130)
+    expect_equal(nrow(iperm$getnext(10)), 8)
+    expect_equal(iperm$getnext(), NULL)
+
+    perm <- permutations(f = c(3, 1, 3), type = "c")
+    expect_equal(iperm$collect(type = "c"), perm)
+    expect_equal(iperm$getnext(type = "c"), c(1, 1, 1, 2, 3, 3, 3))
+    expect_equal(iperm$getnext(type = "c"), c(1, 1, 1, 3, 2, 3, 3))
+    iperm$getnext(130, type = "c")
+    expect_equal(ncol(iperm$getnext(10, type = "c")), 8)
+    expect_equal(iperm$getnext(type = "c"), NULL)
+
+    perm <- permutations(f = c(3, 1, 3), type = "l")
+    expect_equal(iperm$collect(type = "l"), perm)
+    expect_equal(iperm$getnext(type = "l"), c(1, 1, 1, 2, 3, 3, 3))
+    expect_equal(iperm$getnext(type = "l"), c(1, 1, 1, 3, 2, 3, 3))
+    iperm$getnext(130, type = "l")
+    expect_equal(length(iperm$getnext(10, type = "l")), 8)
+    expect_equal(iperm$getnext(type = "l"), NULL)
+
+    expect_error(ipermutations(f = c(2, -1, 0)), "non-negative")
+    expect_error(ipermutations(f = c(2, 2, 1.5)), "non-negative")
 })

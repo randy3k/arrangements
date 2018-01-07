@@ -1,4 +1,4 @@
-#' @export
+#" @export
 Combinations <- R6::R6Class(
     "Combinations",
     inherit = Arrangements,
@@ -24,7 +24,7 @@ Combinations <- R6::R6Class(
             private$state <- new.env()
             private$null_pending <- FALSE
         },
-        collect = function(type = 'r') {
+        collect = function(type = "r") {
             P <- tryCatch(ncombinations(self$n, self$r, self$x, self$f, self$replace),
                 error = function(e) {
                     if (startsWith(e$message, "integer overflow")) {
@@ -37,14 +37,14 @@ Combinations <- R6::R6Class(
             self$reset()
             out
         },
-        getnext = function(d = 1L, type = 'r', drop = d == 1L) {
+        getnext = function(d = 1L, type = "r", drop = d == 1L) {
             if (private$null_pending) {
                 out <- NULL
                 self$reset()
             } else {
                 out <- next_combinations(
                     self$n, self$r, d, private$state, self$x, self$f, self$replace, type)
-                if (type == 'r'){
+                if (type == "r"){
                     if (nrow(out) == 0) {
                         out <- NULL
                         self$reset()
@@ -54,7 +54,7 @@ Combinations <- R6::R6Class(
                     if (!is.null(out) && drop) {
                         dim(out) <- NULL
                     }
-                } else if (type == 'c'){
+                } else if (type == "c"){
                     if (ncol(out) == 0) {
                         out <- NULL
                         self$reset()
@@ -64,7 +64,7 @@ Combinations <- R6::R6Class(
                     if (!is.null(out) && drop) {
                         dim(out) <- NULL
                     }
-                } else if (type == 'l'){
+                } else if (type == "l"){
                     if (length(out) == 0) {
                         out <- NULL
                         self$reset()
@@ -87,16 +87,19 @@ Combinations <- R6::R6Class(
 
 next_combinations <- function(n, r, d, state, x, f, replace, type) {
     if (d > 1) {
-        if ((type != 'l' && is.null(r) && d * r > .Machine$integer.max) ||
-                (type == 'l' && d > .Machine$integer.max)) {
+        if ((type != "l" && is.null(r) && d * r > .Machine$integer.max) ||
+                (type == "l" && d > .Machine$integer.max)) {
             stop("too many results")
         }
     }
-    if (!is.null(f)) {
-        f <- as.integer(f)
-    }
 
-    if (replace) {
+    if (r == 0 || n == 0 || n < r) {
+        if (type == "l") {
+            out <- list()
+        } else {
+            out <- integer(0)
+        }
+    } else if (replace) {
         out <- .Call(
             "next_replace_combinations",
             PACKAGE = "arrangements",
@@ -117,6 +120,9 @@ next_combinations <- function(n, r, d, state, x, f, replace, type) {
             x,
             type)
     } else {
+        if (!is.null(f)) {
+            f <- as.integer(f)
+        }
         out <- .Call(
             "next_multiset_combinations",
             PACKAGE = "arrangements",
@@ -130,13 +136,13 @@ next_combinations <- function(n, r, d, state, x, f, replace, type) {
     }
 
     if (!is.null(out)) {
-        if (type == 'r') {
+        if (type == "r") {
             if (r > 0) {
                 dim(out) <- c(length(out) / r, r)
             } else {
                 dim(out) <- c(0, 0)
             }
-        } else if (type == 'c') {
+        } else if (type == "c") {
             if (r > 0) {
                 dim(out) <- c(r, length(out) / r)
             } else {
@@ -147,8 +153,8 @@ next_combinations <- function(n, r, d, state, x, f, replace, type) {
     out
 }
 
-#' @export
-combinations <- function(n, r, x=NULL, f=NULL, replace=FALSE, type = 'r') {
+#" @export
+combinations <- function(n, r, x=NULL, f=NULL, replace=FALSE, type = "r") {
     n <- validate_n(n, x, f)
     r <- validate_r(r, n, replace)
     P <- tryCatch(ncombinations(n, r, x, f, replace),
@@ -163,14 +169,14 @@ combinations <- function(n, r, x=NULL, f=NULL, replace=FALSE, type = 'r') {
 }
 
 
-#' @export
+#" @export
 icombinations <- function(n, r, x=NULL, f=NULL, replace = FALSE) {
     n <- validate_n(n, x, f)
     r <- validate_r(r, n, replace)
     Combinations$new(n, r, x, f, replace)
 }
 
-#' @export
+#" @export
 ncombinations <- function(n, r, x=NULL, f=NULL, replace=FALSE, bigz=FALSE) {
     n <- validate_n(n, x, f)
     r <- validate_r(r, n)
@@ -178,7 +184,7 @@ ncombinations <- function(n, r, x=NULL, f=NULL, replace=FALSE, bigz=FALSE) {
         out <- 0
     } else if (bigz) {
         if (replace) {
-            out <- gmp::chooseZ(n + r - 1 , r)
+            out <- gmp::chooseZ(n + r - 1, r)
         } else if (is.null(f)) {
             out <- gmp::chooseZ(n, r)
         } else {

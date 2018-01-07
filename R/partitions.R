@@ -1,4 +1,4 @@
-#' @export
+#" @export
 Partitions <- R6::R6Class(
     "Partitions",
     inherit = Arrangements,
@@ -20,7 +20,7 @@ Partitions <- R6::R6Class(
             private$state <- new.env()
             private$null_pending <- FALSE
         },
-        collect = function(type = 'r') {
+        collect = function(type = "r") {
             P <- tryCatch(npartitions(self$n, self$m), error = function(e) {
                 if (startsWith(e$message, "integer overflow")) {
                     stop("too many results")
@@ -32,14 +32,14 @@ Partitions <- R6::R6Class(
             self$reset()
             out
         },
-        getnext = function(d = 1L, type = 'r', drop = d == 1L) {
+        getnext = function(d = 1L, type = "r", drop = d == 1L) {
             if (private$null_pending) {
                 out <- NULL
                 self$reset()
             } else {
                 out <- next_partitions(
                     self$n, self$m, d, private$state, self$descending, type)
-                if (type == 'r'){
+                if (type == "r"){
                     if (nrow(out) == 0) {
                         out <- NULL
                         self$reset()
@@ -49,7 +49,7 @@ Partitions <- R6::R6Class(
                     if (!is.null(out) && drop) {
                         dim(out) <- NULL
                     }
-                } else if (type == 'c'){
+                } else if (type == "c"){
                     if (ncol(out) == 0) {
                         out <- NULL
                         self$reset()
@@ -59,7 +59,7 @@ Partitions <- R6::R6Class(
                     if (!is.null(out) && drop) {
                         dim(out) <- NULL
                     }
-                } else if (type == 'l'){
+                } else if (type == "l"){
                     if (length(out) == 0) {
                         out <- list()
                         self$reset()
@@ -86,9 +86,9 @@ Partitions <- R6::R6Class(
 
 next_partitions <- function(n, m, d, state, descending, type) {
     if (d > 1) {
-        if ((type != 'l' && is.null(m) && d * n > .Machine$integer.max) ||
-                (type != 'l' && !is.null(m) && d * m > .Machine$integer.max) ||
-                (type == 'l' && d > .Machine$integer.max)) {
+        if ((type != "l" && is.null(m) && d * n > .Machine$integer.max) ||
+                (type != "l" && !is.null(m) && d * m > .Machine$integer.max) ||
+                (type == "l" && d > .Machine$integer.max)) {
             stop("too many results")
         }
     }
@@ -140,13 +140,13 @@ next_partitions <- function(n, m, d, state, descending, type) {
     }
 
     if (!is.null(out)) {
-        if (type == 'r') {
+        if (type == "r") {
             if (is.null(m)) {
                 dim(out) <- c(length(out) / n, n)
             } else {
                 dim(out) <- c(length(out) / m, m)
             }
-        } else if (type == 'c') {
+        } else if (type == "c") {
             if (is.null(m)) {
                 dim(out) <- c(n, length(out) / n)
             } else {
@@ -157,8 +157,8 @@ next_partitions <- function(n, m, d, state, descending, type) {
     out
 }
 
-#' @export
-partitions <- function(n, m=NULL, descending = FALSE, type = 'r') {
+#" @export
+partitions <- function(n, m=NULL, descending = FALSE, type = "r") {
     P <- tryCatch(npartitions(n, m), error = function(e) {
         if (startsWith(e$message, "integer overflow")) {
             stop("too many results")
@@ -170,7 +170,7 @@ partitions <- function(n, m=NULL, descending = FALSE, type = 'r') {
 }
 
 
-#' @export
+#" @export
 ipartitions <- function(n, m=NULL, descending = FALSE) {
     (n > 0 && n %% 1 == 0) || stop("n should be a positive integer")
     is.null(m) || (m > 0 && m %% 1 == 0) || stop("m should be a positive integer")
@@ -178,7 +178,7 @@ ipartitions <- function(n, m=NULL, descending = FALSE) {
 }
 
 
-#' @export
+#" @export
 npartitions <- function(n, m=NULL, bigz=FALSE) {
     (n > 0 && n %% 1 == 0) || stop("n should be a positive integer")
     is.null(m) || (m > 0 && m %% 1 == 0) || stop("m should be a positive integer")
