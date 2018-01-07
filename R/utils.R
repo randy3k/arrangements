@@ -22,7 +22,7 @@ validate_n <- function(n, x, f){
             stop("n does not equal to sum(f)")
         }
     }
-    (n > 0 && n %% 1 == 0) || stop("n should be a positive integer")
+    (n >= 0 && n %% 1 == 0) || stop("n should be a positive integer")
     n
 }
 
@@ -30,7 +30,6 @@ validate_r <- function(r, n, replace=TRUE) {
     if (missing(r)) {
         r <- n
     }
-    (r > 0 && r %% 1 == 0) || stop("m should be a positive integer")
-    replace || r <= n || stop("r is greater than n")
+    (r >= 0 && r %% 1 == 0) || stop("r should be a positive integer")
     r
 }

@@ -131,9 +131,17 @@ next_combinations <- function(n, r, d, state, x, f, replace, type) {
 
     if (!is.null(out)) {
         if (type == 'r') {
-            dim(out) <- c(length(out) / r, r)
+            if (r > 0) {
+                dim(out) <- c(length(out) / r, r)
+            } else {
+                dim(out) <- c(0, 0)
+            }
         } else if (type == 'c') {
-            dim(out) <- c(r, length(out) / r)
+            if (r > 0) {
+                dim(out) <- c(r, length(out) / r)
+            } else {
+                dim(out) <- c(0, 0)
+            }
         }
     }
     out

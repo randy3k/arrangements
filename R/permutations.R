@@ -100,7 +100,13 @@ next_permutations <- function(n, r, d, state, x, f, replace, type) {
         f <- as.integer(f)
     }
 
-    if (replace) {
+    if (r == 0 || n == 0 || n < r) {
+        if (type == "l") {
+            out <- list()
+        } else {
+            out <- integer(0)
+        }
+    } else if (replace) {
         out <- .Call(
             "next_replace_permutations",
             PACKAGE = "arrangements",
@@ -135,9 +141,17 @@ next_permutations <- function(n, r, d, state, x, f, replace, type) {
 
     if (!is.null(out)) {
         if (type == 'r') {
-            dim(out) <- c(length(out) / r, r)
+            if (r > 0) {
+                dim(out) <- c(length(out) / r, r)
+            } else {
+                dim(out) <- c(0, 0)
+            }
         } else if (type == 'c') {
-            dim(out) <- c(r, length(out) / r)
+            if (r > 0) {
+                dim(out) <- c(r, length(out) / r)
+            } else {
+                dim(out) <- c(0, 0)
+            }
         }
     }
     out
