@@ -100,13 +100,7 @@ next_permutations <- function(n, r, d, state, x, f, replace, type) {
         f <- as.integer(f)
     }
 
-    if (r == 0 || n == 0 || n < r) {
-        if (type == "l") {
-            out <- list()
-        } else {
-            out <- integer(0)
-        }
-    } else if (replace) {
+    if (replace) {
         out <- .Call(
             "next_replace_permutations",
             PACKAGE = "arrangements",
@@ -116,6 +110,12 @@ next_permutations <- function(n, r, d, state, x, f, replace, type) {
             state,
             x,
             type)
+    } else if (r == 0 || n == 0 || n < r) {
+        if (type == "l") {
+            out <- list()
+        } else {
+            out <- integer(0)
+        }
     } else if (n == r) {
         out <- .Call(
             "next_permutations",
@@ -184,11 +184,11 @@ ipermutations <- function(n, r, x=NULL, f=NULL, replace = FALSE) {
 npermutations <- function(n, r, x=NULL, f=NULL, replace=FALSE, bigz=FALSE) {
     n <- validate_n(n, x, f)
     r <- validate_r(r, n)
-    if (n < r) {
-        out <- 0
-    } else if (bigz) {
+    if (bigz) {
         if (replace) {
             out <- gmp::as.bigz(n) ^ r
+        } else if (n < r) {
+            out <- 0
         } else if (is.null(f)) {
             if (n == r) {
                 out <- gmp::factorialZ(n)
@@ -206,6 +206,8 @@ npermutations <- function(n, r, x=NULL, f=NULL, replace=FALSE, bigz=FALSE) {
     } else {
         if (replace) {
             out <- n ^ r
+        } else if (n < r) {
+            out <- 0
         } else if (is.null(f)) {
             if (n == r) {
                 out <- factorial(n)

@@ -132,19 +132,19 @@ SEXP next_replace_permutations(SEXP _n, SEXP _r, SEXP _d, SEXP state, SEXP label
             }
             if (ltype == NILSXP) {
                 for (i=0; i<r; i++) {
-                    result_intp[j * n + i] = ap[i] + 1;
+                    result_intp[j * r + i] = ap[i] + 1;
                 }
             } else if (ltype == INTSXP) {
                 for (i=0; i<r; i++) {
-                    result_intp[j * n + i] = labels_intp[ap[i]];
+                    result_intp[j * r + i] = labels_intp[ap[i]];
                 }
             } else if (ltype == REALSXP) {
                 for (i=0; i<r; i++) {
-                    result_doublep[j * n + i] = labels_doublep[ap[i]];
+                    result_doublep[j * r + i] = labels_doublep[ap[i]];
                 }
             } else if (ltype == STRSXP) {
                 for (i=0; i<r; i++) {
-                    SET_STRING_ELT(result, j * n + i, STRING_ELT(labels, ap[i]));
+                    SET_STRING_ELT(result, j * r + i, STRING_ELT(labels, ap[i]));
                 }
             }
         }
