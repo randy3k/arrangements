@@ -35,26 +35,40 @@ Partitions <- R6::R6Class(
         getnext = function(d = 1L, type = 'r', drop = d == 1L) {
             if (private$null_pending) {
                 out <- NULL
+                self$reset()
             } else {
                 out <- next_partitions(
                     self$n, self$m, d, private$state, self$descending, type)
-            }
-            if (is.null(out) || length(out) == 0) {
-                self$reset()
-            } else if (d > 1) {
-                if (type == 'r' && nrow(out) < d){
-                    private$null_pending <- TRUE
-                } else if (type == 'c' && ncol(out) < d){
-                    private$null_pending <- TRUE
-                } else if (type == 'l' && length(out) < d){
-                    private$null_pending <- TRUE
-                }
-            }
-            if (!is.null(out) && drop) {
-                if (type == 'l') {
-                    out <- out[[1]]
-                } else {
-                    dim(out) <- NULL
+                if (type == 'r'){
+                    if (nrow(out) == 0) {
+                        out <- NULL
+                        self$reset()
+                    } else if (nrow(out) < d) {
+                        private$null_pending <- TRUE
+                    }
+                    if (!is.null(out) && drop) {
+                        dim(out) <- NULL
+                    }
+                } else if (type == 'c'){
+                    if (ncol(out) == 0) {
+                        out <- NULL
+                        self$reset()
+                    } else if (ncol(out) < d) {
+                        private$null_pending <- TRUE
+                    }
+                    if (!is.null(out) && drop) {
+                        dim(out) <- NULL
+                    }
+                } else if (type == 'l'){
+                    if (length(out) == 0) {
+                        out <- list()
+                        self$reset()
+                    } else if (length(out) < d) {
+                        private$null_pending <- TRUE
+                    }
+                    if (length(out) > 0 && drop) {
+                        out <- unlist(out)
+                    }
                 }
             }
             out
@@ -98,7 +112,13 @@ next_partitions <- function(n, m, d, state, descending, type) {
                 type)
         }
     } else {
-        if (descending) {
+        if (n < m) {
+            if (type == "l") {
+                out <- list()
+            } else {
+                out <- integer(0)
+            }
+        } else if (descending) {
             out <- .Call(
                 "next_desc_k_partitions",
                 PACKAGE = "arrangements",
@@ -152,6 +172,8 @@ partitions <- function(n, m=NULL, descending = FALSE, type = 'r') {
 
 #' @export
 ipartitions <- function(n, m=NULL, descending = FALSE) {
+    (n > 0 && n %% 1 == 0) || stop("n should be a positive integer")
+    is.null(m) || (m > 0 && m %% 1 == 0) || stop("m should be a positive integer")
     Partitions$new(n, m, descending)
 }
 
@@ -159,6 +181,8 @@ ipartitions <- function(n, m=NULL, descending = FALSE) {
 #' @export
 npartitions <- function(n, m=NULL, bigz=FALSE) {
     (n > 0 && n %% 1 == 0) || stop("n should be a positive integer")
+    is.null(m) || (m > 0 && m %% 1 == 0) || stop("m should be a positive integer")
+
     if (is.null(m)) {
         if (n > 120L) {
             out <- gmp::as.bigz(.Call("npart_bigz", PACKAGE = "arrangements", as.integer(n)))
@@ -166,7 +190,6 @@ npartitions <- function(n, m=NULL, bigz=FALSE) {
             out <- .Call("npart", PACKAGE = "arrangements", as.integer(n))
         }
     } else {
-        (m > 0 && m %% 1 == 0) || stop("m should be a positive integer")
         if (n < m) {
             out <- 0
         } else if (n > 158L) {

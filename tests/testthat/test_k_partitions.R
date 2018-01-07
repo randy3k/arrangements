@@ -9,7 +9,8 @@ test_that("Integer partitions in k parts - npartitions", {
     expect_equal(npartitions(20, 10, bigz = TRUE), 42)
     expect_equal(npartitions(100, 10, bigz = TRUE), 2977866)
     expect_equal(npartitions(200, 50, bigz = TRUE), gmp::as.bigz("39403290219"))
-    expect_error(npartitions(20, 0), "positive integer")
+    expect_error(npartitions(20, -1), "positive integer")
+    expect_error(npartitions(20, 1.5), "positive integer")
 })
 
 test_that("Integer k-partitions - ascending partitions", {
@@ -30,13 +31,18 @@ test_that("Integer k-partitions - ascending partitions", {
     expect_true(all(apply(part, 2, sum) == 20))
 
     part <- partitions(20, 10, type = "l")
-    expect_length(part, 42)
+    expect_equal(length(part), 42)
     expect_equal(part[[1]], c(rep(1, 9), 11))
     expect_equal(part[[2]], c(rep(1, 8), 2, 10))
     expect_equal(part[[42]], rep(2, 10))
     expect_true(all(sapply(part, sum) == 20))
 
+    expect_equal(dim(partitions(20, 21)), c(0, 21))
+    expect_equal(dim(partitions(20, 21, type = "c")), c(21, 0))
+    expect_equal(length(partitions(20, 21, type = "l")), 0)
     expect_error(partitions(200, 50), "too many results")
+    expect_error(partitions(20, -1), "positive integer")
+    expect_error(partitions(20, 1.5), "positive integer")
 })
 
 test_that("Integer k-partitions - descending partitions", {
@@ -57,13 +63,18 @@ test_that("Integer k-partitions - descending partitions", {
     expect_true(all(apply(part, 2, sum) == 20))
 
     part <- partitions(20, 10, descending = TRUE, type = "l")
-    expect_length(part, 42)
+    expect_equal(length(part), 42)
     expect_equal(part[[1]], c(11, rep(1, 9)))
     expect_equal(part[[2]], c(10, 2, rep(1, 8)))
     expect_equal(part[[42]], rep(2, 10))
     expect_true(all(sapply(part, sum) == 20))
 
-    expect_error(partitions(200, 50), "too many results")
+    expect_equal(dim(partitions(20, 21, descending = TRUE)), c(0, 21))
+    expect_equal(dim(partitions(20, 21, descending = TRUE, type = "c")), c(21, 0))
+    expect_equal(length(partitions(20, 21, descending = TRUE, type = "l")), 0)
+    expect_error(partitions(200, 50, descending = TRUE), "too many results")
+    expect_error(partitions(20, -1, descending = TRUE), "positive integer")
+    expect_error(partitions(20, 1.5, descending = TRUE), "positive integer")
 })
 
 test_that("Integer k-partitions - ascending ipartitions", {
@@ -74,6 +85,10 @@ test_that("Integer k-partitions - ascending ipartitions", {
     expect_equal(ipart$getnext(), part[1, ])
     expect_equal(ipart$getnext(), part[2, ])
     expect_equal(ipart$getnext(2), part[3:4, ])
+    ipart$getnext(30)
+    expect_equal(nrow(ipart$getnext(30)), 8)
+    expect_equal(ipart$getnext(), NULL)
+
 
     part <- partitions(20, 10, type = "c")
     ipart$reset()
@@ -81,6 +96,9 @@ test_that("Integer k-partitions - ascending ipartitions", {
     expect_equal(ipart$getnext(type = "c"), part[, 1])
     expect_equal(ipart$getnext(type = "c"), part[, 2])
     expect_equal(ipart$getnext(2, type = "c"), part[, 3:4])
+    ipart$getnext(30, type ="c")
+    expect_equal(ncol(ipart$getnext(30, type = "c")), 8)
+    expect_equal(ipart$getnext(type = "c"), NULL)
 
     part <- partitions(20, 10, type = "l")
     ipart$reset()
@@ -88,6 +106,15 @@ test_that("Integer k-partitions - ascending ipartitions", {
     expect_equal(ipart$getnext(type = "l"), part[[1]])
     expect_equal(ipart$getnext(type = "l"), part[[2]])
     expect_equal(ipart$getnext(2, type = "l"), part[3:4])
+    ipart$getnext(30, type ="l")
+    expect_equal(length(ipart$getnext(30, type = "l")), 8)
+    expect_equal(ipart$getnext(type = "l"), NULL)
+
+    ipart <- ipartitions(20, 21)
+    expect_equal(ipart$collect(), NULL)
+    expect_equal(ipart$getnext(), NULL)
+    expect_error(ipartitions(20, -1), "positive integer")
+    expect_error(ipartitions(20, 1.5), "positive integer")
 })
 
 test_that("Integer partitions - descending ipartitions", {
@@ -98,6 +125,9 @@ test_that("Integer partitions - descending ipartitions", {
     expect_equal(ipart$getnext(), part[1, ])
     expect_equal(ipart$getnext(), part[2, ])
     expect_equal(ipart$getnext(2), part[3:4, ])
+    ipart$getnext(30)
+    expect_equal(nrow(ipart$getnext(30)), 8)
+    expect_equal(ipart$getnext(30), NULL)
 
     part <- partitions(20, 10, descending = TRUE, type = "c")
     ipart$reset()
@@ -105,6 +135,9 @@ test_that("Integer partitions - descending ipartitions", {
     expect_equal(ipart$getnext(type = "c"), part[, 1])
     expect_equal(ipart$getnext(type = "c"), part[, 2])
     expect_equal(ipart$getnext(2, type = "c"), part[, 3:4])
+    ipart$getnext(30, type = "c")
+    expect_equal(ncol(ipart$getnext(30, type = "c")), 8)
+    expect_equal(ipart$getnext(type = "c"), NULL)
 
     part <- partitions(20, 10, descending = TRUE, type = "l")
     ipart$reset()
@@ -112,4 +145,13 @@ test_that("Integer partitions - descending ipartitions", {
     expect_equal(ipart$getnext(type = "l"), part[[1]])
     expect_equal(ipart$getnext(type = "l"), part[[2]])
     expect_equal(ipart$getnext(2, type = "l"), part[3:4])
+    ipart$getnext(30, type = "l")
+    expect_equal(length(ipart$getnext(30, type = "l")), 8)
+    expect_equal(ipart$getnext(type = "l"), NULL)
+
+    ipart <- ipartitions(20, 21, descending = TRUE)
+    expect_equal(ipart$collect(), NULL)
+    expect_equal(ipart$getnext(), NULL)
+    expect_error(ipartitions(20, -1, descending = TRUE), "positive integer")
+    expect_error(ipartitions(20, 1.5, descending = TRUE), "positive integer")
 })

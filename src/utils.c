@@ -3,9 +3,6 @@
 #include "utils.h"
 
 SEXP resize_row(SEXP x, size_t n, size_t m, size_t d) {
-    if (d == 0) {
-        return R_NilValue;
-    }
     if (TYPEOF(x) == INTSXP) {
         SEXP y = PROTECT(Rf_allocVector(INTSXP, n*d));
         int* yp = INTEGER(y);
@@ -45,9 +42,6 @@ SEXP resize_row(SEXP x, size_t n, size_t m, size_t d) {
 }
 
 SEXP resize_col(SEXP x, size_t n, size_t m, size_t d) {
-    if (d == 0) {
-        return R_NilValue;
-    }
     if (TYPEOF(x) == INTSXP) {
         SEXP y = PROTECT(Rf_allocVector(INTSXP, n*d));
         int* yp = INTEGER(y);

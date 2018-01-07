@@ -40,26 +40,40 @@ Combinations <- R6::R6Class(
         getnext = function(d = 1L, type = 'r', drop = d == 1L) {
             if (private$null_pending) {
                 out <- NULL
+                self$reset()
             } else {
                 out <- next_combinations(
                     self$n, self$r, d, private$state, self$x, self$f, self$replace, type)
-            }
-            if (is.null(out) || length(out) == 0) {
-                self$reset()
-            } else if (d > 1) {
-                if (type == 'r' && nrow(out) < d){
-                    private$null_pending <- TRUE
-                } else if (type == 'c' && ncol(out) < d){
-                    private$null_pending <- TRUE
-                } else if (type == 'l' && length(out) < d){
-                    private$null_pending <- TRUE
-                }
-            }
-            if (!is.null(out) && drop) {
-                if (type == 'l') {
-                    out <- out[[1]]
-                } else {
-                    dim(out) <- NULL
+                if (type == 'r'){
+                    if (nrow(out) == 0) {
+                        out <- NULL
+                        self$reset()
+                    } else if (nrow(out) < d) {
+                        private$null_pending <- TRUE
+                    }
+                    if (!is.null(out) && drop) {
+                        dim(out) <- NULL
+                    }
+                } else if (type == 'c'){
+                    if (ncol(out) == 0) {
+                        out <- NULL
+                        self$reset()
+                    } else if (ncol(out) < d) {
+                        private$null_pending <- TRUE
+                    }
+                    if (!is.null(out) && drop) {
+                        dim(out) <- NULL
+                    }
+                } else if (type == 'l'){
+                    if (length(out) == 0) {
+                        out <- NULL
+                        self$reset()
+                    } else if (length(out) < d) {
+                        private$null_pending <- TRUE
+                    }
+                    if (length(out) > 0 && drop) {
+                        out <- unlist(out)
+                    }
                 }
             }
             out
@@ -127,7 +141,8 @@ next_combinations <- function(n, r, d, state, x, f, replace, type) {
 
 #' @export
 combinations <- function(n, r, x=NULL, f=NULL, replace=FALSE, type = 'r') {
-    n <- check_nrxf(n, r, x, f, !replace)
+    n <- validate_n(n, x, f)
+    r <- validate_r(r, n, replace)
     P <- tryCatch(ncombinations(n, r, x, f, replace),
         error = function(e) {
             if (startsWith(e$message, "integer overflow")) {
@@ -142,17 +157,18 @@ combinations <- function(n, r, x=NULL, f=NULL, replace=FALSE, type = 'r') {
 
 #' @export
 icombinations <- function(n, r, x=NULL, f=NULL, replace = FALSE) {
-    n <- check_nrxf(n, r, x, f, !replace)
+    n <- validate_n(n, x, f)
+    r <- validate_r(r, n, replace)
     Combinations$new(n, r, x, f, replace)
 }
 
 #' @export
 ncombinations <- function(n, r, x=NULL, f=NULL, replace=FALSE, bigz=FALSE) {
-    n <- check_nrxf(n, r, x, f, FALSE)
+    n <- validate_n(n, x, f)
+    r <- validate_r(r, n)
     if (n < r) {
         out <- 0
-    }
-    if (bigz) {
+    } else if (bigz) {
         if (replace) {
             out <- gmp::chooseZ(n + r - 1 , r)
         } else if (is.null(f)) {
