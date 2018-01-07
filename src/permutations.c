@@ -41,13 +41,13 @@ SEXP next_permutations(SEXP _n, SEXP _d, SEXP state, SEXP labels, SEXP f, SEXP _
             ap = (unsigned int*) INTEGER(as);
         }
         if (f == R_NilValue) {
-            for(i=0; i<n; i++) ap[i] = i + 1;
+            for(i=0; i<n; i++) ap[i] = i;
         } else {
             fp = INTEGER(f);
             k = 0;
             for (i = 0; i< Rf_length(f); i++) {
                 for (j = 0; j< fp[i]; j++) {
-                    ap[k++] = i + 1;
+                    ap[k++] = i;
                 }
             }
         }
@@ -90,19 +90,19 @@ SEXP next_permutations(SEXP _n, SEXP _d, SEXP state, SEXP labels, SEXP f, SEXP _
             }
             if (ltype == NILSXP) {
                 for (i=0; i<n; i++) {
-                    result_intp[j + i*d] = ap[i];
+                    result_intp[j + i*d] = ap[i] + 1;
                 }
             } else if (ltype == INTSXP) {
                 for (i=0; i<n; i++) {
-                    result_intp[j + i*d] = labels_intp[ap[i] - 1];
+                    result_intp[j + i*d] = labels_intp[ap[i]];
                 }
             } else if (ltype == REALSXP) {
                 for (i=0; i<n; i++) {
-                    result_doublep[j + i*d] = labels_doublep[ap[i] - 1];
+                    result_doublep[j + i*d] = labels_doublep[ap[i]];
                 }
             } else if (ltype == STRSXP) {
                 for (i=0; i<n; i++) {
-                    SET_STRING_ELT(result, j + i*d, STRING_ELT(labels, ap[i] - 1));
+                    SET_STRING_ELT(result, j + i*d, STRING_ELT(labels, ap[i]));
                 }
             }
         }
@@ -138,19 +138,19 @@ SEXP next_permutations(SEXP _n, SEXP _d, SEXP state, SEXP labels, SEXP f, SEXP _
             }
             if (ltype == NILSXP) {
                 for (i=0; i<n; i++) {
-                    result_intp[j * n + i] = ap[i];
+                    result_intp[j * n + i] = ap[i] + 1;
                 }
             } else if (ltype == INTSXP) {
                 for (i=0; i<n; i++) {
-                    result_intp[j * n + i] = labels_intp[ap[i] - 1];
+                    result_intp[j * n + i] = labels_intp[ap[i]];
                 }
             } else if (ltype == REALSXP) {
                 for (i=0; i<n; i++) {
-                    result_doublep[j * n + i] = labels_doublep[ap[i] - 1];
+                    result_doublep[j * n + i] = labels_doublep[ap[i]];
                 }
             } else if (ltype == STRSXP) {
                 for (i=0; i<n; i++) {
-                    SET_STRING_ELT(result, j * n + i, STRING_ELT(labels, ap[i] - 1));
+                    SET_STRING_ELT(result, j * n + i, STRING_ELT(labels, ap[i]));
                 }
             }
         }
@@ -181,24 +181,24 @@ SEXP next_permutations(SEXP _n, SEXP _d, SEXP state, SEXP labels, SEXP f, SEXP _
                 resulti = Rf_allocVector(INTSXP, n);
                 result_intp = INTEGER(resulti);
                 for (i=0; i<n; i++) {
-                    result_intp[i] = ap[i];
+                    result_intp[i] = ap[i] + 1;
                 }
             } else if (ltype == INTSXP) {
                 resulti = Rf_allocVector(INTSXP, n);
                 result_intp = INTEGER(resulti);
                 for (i=0; i<n; i++) {
-                    result_intp[i] = labels_intp[ap[i] - 1];
+                    result_intp[i] = labels_intp[ap[i]];
                 }
             } else if (ltype == REALSXP) {
                 resulti = Rf_allocVector(REALSXP, n);
                 result_doublep = REAL(resulti);
                 for (i=0; i<n; i++) {
-                    result_doublep[i] = labels_doublep[ap[i] - 1];
+                    result_doublep[i] = labels_doublep[ap[i]];
                 }
             } else if (ltype == STRSXP) {
                 resulti = Rf_allocVector(STRSXP, n);
                 for (i=0; i<n; i++) {
-                    SET_STRING_ELT(resulti, i, STRING_ELT(labels, ap[i] - 1));
+                    SET_STRING_ELT(resulti, i, STRING_ELT(labels, ap[i]));
                 }
             }
             SET_VECTOR_ELT(result, j, resulti);
