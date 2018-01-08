@@ -1,0 +1,27 @@
+---
+output:
+  github_document:
+    html_preview: false
+---
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+# Fast Generators and Iterators for Permutations, Combinations and Partitions
+
+[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/arrangements)](https://cran.r-project.org/package=arrangements)
+
+Github: [https://github.com/randy3k/arrangements](https://github.com/randy3k/arrangements)
+
+Documentation: [http://randy3k.github.io/arrangements](https://randy3k.github.io/arrangements)
+
+
+```{r results='asis', echo = FALSE, eval = TRUE}
+d <- desc::desc(package = "arrangements")
+cat(d$get("Description"))
+```
+
+## Installation
+
+Install the latest development version using
+
+```r
+devtools::install_github("randy3k/arrangements")
+```
