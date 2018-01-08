@@ -245,30 +245,14 @@ SEXP next_permutations(SEXP _n, SEXP _d, SEXP state, SEXP labels, SEXP f, SEXP _
     return result;
 }
 
-double _nperm_n(int* f, size_t flen) {
-    double out = 1;
-    size_t i, j, h;
-    h = 0;
-    for (i=0; i<flen; i++) {
-        for (j=1; j<=f[i]; j++) {
-            h++;
-            out = out * h / j;
-        }
-    }
-    return out;
-}
-
 SEXP nperm_n(SEXP f) {
-    int* fp = INTEGER(f);
+    int* fp = INTEGER(as_uint_array(f));
     size_t flen = Rf_length(f);
     return Rf_ScalarReal(multichoose(fp, flen));
 }
 
-char* _nperm_n_bigz(int* f, size_t flen) {
-    mpz_t z;
-    mpz_init(z);
+void npermutations_n_bigz(mpz_t z, int* f, size_t flen) {
     mpz_set_ui(z, 1);
-
     size_t i, j, h;
     h = 0;
     for (i=0; i<flen; i++) {
@@ -278,16 +262,17 @@ char* _nperm_n_bigz(int* f, size_t flen) {
             mpz_cdiv_q_ui(z, z, j);
         }
     }
-    char* out = mpz_get_str(NULL, 10, z);
-    mpz_clear(z);
-    return out;
 }
 
 SEXP nperm_n_bigz(SEXP f) {
-    int* fp = INTEGER(f);
+    int* fp = INTEGER(as_uint_array(f));
     size_t flen = Rf_length(f);
-    char* c = _nperm_n_bigz(fp, flen);
+    mpz_t z;
+    mpz_init(z);
+    npermutations_n_bigz(z, fp, flen);
+    char* c = mpz_get_str(NULL, 10, z);
     SEXP out = Rf_mkString(c);
+    mpz_clear(z);
     free(c);
     return out;
 }

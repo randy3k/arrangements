@@ -5,7 +5,7 @@
 #include "algorithms/k_partition.h"
 #include "utils.h"
 
-double _npart_k(int n, int k);
+double npartitions_k(int n, int k);
 
 SEXP next_asc_k_partitions(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP _type) {
     size_t i, j;
@@ -15,7 +15,7 @@ SEXP next_asc_k_partitions(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP _type) {
     int d;
     double dd;
     if (Rf_asInteger(_d) == -1) {
-        dd = _npart_k(n, k);
+        dd = npartitions_k(n, k);
     } else {
         dd = as_uint(_d);
     }
@@ -150,7 +150,7 @@ SEXP next_desc_k_partitions(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP _type) {
     double dd;
     int d = Rf_asInteger(_d);
     if (d == -1) {
-        dd = _npart_k(n, k);
+        dd = npartitions_k(n, k);
     } else {
         dd = as_uint(_d);
     }
@@ -281,7 +281,7 @@ SEXP next_desc_k_partitions(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP _type) {
     return result;
 }
 
-double _npart_k(int n, int k) {
+double npartitions_k(int n, int k) {
     if (n < k) return 0;
     int n1 = n-k+1;
     double* p = (double*) malloc(n1*k * sizeof(double));
@@ -310,15 +310,14 @@ double _npart_k(int n, int k) {
 SEXP npart_k(SEXP _n, SEXP _k) {
     int n = as_uint(_n);
     int k = as_uint(_k);
-    return Rf_ScalarReal(_npart_k(n, k));
+    return Rf_ScalarReal(npartitions_k(n, k));
 }
 
 
-char* _npart_k_bigz(int n, int k) {
-    char* out;
+void npartitions_k_bigz(mpz_t z, int n, int k) {
     if (n < k) {
-        out = (char*) malloc(sizeof(char));
-        out[0] = '0';
+        mpz_set(z, 0);
+        return;
     }
 
     int n1 = n-k+1;
@@ -341,17 +340,20 @@ char* _npart_k_bigz(int n, int k) {
             }
         }
     }
-    out = mpz_get_str(NULL, 10, p[n1*k - 1]);
+    mpz_set(z, p[n1*k - 1]);
     for (i=0; i<n1*k; i++) mpz_clear(p[i]);
     free(p);
-    return out;
 }
 
 SEXP npart_k_bigz(SEXP _n, SEXP _k) {
     int n = as_uint(_n);
     int k = as_uint(_k);
-    char* c = _npart_k_bigz(n, k);
+    mpz_t z;
+    mpz_init(z);
+    npartitions_k_bigz(z, n, k);
+    char* c = mpz_get_str(NULL, 10, z);
     SEXP out = Rf_mkString(c);
+    mpz_clear(z);
     free(c);
     return out;
 }

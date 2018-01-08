@@ -5,7 +5,7 @@
 #include "algorithms/partition.h"
 #include "utils.h"
 
-double _npart(int n);
+double npartitions(int n);
 
 SEXP next_asc_partitions(SEXP _n, SEXP _d, SEXP state, SEXP _type) {
     size_t i, j, k;
@@ -14,7 +14,7 @@ SEXP next_asc_partitions(SEXP _n, SEXP _d, SEXP state, SEXP _type) {
     int d;
     double dd;
     if (Rf_asInteger(_d) == -1) {
-        dd = _npart(n);
+        dd = npartitions(n);
     } else {
         dd = as_uint(_d);
     }
@@ -166,7 +166,7 @@ SEXP next_desc_partitions(SEXP _n, SEXP _d, SEXP state, SEXP _type) {
     double dd;
     int d = Rf_asInteger(_d);
     if (d == -1) {
-        dd = _npart(n);
+        dd = npartitions(n);
     } else {
         dd = as_uint(_d);
     }
@@ -314,7 +314,7 @@ SEXP next_desc_partitions(SEXP _n, SEXP _d, SEXP state, SEXP _type) {
     return result;
 }
 
-double _npart(int n) {
+double npartitions(int n) {
     if (n == 0) return 0;
     // find P(1),...,P(n) sequentially
     int i, j, k, s;
@@ -337,15 +337,14 @@ double _npart(int n) {
 
 SEXP npart(SEXP _n) {
     int n = as_uint(_n);
-    return Rf_ScalarReal(_npart(n));
+    return Rf_ScalarReal(npartitions(n));
 }
 
-char* _npart_bigz(int n) {
+void npartitions_bigz(mpz_t z, int n) {
     // find P(1),...,P(n) sequentially
-    char* out;
     if (n == 0) {
-        out = (char*) malloc(sizeof(char));
-        out[0] = '0';
+        mpz_set_ui(z, 0);
+        return;
     }
     int i, j, h, s;
     mpz_t* p = (mpz_t*) malloc((n+1) * sizeof(mpz_t));
@@ -354,7 +353,6 @@ char* _npart_bigz(int n) {
     mpz_set_ui(p[0], 1);
     mpz_set_ui(p[1], 1);
     for(i=2 ; i<=n ; i++){
-        mpz_set_ui(p[i], 0);
         for (j=1, h=1, s=1; i-j>=0; h+=3, j+=h, s=-s) {
             if (s > 0){
                 mpz_add(p[i], p[i], p[i-j]);
@@ -370,16 +368,19 @@ char* _npart_bigz(int n) {
             }
         }
     }
-    out = mpz_get_str(NULL, 10, p[n]);
+    mpz_set(z, p[n]);
     for (i=0; i<n+1; i++) mpz_clear(p[i]);
     free(p);
-    return out;
 }
 
 SEXP npart_bigz(SEXP _n) {
     int n = as_uint(_n);
-    char* c = _npart_bigz(n);
+    mpz_t z;
+    mpz_init(z);
+    npartitions_bigz(z, n);
+    char* c = mpz_get_str(NULL, 10, z);
     SEXP out = Rf_mkString(c);
+    mpz_clear(z);
     free(c);
     return out;
 }
