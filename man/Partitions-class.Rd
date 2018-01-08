@@ -3,15 +3,18 @@
 \name{Partitions-class}
 \alias{Partitions-class}
 \title{Partitions class}
-\arguments{
-\item{n}{integer to be partitioned}
-
-\item{m}{integer: number of partitions}
-
-\item{descending}{logical: lexicographical or reverse lexicographical order}
-}
 \description{
-\preformatted{
-Partitions$new(n, m=NULL, descending = FALSE)
+An R6 class of partitions iterator. \link{ipartitions} is a convenient wrapper for initializing the class.
 }
+\section{Usage}{
+
+\preformatted{
+Partitions$new(n, k, x = NULL, f = NULL, replace = FALSE)
+...$getnext(d = 1L, type = "r", drop = d == 1L)
+...$collect(type = "r")
+}
+}
+
+\seealso{
+\link{ipartitions}
 }

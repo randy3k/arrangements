@@ -4,7 +4,7 @@
 \alias{icombinations}
 \title{Combinations iterator}
 \usage{
-icombinations(n, r, x = NULL, f = NULL, replace = FALSE)
+icombinations(n, k, x = NULL, f = NULL, replace = FALSE)
 }
 \description{
 Combinations iterator

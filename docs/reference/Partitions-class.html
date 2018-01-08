@@ -79,36 +79,33 @@
     </div>
 
     
-    <pre>
-Partitions$new(n, m=NULL, descending = FALSE)
-</pre>
+    <p>An R6 class of partitions iterator. <a href='ipartitions.html'>ipartitions</a> is a convenient wrapper for initializing the class.</p>
     
 
+        
+    <h2 class="hasAnchor" id="usage"><a class="anchor" href="#usage"></a>Usage</h2>
+
     
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>n</th>
-      <td><p>integer to be partitioned</p></td>
-    </tr>
-    <tr>
-      <th>m</th>
-      <td><p>integer: number of partitions</p></td>
-    </tr>
-    <tr>
-      <th>descending</th>
-      <td><p>logical: lexicographical or reverse lexicographical order</p></td>
-    </tr>
-    </table>
+    <pre>
+Partitions$new(n, k, x = NULL, f = NULL, replace = FALSE)
+...$getnext(d = 1L, type = "r", drop = d == 1L)
+...$collect(type = "r")
+</pre>
+    
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <p><a href='ipartitions.html'>ipartitions</a></p>
     
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
-                </ul>
+      
+      <li><a href="#usage">Usage</a></li>
+
+      <li><a href="#see-also">See also</a></li>
+          </ul>
 
   </div>
 </div>

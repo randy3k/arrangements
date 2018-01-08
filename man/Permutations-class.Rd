@@ -3,20 +3,18 @@
 \name{Permutations-class}
 \alias{Permutations-class}
 \title{Permutations class}
-\arguments{
-\item{n}{integer: number of total items;
-\code{n} may be implicitly determined by \code{x} and \code{f} if missing}
-
-\item{r}{integer: number of selected items}
-
-\item{x}{a vector: optional labeled vector}
-
-\item{f}{an integer vector: frequency for each item}
-
-\item{replace}{with/without replacement}
-}
 \description{
-\preformatted{
-Permutations$new(n, r, x = NULL, f = NULL, replace = FALSE)
+An R6 class of permutation iterator. \link{ipermutations} is a convenient wrapper for initializing the class.
 }
+\section{Usage}{
+
+\preformatted{
+Permutations$new(n, k, x = NULL, f = NULL, replace = FALSE)
+...$getnext(d = 1L, type = "r", drop = d == 1L)
+...$collect(type = "r")
+}
+}
+
+\seealso{
+\link{ipermutations}
 }

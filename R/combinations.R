@@ -1,15 +1,15 @@
 #' Combinations class
 #'
+#' An R6 class of combinations iterator. [icombinations] is a convenient wrapper for initializing the class.
+#'
+#' @section Usage:
 #' \preformatted{
 #' Combinations$new(n, k, x = NULL, f = NULL, replace = FALSE)
+#' ...$getnext(d = 1L, type = "r", drop = d == 1L)
+#' ...$collect(type = "r")
 #' }
-#' @param n integer: number of total items;
-#'          \code{n} may be implicitly determined by \code{x} and \code{f} if missing
-#' @param k integer: number of selected items
-#' @param x a vector: optional labeled vector
-#' @param f an integer vector: frequency for each item
-#' @param replace with/without replacement
 #' @name Combinations-class
+#' @seealso [icombinations]
 NULL
 
 #' @export

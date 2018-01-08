@@ -4,7 +4,7 @@
 \alias{npartitions}
 \title{Number of partitions}
 \usage{
-npartitions(n, m = NULL, bigz = FALSE)
+npartitions(n, k = NULL, bigz = FALSE)
 }
 \description{
 Number of partitions

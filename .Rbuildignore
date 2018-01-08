@@ -3,3 +3,4 @@
 Makefile
 ^docs$
 ^inst/jl$
+^_pkgdown\.yml$

@@ -1,16 +1,16 @@
 Package: arrangements
 Type: Package
-Title: Fast Generators and Iterators of Permutations, Combinations and Partitions
+Title: Fast Generators and Iterators for Permutations, Combinations and Partitions
 Version: 1.0
 Date: 2018-01-07
 Authors@R: c(
     person("Randy", "Lai", , "randy.cs.lai@gmail.com", role = c("aut", "cre"))
     )
-Description: Fast generators and iterators of permutations, combinations and partitions. The iterators allow users to generate arrangements in a memory efficient manner and the generated arrangements are in lexicographical (dictionary) order. Permutations and combinations can be drawn with/without replacement and support multisets. It has been demonstrated that 'arrangements' outperforms most of the existing packages of similar kind.
+Description: Fast generators and iterators for permutations, combinations and partitions. The iterators allow users to generate arrangements in a memory efficient manner and the generated arrangements are in lexicographical (dictionary) order. Permutations and combinations can be drawn with/without replacement and support multisets. It has been demonstrated that 'arrangements' outperforms most of the existing packages of similar kind.
 URL: https://randy3k.github.io/arrangements
-License: GPL (>= 2)
+License: MIT + file LICENSE
 Depends:
-    R (>= 3.0.0)
+    R (>= 3.4.0)
 Imports: R6,
     gmp
 Suggests:
@@ -22,3 +22,4 @@ NeedsCompilation: yes
 SystemRequirements: gmp (>= 4.2.3)
 ByteCompile: yes
 RoxygenNote: 6.0.1
+Roxygen: list(markdown = TRUE)

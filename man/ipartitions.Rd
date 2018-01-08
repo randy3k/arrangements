@@ -4,7 +4,7 @@
 \alias{ipartitions}
 \title{Partitions iterator}
 \usage{
-ipartitions(n, m = NULL, descending = FALSE)
+ipartitions(n, k = NULL, descending = FALSE)
 }
 \description{
 Partitions iterator

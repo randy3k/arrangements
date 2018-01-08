@@ -4,7 +4,7 @@
 \alias{npermutations}
 \title{Number of permutations}
 \usage{
-npermutations(n, r = n, x = NULL, f = NULL, replace = FALSE,
+npermutations(n, k = n, x = NULL, f = NULL, replace = FALSE,
   bigz = FALSE)
 }
 \description{

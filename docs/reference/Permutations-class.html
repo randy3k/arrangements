@@ -79,45 +79,33 @@
     </div>
 
     
-    <pre>
-Permutations$new(n, r, x = NULL, f = NULL, replace = FALSE)
-</pre>
+    <p>An R6 class of permutation iterator. <a href='ipermutations.html'>ipermutations</a> is a convenient wrapper for initializing the class.</p>
     
 
+        
+    <h2 class="hasAnchor" id="usage"><a class="anchor" href="#usage"></a>Usage</h2>
+
     
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>n</th>
-      <td><p>integer: number of total items;
-<code>n</code> may be implicitly determined by <code>x</code> and <code>f</code> if missing</p></td>
-    </tr>
-    <tr>
-      <th>r</th>
-      <td><p>integer: number of selected items</p></td>
-    </tr>
-    <tr>
-      <th>x</th>
-      <td><p>a vector: optional labeled vector</p></td>
-    </tr>
-    <tr>
-      <th>f</th>
-      <td><p>an integer vector: frequency for each item</p></td>
-    </tr>
-    <tr>
-      <th>replace</th>
-      <td><p>with/without replacement</p></td>
-    </tr>
-    </table>
+    <pre>
+Permutations$new(n, k, x = NULL, f = NULL, replace = FALSE)
+...$getnext(d = 1L, type = "r", drop = d == 1L)
+...$collect(type = "r")
+</pre>
+    
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <p><a href='ipermutations.html'>ipermutations</a></p>
     
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
-                </ul>
+      
+      <li><a href="#usage">Usage</a></li>
+
+      <li><a href="#see-also">See also</a></li>
+          </ul>
 
   </div>
 </div>

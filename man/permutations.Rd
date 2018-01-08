@@ -4,7 +4,7 @@
 \alias{permutations}
 \title{Permutations generator}
 \usage{
-permutations(n, r = n, x = NULL, f = NULL, replace = FALSE,
+permutations(n, k = n, x = NULL, f = NULL, replace = FALSE,
   type = "r")
 }
 \description{

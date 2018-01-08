@@ -1,15 +1,15 @@
 #' Permutations class
 #'
+#' An R6 class of permutation iterator. [ipermutations] is a convenient wrapper for initializing the class.
+#'
+#' @section Usage:
 #' \preformatted{
 #' Permutations$new(n, k, x = NULL, f = NULL, replace = FALSE)
+#' ...$getnext(d = 1L, type = "r", drop = d == 1L)
+#' ...$collect(type = "r")
 #' }
-#' @param n integer: number of total items;
-#'          \code{n} may be implicitly determined by \code{x} and \code{f} if missing
-#' @param k integer: number of selected items
-#' @param x a vector: optional labeled vector
-#' @param f an integer vector: frequency for each item
-#' @param replace with/without replacement
 #' @name Permutations-class
+#' @seealso [ipermutations]
 NULL
 
 #' @export

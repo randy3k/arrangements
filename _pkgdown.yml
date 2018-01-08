@@ -1,0 +1,21 @@
+reference:
+  - title: Generators for arrangements
+    desc:
+    contents:
+      - combinations
+      - permutations
+      - partitions
+      - ncombinations
+      - npermutations
+      - npartitions
+
+
+  - title: Iterators for arrangements
+    desc:
+    contents:
+      - icombinations
+      - ipermutations
+      - ipartitions
+      - Combinations-class
+      - Permutations-class
+      - Partitions-class

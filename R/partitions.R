@@ -1,12 +1,15 @@
 #' Partitions class
 #'
+#' An R6 class of partitions iterator. [ipartitions] is a convenient wrapper for initializing the class.
+#'
+#' @section Usage:
 #' \preformatted{
-#' Partitions$new(n, k=NULL, descending = FALSE)
+#' Partitions$new(n, k, x = NULL, f = NULL, replace = FALSE)
+#' ...$getnext(d = 1L, type = "r", drop = d == 1L)
+#' ...$collect(type = "r")
 #' }
-#' @param n integer to be partitioned
-#' @param k integer: number of partitions
-#' @param descending logical: lexicographical or reverse lexicographical order
 #' @name Partitions-class
+#' @seealso [ipartitions]
 NULL
 
 #' @export

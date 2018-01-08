@@ -4,7 +4,7 @@
 \alias{partitions}
 \title{Partitions generator}
 \usage{
-partitions(n, m = NULL, descending = FALSE, type = "r")
+partitions(n, k = NULL, descending = FALSE, type = "r")
 }
 \description{
 Partitions generator
