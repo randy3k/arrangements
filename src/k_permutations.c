@@ -1,15 +1,29 @@
 #define R_NO_REMAP
+#include <limits.h>
 #include <R.h>
 #include <Rinternals.h>
 #include <gmp.h>
 #include "algorithms/k_permutation.h"
 #include "utils.h"
 
+double _nperm_f(int* f, size_t flen, size_t r);
 
 SEXP next_k_permutations(SEXP _n, SEXP _r, SEXP _d, SEXP state, SEXP labels, SEXP f, SEXP _type) {
+    size_t i, j, k;
+
     size_t n = as_uint(_n);
     size_t r = as_uint(_r);
-    int d = as_uint(_d);
+    double dd;
+    int d = Rf_asInteger(_d);
+    if (d == -1) {
+        if (f == R_NilValue) {
+            dd = npr(n, r);
+        } else {
+            dd = _nperm_f(INTEGER(f), Rf_length(f), r);
+        }
+    } else {
+        dd = as_uint(_d);
+    }
 
     int ltype = TYPEOF(labels);
     int* labels_intp;
@@ -19,7 +33,12 @@ SEXP next_k_permutations(SEXP _n, SEXP _r, SEXP _d, SEXP state, SEXP labels, SEX
 
     char type = CHAR(Rf_asChar(_type))[0];
 
-    size_t i, j, k;
+    if (type == 'l') {
+        if (dd > INT_MAX) Rf_error("too many results");
+    } else {
+        if (dd * r > INT_MAX) Rf_error("too many results");
+    }
+    d = round(dd);
 
     SEXP as;
     unsigned int* ap;
@@ -231,26 +250,13 @@ SEXP next_k_permutations(SEXP _n, SEXP _r, SEXP _d, SEXP state, SEXP labels, SEX
     return result;
 }
 
-double _npr(size_t n, size_t r) {
-    double out;
-    size_t i;
-    if (n < r) {
-        return 0;
-    }
-    out = 1;
-    for(i=0; i<r; i++) {
-        out = out * (n - i);
-    }
-    return out;
-}
-
-SEXP npr(SEXP _n, SEXP _r) {
+SEXP nperm_k(SEXP _n, SEXP _r) {
     size_t n = as_uint(_n);
     size_t r = as_uint(_r);
-    return Rf_ScalarReal(_npr(n, r));
+    return Rf_ScalarReal(npr(n, r));
 }
 
-char* _npr_bigz(size_t n, size_t r) {
+char* _nperm_k_bigz(size_t n, size_t r) {
     char* out;
     size_t i;
     if (n < r) {
@@ -268,10 +274,10 @@ char* _npr_bigz(size_t n, size_t r) {
     return out;
 }
 
-SEXP npr_bigz(SEXP _n, SEXP _r) {
+SEXP nperm_k_bigz(SEXP _n, SEXP _r) {
     size_t n = as_uint(_n);
     size_t r = as_uint(_r);
-    char* c = _npr_bigz(n, r);
+    char* c = _nperm_k_bigz(n, r);
     SEXP out = Rf_mkString(c);
     free(c);
     return out;

@@ -7,11 +7,11 @@
 
 
 SEXP next_asc_partitions(SEXP _n, SEXP _d, SEXP state, SEXP _type) {
+    size_t i, j, k;
+
     int n = as_uint(_n);
     int d = as_uint(_d);
     char type = CHAR(Rf_asChar(_type))[0];
-
-    size_t k, i, j;
 
     SEXP as, ks;
     unsigned int* ap;

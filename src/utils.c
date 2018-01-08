@@ -119,3 +119,49 @@ SEXP as_uint_array(SEXP x) {
     }
     return x;
 }
+
+double npr(size_t n, size_t r) {
+    double out;
+    size_t i;
+    if (n < r) {
+        return 0;
+    }
+    out = 1;
+    for(i=0; i<r; i++) {
+        out = out * (n - i);
+    }
+    return out;
+}
+
+
+double ncr(size_t n, size_t r) {
+    double out = 1;
+    size_t i, k;
+    if (n < r) {
+        return 0;
+    }
+    k = 0;
+    for (i=1; i<=r; i++){
+        k++;
+        out = out * k / i;
+    }
+    for (i=1; i<=n-r; i++){
+        k++;
+        out = out * k / i;
+    }
+
+    return out;
+}
+
+double multichoose(int* f, size_t flen) {
+    double out = 1;
+    size_t i, j, k;
+    k = 0;
+    for (i=0; i<flen; i++) {
+        for (j=1; j<=f[i]; j++) {
+            k++;
+            out = out * k / j;
+        }
+    }
+    return out;
+}

@@ -27,8 +27,7 @@ Combinations <- R6::R6Class(
             private$null_pending <- FALSE
         },
         collect = function(type = "r") {
-            P <- ncombinations(self$n, self$r, self$x, self$f, self$replace)
-            out <- self$getnext(P, type, drop = FALSE)
+            out <- self$getnext(-1L, type, drop = FALSE)
             self$reset()
             out
         },
@@ -145,8 +144,7 @@ combinations <- function(n, r, x=NULL, f=NULL, replace=FALSE, type = "r") {
             n <- sum(f)
         }
     }
-    P <- ncombinations(n, r, x, f, replace)
-    next_combinations(n, r, P, NULL, x, f, replace, type)
+    next_combinations(n, r, -1L, NULL, x, f, replace, type)
 }
 
 

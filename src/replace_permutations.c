@@ -1,4 +1,5 @@
 #define R_NO_REMAP
+#include <limits.h>
 #include <R.h>
 #include <Rinternals.h>
 #include "algorithms/cartesian_product.h"
@@ -6,9 +7,20 @@
 
 
 SEXP next_replace_permutations(SEXP _n, SEXP _r, SEXP _d, SEXP state, SEXP labels, SEXP _type) {
+    size_t i, j, k;
+
     size_t n = as_uint(_n);
     size_t r = as_uint(_r);
-    int d = as_uint(_d);
+    double dd;
+    int d = Rf_asInteger(_d);
+    if (d == -1) {
+        dd = 1;
+        for (i=0; i<r; i++) {
+            dd = dd * n;
+        }
+    } else {
+        dd = as_uint(_d);
+    }
 
     int ltype = TYPEOF(labels);
     int* labels_intp;
@@ -18,7 +30,12 @@ SEXP next_replace_permutations(SEXP _n, SEXP _r, SEXP _d, SEXP state, SEXP label
 
     char type = CHAR(Rf_asChar(_type))[0];
 
-    size_t i, j, k;
+    if (type == 'l') {
+        if (dd > INT_MAX) Rf_error("too many results");
+    } else {
+        if (dd * r > INT_MAX) Rf_error("too many results");
+    }
+    d = round(dd);
 
     size_t *sizes;
     sizes = (size_t*) malloc(r*sizeof(*sizes));

@@ -5,11 +5,20 @@
 #include "algorithms/multiset_combination.h"
 #include "utils.h"
 
+double _ncomb_f(int* f, size_t flen, size_t r);
 
 SEXP next_multiset_combinations(SEXP _n, SEXP _r, SEXP _d, SEXP state, SEXP labels, SEXP f, SEXP _type) {
+    size_t i, j, k;
+
     size_t n = as_uint(_n);
     size_t r = as_uint(_r);
-    int d = as_uint(_d);
+    double dd;
+    int d = Rf_asInteger(_d);
+    if (d == -1) {
+        dd = _ncomb_f(INTEGER(f), Rf_length(f), r);
+    } else {
+        dd = as_uint(_d);
+    }
 
     int ltype = TYPEOF(labels);
     int* labels_intp;
@@ -19,7 +28,12 @@ SEXP next_multiset_combinations(SEXP _n, SEXP _r, SEXP _d, SEXP state, SEXP labe
 
     char type = CHAR(Rf_asChar(_type))[0];
 
-    size_t i, j, k;
+    if (type == 'l') {
+        if (dd > INT_MAX) Rf_error("too many results");
+    } else {
+        if (dd * r > INT_MAX) Rf_error("too many results");
+    }
+    d = round(dd);
 
     SEXP ms;
     unsigned int* mp;

@@ -1,14 +1,30 @@
 #define R_NO_REMAP
+#include <limits.h>
+#include <math.h>
 #include <R.h>
 #include <Rinternals.h>
 #include <gmp.h>
 #include "algorithms/permutation.h"
 #include "utils.h"
 
-
 SEXP next_permutations(SEXP _n, SEXP _d, SEXP state, SEXP labels, SEXP f, SEXP _type) {
+    size_t i, j, k;
+
     size_t n = as_uint(_n);
-    int d = as_uint(_d);
+    double dd;
+    int d = Rf_asInteger(_d);
+    if (d == -1) {
+        if (f == R_NilValue) {
+            dd = 1;
+            for (i=2; i<=n; i++) {
+                dd = dd * i;
+            }
+        } else {
+            dd = multichoose(INTEGER(f), Rf_length(f));
+        }
+    } else {
+        dd = as_uint(_d);
+    }
 
     int ltype = TYPEOF(labels);
     int* labels_intp;
@@ -18,7 +34,12 @@ SEXP next_permutations(SEXP _n, SEXP _d, SEXP state, SEXP labels, SEXP f, SEXP _
 
     char type = CHAR(Rf_asChar(_type))[0];
 
-    size_t i, j, k;
+    if (type == 'l') {
+        if (dd > INT_MAX) Rf_error("too many results");
+    } else {
+        if (dd * n > INT_MAX) Rf_error("too many results");
+    }
+    d = round(dd);
 
     SEXP as;
     unsigned int* ap;
@@ -230,7 +251,7 @@ SEXP next_permutations(SEXP _n, SEXP _d, SEXP state, SEXP labels, SEXP f, SEXP _
     return result;
 }
 
-double _multichoose(int* f, size_t flen) {
+double _nperm_n(int* f, size_t flen) {
     double out = 1;
     size_t i, j, k;
     k = 0;
@@ -243,13 +264,13 @@ double _multichoose(int* f, size_t flen) {
     return out;
 }
 
-SEXP multichoose(SEXP f) {
+SEXP nperm_n(SEXP f) {
     int* fp = INTEGER(f);
     size_t flen = Rf_length(f);
-    return Rf_ScalarReal(_multichoose(fp, flen));
+    return Rf_ScalarReal(multichoose(fp, flen));
 }
 
-char* _multichoose_bigz(int* f, size_t flen) {
+char* _nperm_n_bigz(int* f, size_t flen) {
     mpz_t z;
     mpz_init(z);
     mpz_set_ui(z, 1);
@@ -268,10 +289,10 @@ char* _multichoose_bigz(int* f, size_t flen) {
     return out;
 }
 
-SEXP multichoose_bigz(SEXP f) {
+SEXP nperm_n_bigz(SEXP f) {
     int* fp = INTEGER(f);
     size_t flen = Rf_length(f);
-    char* c = _multichoose_bigz(fp, flen);
+    char* c = _nperm_n_bigz(fp, flen);
     SEXP out = Rf_mkString(c);
     free(c);
     return out;

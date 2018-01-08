@@ -27,8 +27,7 @@ Permutations <- R6::R6Class(
             private$null_pending <- FALSE
         },
         collect = function(type = "r") {
-            P <- npermutations(self$n, self$r, self$x, self$f, self$replace)
-            out <- self$getnext(P, type, drop = FALSE)
+            out <- self$getnext(-1L, type, drop = FALSE)
             self$reset()
             out
         },
@@ -149,8 +148,7 @@ permutations <- function(n, r=n, x=NULL, f=NULL, replace=FALSE, type = "r") {
             n <- sum(f)
         }
     }
-    P <- npermutations(n, r, x, f, replace)
-    next_permutations(n, r, P, NULL, x, f, replace, type)
+    next_permutations(n, r, -1L, NULL, x, f, replace, type)
 }
 
 
@@ -184,11 +182,11 @@ npermutations <- function(n, r=n, x=NULL, f=NULL, replace=FALSE, bigz=FALSE) {
             if (n == r) {
                 out <- gmp::factorialZ(n)
             } else {
-                out <- out <- .Call("npr_bigz", PACKAGE = "arrangements", n, r)
+                out <- out <- .Call("nperm_k_bigz", PACKAGE = "arrangements", n, r)
             }
         } else {
             if (n == r) {
-                out <- .Call("multichoose_bigz", PACKAGE = "arrangements", as_uint_array(f))
+                out <- .Call("nperm_n_bigz", PACKAGE = "arrangements", as_uint_array(f))
             } else {
                 out <- .Call("nperm_f_bigz", PACKAGE = "arrangements", as_uint_array(f), r)
             }
@@ -203,11 +201,11 @@ npermutations <- function(n, r=n, x=NULL, f=NULL, replace=FALSE, bigz=FALSE) {
             if (n == r) {
                 out <- factorial(n)
             } else {
-                out <- .Call("npr", PACKAGE = "arrangements", n, r)
+                out <- .Call("nperm_k", PACKAGE = "arrangements", n, r)
             }
         } else {
             if (n == r) {
-                out <- .Call("multichoose", PACKAGE = "arrangements", as_uint_array(f))
+                out <- .Call("nperm_n", PACKAGE = "arrangements", as_uint_array(f))
             } else {
                 out <- .Call("nperm_f", PACKAGE = "arrangements", as_uint_array(f), r)
             }
