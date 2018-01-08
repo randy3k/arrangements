@@ -1,8 +1,11 @@
 # Fast Generators and Iterators of Permutations, Combinations and Partitions
 
-Latest Documentation: [http://randy3k.github.io/arrangements](https://randy3k.github.io/arrangements)
+[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/arrangements)](https://cran.r-project.org/package=arrangements)
 
 Github: [https://github.com/randy3k/arrangements](https://github.com/randy3k/arrangements)
+
+Documentation: [http://randy3k.github.io/arrangements](https://randy3k.github.io/arrangements)
+
 
 Fast generators and iterators of permutations, combinations and partitions.
 The iterators allow users to generate arrangements in a memory efficient
