@@ -1,11 +1,11 @@
 #' Combinations class
 #'
 #' \preformatted{
-#' Combinations$new(n, r, x = NULL, f = NULL, replace = FALSE)
+#' Combinations$new(n, k, x = NULL, f = NULL, replace = FALSE)
 #' }
 #' @param n integer: number of total items;
 #'          \code{n} may be implicitly determined by \code{x} and \code{f} if missing
-#' @param r integer: number of selected items
+#' @param k integer: number of selected items
 #' @param x a vector: optional labeled vector
 #' @param f an integer vector: frequency for each item
 #' @param replace with/without replacement
@@ -22,15 +22,15 @@ Combinations <- R6::R6Class(
     ),
     public = list(
         n = NULL,
-        r = NULL,
+        k = NULL,
         x = NULL,
         f = NULL,
         replace = NULL,
-        initialize = function(n, r, x = NULL, f = NULL, replace = FALSE) {
+        initialize = function(n, k, x = NULL, f = NULL, replace = FALSE) {
             (n %% 1 == 0  && n >= 0) || stop("expect non-negative integer")
-            (r %% 1 == 0  && r >= 0) || stop("expect non-negative integer")
+            (k %% 1 == 0  && k >= 0) || stop("expect non-negative integer")
             self$n <- as.integer(n)
-            self$r <- as.integer(r)
+            self$k <- as.integer(k)
             self$x <- x
             self$f <- as_uint_array(f)
             self$replace <- replace
@@ -51,7 +51,7 @@ Combinations <- R6::R6Class(
                 self$reset()
             } else {
                 out <- next_combinations(
-                    self$n, self$r, d, private$state, self$x, self$f, self$replace, type)
+                    self$n, self$k, d, private$state, self$x, self$f, self$replace, type)
                 if (type == "r"){
                     if (nrow(out) == 0) {
                         out <- NULL
@@ -87,14 +87,14 @@ Combinations <- R6::R6Class(
             out
         },
         print = function(...) {
-            cat("Combinations of", self$r, " items from", self$n, "items\n")
+            cat("Combinations from", self$n, "to", self$k, "\n")
             invisible(self)
         }
     )
 )
 
-next_combinations <- function(n, r, d, state, x, f, replace, type) {
-    if (r == 0) {
+next_combinations <- function(n, k, d, state, x, f, replace, type) {
+    if (k == 0) {
         if (type == "r") {
             out <- integer(0)
             dim(out) <- c(1, 0)
@@ -109,18 +109,18 @@ next_combinations <- function(n, r, d, state, x, f, replace, type) {
             "next_replace_combinations",
             PACKAGE = "arrangements",
             n,
-            r,
+            k,
             d,
             state,
             x,
             type)
-    } else if (n < r) {
+    } else if (n < k) {
         if (type == "r") {
             out <- integer(0)
-            dim(out) <- c(0, r)
+            dim(out) <- c(0, k)
         } else if (type == "c") {
             out <- integer(0)
-            dim(out) <- c(r, 0)
+            dim(out) <- c(k, 0)
         } else {
             out <- list()
         }
@@ -129,7 +129,7 @@ next_combinations <- function(n, r, d, state, x, f, replace, type) {
             "next_combinations",
             PACKAGE = "arrangements",
             n,
-            r,
+            k,
             d,
             state,
             x,
@@ -139,7 +139,7 @@ next_combinations <- function(n, r, d, state, x, f, replace, type) {
             "next_multiset_combinations",
             PACKAGE = "arrangements",
             n,
-            r,
+            k,
             d,
             state,
             x,
@@ -151,7 +151,7 @@ next_combinations <- function(n, r, d, state, x, f, replace, type) {
 
 #' Combinations generator
 #' @export
-combinations <- function(n, r, x=NULL, f=NULL, replace=FALSE, type = "r") {
+combinations <- function(n, k, x=NULL, f=NULL, replace=FALSE, type = "r") {
     if (missing(n)) {
         if (is.null(f) && !is.null(x)) {
             n <- length(x)
@@ -159,12 +159,12 @@ combinations <- function(n, r, x=NULL, f=NULL, replace=FALSE, type = "r") {
             n <- sum(f)
         }
     }
-    next_combinations(n, r, -1L, NULL, x, f, replace, type)
+    next_combinations(n, k, -1L, NULL, x, f, replace, type)
 }
 
 #' Combinations iterator
 #' @export
-icombinations <- function(n, r, x=NULL, f=NULL, replace = FALSE) {
+icombinations <- function(n, k, x=NULL, f=NULL, replace = FALSE) {
     if (missing(n)) {
         if (is.null(f) && !is.null(x)) {
             n <- length(x)
@@ -172,12 +172,12 @@ icombinations <- function(n, r, x=NULL, f=NULL, replace = FALSE) {
             n <- sum(f)
         }
     }
-    Combinations$new(n, r, x, f, replace)
+    Combinations$new(n, k, x, f, replace)
 }
 
 #' Number of combinations
 #' @export
-ncombinations <- function(n, r, x=NULL, f=NULL, replace=FALSE, bigz=FALSE) {
+ncombinations <- function(n, k, x=NULL, f=NULL, replace=FALSE, bigz=FALSE) {
     if (missing(n)) {
         if (is.null(f) && !is.null(x)) {
             n <- length(x)
@@ -185,29 +185,31 @@ ncombinations <- function(n, r, x=NULL, f=NULL, replace=FALSE, bigz=FALSE) {
             n <- sum(f)
         }
     }
+    (n %% 1 == 0  && n >= 0) || stop("expect non-negative integer")
+    (k %% 1 == 0  && k >= 0) || stop("expect non-negative integer")
     if (!is.null(f)) {
         f <- as_uint_array(f)
     }
     if (bigz) {
         if (replace) {
-            out <- gmp::chooseZ(n + r - 1, r)
-        } else if (n < r) {
+            out <- gmp::chooseZ(n + k - 1, k)
+        } else if (n < k) {
             out <- 0
         } else if (is.null(f)) {
-            out <- gmp::chooseZ(n, r)
+            out <- gmp::chooseZ(n, k)
         } else {
-            out <- .Call("ncomb_f_bigz", PACKAGE = "arrangements", as_uint_array(f), r)
+            out <- .Call("ncomb_f_bigz", PACKAGE = "arrangements", as_uint_array(f), k)
         }
 
     } else {
         if (replace) {
-            out <- choose(n + r - 1, r)
-        } else if (n < r) {
+            out <- choose(n + k - 1, k)
+        } else if (n < k) {
             out <- 0
         } else if (is.null(f)) {
-            out <- choose(n, r)
+            out <- choose(n, k)
         } else {
-            out <- .Call("ncomb_f", PACKAGE = "arrangements", as_uint_array(f), r)
+            out <- .Call("ncomb_f", PACKAGE = "arrangements", as_uint_array(f), k)
         }
     }
     convertz(out, bigz)

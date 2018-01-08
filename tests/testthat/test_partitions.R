@@ -35,6 +35,7 @@ test_that("Integer partitions - ascending partitions", {
     expect_equal(part[[42]], 10)
     expect_true(all(sapply(part, sum) == 10))
 
+    expect_error(partitions(150), "too many results")
     expect_error(partitions(-1), "expect non-negative integer")
     expect_error(partitions(1.5), "expect non-negative integer")
 })
@@ -63,6 +64,7 @@ test_that("Integer partitions - descending partitions", {
     expect_equal(part[[42]], rep(1, 10))
     expect_true(all(sapply(part, sum) == 10))
 
+    expect_error(partitions(150, descending = TRUE), "too many results")
     expect_error(partitions(-1, descending = TRUE), "expect non-negative integer")
     expect_error(partitions(1.5, descending = TRUE), "expect non-negative integer")
 })

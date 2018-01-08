@@ -37,6 +37,7 @@ test_that("Integer k-partitions - ascending partitions", {
     expect_equal(part[[42]], rep(2, 10))
     expect_true(all(sapply(part, sum) == 20))
 
+    expect_error(partitions(200, 50), "too many results")
     expect_equal(dim(partitions(20, 21)), c(0, 21))
     expect_equal(dim(partitions(20, 21, type = "c")), c(21, 0))
     expect_equal(length(partitions(20, 21, type = "l")), 0)
@@ -68,6 +69,7 @@ test_that("Integer k-partitions - descending partitions", {
     expect_equal(part[[42]], rep(2, 10))
     expect_true(all(sapply(part, sum) == 20))
 
+    expect_error(partitions(200, 50, descending = TRUE), "too many results")
     expect_equal(dim(partitions(20, 21, descending = TRUE)), c(0, 21))
     expect_equal(dim(partitions(20, 21, descending = TRUE, type = "c")), c(21, 0))
     expect_equal(length(partitions(20, 21, descending = TRUE, type = "l")), 0)

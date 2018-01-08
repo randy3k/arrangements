@@ -7,8 +7,8 @@ test_that("Permutations - npermutations", {
     expect_error(npermutations(x = LETTERS[1:13]), "integer overflow")
     expect_equal(npermutations(13, bigz = TRUE), gmp::as.bigz("6227020800"))
     expect_equal(npermutations(0), 1)
-    # expect_error(npermutations(-1), "non-negative")
-    # expect_error(npermutations(1.5), "non-negative")
+    expect_error(npermutations(-1), "expect non-negative integer")
+    expect_error(npermutations(1.5), "expect non-negative integer")
 })
 
 test_that("Permutations - permutations", {
@@ -35,8 +35,9 @@ test_that("Permutations - permutations", {
     expect_equal(perm[1, ], LETTERS[1:5])
     expect_equal(perm[120, ], LETTERS[5:1])
 
-    # expect_error(permutations(-1), "non-negative")
-    # expect_error(permutations(1.5), "non-negative")
+    expect_error(permutations(13), "too many results")
+    expect_error(permutations(-1), "expect non-negative integer")
+    expect_error(permutations(1.5), "expect non-negative integer")
     expect_equal(dim(permutations(0)), c(1, 0))
 })
 
@@ -66,8 +67,8 @@ test_that("Permutations - ipermutations", {
     expect_equal(length(iperm$getnext(10, type = "l")), 8)
     expect_equal(iperm$getnext(type = "l"), NULL)
 
-    # expect_error(ipermutations(-1), "non-negative")
-    # expect_error(ipermutations(1.5), "non-negative")
+    expect_error(ipermutations(-1), "expect non-negative integer")
+    expect_error(ipermutations(1.5), "expect non-negative integer")
 })
 
 
@@ -80,8 +81,8 @@ test_that("Multiset Permutations - npermutations", {
     expect_error(npermutations(x = LETTERS[1:3], f = c(10, 5, 10)), "integer overflow")
     expect_equal(npermutations(f = c(10, 5, 10), bigz = TRUE), gmp::as.bigz("9816086280"))
     expect_equal(npermutations(f = c(0, 0, 0)), 1)
-    # expect_error(npermutations(f = c(2, -1, 0)), "non-negative")
-    # expect_error(npermutations(f = c(2, 2, 1.5)), "non-negative")
+    expect_error(npermutations(f = c(2, -1, 0)), "expect non-negative integer")
+    expect_error(npermutations(f = c(2, 2, 1.5)), "expect non-negative integer")
 })
 
 test_that("Multiset Permutations - permutations", {
@@ -108,8 +109,9 @@ test_that("Multiset Permutations - permutations", {
     expect_equal(perm[1, ], LETTERS[c(1, 1, 1, 2, 3, 3, 3)])
     expect_equal(perm[140, ], LETTERS[c(3, 3, 3, 2, 1, 1, 1)])
 
-    # expect_error(permutations(f = c(2, -1, 0)), "non-negative")
-    # expect_error(permutations(f = c(2, 2, 1.5)), "non-negative")
+    expect_error(permutations(f = c(10, 5, 10)), "too many results")
+    expect_error(permutations(f = c(2, -1, 0)), "expect non-negative integer")
+    expect_error(permutations(f = c(2, 2, 1.5)), "expect non-negative integer")
     expect_equal(dim(permutations(f = c(0, 0, 0))), c(1, 0))
 })
 
@@ -139,6 +141,6 @@ test_that("Multiset Permutations - ipermutations", {
     expect_equal(length(iperm$getnext(10, type = "l")), 8)
     expect_equal(iperm$getnext(type = "l"), NULL)
 
-    # expect_error(ipermutations(f = c(2, -1, 0)), "non-negative")
-    # expect_error(ipermutations(f = c(2, 2, 1.5)), "non-negative")
+    expect_error(ipermutations(f = c(2, -1, 0)), "expect non-negative integer")
+    expect_error(ipermutations(f = c(2, 2, 1.5)), "expect non-negative integer")
 })

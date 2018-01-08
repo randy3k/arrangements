@@ -1,11 +1,11 @@
 #' Permutations class
 #'
 #' \preformatted{
-#' Permutations$new(n, r, x = NULL, f = NULL, replace = FALSE)
+#' Permutations$new(n, k, x = NULL, f = NULL, replace = FALSE)
 #' }
 #' @param n integer: number of total items;
 #'          \code{n} may be implicitly determined by \code{x} and \code{f} if missing
-#' @param r integer: number of selected items
+#' @param k integer: number of selected items
 #' @param x a vector: optional labeled vector
 #' @param f an integer vector: frequency for each item
 #' @param replace with/without replacement
@@ -22,15 +22,15 @@ Permutations <- R6::R6Class(
     ),
     public = list(
         n = NULL,
-        r = NULL,
+        k = NULL,
         x = NULL,
         f = NULL,
         replace = NULL,
-        initialize = function(n, r, x=NULL, f=NULL, replace = FALSE) {
+        initialize = function(n, k, x=NULL, f=NULL, replace = FALSE) {
             (n %% 1 == 0  && n >= 0) || stop("expect non-negative integer")
-            (r %% 1 == 0  && r >= 0) || stop("expect non-negative integer")
+            (k %% 1 == 0  && k >= 0) || stop("expect non-negative integer")
             self$n <- as.integer(n)
-            self$r <- as.integer(r)
+            self$k <- as.integer(k)
             self$x <- x
             self$f <- as_uint_array(f)
             self$replace <- replace
@@ -51,7 +51,7 @@ Permutations <- R6::R6Class(
                 self$reset()
             } else {
                 out <- next_permutations(
-                    self$n, self$r, d, private$state, self$x, self$f, self$replace, type)
+                    self$n, self$k, d, private$state, self$x, self$f, self$replace, type)
                 if (type == "r"){
                     if (nrow(out) == 0) {
                         out <- NULL
@@ -87,18 +87,18 @@ Permutations <- R6::R6Class(
             out
         },
         print = function(...) {
-            if (is.null(self$r)) {
+            if (is.null(self$k)) {
                 cat("Permutations of", self$n, "items\n")
             } else {
-                cat("Permutations of", self$r, "items from", self$n, "items\n")
+                cat("Permutations of", self$k, "items from", self$n, "items\n")
             }
             invisible(self)
         }
     )
 )
 
-next_permutations <- function(n, r, d, state, x, f, replace, type) {
-    if (r == 0) {
+next_permutations <- function(n, k, d, state, x, f, replace, type) {
+    if (k == 0) {
         if (type == "r") {
             out <- integer(0)
             dim(out) <- c(1, 0)
@@ -113,22 +113,22 @@ next_permutations <- function(n, r, d, state, x, f, replace, type) {
             "next_replace_permutations",
             PACKAGE = "arrangements",
             n,
-            r,
+            k,
             d,
             state,
             x,
             type)
-    } else if (n < r) {
+    } else if (n < k) {
         if (type == "r") {
             out <- integer(0)
-            dim(out) <- c(0, r)
+            dim(out) <- c(0, k)
         } else if (type == "c") {
             out <- integer(0)
-            dim(out) <- c(r, 0)
+            dim(out) <- c(k, 0)
         } else {
             out <- list()
         }
-    } else if (n == r) {
+    } else if (n == k) {
         out <- .Call(
             "next_permutations",
             PACKAGE = "arrangements",
@@ -143,7 +143,7 @@ next_permutations <- function(n, r, d, state, x, f, replace, type) {
             "next_k_permutations",
             PACKAGE = "arrangements",
             n,
-            r,
+            k,
             d,
             state,
             x,
@@ -155,7 +155,7 @@ next_permutations <- function(n, r, d, state, x, f, replace, type) {
 
 #' Permutations generator
 #' @export
-permutations <- function(n, r=n, x=NULL, f=NULL, replace=FALSE, type = "r") {
+permutations <- function(n, k=n, x=NULL, f=NULL, replace=FALSE, type = "r") {
     if (missing(n)) {
         if (is.null(f) && !is.null(x)) {
             n <- length(x)
@@ -163,13 +163,13 @@ permutations <- function(n, r=n, x=NULL, f=NULL, replace=FALSE, type = "r") {
             n <- sum(f)
         }
     }
-    next_permutations(n, r, -1L, NULL, x, f, replace, type)
+    next_permutations(n, k, -1L, NULL, x, f, replace, type)
 }
 
 
 #' Permutations generator
 #' @export
-ipermutations <- function(n, r=n, x=NULL, f=NULL, replace = FALSE) {
+ipermutations <- function(n, k=n, x=NULL, f=NULL, replace = FALSE) {
     if (missing(n)) {
         if (is.null(f) && !is.null(x)) {
             n <- length(x)
@@ -177,12 +177,12 @@ ipermutations <- function(n, r=n, x=NULL, f=NULL, replace = FALSE) {
             n <- sum(f)
         }
     }
-    Permutations$new(n, r, x, f, replace)
+    Permutations$new(n, k, x, f, replace)
 }
 
 #' Number of permutations
 #' @export
-npermutations <- function(n, r=n, x=NULL, f=NULL, replace=FALSE, bigz=FALSE) {
+npermutations <- function(n, k=n, x=NULL, f=NULL, replace=FALSE, bigz=FALSE) {
     if (missing(n)) {
         if (is.null(f) && !is.null(x)) {
             n <- length(x)
@@ -190,41 +190,43 @@ npermutations <- function(n, r=n, x=NULL, f=NULL, replace=FALSE, bigz=FALSE) {
             n <- sum(f)
         }
     }
+    (n %% 1 == 0  && n >= 0) || stop("expect non-negative integer")
+    (k %% 1 == 0  && k >= 0) || stop("expect non-negative integer")
     if (bigz) {
         if (replace) {
-            out <- gmp::as.bigz(n) ^ r
-        } else if (n < r) {
+            out <- gmp::as.bigz(n) ^ k
+        } else if (n < k) {
             out <- 0
         } else if (is.null(f)) {
-            if (n == r) {
+            if (n == k) {
                 out <- gmp::factorialZ(n)
             } else {
-                out <- out <- .Call("nperm_k_bigz", PACKAGE = "arrangements", n, r)
+                out <- out <- .Call("nperm_k_bigz", PACKAGE = "arrangements", n, k)
             }
         } else {
-            if (n == r) {
+            if (n == k) {
                 out <- .Call("nperm_n_bigz", PACKAGE = "arrangements", as_uint_array(f))
             } else {
-                out <- .Call("nperm_f_bigz", PACKAGE = "arrangements", as_uint_array(f), r)
+                out <- .Call("nperm_f_bigz", PACKAGE = "arrangements", as_uint_array(f), k)
             }
         }
 
     } else {
         if (replace) {
-            out <- n ^ r
-        } else if (n < r) {
+            out <- n ^ k
+        } else if (n < k) {
             out <- 0
         } else if (is.null(f)) {
-            if (n == r) {
+            if (n == k) {
                 out <- factorial(n)
             } else {
-                out <- .Call("nperm_k", PACKAGE = "arrangements", n, r)
+                out <- .Call("nperm_k", PACKAGE = "arrangements", n, k)
             }
         } else {
-            if (n == r) {
+            if (n == k) {
                 out <- .Call("nperm_n", PACKAGE = "arrangements", as_uint_array(f))
             } else {
-                out <- .Call("nperm_f", PACKAGE = "arrangements", as_uint_array(f), r)
+                out <- .Call("nperm_f", PACKAGE = "arrangements", as_uint_array(f), k)
             }
         }
     }

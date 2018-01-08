@@ -1,10 +1,10 @@
 #' Partitions class
 #'
 #' \preformatted{
-#' Partitions$new(n, m=NULL, descending = FALSE)
+#' Partitions$new(n, k=NULL, descending = FALSE)
 #' }
 #' @param n integer to be partitioned
-#' @param m integer: number of partitions
+#' @param k integer: number of partitions
 #' @param descending logical: lexicographical or reverse lexicographical order
 #' @name Partitions-class
 NULL
@@ -19,14 +19,14 @@ Partitions <- R6::R6Class(
     ),
     public = list(
         n = NULL,
-        m = NULL,
+        k = NULL,
         descending = NULL,
-        initialize = function(n, m=NULL, descending = FALSE) {
+        initialize = function(n, k=NULL, descending = FALSE) {
             (n %% 1 == 0  && n >= 0) || stop("expect non-negative integer")
             self$n <- as.integer(n)
-            if (!is.null(m)) {
-                (m %% 1 == 0 && m >= 0) || stop("expect non-negative integer")
-                self$m <- as.integer(m)
+            if (!is.null(k)) {
+                (k %% 1 == 0 && k >= 0) || stop("expect non-negative integer")
+                self$k <- as.integer(k)
             }
             self$descending <- descending
             self$reset()
@@ -46,7 +46,7 @@ Partitions <- R6::R6Class(
                 self$reset()
             } else {
                 out <- next_partitions(
-                    self$n, self$m, d, private$state, self$descending, type)
+                    self$n, self$k, d, private$state, self$descending, type)
                 if (type == "r"){
                     if (nrow(out) == 0) {
                         out <- NULL
@@ -82,18 +82,18 @@ Partitions <- R6::R6Class(
             out
         },
         print = function(...) {
-            if (is.null(self$m)) {
+            if (is.null(self$k)) {
                 cat("Partitions of", self$n, "\n")
             } else {
-                cat("Partitions of", self$n, "into", self$m, "parts\n")
+                cat("Partitions of", self$n, "into", self$k, "parts\n")
             }
             invisible(self)
         }
     )
 )
 
-next_partitions <- function(n, m, d, state, descending, type) {
-    if (is.null(m)) {
+next_partitions <- function(n, k, d, state, descending, type) {
+    if (is.null(k)) {
         if (descending) {
             out <- .Call(
                 "next_desc_partitions",
@@ -112,13 +112,13 @@ next_partitions <- function(n, m, d, state, descending, type) {
                 type)
         }
     } else {
-        if (n < m) {
+        if (n < k) {
             if (type == "r") {
                 out <- integer(0)
-                dim(out) <- c(0, m)
+                dim(out) <- c(0, k)
             } else if (type == "c") {
                 out <- integer(0)
-                dim(out) <- c(m, 0)
+                dim(out) <- c(k, 0)
             } else {
                 out <- list()
             }
@@ -127,7 +127,7 @@ next_partitions <- function(n, m, d, state, descending, type) {
                 "next_desc_k_partitions",
                 PACKAGE = "arrangements",
                 n,
-                m,
+                k,
                 d,
                 state,
                 type)
@@ -136,7 +136,7 @@ next_partitions <- function(n, m, d, state, descending, type) {
                 "next_asc_k_partitions",
                 PACKAGE = "arrangements",
                 n,
-                m,
+                k,
                 d,
                 state,
                 type)
@@ -147,30 +147,32 @@ next_partitions <- function(n, m, d, state, descending, type) {
 
 #' Partitions generator
 #' @export
-partitions <- function(n, m=NULL, descending = FALSE, type = "r") {
-    next_partitions(n, m, -1L, NULL, descending, type)
+partitions <- function(n, k=NULL, descending = FALSE, type = "r") {
+    next_partitions(n, k, -1L, NULL, descending, type)
 }
 
 #' Partitions iterator
 #' @export
-ipartitions <- function(n, m=NULL, descending = FALSE) {
-    Partitions$new(n, m, descending)
+ipartitions <- function(n, k=NULL, descending = FALSE) {
+    Partitions$new(n, k, descending)
 }
 
 #' Number of partitions
 #' @export
-npartitions <- function(n, m=NULL, bigz=FALSE) {
-    if (is.null(m)) {
+npartitions <- function(n, k=NULL, bigz=FALSE) {
+    (n %% 1 == 0  && n >= 0) || stop("expect non-negative integer")
+    if (is.null(k)) {
         if (bigz) {
             out <- .Call("npart_bigz", PACKAGE = "arrangements", n)
         } else {
             out <- .Call("npart", PACKAGE = "arrangements", n)
         }
     } else {
+        (k %% 1 == 0  && k >= 0) || stop("expect non-negative integer")
         if (bigz) {
-            out <- .Call("npart_k_bigz", PACKAGE = "arrangements", n, m)
+            out <- .Call("npart_k_bigz", PACKAGE = "arrangements", n, k)
         } else {
-            out <- .Call("npart_k", PACKAGE = "arrangements", n, m)
+            out <- .Call("npart_k", PACKAGE = "arrangements", n, k)
         }
     }
     convertz(out, bigz)
