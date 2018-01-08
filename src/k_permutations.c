@@ -7,9 +7,9 @@
 
 
 SEXP next_k_permutations(SEXP _n, SEXP _r, SEXP _d, SEXP state, SEXP labels, SEXP f, SEXP _type) {
-    size_t n = Rf_asInteger(_n);
-    size_t r = Rf_asInteger(_r);
-    int d = Rf_asInteger(_d);
+    size_t n = as_uint(_n);
+    size_t r = as_uint(_r);
+    int d = as_uint(_d);
 
     int ltype = TYPEOF(labels);
     int* labels_intp;
@@ -41,7 +41,7 @@ SEXP next_k_permutations(SEXP _n, SEXP _r, SEXP _d, SEXP state, SEXP labels, SEX
             UNPROTECT(1);
             ap = (unsigned int*) INTEGER(as);
         }
-        if (Rf_length(f) == 0) {
+        if (f == R_NilValue) {
             for(i=0; i<n; i++) ap[i] = i;
         } else {
             fp = INTEGER(f);
@@ -245,8 +245,8 @@ double _npr(size_t n, size_t r) {
 }
 
 SEXP npr(SEXP _n, SEXP _r) {
-    size_t n = Rf_asInteger(_n);
-    size_t r = Rf_asInteger(_r);
+    size_t n = as_uint(_n);
+    size_t r = as_uint(_r);
     return Rf_ScalarReal(_npr(n, r));
 }
 
@@ -269,8 +269,8 @@ char* _npr_bigz(size_t n, size_t r) {
 }
 
 SEXP npr_bigz(SEXP _n, SEXP _r) {
-    size_t n = Rf_asInteger(_n);
-    size_t r = Rf_asInteger(_r);
+    size_t n = as_uint(_n);
+    size_t r = as_uint(_r);
     char* c = _npr_bigz(n, r);
     SEXP out = Rf_mkString(c);
     free(c);
@@ -336,7 +336,7 @@ double _nperm_f(int* f, size_t flen, size_t r) {
 SEXP nperm_f(SEXP f, SEXP _r) {
     int* fp = INTEGER(f);
     size_t flen = Rf_length(f);
-    size_t r = Rf_asInteger(_r);
+    size_t r = as_uint(_r);
     return Rf_ScalarReal(_nperm_f(fp, flen, r));
 }
 
@@ -414,7 +414,7 @@ char* _nperm_f_bigz(int* f, size_t flen, size_t r) {
 SEXP nperm_f_bigz(SEXP f, SEXP _r) {
     int* fp = INTEGER(f);
     size_t flen = Rf_length(f);
-    size_t r = Rf_asInteger(_r);
+    size_t r = as_uint(_r);
     char* c = _nperm_f_bigz(fp, flen, r);
     SEXP out = Rf_mkString(c);
     free(c);

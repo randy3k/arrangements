@@ -85,3 +85,37 @@ int as_uint(SEXP x) {
     if (y != z || z < 0) Rf_error("expect non-negative integer");
     return z;
 }
+
+SEXP as_uint_array(SEXP x) {
+    SEXP y;
+    size_t i, n;
+    double w;
+    int z;
+    int* x_intp;
+    double* x_doublep;
+    int* yp;
+
+    if (TYPEOF(x) == INTSXP) {
+        n = Rf_length(x);
+        x_intp = INTEGER(x);
+        for (i=0; i<n; i++) {
+            z = x_intp[i];
+            if (z < 0) Rf_error("expect non-negative integer");
+        }
+        return x;
+    } else if (TYPEOF(x) == REALSXP) {
+        n = Rf_length(x);
+        PROTECT(y = Rf_allocVector(INTSXP, n));
+        yp = INTEGER(y);
+        x_doublep = REAL(x);
+        for (i=0; i<n; i++) {
+            w = x_doublep[i];
+            z = (int) w;
+            if (w != z || w < 0) Rf_error("expect non-negative integer");
+            yp[i] = (int) x_doublep[i];
+        }
+        UNPROTECT(1);
+        return y;
+    }
+    return x;
+}

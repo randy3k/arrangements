@@ -13,10 +13,12 @@ Combinations <- R6::R6Class(
         f = NULL,
         replace = NULL,
         initialize = function(n, r, x=NULL, f=NULL, replace = FALSE) {
-            self$n <- n
-            self$r <- r
+            (n %% 1 == 0  && n >= 0) || stop("expect non-negative integer")
+            (r %% 1 == 0  && r >= 0) || stop("expect non-negative integer")
+            self$n <- as.integer(n)
+            self$r <- as.integer(r)
             self$x <- x
-            self$f <- f
+            self$f <- as_uint_array(f)
             self$replace <- replace
             self$reset()
         },
@@ -93,9 +95,9 @@ next_combinations <- function(n, r, d, state, x, f, replace, type) {
         out <- .Call(
             "next_replace_combinations",
             PACKAGE = "arrangements",
-            as.integer(n),
-            as.integer(r),
-            as.integer(d),
+            n,
+            r,
+            d,
             state,
             x,
             type)
@@ -113,25 +115,22 @@ next_combinations <- function(n, r, d, state, x, f, replace, type) {
         out <- .Call(
             "next_combinations",
             PACKAGE = "arrangements",
-            as.integer(n),
-            as.integer(r),
-            as.integer(d),
+            n,
+            r,
+            d,
             state,
             x,
             type)
     } else {
-        if (!is.null(f)) {
-            f <- as.integer(f)
-        }
         out <- .Call(
             "next_multiset_combinations",
             PACKAGE = "arrangements",
-            as.integer(n),
-            as.integer(r),
-            as.integer(d),
+            n,
+            r,
+            d,
             state,
             x,
-            f,
+            as_uint_array(f),
             type)
     }
     out
@@ -172,6 +171,9 @@ ncombinations <- function(n, r, x=NULL, f=NULL, replace=FALSE, bigz=FALSE) {
             n <- sum(f)
         }
     }
+    if (!is.null(f)) {
+        f <- as_uint_array(f)
+    }
     if (bigz) {
         if (replace) {
             out <- gmp::chooseZ(n + r - 1, r)
@@ -180,7 +182,7 @@ ncombinations <- function(n, r, x=NULL, f=NULL, replace=FALSE, bigz=FALSE) {
         } else if (is.null(f)) {
             out <- gmp::chooseZ(n, r)
         } else {
-            out <- .Call("ncomb_f_bigz", PACKAGE = "arrangements", as.integer(f), as.integer(r))
+            out <- .Call("ncomb_f_bigz", PACKAGE = "arrangements", as_uint_array(f), r)
         }
 
     } else {
@@ -191,7 +193,7 @@ ncombinations <- function(n, r, x=NULL, f=NULL, replace=FALSE, bigz=FALSE) {
         } else if (is.null(f)) {
             out <- choose(n, r)
         } else {
-            out <- .Call("ncomb_f", PACKAGE = "arrangements", as.integer(f), as.integer(r))
+            out <- .Call("ncomb_f", PACKAGE = "arrangements", as_uint_array(f), r)
         }
     }
     convertz(out, bigz)

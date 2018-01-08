@@ -7,8 +7,8 @@
 
 
 SEXP next_permutations(SEXP _n, SEXP _d, SEXP state, SEXP labels, SEXP f, SEXP _type) {
-    size_t n = Rf_asInteger(_n);
-    int d = Rf_asInteger(_d);
+    size_t n = as_uint(_n);
+    int d = as_uint(_d);
 
     int ltype = TYPEOF(labels);
     int* labels_intp;
@@ -40,7 +40,7 @@ SEXP next_permutations(SEXP _n, SEXP _d, SEXP state, SEXP labels, SEXP f, SEXP _
             UNPROTECT(1);
             ap = (unsigned int*) INTEGER(as);
         }
-        if ((Rf_length(f) == 0)) {
+        if (f == R_NilValue) {
             for(i=0; i<n; i++) ap[i] = i;
         } else {
             fp = INTEGER(f);

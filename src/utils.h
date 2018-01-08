@@ -12,4 +12,6 @@ SEXP resize_list(SEXP x, size_t m, size_t d);
 
 int as_uint(SEXP x);
 
+SEXP as_uint_array(SEXP x);
+
 #endif

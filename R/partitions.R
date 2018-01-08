@@ -12,9 +12,11 @@ Partitions <- R6::R6Class(
         descending = NULL,
         initialize = function(n, m=NULL, descending = FALSE) {
             (n %% 1 == 0  && n >= 0) || stop("expect non-negative integer")
-            is.null(m) || (m %% 1 == 0 && m >= 0) || stop("expect non-negative integer")
-            self$n <- n
-            self$m <- m
+            self$n <- as.integer(n)
+            if (!is.null(m)) {
+                (m %% 1 == 0 && m >= 0) || stop("expect non-negative integer")
+                self$m <- as.integer(m)
+            }
             self$descending <- descending
             self$reset()
         },

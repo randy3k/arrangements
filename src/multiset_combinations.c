@@ -7,9 +7,9 @@
 
 
 SEXP next_multiset_combinations(SEXP _n, SEXP _r, SEXP _d, SEXP state, SEXP labels, SEXP f, SEXP _type) {
-    size_t n = Rf_asInteger(_n);
-    size_t r = Rf_asInteger(_r);
-    int d = Rf_asInteger(_d);
+    size_t n = as_uint(_n);
+    size_t r = as_uint(_r);
+    int d = as_uint(_d);
 
     int ltype = TYPEOF(labels);
     int* labels_intp;
@@ -294,7 +294,7 @@ double _ncomb_f(int* f, size_t flen, size_t r) {
 SEXP ncomb_f(SEXP f, SEXP _r) {
     int* fp = INTEGER(f);
     size_t flen = Rf_length(f);
-    size_t r = Rf_asInteger(_r);
+    size_t r = as_uint(_r);
     return Rf_ScalarReal(_ncomb_f(fp, flen, r));
 }
 
@@ -347,7 +347,7 @@ char* _ncomb_f_bigz(int* f, size_t flen, size_t r) {
 SEXP ncomb_f_bigz(SEXP f, SEXP _r) {
     int* fp = INTEGER(f);
     size_t flen = Rf_length(f);
-    size_t r = Rf_asInteger(_r);
+    size_t r = as_uint(_r);
     char* c = _ncomb_f_bigz(fp, flen, r);
     SEXP out = Rf_mkString(c);
     free(c);

@@ -13,10 +13,12 @@ Permutations <- R6::R6Class(
         f = NULL,
         replace = NULL,
         initialize = function(n, r, x=NULL, f=NULL, replace = FALSE) {
-            self$n <- n
-            self$r <- r
+            (n %% 1 == 0  && n >= 0) || stop("expect non-negative integer")
+            (r %% 1 == 0  && r >= 0) || stop("expect non-negative integer")
+            self$n <- as.integer(n)
+            self$r <- as.integer(r)
             self$x <- x
-            self$f <- f
+            self$f <- as_uint_array(f)
             self$replace <- replace
             self$reset()
         },
@@ -97,9 +99,9 @@ next_permutations <- function(n, r, d, state, x, f, replace, type) {
         out <- .Call(
             "next_replace_permutations",
             PACKAGE = "arrangements",
-            as.integer(n),
-            as.integer(r),
-            as.integer(d),
+            n,
+            r,
+            d,
             state,
             x,
             type)
@@ -117,22 +119,22 @@ next_permutations <- function(n, r, d, state, x, f, replace, type) {
         out <- .Call(
             "next_permutations",
             PACKAGE = "arrangements",
-            as.integer(n),
-            as.integer(d),
+            n,
+            d,
             state,
             x,
-            as.integer(f),
+            as_uint_array(f),
             type)
     } else {
         out <- .Call(
             "next_k_permutations",
             PACKAGE = "arrangements",
-            as.integer(n),
-            as.integer(r),
-            as.integer(d),
+            n,
+            r,
+            d,
             state,
             x,
-            as.integer(f),
+            as_uint_array(f),
             type)
     }
     out
@@ -182,13 +184,13 @@ npermutations <- function(n, r=n, x=NULL, f=NULL, replace=FALSE, bigz=FALSE) {
             if (n == r) {
                 out <- gmp::factorialZ(n)
             } else {
-                out <- out <- .Call("npr_bigz", PACKAGE = "arrangements", as.integer(n), as.integer(r))
+                out <- out <- .Call("npr_bigz", PACKAGE = "arrangements", n, r)
             }
         } else {
             if (n == r) {
-                out <- .Call("multichoose_bigz", PACKAGE = "arrangements", as.integer(f))
+                out <- .Call("multichoose_bigz", PACKAGE = "arrangements", as_uint_array(f))
             } else {
-                out <- .Call("nperm_f_bigz", PACKAGE = "arrangements", as.integer(f), as.integer(r))
+                out <- .Call("nperm_f_bigz", PACKAGE = "arrangements", as_uint_array(f), r)
             }
         }
 
@@ -201,13 +203,13 @@ npermutations <- function(n, r=n, x=NULL, f=NULL, replace=FALSE, bigz=FALSE) {
             if (n == r) {
                 out <- factorial(n)
             } else {
-                out <- .Call("npr", PACKAGE = "arrangements", as.integer(n), as.integer(r))
+                out <- .Call("npr", PACKAGE = "arrangements", n, r)
             }
         } else {
             if (n == r) {
-                out <- .Call("multichoose", PACKAGE = "arrangements", as.integer(f))
+                out <- .Call("multichoose", PACKAGE = "arrangements", as_uint_array(f))
             } else {
-                out <- .Call("nperm_f", PACKAGE = "arrangements", as.integer(f), as.integer(r))
+                out <- .Call("nperm_f", PACKAGE = "arrangements", as_uint_array(f), r)
             }
         }
     }

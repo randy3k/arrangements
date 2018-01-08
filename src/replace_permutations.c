@@ -6,9 +6,9 @@
 
 
 SEXP next_replace_permutations(SEXP _n, SEXP _r, SEXP _d, SEXP state, SEXP labels, SEXP _type) {
-    size_t n = Rf_asInteger(_n);
-    size_t r = Rf_asInteger(_r);
-    int d = Rf_asInteger(_d);
+    size_t n = as_uint(_n);
+    size_t r = as_uint(_r);
+    int d = as_uint(_d);
 
     int ltype = TYPEOF(labels);
     int* labels_intp;
