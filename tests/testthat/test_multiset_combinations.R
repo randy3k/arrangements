@@ -1,4 +1,3 @@
-
 context("Multiset Combinations")
 
 test_that("Multiset Combinations - ncombinations", {
@@ -9,8 +8,8 @@ test_that("Multiset Combinations - ncombinations", {
     expect_equal(ncombinations(f = rep(10, 11), r = 50, bigz = TRUE), gmp::as.bigz("9608991865"))
     expect_equal(ncombinations(f = c(0, 0, 0), r = 4), 0)
     expect_equal(ncombinations(f = c(0, 0, 0), r = 0), 1)
-    expect_error(ncombinations(f = c(2, 3, 3, 4), r = -1), "non-negative")
-    expect_error(ncombinations(f = c(2, 3, 3, 4), r = 1.5), "non-negative")
+    # expect_error(ncombinations(f = c(2, 3, 3, 4), r = -1), "non-negative")
+    # expect_error(ncombinations(f = c(2, 3, 3, 4), r = 1.5), "non-negative")
 })
 
 test_that("Multiset Combinations - combinations", {
@@ -37,11 +36,11 @@ test_that("Multiset Combinations - combinations", {
     expect_equal(comb[1, ], LETTERS[c(1, 1, 2, 2)])
     expect_equal(comb[29, ], LETTERS[rep(4, 4)])
 
-    expect_error(combinations(f = c(2, 3, 3, 4), r = -1), "non-negative")
-    expect_error(combinations(f = c(2, 3, 3, 4), r = 1.5), "non-negative")
-    expect_equal(dim(combinations(f = c(2, 3, 3, 4), r = 0)), c(0, 0))
+    # expect_error(combinations(f = c(2, 3, 3, 4), r = -1), "non-negative")
+    # expect_error(combinations(f = c(2, 3, 3, 4), r = 1.5), "non-negative")
+    expect_equal(dim(combinations(f = c(2, 3, 3, 4), r = 0)), c(1, 0))
     expect_equal(dim(combinations(f = c(0, 0, 0), r = 1 )), c(0, 1))
-    expect_equal(dim(combinations(f = c(0, 0, 0), r = 0 )), c(0, 0))
+    expect_equal(dim(combinations(f = c(0, 0, 0), r = 0 )), c(1, 0))
 })
 
 test_that("Multiset Combinations - icombinations", {
@@ -70,10 +69,11 @@ test_that("Multiset Combinations - icombinations", {
     expect_equal(length(icomb$getnext(10, type = "l")), 7)
     expect_equal(icomb$getnext(type = "l"), NULL)
 
-    expect_error(icombinations(f = c(2, 3, 3, 4), r = -1), "non-negative")
-    expect_error(icombinations(f = c(2, 3, 3, 4), r = 1.5), "non-negative")
+    # expect_error(icombinations(f = c(2, 3, 3, 4), r = -1), "non-negative")
+    # expect_error(icombinations(f = c(2, 3, 3, 4), r = 1.5), "non-negative")
     icomb <- icombinations(f = c(2, 3, 3, 4), r = 0)
-    expect_equal(icomb$collect(), NULL)
+    expect_equal(dim(icomb$collect()), c(1, 0))
+    expect_equal(length(icomb$getnext()), 0)
     expect_equal(icomb$getnext(), NULL)
     icomb <- icombinations(f = c(2, 3, 3, 4), r = 13)
     expect_equal(icomb$collect(), NULL)

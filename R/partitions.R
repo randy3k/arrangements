@@ -11,6 +11,8 @@ Partitions <- R6::R6Class(
         m = NULL,
         descending = NULL,
         initialize = function(n, m=NULL, descending = FALSE) {
+            (n %% 1 == 0  && n >= 0) || stop("expect non-negative integer")
+            is.null(m) || (m %% 1 == 0 && m >= 0) || stop("expect non-negative integer")
             self$n <- n
             self$m <- m
             self$descending <- descending
@@ -21,13 +23,7 @@ Partitions <- R6::R6Class(
             private$null_pending <- FALSE
         },
         collect = function(type = "r") {
-            P <- tryCatch(npartitions(self$n, self$m), error = function(e) {
-                if (startsWith(e$message, "integer overflow")) {
-                    stop("too many results")
-                } else {
-                    stop(e)
-                }
-            })
+            P <- npartitions(self$n, self$m)
             out <- self$getnext(P, type, drop = FALSE)
             self$reset()
             out
@@ -43,7 +39,7 @@ Partitions <- R6::R6Class(
                     if (nrow(out) == 0) {
                         out <- NULL
                         self$reset()
-                    } else if (nrow(out) < d) {
+                    } else if (nrow(out) < d || ncol(out) == 0) {
                         private$null_pending <- TRUE
                     }
                     if (!is.null(out) && drop) {
@@ -53,7 +49,7 @@ Partitions <- R6::R6Class(
                     if (ncol(out) == 0) {
                         out <- NULL
                         self$reset()
-                    } else if (ncol(out) < d) {
+                    } else if (ncol(out) < d || nrow(out) == 0) {
                         private$null_pending <- TRUE
                     }
                     if (!is.null(out) && drop) {
@@ -85,73 +81,53 @@ Partitions <- R6::R6Class(
 )
 
 next_partitions <- function(n, m, d, state, descending, type) {
-    if (d > 1) {
-        if ((type != "l" && is.null(m) && d * n > .Machine$integer.max) ||
-                (type != "l" && !is.null(m) && d * m > .Machine$integer.max) ||
-                (type == "l" && d > .Machine$integer.max)) {
-            stop("too many results")
-        }
-    }
-
     if (is.null(m)) {
         if (descending) {
             out <- .Call(
                 "next_desc_partitions",
                 PACKAGE = "arrangements",
-                as.integer(n),
-                as.integer(d),
+                n,
+                d,
                 state,
                 type)
         } else {
             out <- .Call(
                 "next_asc_partitions",
                 PACKAGE = "arrangements",
-                as.integer(n),
-                as.integer(d),
+                n,
+                d,
                 state,
                 type)
         }
     } else {
         if (n < m) {
-            if (type == "l") {
-                out <- list()
-            } else {
+            if (type == "r") {
                 out <- integer(0)
+                dim(out) <- c(0, m)
+            } else if (type == "c") {
+                out <- integer(0)
+                dim(out) <- c(m, 0)
+            } else {
+                out <- list()
             }
         } else if (descending) {
             out <- .Call(
                 "next_desc_k_partitions",
                 PACKAGE = "arrangements",
-                as.integer(n),
-                as.integer(m),
-                as.integer(d),
+                n,
+                m,
+                d,
                 state,
                 type)
         } else {
             out <- .Call(
                 "next_asc_k_partitions",
                 PACKAGE = "arrangements",
-                as.integer(n),
-                as.integer(m),
-                as.integer(d),
+                n,
+                m,
+                d,
                 state,
                 type)
-        }
-    }
-
-    if (!is.null(out)) {
-        if (type == "r") {
-            if (is.null(m)) {
-                dim(out) <- c(length(out) / n, n)
-            } else {
-                dim(out) <- c(length(out) / m, m)
-            }
-        } else if (type == "c") {
-            if (is.null(m)) {
-                dim(out) <- c(n, length(out) / n)
-            } else {
-                dim(out) <- c(m, length(out) / m)
-            }
         }
     }
     out
@@ -159,44 +135,29 @@ next_partitions <- function(n, m, d, state, descending, type) {
 
 #" @export
 partitions <- function(n, m=NULL, descending = FALSE, type = "r") {
-    P <- tryCatch(npartitions(n, m), error = function(e) {
-        if (startsWith(e$message, "integer overflow")) {
-            stop("too many results")
-        } else {
-            stop(e)
-        }
-    })
+    P <- npartitions(n, m)
     next_partitions(n, m, P, NULL, descending, type)
 }
 
-
 #" @export
 ipartitions <- function(n, m=NULL, descending = FALSE) {
-    (n > 0 && n %% 1 == 0) || stop("n should be a positive integer")
-    is.null(m) || (m > 0 && m %% 1 == 0) || stop("m should be a positive integer")
     Partitions$new(n, m, descending)
 }
 
-
 #" @export
 npartitions <- function(n, m=NULL, bigz=FALSE) {
-    (n > 0 && n %% 1 == 0) || stop("n should be a positive integer")
-    is.null(m) || (m > 0 && m %% 1 == 0) || stop("m should be a positive integer")
-
     if (is.null(m)) {
         if (n > 120L) {
-            out <- gmp::as.bigz(.Call("npart_bigz", PACKAGE = "arrangements", as.integer(n)))
+            out <- gmp::as.bigz(.Call("npart_bigz", PACKAGE = "arrangements", n))
         } else {
-            out <- .Call("npart", PACKAGE = "arrangements", as.integer(n))
+            out <- .Call("npart", PACKAGE = "arrangements", n)
         }
     } else {
-        if (n < m) {
-            out <- 0
-        } else if (n > 158L) {
+        if (n > 158L) {
             out <- gmp::as.bigz(
-                .Call("nfixedpart_bigz", PACKAGE = "arrangements", as.integer(n), as.integer(m)))
+                .Call("nfixedpart_bigz", PACKAGE = "arrangements", n, m))
         } else {
-            out <- .Call("nfixedpart", PACKAGE = "arrangements", as.integer(n), as.integer(m))
+            out <- .Call("nfixedpart", PACKAGE = "arrangements", n, m)
         }
     }
     convertz(out, bigz)

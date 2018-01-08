@@ -77,6 +77,7 @@ SEXP next_multiset_combinations(SEXP _n, SEXP _r, SEXP _d, SEXP state, SEXP labe
         status = 1;
     }
 
+    SEXP rdim;
     SEXP result, resulti;
     int* result_intp;
     double* result_doublep;
@@ -130,6 +131,12 @@ SEXP next_multiset_combinations(SEXP _n, SEXP _r, SEXP _d, SEXP state, SEXP labe
             result = PROTECT(resize_row(result, r, d, j));
             nprotect++;
         }
+        PROTECT(rdim = Rf_allocVector(INTSXP, 2));
+        INTEGER(rdim)[0] = j;
+        INTEGER(rdim)[1] = r;
+        Rf_setAttrib(result, R_DimSymbol, rdim);
+        UNPROTECT(1);
+
     } else if (type == 'c') {
         if (labels == R_NilValue) {
             result = PROTECT(Rf_allocVector(INTSXP, r*d));
@@ -178,6 +185,12 @@ SEXP next_multiset_combinations(SEXP _n, SEXP _r, SEXP _d, SEXP state, SEXP labe
             result = PROTECT(resize_col(result, r, d, j));
             nprotect++;
         }
+        PROTECT(rdim = Rf_allocVector(INTSXP, 2));
+        INTEGER(rdim)[0] = r;
+        INTEGER(rdim)[1] = j;
+        Rf_setAttrib(result, R_DimSymbol, rdim);
+        UNPROTECT(1);
+
     } else {
         // type == "list"
         result = PROTECT(Rf_allocVector(VECSXP, d));

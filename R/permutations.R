@@ -25,14 +25,7 @@ Permutations <- R6::R6Class(
             private$null_pending <- FALSE
         },
         collect = function(type = "r") {
-            P <- tryCatch(npermutations(self$n, self$r, self$x, self$f, self$replace),
-                error = function(e) {
-                    if (startsWith(e$message, "integer overflow")) {
-                        stop("too many results")
-                    } else {
-                        stop(e)
-                    }
-            })
+            P <- npermutations(self$n, self$r, self$x, self$f, self$replace)
             out <- self$getnext(P, type, drop = FALSE)
             self$reset()
             out
@@ -48,7 +41,7 @@ Permutations <- R6::R6Class(
                     if (nrow(out) == 0) {
                         out <- NULL
                         self$reset()
-                    } else if (nrow(out) < d) {
+                    } else if (nrow(out) < d || ncol(out) == 0) {
                         private$null_pending <- TRUE
                     }
                     if (!is.null(out) && drop) {
@@ -58,7 +51,7 @@ Permutations <- R6::R6Class(
                     if (ncol(out) == 0) {
                         out <- NULL
                         self$reset()
-                    } else if (ncol(out) < d) {
+                    } else if (ncol(out) < d || nrow(out) == 0) {
                         private$null_pending <- TRUE
                     }
                     if (!is.null(out) && drop) {
@@ -90,17 +83,17 @@ Permutations <- R6::R6Class(
 )
 
 next_permutations <- function(n, r, d, state, x, f, replace, type) {
-    if (d > 1) {
-        if ((type != "l" && is.null(r) && d * r > .Machine$integer.max) ||
-                (type == "l" && d > .Machine$integer.max)) {
-            stop("too many results")
+    if (r == 0) {
+        if (type == "r") {
+            out <- integer(0)
+            dim(out) <- c(1, 0)
+        } else if (type == "c") {
+            out <- integer(0)
+            dim(out) <- c(0, 1)
+        } else {
+            out <- list()
         }
-    }
-    if (!is.null(f)) {
-        f <- as.integer(f)
-    }
-
-    if (replace) {
+    } else if (replace) {
         out <- .Call(
             "next_replace_permutations",
             PACKAGE = "arrangements",
@@ -110,11 +103,15 @@ next_permutations <- function(n, r, d, state, x, f, replace, type) {
             state,
             x,
             type)
-    } else if (r == 0 || n == 0 || n < r) {
-        if (type == "l") {
-            out <- list()
-        } else {
+    } else if (n < r) {
+        if (type == "r") {
             out <- integer(0)
+            dim(out) <- c(0, r)
+        } else if (type == "c") {
+            out <- integer(0)
+            dim(out) <- c(r, 0)
+        } else {
+            out <- list()
         }
     } else if (n == r) {
         out <- .Call(
@@ -124,7 +121,7 @@ next_permutations <- function(n, r, d, state, x, f, replace, type) {
             as.integer(d),
             state,
             x,
-            f,
+            as.integer(f),
             type)
     } else {
         out <- .Call(
@@ -135,55 +132,47 @@ next_permutations <- function(n, r, d, state, x, f, replace, type) {
             as.integer(d),
             state,
             x,
-            f,
+            as.integer(f),
             type)
-    }
-
-    if (!is.null(out)) {
-        if (type == "r") {
-            if (r > 0) {
-                dim(out) <- c(length(out) / r, r)
-            } else {
-                dim(out) <- c(0, 0)
-            }
-        } else if (type == "c") {
-            if (r > 0) {
-                dim(out) <- c(r, length(out) / r)
-            } else {
-                dim(out) <- c(0, 0)
-            }
-        }
     }
     out
 }
 
 #" @export
-permutations <- function(n, r, x=NULL, f=NULL, replace=FALSE, type = "r") {
-    n <- validate_n(n, x, f)
-    r <- validate_r(r, n, replace)
-    P <- tryCatch(npermutations(n, r, x, f, replace),
-        error = function(e) {
-            if (startsWith(e$message, "integer overflow")) {
-                stop("too many results")
-            } else {
-                stop(e)
-            }
-    })
+permutations <- function(n, r=n, x=NULL, f=NULL, replace=FALSE, type = "r") {
+    if (missing(n)) {
+        if (is.null(f) && !is.null(x)) {
+            n <- length(x)
+        } else if (!is.null(f)) {
+            n <- sum(f)
+        }
+    }
+    P <- npermutations(n, r, x, f, replace)
     next_permutations(n, r, P, NULL, x, f, replace, type)
 }
 
 
 #" @export
-ipermutations <- function(n, r, x=NULL, f=NULL, replace = FALSE) {
-    n <- validate_n(n, x, f)
-    r <- validate_r(r, n, replace)
+ipermutations <- function(n, r=n, x=NULL, f=NULL, replace = FALSE) {
+    if (missing(n)) {
+        if (is.null(f) && !is.null(x)) {
+            n <- length(x)
+        } else if (!is.null(f)) {
+            n <- sum(f)
+        }
+    }
     Permutations$new(n, r, x, f, replace)
 }
 
 #" @export
-npermutations <- function(n, r, x=NULL, f=NULL, replace=FALSE, bigz=FALSE) {
-    n <- validate_n(n, x, f)
-    r <- validate_r(r, n)
+npermutations <- function(n, r=n, x=NULL, f=NULL, replace=FALSE, bigz=FALSE) {
+    if (missing(n)) {
+        if (is.null(f) && !is.null(x)) {
+            n <- length(x)
+        } else if (!is.null(f)) {
+            n <- sum(f)
+        }
+    }
     if (bigz) {
         if (replace) {
             out <- gmp::as.bigz(n) ^ r

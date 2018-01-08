@@ -41,7 +41,7 @@ SEXP next_k_permutations(SEXP _n, SEXP _r, SEXP _d, SEXP state, SEXP labels, SEX
             UNPROTECT(1);
             ap = (unsigned int*) INTEGER(as);
         }
-        if (f == R_NilValue) {
+        if (Rf_length(f) == 0) {
             for(i=0; i<n; i++) ap[i] = i;
         } else {
             fp = INTEGER(f);
@@ -58,6 +58,7 @@ SEXP next_k_permutations(SEXP _n, SEXP _r, SEXP _d, SEXP state, SEXP labels, SEX
         status = 1;
     }
 
+    SEXP rdim;
     SEXP result, resulti;
     int* result_intp;
     double* result_doublep;
@@ -111,6 +112,12 @@ SEXP next_k_permutations(SEXP _n, SEXP _r, SEXP _d, SEXP state, SEXP labels, SEX
             result = PROTECT(resize_row(result, r, d, j));
             nprotect++;
         }
+        PROTECT(rdim = Rf_allocVector(INTSXP, 2));
+        INTEGER(rdim)[0] = j;
+        INTEGER(rdim)[1] = r;
+        Rf_setAttrib(result, R_DimSymbol, rdim);
+        UNPROTECT(1);
+
     } else if (type == 'c') {
         if (labels == R_NilValue) {
             result = PROTECT(Rf_allocVector(INTSXP, r*d));
@@ -159,6 +166,12 @@ SEXP next_k_permutations(SEXP _n, SEXP _r, SEXP _d, SEXP state, SEXP labels, SEX
             result = PROTECT(resize_col(result, r, d, j));
             nprotect++;
         }
+        PROTECT(rdim = Rf_allocVector(INTSXP, 2));
+        INTEGER(rdim)[0] = r;
+        INTEGER(rdim)[1] = j;
+        Rf_setAttrib(result, R_DimSymbol, rdim);
+        UNPROTECT(1);
+
     } else {
         // type == "list"
         result = PROTECT(Rf_allocVector(VECSXP, d));
@@ -243,6 +256,7 @@ char* _npr_bigz(size_t n, size_t r) {
     if (n < r) {
         out = (char*) malloc(sizeof(char));
         out[0] = '0';
+        return out;
     }
     mpz_t p;
     mpz_init_set_ui(p, 1);

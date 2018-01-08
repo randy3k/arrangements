@@ -7,12 +7,9 @@
 
 
 SEXP next_asc_partitions(SEXP _n, SEXP _d, SEXP state, SEXP _type) {
-    int n = Rf_asInteger(_n);
-    int d = Rf_asInteger(_d);
+    int n = as_uint(_n);
+    int d = as_uint(_d);
     char type = CHAR(Rf_asChar(_type))[0];
-    SEXP result, resulti;
-    int* resultp;
-    int nprotect = 0;
 
     size_t k, i, j;
 
@@ -46,6 +43,10 @@ SEXP next_asc_partitions(SEXP _n, SEXP _d, SEXP state, SEXP _type) {
 
     k = (ks == R_UnboundValue) ? n-1 : Rf_asInteger(ks);
 
+    SEXP rdim;
+    SEXP result, resulti;
+    int* resultp;
+    int nprotect = 0;
 
     if (type == 'r') {
         result = PROTECT(Rf_allocVector(INTSXP, n*d));
@@ -72,6 +73,12 @@ SEXP next_asc_partitions(SEXP _n, SEXP _d, SEXP state, SEXP _type) {
             result = PROTECT(resize_row(result, n, d, j));
             nprotect++;
         }
+        PROTECT(rdim = Rf_allocVector(INTSXP, 2));
+        INTEGER(rdim)[0] = j;
+        INTEGER(rdim)[1] = n;
+        Rf_setAttrib(result, R_DimSymbol, rdim);
+        UNPROTECT(1);
+
     } else if (type == 'c') {
         result = PROTECT(Rf_allocVector(INTSXP, n*d));
         nprotect++;
@@ -97,6 +104,12 @@ SEXP next_asc_partitions(SEXP _n, SEXP _d, SEXP state, SEXP _type) {
             result = PROTECT(resize_col(result, n, d, j));
             nprotect++;
         }
+        PROTECT(rdim = Rf_allocVector(INTSXP, 2));
+        INTEGER(rdim)[0] = n;
+        INTEGER(rdim)[1] = j;
+        Rf_setAttrib(result, R_DimSymbol, rdim);
+        UNPROTECT(1);
+
     } else if (type == 'l') {
         result = PROTECT(Rf_allocVector(VECSXP, d));
         nprotect++;
@@ -135,13 +148,9 @@ SEXP next_asc_partitions(SEXP _n, SEXP _d, SEXP state, SEXP _type) {
 
 
 SEXP next_desc_partitions(SEXP _n, SEXP _d, SEXP state, SEXP _type) {
-    int n = Rf_asInteger(_n);
-    int d = Rf_asInteger(_d);
+    int n = as_uint(_n);
+    int d = as_uint(_d);
     char type = CHAR(Rf_asChar(_type))[0];
-
-    SEXP result, resulti;
-    int* resultp;
-    int nprotect = 0;
 
     size_t h, k, i, j;
 
@@ -178,6 +187,11 @@ SEXP next_desc_partitions(SEXP _n, SEXP _d, SEXP state, SEXP _type) {
     h = (hs == R_UnboundValue) ? 0 : Rf_asInteger(hs);
     k = (ks == R_UnboundValue) ? 1 : Rf_asInteger(ks);
 
+    SEXP rdim;
+    SEXP result, resulti;
+    int* resultp;
+    int nprotect = 0;
+
     if (type == 'r') {
         result = PROTECT(Rf_allocVector(INTSXP, n*d));
         nprotect++;
@@ -203,6 +217,12 @@ SEXP next_desc_partitions(SEXP _n, SEXP _d, SEXP state, SEXP _type) {
             result = PROTECT(resize_row(result, n, d, j));
             nprotect++;
         }
+        PROTECT(rdim = Rf_allocVector(INTSXP, 2));
+        INTEGER(rdim)[0] = j;
+        INTEGER(rdim)[1] = n;
+        Rf_setAttrib(result, R_DimSymbol, rdim);
+        UNPROTECT(1);
+
     } else if (type == 'c') {
         result = PROTECT(Rf_allocVector(INTSXP, n*d));
         nprotect++;
@@ -228,6 +248,12 @@ SEXP next_desc_partitions(SEXP _n, SEXP _d, SEXP state, SEXP _type) {
             result = PROTECT(resize_col(result, n, d, j));
             nprotect++;
         }
+        PROTECT(rdim = Rf_allocVector(INTSXP, 2));
+        INTEGER(rdim)[0] = n;
+        INTEGER(rdim)[1] = j;
+        Rf_setAttrib(result, R_DimSymbol, rdim);
+        UNPROTECT(1);
+
     } else if (type == 'l') {
         result = PROTECT(Rf_allocVector(VECSXP, d));
         nprotect++;
@@ -266,6 +292,7 @@ SEXP next_desc_partitions(SEXP _n, SEXP _d, SEXP state, SEXP _type) {
 }
 
 int _npart(int n) {
+    if (n == 0) return 0;
     // find P(1),...,P(n) sequentially
     int i, j, k, s;
     int out;
@@ -286,12 +313,17 @@ int _npart(int n) {
 }
 
 SEXP npart(SEXP _n) {
-    int n = Rf_asInteger(_n);
+    int n = as_uint(_n);
     return Rf_ScalarInteger(_npart(n));
 }
 
 char* _npart_bigz(int n) {
     // find P(1),...,P(n) sequentially
+    char* out;
+    if (n == 0) {
+        out = (char*) malloc(sizeof(char));
+        out[0] = '0';
+    }
     int i, j, k, s;
     mpz_t* p = (mpz_t*) malloc((n+1) * sizeof(mpz_t));
     for (i=0; i<n+1; i++) mpz_init(p[i]);
@@ -315,14 +347,14 @@ char* _npart_bigz(int n) {
             }
         }
     }
-    char* out = mpz_get_str(NULL, 10, p[n]);
+    out = mpz_get_str(NULL, 10, p[n]);
     for (i=0; i<n+1; i++) mpz_clear(p[i]);
     free(p);
     return out;
 }
 
 SEXP npart_bigz(SEXP _n) {
-    int n = Rf_asInteger(_n);
+    int n = as_uint(_n);
     char* c = _npart_bigz(n);
     SEXP out = Rf_mkString(c);
     free(c);

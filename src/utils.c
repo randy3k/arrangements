@@ -78,3 +78,10 @@ SEXP resize_list(SEXP x, size_t m, size_t d) {
     UNPROTECT(2);
     return y;
 }
+
+int as_uint(SEXP x) {
+    double y = Rf_asReal(x);
+    int z = (int) y;
+    if (y != z || z < 0) Rf_error("expect non-negative integer");
+    return z;
+}

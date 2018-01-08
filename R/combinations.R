@@ -25,14 +25,7 @@ Combinations <- R6::R6Class(
             private$null_pending <- FALSE
         },
         collect = function(type = "r") {
-            P <- tryCatch(ncombinations(self$n, self$r, self$x, self$f, self$replace),
-                error = function(e) {
-                    if (startsWith(e$message, "integer overflow")) {
-                        stop("too many results")
-                    } else {
-                        stop(e)
-                    }
-            })
+            P <- ncombinations(self$n, self$r, self$x, self$f, self$replace)
             out <- self$getnext(P, type, drop = FALSE)
             self$reset()
             out
@@ -48,7 +41,7 @@ Combinations <- R6::R6Class(
                     if (nrow(out) == 0) {
                         out <- NULL
                         self$reset()
-                    } else if (nrow(out) < d) {
+                    } else if (nrow(out) < d || ncol(out) == 0) {
                         private$null_pending <- TRUE
                     }
                     if (!is.null(out) && drop) {
@@ -58,7 +51,7 @@ Combinations <- R6::R6Class(
                     if (ncol(out) == 0) {
                         out <- NULL
                         self$reset()
-                    } else if (ncol(out) < d) {
+                    } else if (ncol(out) < d || nrow(out) == 0) {
                         private$null_pending <- TRUE
                     }
                     if (!is.null(out) && drop) {
@@ -86,14 +79,17 @@ Combinations <- R6::R6Class(
 )
 
 next_combinations <- function(n, r, d, state, x, f, replace, type) {
-    if (d > 1) {
-        if ((type != "l" && is.null(r) && d * r > .Machine$integer.max) ||
-                (type == "l" && d > .Machine$integer.max)) {
-            stop("too many results")
+    if (r == 0) {
+        if (type == "r") {
+            out <- integer(0)
+            dim(out) <- c(1, 0)
+        } else if (type == "c") {
+            out <- integer(0)
+            dim(out) <- c(0, 1)
+        } else {
+            out <- list()
         }
-    }
-
-    if (replace) {
+    } else if (replace) {
         out <- .Call(
             "next_replace_combinations",
             PACKAGE = "arrangements",
@@ -103,11 +99,15 @@ next_combinations <- function(n, r, d, state, x, f, replace, type) {
             state,
             x,
             type)
-    } else if (r == 0 || n == 0 || n < r) {
-        if (type == "l") {
-            out <- list()
-        } else {
+    } else if (n < r) {
+        if (type == "r") {
             out <- integer(0)
+            dim(out) <- c(0, r)
+        } else if (type == "c") {
+            out <- integer(0)
+            dim(out) <- c(r, 0)
+        } else {
+            out <- list()
         }
     } else if (is.null(f)) {
         out <- .Call(
@@ -134,52 +134,44 @@ next_combinations <- function(n, r, d, state, x, f, replace, type) {
             f,
             type)
     }
-
-    if (!is.null(out)) {
-        if (type == "r") {
-            if (r > 0) {
-                dim(out) <- c(length(out) / r, r)
-            } else {
-                dim(out) <- c(0, 0)
-            }
-        } else if (type == "c") {
-            if (r > 0) {
-                dim(out) <- c(r, length(out) / r)
-            } else {
-                dim(out) <- c(0, 0)
-            }
-        }
-    }
     out
 }
 
 #" @export
 combinations <- function(n, r, x=NULL, f=NULL, replace=FALSE, type = "r") {
-    n <- validate_n(n, x, f)
-    r <- validate_r(r, n, replace)
-    P <- tryCatch(ncombinations(n, r, x, f, replace),
-        error = function(e) {
-            if (startsWith(e$message, "integer overflow")) {
-                stop("too many results")
-            } else {
-                stop(e)
-            }
-    })
+    if (missing(n)) {
+        if (is.null(f) && !is.null(x)) {
+            n <- length(x)
+        } else if (!is.null(f)) {
+            n <- sum(f)
+        }
+    }
+    P <- ncombinations(n, r, x, f, replace)
     next_combinations(n, r, P, NULL, x, f, replace, type)
 }
 
 
 #" @export
 icombinations <- function(n, r, x=NULL, f=NULL, replace = FALSE) {
-    n <- validate_n(n, x, f)
-    r <- validate_r(r, n, replace)
+    if (missing(n)) {
+        if (is.null(f) && !is.null(x)) {
+            n <- length(x)
+        } else if (!is.null(f)) {
+            n <- sum(f)
+        }
+    }
     Combinations$new(n, r, x, f, replace)
 }
 
 #" @export
 ncombinations <- function(n, r, x=NULL, f=NULL, replace=FALSE, bigz=FALSE) {
-    n <- validate_n(n, x, f)
-    r <- validate_r(r, n)
+    if (missing(n)) {
+        if (is.null(f) && !is.null(x)) {
+            n <- length(x)
+        } else if (!is.null(f)) {
+            n <- sum(f)
+        }
+    }
     if (bigz) {
         if (replace) {
             out <- gmp::chooseZ(n + r - 1, r)
