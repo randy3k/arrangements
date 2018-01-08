@@ -52,7 +52,7 @@ SEXP next_multiset_combinations(SEXP _n, SEXP _r, SEXP _d, SEXP state, SEXP labe
 
     if (ms == R_UnboundValue) {
         if (state == R_NilValue) {
-            mp = (unsigned int*) malloc(n * sizeof(int));
+            mp = (unsigned int*) R_alloc(n, sizeof(int));
         } else {
             ms = PROTECT(Rf_allocVector(INTSXP, n));
             Rf_defineVar(Rf_install("m"), ms, state);
@@ -73,7 +73,7 @@ SEXP next_multiset_combinations(SEXP _n, SEXP _r, SEXP _d, SEXP state, SEXP labe
 
     if (as == R_UnboundValue) {
         if (state == R_NilValue) {
-            ap = (unsigned int*) malloc(r * sizeof(int));
+            ap = (unsigned int*) R_alloc(r, sizeof(int));
         } else {
             as = PROTECT(Rf_allocVector(INTSXP, r));
             Rf_defineVar(Rf_install("a"), as, state);
@@ -254,11 +254,6 @@ SEXP next_multiset_combinations(SEXP _n, SEXP _r, SEXP _d, SEXP state, SEXP labe
             result = PROTECT(resize_list(result, d, j));
             nprotect++;
         }
-    }
-
-    if (state == R_NilValue) {
-        free(ap);
-        free(mp);
     }
 
     UNPROTECT(nprotect);

@@ -37,7 +37,7 @@ SEXP next_replace_permutations(SEXP _n, SEXP _r, SEXP _d, SEXP state, SEXP label
     d = round(dd);
 
     size_t *sizes;
-    sizes = (size_t*) malloc(r*sizeof(*sizes));
+    sizes = (size_t*) R_alloc(r, sizeof(*sizes));
     for(i=0; i<r; i++) sizes[i] = n;
 
     SEXP as;
@@ -53,7 +53,7 @@ SEXP next_replace_permutations(SEXP _n, SEXP _r, SEXP _d, SEXP state, SEXP label
 
     if (as == R_UnboundValue) {
         if (state == R_NilValue) {
-            ap = (unsigned int*) malloc(r * sizeof(int));
+            ap = (unsigned int*) R_alloc(r, sizeof(int));
         } else {
             as = PROTECT(Rf_allocVector(INTSXP, r));
             Rf_defineVar(Rf_install("a"), as, state);
@@ -231,12 +231,6 @@ SEXP next_replace_permutations(SEXP _n, SEXP _r, SEXP _d, SEXP state, SEXP label
             nprotect++;
         }
     }
-
-    if (state == R_NilValue) {
-        free(ap);
-    }
-
-    free(sizes);
 
     UNPROTECT(nprotect);
     return result;

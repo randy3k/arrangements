@@ -52,7 +52,7 @@ SEXP next_permutations(SEXP _n, SEXP _d, SEXP state, SEXP labels, SEXP f, SEXP _
 
     if (as == R_UnboundValue) {
         if (state == R_NilValue) {
-            ap = (unsigned int*) malloc(n * sizeof(int));
+            ap = (unsigned int*) R_alloc(n, sizeof(int));
         } else {
             as = PROTECT(Rf_allocVector(INTSXP, n));
             Rf_defineVar(Rf_install("a"), as, state);
@@ -239,10 +239,6 @@ SEXP next_permutations(SEXP _n, SEXP _d, SEXP state, SEXP labels, SEXP f, SEXP _
             result = PROTECT(resize_list(result, d, j));
             nprotect++;
         }
-    }
-
-    if (state == R_NilValue) {
-        free(ap);
     }
 
     UNPROTECT(nprotect);

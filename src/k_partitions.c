@@ -40,7 +40,7 @@ SEXP next_asc_k_partitions(SEXP _n, SEXP _m, SEXP _d, SEXP state, SEXP _type) {
     }
     if (as == R_UnboundValue) {
         if (state == R_NilValue) {
-            ap = (unsigned int*) malloc(n * sizeof(int));
+            ap = (unsigned int*) R_alloc(n, sizeof(int));
         } else {
             as = PROTECT(Rf_allocVector(INTSXP, n));
             Rf_defineVar(Rf_install("a"), as, state);
@@ -140,10 +140,6 @@ SEXP next_asc_k_partitions(SEXP _n, SEXP _m, SEXP _d, SEXP state, SEXP _type) {
         }
     }
 
-    if (state == R_NilValue) {
-        free(ap);
-    }
-
     UNPROTECT(nprotect);
     return result;
 }
@@ -181,7 +177,7 @@ SEXP next_desc_k_partitions(SEXP _n, SEXP _m, SEXP _d, SEXP state, SEXP _type) {
     }
     if (as == R_UnboundValue) {
         if (state == R_NilValue) {
-            ap = (unsigned int*) malloc(n * sizeof(int));
+            ap = (unsigned int*) R_alloc(n, sizeof(int));
         } else {
             as = PROTECT(Rf_allocVector(INTSXP, n));
             Rf_defineVar(Rf_install("a"), as, state);
@@ -279,10 +275,6 @@ SEXP next_desc_k_partitions(SEXP _n, SEXP _m, SEXP _d, SEXP state, SEXP _type) {
             result = PROTECT(resize_list(result, d, j));
             nprotect++;
         }
-    }
-
-    if (state == R_NilValue) {
-        free(ap);
     }
 
     UNPROTECT(nprotect);

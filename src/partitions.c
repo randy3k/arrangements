@@ -41,7 +41,7 @@ SEXP next_asc_partitions(SEXP _n, SEXP _d, SEXP state, SEXP _type) {
     }
     if (as == R_UnboundValue) {
         if (state == R_NilValue) {
-            ap = (unsigned int*) malloc(n * sizeof(int));
+            ap = (unsigned int*) R_alloc(n, sizeof(int));
         } else {
             as = PROTECT(Rf_allocVector(INTSXP, n));
             Rf_defineVar(Rf_install("a"), as, state);
@@ -150,9 +150,7 @@ SEXP next_asc_partitions(SEXP _n, SEXP _d, SEXP state, SEXP _type) {
         }
     }
 
-    if (state == R_NilValue) {
-        free(ap);
-    } else {
+    if (state != R_NilValue) {
         Rf_defineVar(Rf_install("k"), Rf_ScalarInteger((int) k), state);
     }
 
@@ -163,7 +161,7 @@ SEXP next_asc_partitions(SEXP _n, SEXP _d, SEXP state, SEXP _type) {
 
 SEXP next_desc_partitions(SEXP _n, SEXP _d, SEXP state, SEXP _type) {
     size_t h, k, i, j;
-    
+
     int n = as_uint(_n);
     double dd;
     int d = Rf_asInteger(_d);
@@ -197,7 +195,7 @@ SEXP next_desc_partitions(SEXP _n, SEXP _d, SEXP state, SEXP _type) {
     }
     if (as == R_UnboundValue) {
         if (state == R_NilValue) {
-            ap = (unsigned int*) malloc(n * sizeof(int));
+            ap = (unsigned int*) R_alloc(n, sizeof(int));
         } else {
             as = PROTECT(Rf_allocVector(INTSXP, n));
             Rf_defineVar(Rf_install("a"), as, state);
@@ -307,9 +305,7 @@ SEXP next_desc_partitions(SEXP _n, SEXP _d, SEXP state, SEXP _type) {
         }
     }
 
-    if (state == R_NilValue) {
-        free(ap);
-    } else {
+    if (state != R_NilValue) {
         Rf_defineVar(Rf_install("h"), Rf_ScalarInteger((int) h), state);
         Rf_defineVar(Rf_install("k"), Rf_ScalarInteger((int) k), state);
     }
