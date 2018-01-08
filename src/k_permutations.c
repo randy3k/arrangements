@@ -16,7 +16,7 @@ SEXP next_k_permutations(SEXP _n, SEXP _r, SEXP _d, SEXP state, SEXP labels, SEX
     double dd;
     if (Rf_asInteger(_d) == -1) {
         if (f == R_NilValue) {
-            dd = npr(n, r);
+            dd = fallfact(n, r);
         } else {
             dd = _nperm_f(INTEGER(f), Rf_length(f), r);
         }
@@ -248,7 +248,7 @@ SEXP next_k_permutations(SEXP _n, SEXP _r, SEXP _d, SEXP state, SEXP labels, SEX
 SEXP nperm_k(SEXP _n, SEXP _r) {
     size_t n = as_uint(_n);
     size_t r = as_uint(_r);
-    return Rf_ScalarReal(npr(n, r));
+    return Rf_ScalarReal(fallfact(n, r));
 }
 
 char* _nperm_k_bigz(size_t n, size_t r) {

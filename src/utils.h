@@ -14,9 +14,9 @@ int as_uint(SEXP x);
 
 SEXP as_uint_array(SEXP x);
 
-double npr(size_t n, size_t r);
+double fallfact(size_t n, size_t r);
 
-double ncr(size_t n, size_t r);
+double choose(size_t n, size_t r);
 
 double multichoose(int* f, size_t flen);
 

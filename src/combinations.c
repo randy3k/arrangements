@@ -14,7 +14,7 @@ SEXP next_combinations(SEXP _n, SEXP _r, SEXP _d, SEXP state, SEXP labels, SEXP 
     int d;
     double dd;
     if (Rf_asInteger(_d) == -1) {
-        dd = ncr(n, r);
+        dd = choose(n, r);
     } else {
         dd = as_uint(_d);
     }
