@@ -1,4 +1,18 @@
-#" @export
+#' Permutations class
+#'
+#' \preformatted{
+#' Permutations$new(n, r, x = NULL, f = NULL, replace = FALSE)
+#' }
+#' @param n integer: number of total items;
+#'          \code{n} may be implicitly determined by \code{x} and \code{f} if missing
+#' @param r integer: number of selected items
+#' @param x a vector: optional labeled vector
+#' @param f an integer vector: frequency for each item
+#' @param replace with/without replacement
+#' @name Permutations-class
+NULL
+
+#' @export
 Permutations <- R6::R6Class(
     "Permutations",
     inherit = Arrangements,
@@ -139,7 +153,8 @@ next_permutations <- function(n, r, d, state, x, f, replace, type) {
     out
 }
 
-#" @export
+#' Permutations generator
+#' @export
 permutations <- function(n, r=n, x=NULL, f=NULL, replace=FALSE, type = "r") {
     if (missing(n)) {
         if (is.null(f) && !is.null(x)) {
@@ -152,7 +167,8 @@ permutations <- function(n, r=n, x=NULL, f=NULL, replace=FALSE, type = "r") {
 }
 
 
-#" @export
+#' Permutations generator
+#' @export
 ipermutations <- function(n, r=n, x=NULL, f=NULL, replace = FALSE) {
     if (missing(n)) {
         if (is.null(f) && !is.null(x)) {
@@ -164,7 +180,8 @@ ipermutations <- function(n, r=n, x=NULL, f=NULL, replace = FALSE) {
     Permutations$new(n, r, x, f, replace)
 }
 
-#" @export
+#' Number of permutations
+#' @export
 npermutations <- function(n, r=n, x=NULL, f=NULL, replace=FALSE, bigz=FALSE) {
     if (missing(n)) {
         if (is.null(f) && !is.null(x)) {

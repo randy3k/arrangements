@@ -1,4 +1,18 @@
-#" @export
+#' Combinations class
+#'
+#' \preformatted{
+#' Combinations$new(n, r, x = NULL, f = NULL, replace = FALSE)
+#' }
+#' @param n integer: number of total items;
+#'          \code{n} may be implicitly determined by \code{x} and \code{f} if missing
+#' @param r integer: number of selected items
+#' @param x a vector: optional labeled vector
+#' @param f an integer vector: frequency for each item
+#' @param replace with/without replacement
+#' @name Combinations-class
+NULL
+
+#' @export
 Combinations <- R6::R6Class(
     "Combinations",
     inherit = Arrangements,
@@ -12,7 +26,7 @@ Combinations <- R6::R6Class(
         x = NULL,
         f = NULL,
         replace = NULL,
-        initialize = function(n, r, x=NULL, f=NULL, replace = FALSE) {
+        initialize = function(n, r, x = NULL, f = NULL, replace = FALSE) {
             (n %% 1 == 0  && n >= 0) || stop("expect non-negative integer")
             (r %% 1 == 0  && r >= 0) || stop("expect non-negative integer")
             self$n <- as.integer(n)
@@ -135,7 +149,8 @@ next_combinations <- function(n, r, d, state, x, f, replace, type) {
     out
 }
 
-#" @export
+#' Combinations generator
+#' @export
 combinations <- function(n, r, x=NULL, f=NULL, replace=FALSE, type = "r") {
     if (missing(n)) {
         if (is.null(f) && !is.null(x)) {
@@ -147,8 +162,8 @@ combinations <- function(n, r, x=NULL, f=NULL, replace=FALSE, type = "r") {
     next_combinations(n, r, -1L, NULL, x, f, replace, type)
 }
 
-
-#" @export
+#' Combinations iterator
+#' @export
 icombinations <- function(n, r, x=NULL, f=NULL, replace = FALSE) {
     if (missing(n)) {
         if (is.null(f) && !is.null(x)) {
@@ -160,7 +175,8 @@ icombinations <- function(n, r, x=NULL, f=NULL, replace = FALSE) {
     Combinations$new(n, r, x, f, replace)
 }
 
-#" @export
+#' Number of combinations
+#' @export
 ncombinations <- function(n, r, x=NULL, f=NULL, replace=FALSE, bigz=FALSE) {
     if (missing(n)) {
         if (is.null(f) && !is.null(x)) {

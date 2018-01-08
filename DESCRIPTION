@@ -3,8 +3,9 @@ Type: Package
 Title: Fast Generators and Iterators of Permutations, Combinations and Partitions
 Version: 1.0
 Date: 2018-01-07
-Author: Randy Lai
-Maintainer: Randy Lai <randy.cs.lai@gmail.com>
+Authors@R: c(
+    person("Randy", "Lai", , "randy.cs.lai@gmail.com", role = c("aut", "cre"))
+    )
 Description: Fast generators and iterators of permutations, combinations and partitions. The iterators allow users to generate arrangements in a memory efficient manner and the generated arrangements are in lexicographical (dictionary) order. Permutations and combinations can be drawn with/without replacement and support multisets. It has been demonstrated that 'arrangements' outperforms most of the existing packages of similar kind.
 URL: https://randy3k.github.io/arrangements
 License: GPL (>= 2)

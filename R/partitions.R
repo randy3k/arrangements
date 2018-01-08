@@ -1,4 +1,15 @@
-#" @export
+#' Partitions class
+#'
+#' \preformatted{
+#' Partitions$new(n, m=NULL, descending = FALSE)
+#' }
+#' @param n integer to be partitioned
+#' @param m integer: number of partitions
+#' @param descending logical: lexicographical or reverse lexicographical order
+#' @name Partitions-class
+NULL
+
+#' @export
 Partitions <- R6::R6Class(
     "Partitions",
     inherit = Arrangements,
@@ -134,17 +145,20 @@ next_partitions <- function(n, m, d, state, descending, type) {
     out
 }
 
-#" @export
+#' Partitions generator
+#' @export
 partitions <- function(n, m=NULL, descending = FALSE, type = "r") {
     next_partitions(n, m, -1L, NULL, descending, type)
 }
 
-#" @export
+#' Partitions iterator
+#' @export
 ipartitions <- function(n, m=NULL, descending = FALSE) {
     Partitions$new(n, m, descending)
 }
 
-#" @export
+#' Number of partitions
+#' @export
 npartitions <- function(n, m=NULL, bigz=FALSE) {
     if (is.null(m)) {
         if (bigz) {

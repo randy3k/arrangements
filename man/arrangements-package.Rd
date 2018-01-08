@@ -4,3 +4,10 @@
 \name{arrangements-package}
 \alias{arrangements-package}
 \title{Fast Generators and Iterators of Permutations, Combinations and Partitions}
+\description{
+The iterators allow users to generate arrangements in a memory efficient
+manner and the generated arrangements are in lexicographical (dictionary)
+order. Permutations and combinations can be drawn with/without replacement and
+support multisets. It has been demonstrated that 'arrangements' outperforms
+most of the existing packages of similar kind.
+}
