@@ -17,5 +17,5 @@ most of the existing packages of similar kind.
 Install the latest development version using
 
 ```r
-devtools::install_github("randy3k/iterpc")
+devtools::install_github("randy3k/arrangements")
 ```
