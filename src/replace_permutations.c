@@ -10,9 +10,9 @@ SEXP next_replace_permutations(SEXP _n, SEXP _r, SEXP _d, SEXP state, SEXP label
 
     size_t n = as_uint(_n);
     size_t r = as_uint(_r);
+    int d;
     double dd;
-    int d = Rf_asInteger(_d);
-    if (d == -1) {
+    if (Rf_asInteger(_d) == -1) {
         dd = 1;
         for (i=0; i<r; i++) {
             dd = dd * n;

@@ -5,17 +5,17 @@
 #include "algorithms/k_partition.h"
 #include "utils.h"
 
-double _nfixedpart(int n, int m);
+double _npart_k(int n, int m);
 
 SEXP next_asc_k_partitions(SEXP _n, SEXP _m, SEXP _d, SEXP state, SEXP _type) {
     size_t i, j;
 
     int n = as_uint(_n);
     int m = as_uint(_m);
+    int d;
     double dd;
-    int d = Rf_asInteger(_d);
-    if (d == -1) {
-        dd = _nfixedpart(n, m);
+    if (Rf_asInteger(_d) == -1) {
+        dd = _npart_k(n, m);
     } else {
         dd = as_uint(_d);
     }
@@ -150,7 +150,7 @@ SEXP next_desc_k_partitions(SEXP _n, SEXP _m, SEXP _d, SEXP state, SEXP _type) {
     double dd;
     int d = Rf_asInteger(_d);
     if (d == -1) {
-        dd = _nfixedpart(n, m);
+        dd = _npart_k(n, m);
     } else {
         dd = as_uint(_d);
     }
@@ -281,7 +281,7 @@ SEXP next_desc_k_partitions(SEXP _n, SEXP _m, SEXP _d, SEXP state, SEXP _type) {
     return result;
 }
 
-double _nfixedpart(int n, int m) {
+double _npart_k(int n, int m) {
     if (n < m) return 0;
     int n1 = n-m+1;
     double* p = (double*) malloc(n1*m * sizeof(double));
@@ -307,14 +307,14 @@ double _nfixedpart(int n, int m) {
 }
 
 
-SEXP nfixedpart(SEXP _n, SEXP _m) {
+SEXP npart_k(SEXP _n, SEXP _m) {
     int n = as_uint(_n);
     int m = as_uint(_m);
-    return Rf_ScalarReal(_nfixedpart(n, m));
+    return Rf_ScalarReal(_npart_k(n, m));
 }
 
 
-char* _nfixedpart_bigz(int n, int m) {
+char* _npart_k_bigz(int n, int m) {
     char* out;
     if (n < m) {
         out = (char*) malloc(sizeof(char));
@@ -347,10 +347,10 @@ char* _nfixedpart_bigz(int n, int m) {
     return out;
 }
 
-SEXP nfixedpart_bigz(SEXP _n, SEXP _m) {
+SEXP npart_k_bigz(SEXP _n, SEXP _m) {
     int n = as_uint(_n);
     int m = as_uint(_m);
-    char* c = _nfixedpart_bigz(n, m);
+    char* c = _npart_k_bigz(n, m);
     SEXP out = Rf_mkString(c);
     free(c);
     return out;

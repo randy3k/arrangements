@@ -11,9 +11,9 @@ SEXP next_asc_partitions(SEXP _n, SEXP _d, SEXP state, SEXP _type) {
     size_t i, j, k;
 
     int n = as_uint(_n);
+    int d;
     double dd;
-    int d = Rf_asInteger(_d);
-    if (d == -1) {
+    if (Rf_asInteger(_d) == -1) {
         dd = _npart(n);
     } else {
         dd = as_uint(_d);

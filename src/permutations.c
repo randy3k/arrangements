@@ -9,9 +9,9 @@ SEXP next_permutations(SEXP _n, SEXP _d, SEXP state, SEXP labels, SEXP f, SEXP _
     size_t i, j, k;
 
     size_t n = as_uint(_n);
+    int d;
     double dd;
-    int d = Rf_asInteger(_d);
-    if (d == -1) {
+    if (Rf_asInteger(_d) == -1) {
         if (f == R_NilValue) {
             dd = 1;
             for (i=2; i<=n; i++) {

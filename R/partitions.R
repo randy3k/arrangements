@@ -168,9 +168,9 @@ npartitions <- function(n, m=NULL, bigz=FALSE) {
         }
     } else {
         if (bigz) {
-            out <- .Call("nfixedpart_bigz", PACKAGE = "arrangements", n, m)
+            out <- .Call("npart_k_bigz", PACKAGE = "arrangements", n, m)
         } else {
-            out <- .Call("nfixedpart", PACKAGE = "arrangements", n, m)
+            out <- .Call("npart_k", PACKAGE = "arrangements", n, m)
         }
     }
     convertz(out, bigz)
