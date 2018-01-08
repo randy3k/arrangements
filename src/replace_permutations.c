@@ -1,5 +1,4 @@
 #define R_NO_REMAP
-#include <limits.h>
 #include <R.h>
 #include <Rinternals.h>
 #include "algorithms/cartesian_product.h"
