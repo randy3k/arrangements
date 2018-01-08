@@ -5,14 +5,28 @@
 #include "algorithms/k_partition.h"
 #include "utils.h"
 
+double _nfixedpart(int n, int m);
 
 SEXP next_asc_k_partitions(SEXP _n, SEXP _m, SEXP _d, SEXP state, SEXP _type) {
     size_t i, j;
 
     int n = as_uint(_n);
     int m = as_uint(_m);
-    int d = as_uint(_d);
+    double dd;
+    int d = Rf_asInteger(_d);
+    if (d == -1) {
+        dd = _nfixedpart(n, m);
+    } else {
+        dd = as_uint(_d);
+    }
     char type = CHAR(Rf_asChar(_type))[0];
+
+    if (type == 'l') {
+        if (dd > INT_MAX) Rf_error("too many results");
+    } else {
+        if (dd * m > INT_MAX) Rf_error("too many results");
+    }
+    d = round(dd);
 
     SEXP as;
     unsigned int* ap;
@@ -137,8 +151,21 @@ SEXP next_asc_k_partitions(SEXP _n, SEXP _m, SEXP _d, SEXP state, SEXP _type) {
 SEXP next_desc_k_partitions(SEXP _n, SEXP _m, SEXP _d, SEXP state, SEXP _type) {
     int n = as_uint(_n);
     int m = as_uint(_m);
-    int d = as_uint(_d);
+    double dd;
+    int d = Rf_asInteger(_d);
+    if (d == -1) {
+        dd = _nfixedpart(n, m);
+    } else {
+        dd = as_uint(_d);
+    }
     char type = CHAR(Rf_asChar(_type))[0];
+
+    if (type == 'l') {
+        if (dd > INT_MAX) Rf_error("too many results");
+    } else {
+        if (dd * m > INT_MAX) Rf_error("too many results");
+    }
+    d = round(dd);
 
     size_t i, j;
 

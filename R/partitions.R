@@ -25,8 +25,7 @@ Partitions <- R6::R6Class(
             private$null_pending <- FALSE
         },
         collect = function(type = "r") {
-            P <- npartitions(self$n, self$m)
-            out <- self$getnext(P, type, drop = FALSE)
+            out <- self$getnext(-1L, type, drop = FALSE)
             self$reset()
             out
         },
@@ -137,8 +136,7 @@ next_partitions <- function(n, m, d, state, descending, type) {
 
 #" @export
 partitions <- function(n, m=NULL, descending = FALSE, type = "r") {
-    P <- npartitions(n, m)
-    next_partitions(n, m, P, NULL, descending, type)
+    next_partitions(n, m, -1L, NULL, descending, type)
 }
 
 #" @export
