@@ -6,7 +6,7 @@
 #include "utils.h"
 
 SEXP next_permutations(SEXP _n, SEXP _d, SEXP state, SEXP labels, SEXP f, SEXP _type) {
-    size_t i, j, k;
+    size_t i, j, h;
 
     size_t n = as_uint(_n);
     int d;
@@ -63,10 +63,10 @@ SEXP next_permutations(SEXP _n, SEXP _d, SEXP state, SEXP labels, SEXP f, SEXP _
             for(i=0; i<n; i++) ap[i] = i;
         } else {
             fp = INTEGER(f);
-            k = 0;
+            h = 0;
             for (i = 0; i< Rf_length(f); i++) {
                 for (j = 0; j< fp[i]; j++) {
-                    ap[k++] = i;
+                    ap[h++] = i;
                 }
             }
         }
@@ -247,12 +247,12 @@ SEXP next_permutations(SEXP _n, SEXP _d, SEXP state, SEXP labels, SEXP f, SEXP _
 
 double _nperm_n(int* f, size_t flen) {
     double out = 1;
-    size_t i, j, k;
-    k = 0;
+    size_t i, j, h;
+    h = 0;
     for (i=0; i<flen; i++) {
         for (j=1; j<=f[i]; j++) {
-            k++;
-            out = out * k / j;
+            h++;
+            out = out * h / j;
         }
     }
     return out;
@@ -269,12 +269,12 @@ char* _nperm_n_bigz(int* f, size_t flen) {
     mpz_init(z);
     mpz_set_ui(z, 1);
 
-    size_t i, j, k;
-    k = 0;
+    size_t i, j, h;
+    h = 0;
     for (i=0; i<flen; i++) {
         for (j=1; j<=f[i]; j++) {
-            k++;
-            mpz_mul_ui(z, z, k);
+            h++;
+            mpz_mul_ui(z, z, h);
             mpz_cdiv_q_ui(z, z, j);
         }
     }

@@ -5,20 +5,20 @@
 #include "algorithms/k_permutation.h"
 #include "utils.h"
 
-double _nperm_f(int* f, size_t flen, size_t r);
+double _nperm_f(int* f, size_t flen, size_t k);
 
-SEXP next_k_permutations(SEXP _n, SEXP _r, SEXP _d, SEXP state, SEXP labels, SEXP f, SEXP _type) {
-    size_t i, j, k;
+SEXP next_k_permutations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP labels, SEXP f, SEXP _type) {
+    size_t i, j, h;
 
     size_t n = as_uint(_n);
-    size_t r = as_uint(_r);
+    size_t k = as_uint(_k);
     int d;
     double dd;
     if (Rf_asInteger(_d) == -1) {
         if (f == R_NilValue) {
-            dd = fallfact(n, r);
+            dd = fallfact(n, k);
         } else {
-            dd = _nperm_f(INTEGER(f), Rf_length(f), r);
+            dd = _nperm_f(INTEGER(f), Rf_length(f), k);
         }
     } else {
         dd = as_uint(_d);
@@ -35,7 +35,7 @@ SEXP next_k_permutations(SEXP _n, SEXP _r, SEXP _d, SEXP state, SEXP labels, SEX
     if (type == 'l') {
         if (dd > INT_MAX) Rf_error("too many results");
     } else {
-        if (dd * r > INT_MAX) Rf_error("too many results");
+        if (dd * k > INT_MAX) Rf_error("too many results");
     }
     d = round(dd);
 
@@ -63,10 +63,10 @@ SEXP next_k_permutations(SEXP _n, SEXP _r, SEXP _d, SEXP state, SEXP labels, SEX
             for(i=0; i<n; i++) ap[i] = i;
         } else {
             fp = INTEGER(f);
-            k = 0;
+            h = 0;
             for (i = 0; i< Rf_length(f); i++) {
                 for (j = 0; j< fp[i]; j++) {
-                    ap[k++] = i;
+                    ap[h++] = i;
                 }
             }
         }
@@ -84,11 +84,11 @@ SEXP next_k_permutations(SEXP _n, SEXP _r, SEXP _d, SEXP state, SEXP labels, SEX
 
     if (type == 'r') {
         if (labels == R_NilValue) {
-            result = PROTECT(Rf_allocVector(INTSXP, r*d));
+            result = PROTECT(Rf_allocVector(INTSXP, k*d));
             nprotect++;
             result_intp = INTEGER(result);
         } else {
-            result = PROTECT(Rf_allocVector(ltype, r*d));
+            result = PROTECT(Rf_allocVector(ltype, k*d));
             nprotect++;
             if (ltype == INTSXP) {
                 result_intp = INTEGER(result);
@@ -101,7 +101,7 @@ SEXP next_k_permutations(SEXP _n, SEXP _r, SEXP _d, SEXP state, SEXP labels, SEX
 
         for (j=0; j<d; j++) {
             if (status) {
-                if (!next_k_permutation(ap, n, r)) {
+                if (!next_k_permutation(ap, n, k)) {
                     status = 0;
                     break;
                 }
@@ -109,40 +109,40 @@ SEXP next_k_permutations(SEXP _n, SEXP _r, SEXP _d, SEXP state, SEXP labels, SEX
                 status = 1;
             }
             if (ltype == NILSXP) {
-                for (i=0; i<r; i++) {
+                for (i=0; i<k; i++) {
                     result_intp[j + i*d] = ap[i] + 1;
                 }
             } else if (ltype == INTSXP) {
-                for (i=0; i<r; i++) {
+                for (i=0; i<k; i++) {
                     result_intp[j + i*d] = labels_intp[ap[i]];
                 }
             } else if (ltype == REALSXP) {
-                for (i=0; i<r; i++) {
+                for (i=0; i<k; i++) {
                     result_doublep[j + i*d] = labels_doublep[ap[i]];
                 }
             } else if (ltype == STRSXP) {
-                for (i=0; i<r; i++) {
+                for (i=0; i<k; i++) {
                     SET_STRING_ELT(result, j + i*d, STRING_ELT(labels, ap[i]));
                 }
             }
         }
         if (status == 0) {
-            result = PROTECT(resize_row(result, r, d, j));
+            result = PROTECT(resize_row(result, k, d, j));
             nprotect++;
         }
         PROTECT(rdim = Rf_allocVector(INTSXP, 2));
         INTEGER(rdim)[0] = j;
-        INTEGER(rdim)[1] = r;
+        INTEGER(rdim)[1] = k;
         Rf_setAttrib(result, R_DimSymbol, rdim);
         UNPROTECT(1);
 
     } else if (type == 'c') {
         if (labels == R_NilValue) {
-            result = PROTECT(Rf_allocVector(INTSXP, r*d));
+            result = PROTECT(Rf_allocVector(INTSXP, k*d));
             nprotect++;
             result_intp = INTEGER(result);
         } else {
-            result = PROTECT(Rf_allocVector(ltype, r*d));
+            result = PROTECT(Rf_allocVector(ltype, k*d));
             nprotect++;
             if (ltype == INTSXP) {
                 result_intp = INTEGER(result);
@@ -155,7 +155,7 @@ SEXP next_k_permutations(SEXP _n, SEXP _r, SEXP _d, SEXP state, SEXP labels, SEX
 
         for (j=0; j<d; j++) {
             if (status) {
-                if (!next_k_permutation(ap, n, r)) {
+                if (!next_k_permutation(ap, n, k)) {
                     status = 0;
                     break;
                 }
@@ -163,29 +163,29 @@ SEXP next_k_permutations(SEXP _n, SEXP _r, SEXP _d, SEXP state, SEXP labels, SEX
                 status = 1;
             }
             if (ltype == NILSXP) {
-                for (i=0; i<r; i++) {
-                    result_intp[j * r + i] = ap[i] + 1;
+                for (i=0; i<k; i++) {
+                    result_intp[j * k + i] = ap[i] + 1;
                 }
             } else if (ltype == INTSXP) {
-                for (i=0; i<r; i++) {
-                    result_intp[j * r + i] = labels_intp[ap[i]];
+                for (i=0; i<k; i++) {
+                    result_intp[j * k + i] = labels_intp[ap[i]];
                 }
             } else if (ltype == REALSXP) {
-                for (i=0; i<r; i++) {
-                    result_doublep[j * r + i] = labels_doublep[ap[i]];
+                for (i=0; i<k; i++) {
+                    result_doublep[j * k + i] = labels_doublep[ap[i]];
                 }
             } else if (ltype == STRSXP) {
-                for (i=0; i<r; i++) {
-                    SET_STRING_ELT(result, j * r + i, STRING_ELT(labels, ap[i]));
+                for (i=0; i<k; i++) {
+                    SET_STRING_ELT(result, j * k + i, STRING_ELT(labels, ap[i]));
                 }
             }
         }
         if (status == 0) {
-            result = PROTECT(resize_col(result, r, d, j));
+            result = PROTECT(resize_col(result, k, d, j));
             nprotect++;
         }
         PROTECT(rdim = Rf_allocVector(INTSXP, 2));
-        INTEGER(rdim)[0] = r;
+        INTEGER(rdim)[0] = k;
         INTEGER(rdim)[1] = j;
         Rf_setAttrib(result, R_DimSymbol, rdim);
         UNPROTECT(1);
@@ -202,7 +202,7 @@ SEXP next_k_permutations(SEXP _n, SEXP _r, SEXP _d, SEXP state, SEXP labels, SEX
 
         for (j=0; j<d; j++) {
             if (status) {
-                if (!next_k_permutation(ap, n, r)) {
+                if (!next_k_permutation(ap, n, k)) {
                     status = 0;
                     break;
                 }
@@ -210,26 +210,26 @@ SEXP next_k_permutations(SEXP _n, SEXP _r, SEXP _d, SEXP state, SEXP labels, SEX
                 status = 1;
             }
             if (ltype == NILSXP) {
-                resulti = Rf_allocVector(INTSXP, r);
+                resulti = Rf_allocVector(INTSXP, k);
                 result_intp = INTEGER(resulti);
-                for (i=0; i<r; i++) {
+                for (i=0; i<k; i++) {
                     result_intp[i] = ap[i] + 1;
                 }
             } else if (ltype == INTSXP) {
-                resulti = Rf_allocVector(INTSXP, r);
+                resulti = Rf_allocVector(INTSXP, k);
                 result_intp = INTEGER(resulti);
-                for (i=0; i<r; i++) {
+                for (i=0; i<k; i++) {
                     result_intp[i] = labels_intp[ap[i]];
                 }
             } else if (ltype == REALSXP) {
-                resulti = Rf_allocVector(REALSXP, r);
+                resulti = Rf_allocVector(REALSXP, k);
                 result_doublep = REAL(resulti);
-                for (i=0; i<r; i++) {
+                for (i=0; i<k; i++) {
                     result_doublep[i] = labels_doublep[ap[i]];
                 }
             } else if (ltype == STRSXP) {
-                resulti = Rf_allocVector(STRSXP, r);
-                for (i=0; i<r; i++) {
+                resulti = Rf_allocVector(STRSXP, k);
+                for (i=0; i<k; i++) {
                     SET_STRING_ELT(resulti, i, STRING_ELT(labels, ap[i]));
                 }
             }
@@ -245,23 +245,23 @@ SEXP next_k_permutations(SEXP _n, SEXP _r, SEXP _d, SEXP state, SEXP labels, SEX
     return result;
 }
 
-SEXP nperm_k(SEXP _n, SEXP _r) {
+SEXP nperm_k(SEXP _n, SEXP _k) {
     size_t n = as_uint(_n);
-    size_t r = as_uint(_r);
-    return Rf_ScalarReal(fallfact(n, r));
+    size_t k = as_uint(_k);
+    return Rf_ScalarReal(fallfact(n, k));
 }
 
-char* _nperm_k_bigz(size_t n, size_t r) {
+char* _nperm_k_bigz(size_t n, size_t k) {
     char* out;
     size_t i;
-    if (n < r) {
+    if (n < k) {
         out = (char*) malloc(sizeof(char));
         out[0] = '0';
         return out;
     }
     mpz_t p;
     mpz_init_set_ui(p, 1);
-    for(i=0; i<r; i++) {
+    for(i=0; i<k; i++) {
         mpz_mul_ui(p, p, n - i);
     }
     out = mpz_get_str(NULL, 10, p);
@@ -269,21 +269,21 @@ char* _nperm_k_bigz(size_t n, size_t r) {
     return out;
 }
 
-SEXP nperm_k_bigz(SEXP _n, SEXP _r) {
+SEXP nperm_k_bigz(SEXP _n, SEXP _k) {
     size_t n = as_uint(_n);
-    size_t r = as_uint(_r);
-    char* c = _nperm_k_bigz(n, r);
+    size_t k = as_uint(_k);
+    char* c = _nperm_k_bigz(n, k);
     SEXP out = Rf_mkString(c);
     free(c);
     return out;
 }
 
 
-double _nperm_f(int* f, size_t flen, size_t r) {
+double _nperm_f(int* f, size_t flen, size_t k) {
     int n = 0;
-    int i, j, k;
+    int i, j, h;
     for (i=0; i<flen; i++) n += f[i];
-    if (r > n) {
+    if (k > n) {
         return 0;
     }
 
@@ -294,37 +294,37 @@ double _nperm_f(int* f, size_t flen, size_t r) {
     }
 
     double rfact = 1;
-    for (j=2; j<=r; j++) {
+    for (j=2; j<=k; j++) {
         rfact = rfact*j;
     }
-    size_t factlen = (r < maxf ? r : maxf) + 1;
+    size_t factlen = (k < maxf ? k : maxf) + 1;
     double* fact = (double*) malloc(factlen * sizeof(double));
     fact[0] = 1;
     for (j=1; j< factlen; j++) fact[j] = j * fact[j-1];
 
-    double* p = (double*) malloc((r+1) * sizeof(double));
-    for (j=0; j<=r; j++) p[j] = 0;
+    double* p = (double*) malloc((k+1) * sizeof(double));
+    for (j=0; j<=k; j++) p[j] = 0;
 
     double ptemp;
 
     for (i=0; i<flen; i++) {
         if (i == 0) {
-            for (j=0; j<=r && j<=f[i]; j++) {
+            for (j=0; j<=k && j<=f[i]; j++) {
                 p[j] = rfact / fact[j];
             }
-            ptemp = p[r];
+            ptemp = p[k];
         } else if (i < flen - 1){
-            for (j=r; j>0; j--) {
+            for (j=k; j>0; j--) {
                 ptemp = 0;
-                for(k=0; k<=f[i] && k<=j; k++) {
-                    ptemp += p[j-k] / fact[k];
+                for(h=0; h<=f[i] && h<=j; h++) {
+                    ptemp += p[j-h] / fact[h];
                 }
                 p[j] = ptemp;
             }
         } else {
             ptemp = 0;
-            for(k=0; k<=f[i] && k<=r; k++) {
-                ptemp += p[r-k] / fact[k];
+            for(h=0; h<=f[i] && h<=k; h++) {
+                ptemp += p[k-h] / fact[h];
             }
         }
     }
@@ -334,19 +334,19 @@ double _nperm_f(int* f, size_t flen, size_t r) {
     return ptemp;
 }
 
-SEXP nperm_f(SEXP f, SEXP _r) {
+SEXP nperm_f(SEXP f, SEXP _k) {
     int* fp = INTEGER(f);
     size_t flen = Rf_length(f);
-    size_t r = as_uint(_r);
-    return Rf_ScalarReal(_nperm_f(fp, flen, r));
+    size_t k = as_uint(_k);
+    return Rf_ScalarReal(_nperm_f(fp, flen, k));
 }
 
-char* _nperm_f_bigz(int* f, size_t flen, size_t r) {
+char* _nperm_f_bigz(int* f, size_t flen, size_t k) {
     int n = 0;
-    int i, j, k;
+    int i, j, h;
     char* out;
     for (i=0; i<flen; i++) n += f[i];
-    if (r > n) {
+    if (k > n) {
         out = (char*) malloc(sizeof(char));
         out[0] = '0';
         return out;
@@ -360,17 +360,17 @@ char* _nperm_f_bigz(int* f, size_t flen, size_t r) {
 
     mpz_t rfact;
     mpz_init(rfact);
-    mpz_fac_ui(rfact, r);
+    mpz_fac_ui(rfact, k);
 
-    size_t factlen = (r < maxf ? r : maxf) + 1;
+    size_t factlen = (k < maxf ? k : maxf) + 1;
     mpz_t* fact = (mpz_t*) malloc(factlen * sizeof(mpz_t));
     for (j=0; j< factlen; j++) mpz_init(fact[j]);
 
     mpz_set_ui(fact[0], 1);
     for (j=1; j< factlen; j++) mpz_mul_ui(fact[j], fact[j-1], j);
 
-    mpz_t* p = (mpz_t*) malloc((r+1) * sizeof(mpz_t));
-    for (j=0; j<=r; j++) mpz_init(p[j]);
+    mpz_t* p = (mpz_t*) malloc((k+1) * sizeof(mpz_t));
+    for (j=0; j<=k; j++) mpz_init(p[j]);
 
     mpz_t ptemp;
     mpz_init(ptemp);
@@ -379,23 +379,23 @@ char* _nperm_f_bigz(int* f, size_t flen, size_t r) {
 
     for (i=0; i<flen; i++) {
         if (i == 0) {
-            for (j=0; j<=r && j<=f[i]; j++) {
+            for (j=0; j<=k && j<=f[i]; j++) {
                 mpz_cdiv_q(p[j], rfact, fact[j]);
             }
-            mpz_set(ptemp, p[r]);
+            mpz_set(ptemp, p[k]);
         } else if (i < flen - 1){
-            for (j=r; j>0; j--) {
+            for (j=k; j>0; j--) {
                 mpz_set_ui(ptemp, 0);
-                for(k=0; k<=f[i] && k<=j; k++) {
-                    mpz_cdiv_q(ptemp2, p[j-k], fact[k]);
+                for(h=0; h<=f[i] && h<=j; h++) {
+                    mpz_cdiv_q(ptemp2, p[j-h], fact[h]);
                     mpz_add(ptemp, ptemp, ptemp2);
                 }
                 mpz_set(p[j], ptemp);
             }
         } else {
             mpz_set_ui(ptemp, 0);
-            for(k=0; k<=f[i] && k<=r; k++) {
-                mpz_cdiv_q(ptemp2, p[r-k], fact[k]);
+            for(h=0; h<=f[i] && h<=k; h++) {
+                mpz_cdiv_q(ptemp2, p[k-h], fact[h]);
                 mpz_add(ptemp, ptemp, ptemp2);
             }
         }
@@ -403,7 +403,7 @@ char* _nperm_f_bigz(int* f, size_t flen, size_t r) {
 
     out = mpz_get_str(NULL, 10, ptemp);
     for (j=0; j< factlen; j++) mpz_clear(fact[j]);
-    for (j=0; j<=r; j++) mpz_clear(p[j]);
+    for (j=0; j<=k; j++) mpz_clear(p[j]);
     free(fact);
     free(p);
     mpz_clear(rfact);
@@ -412,11 +412,11 @@ char* _nperm_f_bigz(int* f, size_t flen, size_t r) {
     return out;
 }
 
-SEXP nperm_f_bigz(SEXP f, SEXP _r) {
+SEXP nperm_f_bigz(SEXP f, SEXP _k) {
     int* fp = INTEGER(f);
     size_t flen = Rf_length(f);
-    size_t r = as_uint(_r);
-    char* c = _nperm_f_bigz(fp, flen, r);
+    size_t k = as_uint(_k);
+    char* c = _nperm_f_bigz(fp, flen, k);
     SEXP out = Rf_mkString(c);
     free(c);
     return out;

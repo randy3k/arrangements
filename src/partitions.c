@@ -347,7 +347,7 @@ char* _npart_bigz(int n) {
         out = (char*) malloc(sizeof(char));
         out[0] = '0';
     }
-    int i, j, k, s;
+    int i, j, h, s;
     mpz_t* p = (mpz_t*) malloc((n+1) * sizeof(mpz_t));
     for (i=0; i<n+1; i++) mpz_init(p[i]);
 
@@ -355,14 +355,14 @@ char* _npart_bigz(int n) {
     mpz_set_ui(p[1], 1);
     for(i=2 ; i<=n ; i++){
         mpz_set_ui(p[i], 0);
-        for (j=1, k=1, s=1; i-j>=0; k+=3, j+=k, s=-s) {
+        for (j=1, h=1, s=1; i-j>=0; h+=3, j+=h, s=-s) {
             if (s > 0){
                 mpz_add(p[i], p[i], p[i-j]);
             } else {
                 mpz_sub(p[i], p[i], p[i-j]);
             }
         }
-        for (j=2, k=2, s=1; i-j>=0; k+=3, j+=k, s=-s) {
+        for (j=2, h=2, s=1; i-j>=0; h+=3, j+=h, s=-s) {
             if (s > 0){
                 mpz_add(p[i], p[i], p[i-j]);
             } else {

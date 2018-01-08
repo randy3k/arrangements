@@ -120,34 +120,34 @@ SEXP as_uint_array(SEXP x) {
     return x;
 }
 
-double fallfact(size_t n, size_t r) {
+double fallfact(size_t n, size_t k) {
     double out;
     size_t i;
-    if (n < r) {
+    if (n < k) {
         return 0;
     }
     out = 1;
-    for(i=0; i<r; i++) {
+    for(i=0; i<k; i++) {
         out = out * (n - i);
     }
     return out;
 }
 
 
-double choose(size_t n, size_t r) {
+double choose(size_t n, size_t k) {
     double out = 1;
-    size_t i, k;
-    if (n < r) {
+    size_t h, i;
+    if (n < k) {
         return 0;
     }
-    k = 0;
-    for (i=1; i<=r; i++){
-        k++;
-        out = out * k / i;
+    h = 0;
+    for (i=1; i<=k; i++){
+        h++;
+        out = out * h / i;
     }
-    for (i=1; i<=n-r; i++){
-        k++;
-        out = out * k / i;
+    for (i=1; i<=n-k; i++){
+        h++;
+        out = out * h / i;
     }
 
     return out;
@@ -155,12 +155,12 @@ double choose(size_t n, size_t r) {
 
 double multichoose(int* f, size_t flen) {
     double out = 1;
-    size_t i, j, k;
-    k = 0;
+    size_t h, i, j;
+    h = 0;
     for (i=0; i<flen; i++) {
         for (j=1; j<=f[i]; j++) {
-            k++;
-            out = out * k / j;
+            h++;
+            out = out * h / j;
         }
     }
     return out;
