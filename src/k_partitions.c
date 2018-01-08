@@ -262,10 +262,10 @@ SEXP next_desc_k_partitions(SEXP _n, SEXP _m, SEXP _d, SEXP state, SEXP _type) {
     return result;
 }
 
-int _nfixedpart(int n, int m) {
+double _nfixedpart(int n, int m) {
     if (n < m) return 0;
     int n1 = n-m+1;
-    int* p = (int*) malloc(n1*m * sizeof(int));
+    double* p = (double*) malloc(n1*m * sizeof(double));
     int i, j, k;
 
     for (j=0; j<m; j++) {
@@ -282,7 +282,7 @@ int _nfixedpart(int n, int m) {
             }
         }
     }
-    int out = p[n1*m - 1];
+    double out = p[n1*m - 1];
     free(p);
     return out;
 }
@@ -291,7 +291,7 @@ int _nfixedpart(int n, int m) {
 SEXP nfixedpart(SEXP _n, SEXP _m) {
     int n = as_uint(_n);
     int m = as_uint(_m);
-    return Rf_ScalarInteger(_nfixedpart(n, m));
+    return Rf_ScalarReal(_nfixedpart(n, m));
 }
 
 

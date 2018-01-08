@@ -147,15 +147,14 @@ ipartitions <- function(n, m=NULL, descending = FALSE) {
 #" @export
 npartitions <- function(n, m=NULL, bigz=FALSE) {
     if (is.null(m)) {
-        if (n > 120L) {
-            out <- gmp::as.bigz(.Call("npart_bigz", PACKAGE = "arrangements", n))
+        if (bigz) {
+            out <- .Call("npart_bigz", PACKAGE = "arrangements", n)
         } else {
             out <- .Call("npart", PACKAGE = "arrangements", n)
         }
     } else {
-        if (n > 158L) {
-            out <- gmp::as.bigz(
-                .Call("nfixedpart_bigz", PACKAGE = "arrangements", n, m))
+        if (bigz) {
+            out <- .Call("nfixedpart_bigz", PACKAGE = "arrangements", n, m)
         } else {
             out <- .Call("nfixedpart", PACKAGE = "arrangements", n, m)
         }

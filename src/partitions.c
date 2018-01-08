@@ -291,12 +291,12 @@ SEXP next_desc_partitions(SEXP _n, SEXP _d, SEXP state, SEXP _type) {
     return result;
 }
 
-int _npart(int n) {
+double _npart(int n) {
     if (n == 0) return 0;
     // find P(1),...,P(n) sequentially
     int i, j, k, s;
-    int out;
-    int* p = (int*) malloc((n+1) * sizeof(int));
+    double out;
+    double* p = (double*) malloc((n+1) * sizeof(double));
     p[0] = p[1] = 1;
     for(i=2 ; i<=n ; i++){
         p[i] = 0;
@@ -314,7 +314,7 @@ int _npart(int n) {
 
 SEXP npart(SEXP _n) {
     int n = as_uint(_n);
-    return Rf_ScalarInteger(_npart(n));
+    return Rf_ScalarReal(_npart(n));
 }
 
 char* _npart_bigz(int n) {
