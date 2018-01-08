@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# Fast Generators and Iterators for Permutations, Combinations and Partitions
+# Fast Generators and Iterators of Permutations, Combinations and Partitions
 
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/arrangements)](https://cran.r-project.org/package=arrangements)
 

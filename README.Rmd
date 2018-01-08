@@ -4,7 +4,14 @@ output:
     html_preview: false
 ---
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-# Fast Generators and Iterators for Permutations, Combinations and Partitions
+
+```{r results='asis', echo = FALSE, eval = TRUE}
+d <- desc::desc(package = "arrangements")
+```
+
+```{r results="asis", echo = FALSE, eval = TRUE}
+cat(paste0("# ", paste(trimws(strsplit(d$get("Title"), "\n")$Title), collapse=" ")))
+```
 
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/arrangements)](https://cran.r-project.org/package=arrangements)
 
@@ -13,8 +20,7 @@ Github: [https://github.com/randy3k/arrangements](https://github.com/randy3k/arr
 Documentation: [http://randy3k.github.io/arrangements](https://randy3k.github.io/arrangements)
 
 
-```{r results='asis', echo = FALSE, eval = TRUE}
-d <- desc::desc(package = "arrangements")
+```{r results="asis", echo = FALSE, eval = TRUE}
 cat(d$get("Description"))
 ```
 
