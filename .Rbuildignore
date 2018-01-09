@@ -1,7 +1,8 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
-Makefile
 ^docs$
 ^inst/jl$
 ^_pkgdown\.yml$
+^man-roxygen$$
 README.Rmd
+Makefile
