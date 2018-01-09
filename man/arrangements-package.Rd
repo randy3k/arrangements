@@ -4,7 +4,7 @@
 \name{arrangements-package}
 \alias{arrangements}
 \alias{arrangements-package}
-\title{arrangements: Fast Generators and Iterators for Permutations, Combinations and Partitions}
+\title{Package 'arragements'}
 \description{
 Fast generators and iterators for permutations, combinations and partitions. The iterators allow users to generate arrangements in a memory efficient manner and the generated arrangements are in lexicographical (dictionary) order. Permutations and combinations can be drawn with/without replacement and support multisets. It has been demonstrated that 'arrangements' outperforms most of the existing packages of similar kind.
 }

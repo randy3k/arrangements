@@ -7,6 +7,24 @@
 permutations(n, k = n, x = NULL, f = NULL, replace = FALSE,
   type = "r")
 }
+\arguments{
+\item{n}{an integer, would be determined implicitly from \code{x} or \code{f} if missing}
+
+\item{k}{an integer}
+
+\item{x}{an optional vector indicating item labels}
+
+\item{f}{an integer vector of item repeat frequencies}
+
+\item{replace}{an logical to select with replacement}
+
+\item{type}{if "r", "c" or "l" is specified, the return results would be a
+"row" matrix, "column" matrix or a list respectively}
+}
+\value{
+a matrix if \code{type} is "r" or "c", a list if \code{type} is "l".
+}
 \description{
-Permutations generator
+This function generates all the permutations of selecting \code{k} items from \code{n} items.
+The results are in lexicographical order.
 }

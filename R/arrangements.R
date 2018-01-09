@@ -1,5 +1,6 @@
 #' @name arrangements-package
 #' @docType package
+#' @title Package 'arragements'
 #' @useDynLib arrangements
 "_PACKAGE"
 

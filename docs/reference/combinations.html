@@ -79,17 +79,61 @@
     </div>
 
     
-    <p>Combinations generator</p>
+    <p>This function generates all the combinations of selecting <code>k</code> items from <code>n</code> items.
+The results are in lexicographical order.</p>
     
 
     <pre class="usage"><span class='fu'>combinations</span>(<span class='no'>n</span>, <span class='no'>k</span>, <span class='kw'>x</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>f</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>replace</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"r"</span>)</pre>
-        
+    
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>n</th>
+      <td><p>an integer, would be determined implicitly from <code>x</code> or <code>f</code> if missing</p></td>
+    </tr>
+    <tr>
+      <th>k</th>
+      <td><p>an integer</p></td>
+    </tr>
+    <tr>
+      <th>x</th>
+      <td><p>an optional vector indicating item labels</p></td>
+    </tr>
+    <tr>
+      <th>f</th>
+      <td><p>an integer vector of item repeat frequencies</p></td>
+    </tr>
+    <tr>
+      <th>replace</th>
+      <td><p>an logical to select with replacement</p></td>
+    </tr>
+    <tr>
+      <th>type</th>
+      <td><p>if "r", "c" or "l" is specified, the return results would be a
+"row" matrix, "column" matrix or a list respectively</p></td>
+    </tr>
+    </table>
+    
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>a matrix if <code>type</code> is "r" or "c", a list if <code>type</code> is "l".</p>
+    
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <p><a href='icombinations.html'>icombinations</a> for iterating combinations and <a href='ncombinations.html'>ncombinations</a> to calculate number of combinations</p>
+    
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-                </ul>
+      <li><a href="#arguments">Arguments</a></li>
+      
+      <li><a href="#value">Value</a></li>
+
+      <li><a href="#see-also">See also</a></li>
+          </ul>
 
   </div>
 </div>

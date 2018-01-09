@@ -154,6 +154,14 @@ next_permutations <- function(n, k, d, state, x, f, replace, type) {
 }
 
 #' Permutations generator
+#'
+#' This function generates all the permutations of selecting `k` items from `n` items.
+#' The results are in lexicographical order.
+#'
+#' @inheritParams npermutations
+#' @param type if "r", "c" or "l" is specified, the return results would be a
+#'  "row" matrix, "column" matrix or a list respectively
+#' @return a matrix if `type` is "r" or "c", a list if `type` is "l".
 #' @export
 permutations <- function(n, k=n, x=NULL, f=NULL, replace=FALSE, type = "r") {
     if (missing(n)) {
@@ -168,6 +176,7 @@ permutations <- function(n, k=n, x=NULL, f=NULL, replace=FALSE, type = "r") {
 
 
 #' Permutations generator
+#' @inheritParams npermutations
 #' @export
 ipermutations <- function(n, k=n, x=NULL, f=NULL, replace = FALSE) {
     if (missing(n)) {
@@ -181,6 +190,7 @@ ipermutations <- function(n, k=n, x=NULL, f=NULL, replace = FALSE) {
 }
 
 #' Number of permutations
+#' @inheritParams ncombinations
 #' @export
 npermutations <- function(n, k=n, x=NULL, f=NULL, replace=FALSE, bigz=FALSE) {
     if (missing(n)) {
