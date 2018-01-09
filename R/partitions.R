@@ -2,7 +2,7 @@
 #'
 #' An R6 class of partitions iterator. [ipartitions] is a convenient wrapper for initializing the class.
 #'
-#' @section Signatures:
+#' @section Methods:
 #' \preformatted{
 #' Partitions$new(n, k, x = NULL, f = NULL, replace = FALSE)
 #' .$getnext(d = 1L, type = "r", drop = d == 1L)
