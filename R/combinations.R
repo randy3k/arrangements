@@ -96,13 +96,29 @@ Combinations <- R6::R6Class(
 next_combinations <- function(n, k, d, state, x, f, replace, type) {
     if (k == 0) {
         if (type == "r") {
-            out <- integer(0)
+            if (is.null(x)) {
+                out <- integer(0)
+            } else {
+                out <- new(typeof(x))
+            }
             dim(out) <- c(1, 0)
         } else if (type == "c") {
-            out <- integer(0)
+            if (is.null(x)) {
+                out <- integer(0)
+            } else {
+                out <- new(typeof(x))
+            }
             dim(out) <- c(0, 1)
         } else {
-            out <- list()
+            if (n == 0) {
+                if (is.null(f)) {
+                    out <- list(integer(0))
+                } else {
+                    out <- list(new(typeof(x)))
+                }
+            } else {
+                out <- list()
+            }
         }
     } else if (replace) {
         out <- .Call(
@@ -116,10 +132,18 @@ next_combinations <- function(n, k, d, state, x, f, replace, type) {
             type)
     } else if (n < k) {
         if (type == "r") {
-            out <- integer(0)
+            if (is.null(x)) {
+                out <- integer(0)
+            } else {
+                out <- new(typeof(x))
+            }
             dim(out) <- c(0, k)
         } else if (type == "c") {
-            out <- integer(0)
+            if (is.null(x)) {
+                out <- integer(0)
+            } else {
+                out <- new(typeof(x))
+            }
             dim(out) <- c(k, 0)
         } else {
             out <- list()

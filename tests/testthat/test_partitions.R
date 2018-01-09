@@ -7,6 +7,7 @@ test_that("Integer partitions - npartitions", {
     expect_equal(npartitions(10, bigz = TRUE), 42)
     expect_equal(npartitions(100, bigz = TRUE), 190569292)
     expect_equal(npartitions(150, bigz = TRUE), gmp::as.bigz("40853235313"))
+    expect_equal(npartitions(0), 1)
     expect_error(npartitions(-1), "expect non-negative integer")
     expect_error(npartitions(1.5), "expect non-negative integer")
 })

@@ -97,7 +97,17 @@ Partitions <- R6::R6Class(
 
 next_partitions <- function(n, k, d, state, descending, type) {
     if (is.null(k)) {
-        if (descending) {
+        if (n == 0) {
+            if (type == "r") {
+                out <- integer(0)
+                dim(out) <- c(1, 0)
+            } else if (type == "c") {
+                out <- integer(0)
+                dim(out) <- c(0, 1)
+            } else {
+                out <- list(integer(0))
+            }
+        } else if (descending) {
             out <- .Call(
                 "next_desc_partitions",
                 PACKAGE = "arrangements",
@@ -122,6 +132,26 @@ next_partitions <- function(n, k, d, state, descending, type) {
             } else if (type == "c") {
                 out <- integer(0)
                 dim(out) <- c(k, 0)
+            } else {
+                out <- list()
+            }
+        } else if (n == 0 && k == 0) {
+            if (type == "r") {
+                out <- integer(0)
+                dim(out) <- c(1, 0)
+            } else if (type == "c") {
+                out <- integer(0)
+                dim(out) <- c(0, 1)
+            } else {
+                out <- list(integer(0))
+            }
+        } else if (k == 0) {
+            if (type == "r") {
+                out <- integer(0)
+                dim(out) <- c(0, 0)
+            } else if (type == "c") {
+                out <- integer(0)
+                dim(out) <- c(0, 0)
             } else {
                 out <- list()
             }

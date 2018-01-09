@@ -315,7 +315,7 @@ SEXP next_desc_partitions(SEXP _n, SEXP _d, SEXP state, SEXP _type) {
 }
 
 double npartitions(int n) {
-    if (n == 0) return 0;
+    if (n == 0) return 1;
     // find P(1),...,P(n) sequentially
     int i, j, k, s;
     double out;
@@ -343,7 +343,7 @@ SEXP npart(SEXP _n) {
 void npartitions_bigz(mpz_t z, int n) {
     // find P(1),...,P(n) sequentially
     if (n == 0) {
-        mpz_set_ui(z, 0);
+        mpz_set_ui(z, 1);
         return;
     }
     int i, j, h, s;

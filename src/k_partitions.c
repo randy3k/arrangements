@@ -282,7 +282,11 @@ SEXP next_desc_k_partitions(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP _type) {
 }
 
 double npartitions_k(int n, int k) {
-    if (n < k) return 0;
+    if (n < k) {
+        return 0;
+    } else if (n == 0 && k == 0) {
+        return 1;
+    }
     int n1 = n-k+1;
     double* p = (double*) malloc(n1*k * sizeof(double));
     int i, j, h;
@@ -316,7 +320,10 @@ SEXP npart_k(SEXP _n, SEXP _k) {
 
 void npartitions_k_bigz(mpz_t z, int n, int k) {
     if (n < k) {
-        mpz_set(z, 0);
+        mpz_set_ui(z, 0);
+        return;
+    } else if (n == 0 && k == 0) {
+        mpz_set_ui(z, 1);
         return;
     }
 
