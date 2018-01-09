@@ -11,7 +11,8 @@ URL: https://randy3k.github.io/arrangements
 License: MIT + file LICENSE
 Depends:
     R (>= 3.4.0)
-Imports: R6,
+Imports: methods,
+    R6,
     gmp
 Suggests:
     foreach,

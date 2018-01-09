@@ -4,3 +4,4 @@ Makefile
 ^docs$
 ^inst/jl$
 ^_pkgdown\.yml$
+README.Rmd

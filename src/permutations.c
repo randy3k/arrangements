@@ -2,6 +2,7 @@
 #include <R.h>
 #include <Rinternals.h>
 #include <gmp.h>
+#include "arrangements.h"
 #include "algorithms/permutation.h"
 #include "utils.h"
 
