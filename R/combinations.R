@@ -218,9 +218,7 @@ combinations <- function(n, k, x = NULL, f = NULL, replace = FALSE, type = "r") 
 #' This function returns a [Combinations](Combinations-class.html) iterator which
 #' allows users to fetch the next combination(s) via the `getnext()` method. All remaing
 #' combinations of the iterator can be fetched via the `collect()` method.
-#'
-#' @usage
-#' icombinations(n, k, x=NULL, f=NULL, replace = FALSE)
+
 #' @template param_pc
 #' @template iterator_methods
 #' @seealso [combinations] for generating all combinations and [ncombinations] to calculate number of combinations
@@ -238,8 +236,6 @@ combinations <- function(n, k, x = NULL, f = NULL, replace = FALSE, type = "r") 
 #' }
 #' @export
 #' @name icombinations
-NULL
-
 icombinations <- function(n, k, x = NULL, f = NULL, replace = FALSE) {
     if (missing(n)) {
         if (is.null(f) && !is.null(x)) {

@@ -4,7 +4,7 @@
 \alias{icombinations}
 \title{Combinations iterator}
 \usage{
-icombinations(n, k, x=NULL, f=NULL, replace = FALSE)
+icombinations(n, k, x = NULL, f = NULL, replace = FALSE)
 }
 \arguments{
 \item{n}{an integer, would be determined implicitly from \code{x} or \code{f} if missing}

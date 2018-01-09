@@ -42,8 +42,8 @@ ipart$getnext(type = "c", drop = FALSE)
 ipart$collect()
 
 library(foreach)
-foreach(x = ipartitions(5, 2), .combine=c) \%do\% {
-  length(x)
+foreach(x = ipartitions(6, 2), .combine=c) \%do\% {
+  prod(x)
 }
 }
 \seealso{

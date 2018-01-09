@@ -161,9 +161,9 @@ reset()
 #&gt; [20,]    1    2    2    5    0    0    0    0    0     0
 #&gt;  [ reached getOption("max.print") -- omitted 18 rows ]</div><div class='input'>
 <span class='fu'>library</span>(<span class='no'>foreach</span>)
-<span class='fu'><a href='http://www.rdocumentation.org/packages/foreach/topics/foreach'>foreach</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'>ipartitions</span>(<span class='fl'>5</span>, <span class='fl'>2</span>), <span class='kw'>.combine</span><span class='kw'>=</span><span class='no'>c</span>) <span class='kw'>%do%</span> {
-  <span class='fu'>length</span>(<span class='no'>x</span>)
-}</div><div class='output co'>#&gt; [1] 2 2</div></pre>
+<span class='fu'><a href='http://www.rdocumentation.org/packages/foreach/topics/foreach'>foreach</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'>ipartitions</span>(<span class='fl'>6</span>, <span class='fl'>2</span>), <span class='kw'>.combine</span><span class='kw'>=</span><span class='no'>c</span>) <span class='kw'>%do%</span> {
+  <span class='fu'>prod</span>(<span class='no'>x</span>)
+}</div><div class='output co'>#&gt; [1] 5 8 9</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
