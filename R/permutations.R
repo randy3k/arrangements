@@ -2,7 +2,7 @@
 #'
 #' An R6 class of permutation iterator. [ipermutations] is a convenient wrapper for initializing the class.
 #'
-#' @section Usage:
+#' @section Usage
 #' \preformatted{
 #' Permutations$new(n, k, x = NULL, f = NULL, replace = FALSE)
 #' ...$getnext(d = 1L, type = "r", drop = d == 1L)
@@ -182,9 +182,9 @@ next_permutations <- function(n, k, d, state, x, f, replace, type) {
 #' This function generates all the permutations of selecting `k` items from `n` items.
 #' The results are in lexicographical order.
 #'
-#' @inheritParams npermutations
+#' @template pc_param
 #' @param type if "r", "c" or "l" is specified, the return results would be a
-#'  "row" matrix, "column" matrix or a list respectively
+#'  "row-major" matrix, "column-major" matrix or a list respectively
 #' @return a matrix if `type` is "r" or "c", a list if `type` is "l".
 #' @export
 permutations <- function(n, k=n, x=NULL, f=NULL, replace=FALSE, type = "r") {
@@ -199,8 +199,12 @@ permutations <- function(n, k=n, x=NULL, f=NULL, replace=FALSE, type = "r") {
 }
 
 
-#' Permutations generator
-#' @inheritParams npermutations
+#' Permutations iterator
+#'
+#' This function returns a [Permutations](Permutations-class.html) object which
+#' allows users to fetch the permutations via the `getnext` method.
+#'
+#' @template pc_param
 #' @export
 ipermutations <- function(n, k=n, x=NULL, f=NULL, replace = FALSE) {
     if (missing(n)) {
@@ -214,7 +218,8 @@ ipermutations <- function(n, k=n, x=NULL, f=NULL, replace = FALSE) {
 }
 
 #' Number of permutations
-#' @inheritParams ncombinations
+#' @template pc_param
+#' @param bigz an logical to indicate using [gmp::bigz]
 #' @export
 npermutations <- function(n, k=n, x=NULL, f=NULL, replace=FALSE, bigz=FALSE) {
     if (missing(n)) {

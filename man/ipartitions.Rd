@@ -7,5 +7,6 @@
 ipartitions(n, k = NULL, descending = FALSE)
 }
 \description{
-Partitions iterator
+This function returns a \href{Combinations-class.html}{Combinations} object which
+allows users to fetch the partitions via the \code{getnext} method.
 }

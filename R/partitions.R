@@ -185,6 +185,10 @@ partitions <- function(n, k=NULL, descending = FALSE, type = "r") {
 }
 
 #' Partitions iterator
+#'
+#' This function returns a [Combinations](Combinations-class.html) object which
+#' allows users to fetch the partitions via the `getnext` method.
+#'
 #' @export
 ipartitions <- function(n, k=NULL, descending = FALSE) {
     Partitions$new(n, k, descending)

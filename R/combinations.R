@@ -178,9 +178,9 @@ next_combinations <- function(n, k, d, state, x, f, replace, type) {
 #' This function generates all the combinations of selecting `k` items from `n` items.
 #' The results are in lexicographical order.
 #'
-#' @inheritParams ncombinations
+#' @template pc_param
 #' @param type if "r", "c" or "l" is specified, the return results would be a
-#'  "row" matrix, "column" matrix or a list respectively
+#'  "row-major" matrix, "column-major" matrix or a list respectively
 #' @return a matrix if `type` is "r" or "c", a list if `type` is "l".
 #' @seealso [icombinations] for iterating combinations and [ncombinations] to calculate number of combinations
 #' @export
@@ -196,7 +196,11 @@ combinations <- function(n, k, x=NULL, f=NULL, replace=FALSE, type = "r") {
 }
 
 #' Combinations iterator
-#' @inheritParams ncombinations
+#'
+#' This function returns a [Combinations](Combinations-class.html) object which
+#' allows users to fetch the combinations via the `getnext` method.
+#'
+#' @template pc_param
 #' @seealso [combinations] for generating combinations and [ncombinations] to calculate number of combinations
 #' @export
 icombinations <- function(n, k, x=NULL, f=NULL, replace = FALSE) {
@@ -211,11 +215,8 @@ icombinations <- function(n, k, x=NULL, f=NULL, replace = FALSE) {
 }
 
 #' Number of combinations
-#' @param n an integer, would be determined implicitly from `x` or `f` if missing
-#' @param k an integer
-#' @param x an optional vector indicating item labels
-#' @param f an integer vector of item repeat frequencies
-#' @param replace an logical to select with replacement
+#' @template pc_param
+#' @param bigz an logical to indicate using [gmp::bigz]
 #' @seealso [combinations] for generating combinations and [icombinations] for iterating combinations
 #' @export
 ncombinations <- function(n, k, x=NULL, f=NULL, replace=FALSE, bigz=FALSE) {

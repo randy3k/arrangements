@@ -7,7 +7,7 @@
 icombinations(n, k, x = NULL, f = NULL, replace = FALSE)
 }
 \arguments{
-\item{n}{an integer, would be determined implicitly from \code{x} or \code{f} if missing}
+\item{n}{an integer, would be determined implicitly from `x` or `f` if missing}
 
 \item{k}{an integer}
 
@@ -18,7 +18,8 @@ icombinations(n, k, x = NULL, f = NULL, replace = FALSE)
 \item{replace}{an logical to select with replacement}
 }
 \description{
-Combinations iterator
+This function returns a \href{Combinations-class.html}{Combinations} object which
+allows users to fetch the combinations via the \code{getnext} method.
 }
 \seealso{
 \link{combinations} for generating combinations and \link{ncombinations} to calculate number of combinations

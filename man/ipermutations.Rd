@@ -2,12 +2,12 @@
 % Please edit documentation in R/permutations.R
 \name{ipermutations}
 \alias{ipermutations}
-\title{Permutations generator}
+\title{Permutations iterator}
 \usage{
 ipermutations(n, k = n, x = NULL, f = NULL, replace = FALSE)
 }
 \arguments{
-\item{n}{an integer, would be determined implicitly from \code{x} or \code{f} if missing}
+\item{n}{an integer, would be determined implicitly from `x` or `f` if missing}
 
 \item{k}{an integer}
 
@@ -18,5 +18,6 @@ ipermutations(n, k = n, x = NULL, f = NULL, replace = FALSE)
 \item{replace}{an logical to select with replacement}
 }
 \description{
-Permutations generator
+This function returns a \href{Permutations-class.html}{Permutations} object which
+allows users to fetch the permutations via the \code{getnext} method.
 }

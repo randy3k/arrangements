@@ -6,15 +6,6 @@
 \description{
 An R6 class of permutation iterator. \link{ipermutations} is a convenient wrapper for initializing the class.
 }
-\section{Usage}{
-
-\preformatted{
-Permutations$new(n, k, x = NULL, f = NULL, replace = FALSE)
-...$getnext(d = 1L, type = "r", drop = d == 1L)
-...$collect(type = "r")
-}
-}
-
 \seealso{
 \link{ipermutations}
 }

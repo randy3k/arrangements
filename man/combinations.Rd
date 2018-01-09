@@ -7,7 +7,7 @@
 combinations(n, k, x = NULL, f = NULL, replace = FALSE, type = "r")
 }
 \arguments{
-\item{n}{an integer, would be determined implicitly from \code{x} or \code{f} if missing}
+\item{n}{an integer, would be determined implicitly from `x` or `f` if missing}
 
 \item{k}{an integer}
 
@@ -18,7 +18,7 @@ combinations(n, k, x = NULL, f = NULL, replace = FALSE, type = "r")
 \item{replace}{an logical to select with replacement}
 
 \item{type}{if "r", "c" or "l" is specified, the return results would be a
-"row" matrix, "column" matrix or a list respectively}
+"row-major" matrix, "column-major" matrix or a list respectively}
 }
 \value{
 a matrix if \code{type} is "r" or "c", a list if \code{type} is "l".

@@ -7,7 +7,7 @@
 ncombinations(n, k, x = NULL, f = NULL, replace = FALSE, bigz = FALSE)
 }
 \arguments{
-\item{n}{an integer, would be determined implicitly from \code{x} or \code{f} if missing}
+\item{n}{an integer, would be determined implicitly from `x` or `f` if missing}
 
 \item{k}{an integer}
 
@@ -16,6 +16,8 @@ ncombinations(n, k, x = NULL, f = NULL, replace = FALSE, bigz = FALSE)
 \item{f}{an integer vector of item repeat frequencies}
 
 \item{replace}{an logical to select with replacement}
+
+\item{bigz}{an logical to indicate using \link[gmp:bigz]{gmp::bigz}}
 }
 \description{
 Number of combinations
