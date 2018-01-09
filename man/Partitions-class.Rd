@@ -22,7 +22,7 @@ Partitions$new(n, k, x = NULL, f = NULL, replace = FALSE)
 \section{Methods}{
 
 \preformatted{
-getnext(d = 1L, type = "r", drop = d == 1L)
+getnext(d = 1L, type = NULL, drop = d == 1L && is.null(type))
 collect(type = "r")
 reset()
 }

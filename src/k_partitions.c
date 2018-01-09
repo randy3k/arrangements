@@ -19,7 +19,14 @@ SEXP next_asc_k_partitions(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP _type) {
     } else {
         dd = as_uint(_d);
     }
-    char type = CHAR(Rf_asChar(_type))[0];
+
+    char type;
+    if (_type == R_NilValue) {
+        type = 'r';
+    } else {
+        type = CHAR(Rf_asChar(_type))[0];
+        if (type != 'r' && type != 'c' && type != 'l') type = 'r';
+    }
 
     if (type == 'l') {
         if (dd > INT_MAX) Rf_error("too many results");
@@ -154,7 +161,14 @@ SEXP next_desc_k_partitions(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP _type) {
     } else {
         dd = as_uint(_d);
     }
-    char type = CHAR(Rf_asChar(_type))[0];
+
+    char type;
+    if (_type == R_NilValue) {
+        type = 'r';
+    } else {
+        type = CHAR(Rf_asChar(_type))[0];
+        if (type != 'r' && type != 'c' && type != 'l') type = 'r';
+    }
 
     if (type == 'l') {
         if (dd > INT_MAX) Rf_error("too many results");
@@ -286,6 +300,8 @@ double npartitions_k(int n, int k) {
         return 0;
     } else if (n == 0 && k == 0) {
         return 1;
+    } else if (k == 0) {
+        return 0;
     }
     int n1 = n-k+1;
     double* p = (double*) malloc(n1*k * sizeof(double));
@@ -324,6 +340,9 @@ void npartitions_k_bigz(mpz_t z, int n, int k) {
         return;
     } else if (n == 0 && k == 0) {
         mpz_set_ui(z, 1);
+        return;
+    } else if (k == 0) {
+        mpz_set_ui(z, 0);
         return;
     }
 

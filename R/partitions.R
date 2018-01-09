@@ -40,14 +40,14 @@ Partitions <- R6::R6Class(
             self$reset()
             out
         },
-        getnext = function(d = 1L, type = "r", drop = d == 1L) {
+        getnext = function(d = 1L, type = NULL, drop = d == 1L && is.null(type)) {
             if (private$null_pending) {
                 out <- NULL
                 self$reset()
             } else {
                 out <- next_partitions(
                     self$n, self$k, d, private$state, self$descending, type)
-                if (type == "r"){
+                if (type == "r" || is.null(type)){
                     if (nrow(out) == 0) {
                         out <- NULL
                         self$reset()
@@ -95,7 +95,7 @@ Partitions <- R6::R6Class(
 next_partitions <- function(n, k, d, state, descending, type) {
     if (is.null(k)) {
         if (n == 0) {
-            if (type == "r") {
+            if (type == "r" || is.null(type)) {
                 out <- integer(0)
                 dim(out) <- c(1, 0)
             } else if (type == "c") {
@@ -123,7 +123,7 @@ next_partitions <- function(n, k, d, state, descending, type) {
         }
     } else {
         if (n < k) {
-            if (type == "r") {
+            if (type == "r" || is.null(type)) {
                 out <- integer(0)
                 dim(out) <- c(0, k)
             } else if (type == "c") {
@@ -133,7 +133,7 @@ next_partitions <- function(n, k, d, state, descending, type) {
                 out <- list()
             }
         } else if (n == 0 && k == 0) {
-            if (type == "r") {
+            if (type == "r" || is.null(type)) {
                 out <- integer(0)
                 dim(out) <- c(1, 0)
             } else if (type == "c") {
@@ -143,7 +143,7 @@ next_partitions <- function(n, k, d, state, descending, type) {
                 out <- list(integer(0))
             }
         } else if (k == 0) {
-            if (type == "r") {
+            if (type == "r" || is.null(type)) {
                 out <- integer(0)
                 dim(out) <- c(0, 0)
             } else if (type == "c") {
@@ -236,8 +236,8 @@ partitions <- function(n, k = NULL, descending = FALSE, type = "r") {
 #' ipart$collect()
 #'
 #' library(foreach)
-#' foreach(x = ipartitions(5, 2), .combine=c) %do% {
-#'   length(x)
+#' foreach(x = ipartitions(6, 2), .combine=c) %do% {
+#'   prod(x)
 #' }
 #' @export
 ipartitions <- function(n, k = NULL, descending = FALSE) {

@@ -42,14 +42,14 @@ Permutations <- R6::R6Class(
             self$reset()
             out
         },
-        getnext = function(d = 1L, type = "r", drop = d == 1L) {
+        getnext = function(d = 1L, type = NULL, drop = d == 1L && is.null(type)) {
             if (private$null_pending) {
                 out <- NULL
                 self$reset()
             } else {
                 out <- next_permutations(
                     self$n, self$k, d, private$state, self$x, self$f, self$replace, type)
-                if (type == "r"){
+                if (type == "r" || is.null(type)){
                     if (nrow(out) == 0) {
                         out <- NULL
                         self$reset()
@@ -96,7 +96,7 @@ Permutations <- R6::R6Class(
 
 next_permutations <- function(n, k, d, state, x, f, replace, type) {
     if (k == 0) {
-        if (type == "r") {
+        if (type == "r" || is.null(type)) {
             if (is.null(x)) {
                 out <- integer(0)
             } else {
@@ -132,7 +132,7 @@ next_permutations <- function(n, k, d, state, x, f, replace, type) {
             x,
             type)
     } else if (n < k) {
-        if (type == "r") {
+        if (type == "r" || is.null(type)) {
             if (is.null(x)) {
                 out <- integer(0)
             } else {

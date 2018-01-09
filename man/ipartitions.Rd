@@ -21,7 +21,7 @@ partitions of the iterator can be fetched via the \code{collect()} method.
 \section{Methods}{
 
 \preformatted{
-getnext(d = 1L, type = "r", drop = d == 1L)
+getnext(d = 1L, type = NULL, drop = d == 1L && is.null(type))
 collect(type = "r")
 reset()
 }
@@ -43,9 +43,6 @@ ipart$collect()
 
 library(foreach)
 foreach(x = ipartitions(5, 2), .combine=c) \%do\% {
-  length(x)
-}
-foreach(x = ipartitions(6, type = "l"), .combine=c) \%do\% {
   length(x)
 }
 }

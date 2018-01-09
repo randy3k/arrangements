@@ -99,7 +99,7 @@ Combinations$new(n, k, x = NULL, f = NULL, replace = FALSE)
 
     
     <pre>
-getnext(d = 1L, type = "r", drop = d == 1L)
+getnext(d = 1L, type = NULL, drop = d == 1L &amp;&amp; is.null(type))
 collect(type = "r")
 reset()
 </pre>
