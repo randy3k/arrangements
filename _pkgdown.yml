@@ -1,5 +1,10 @@
 reference:
-  - title: Generators for arrangements
+  - title: Introduction
+    desc:
+    contents:
+      - arrangements-package
+
+  - title: Generating arrangements
     desc:
     contents:
       - combinations
@@ -9,8 +14,7 @@ reference:
       - npermutations
       - npartitions
 
-
-  - title: Iterators for arrangements
+  - title: Iterating arrangements
     desc:
     contents:
       - icombinations

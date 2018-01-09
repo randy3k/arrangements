@@ -22,6 +22,34 @@ This function returns a \href{Permutations-class.html}{Permutations} iterator wh
 allows users to fetch the next permutation(s) via the \code{getnext()} method. All remaing
 permutations of the iterator can be fetched via the \code{collect()} method.
 }
+\section{Methods}{
+
+\preformatted{
+getnext(d = 1L, type = "r", drop = d == 1L)
+collect(type = "r")
+reset()
+}
+\describe{
+\item{\code{d}}{number of fetched arrangements}
+\item{\code{type}}{if "r", "c" or "l" is specified, the returned value would be a
+ "row-major" matrix, a "column-major" matrix or a list respectively}
+\item{\code{drop}}{vectorize a matrix or unlist a list}
+}
+}
+
+\examples{
+iperm <- ipermutations(5, 2)
+iperm$getnext()
+iperm$getnext(2)
+iperm$getnext(type = "c", drop = FALSE)
+# collect remaining permutations
+iperm$collect()
+
+library(foreach)
+foreach(x = ipermutations(5, 2), .combine=c) \%do\% {
+  sum(x)
+}
+}
 \seealso{
 \link{permutations} for generating all permutations and \link{npermutations} to calculate number of permutations
 }

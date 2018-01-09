@@ -13,11 +13,8 @@ partitions(n, k = NULL, descending = FALSE, type = "r")
 
 \item{descending}{logical to use reversed lexicographical order}
 
-\item{type}{if "r", "c" or "l" is specified, the return results would be a
-"row-major" matrix, "column-major" matrix or a list respectively}
-}
-\value{
-a matrix if \code{type} is "r" or "c", a list if \code{type} is "l".
+\item{type}{if "r", "c" or "l" is specified, the returned value would be a
+"row-major" matrix, a "column-major" matrix or a list respectively}
 }
 \description{
 This function partitions an non-negative interger into \code{k} parts or any part size.
@@ -26,21 +23,21 @@ The results are in lexicographical or reversed lexicographical order.
 \examples{
 # all partitions of 6
 partitions(6)
-
 # reversed lexicographical order
 partitions(6, descending = TRUE)
 
 # fixed number of parts
 partitions(10, 5)
-
 # reversed lexicographical order
 partitions(10, 5, descending = TRUE)
 
 # column major
-partitions(10, 5, type = "c")
+partitions(6, type = "c")
+partitions(6, 3, type = "c")
 
 # list output
-partitions(10, 5, type = "l")
+partitions(6, type = "l")
+partitions(6, 3, type = "l")
 
 # zero sized partitions
 dim(partitions(0))

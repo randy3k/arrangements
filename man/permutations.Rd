@@ -18,11 +18,8 @@ permutations(n, k = n, x = NULL, f = NULL, replace = FALSE,
 
 \item{replace}{an logical to draw items with replacement}
 
-\item{type}{if "r", "c" or "l" is specified, the return results would be a
-"row-major" matrix, "column-major" matrix or a list respectively}
-}
-\value{
-a matrix if \code{type} is "r" or "c", a list if \code{type} is "l".
+\item{type}{if "r", "c" or "l" is specified, the returned value would be a
+"row-major" matrix, a "column-major" matrix or a list respectively}
 }
 \description{
 This function generates all the permutations of selecting \code{k} items from \code{n} items.
@@ -43,9 +40,11 @@ permutations(f = c(2, 3), k = 3)
 permutations(4, 2, replace = TRUE)
 
 # column major
+permutations(3, type = "c")
 permutations(4, 2, type = "c")
 
 # list output
+permutations(3, type = "l")
 permutations(4, 2, type = "l")
 
 # zero sized partitions

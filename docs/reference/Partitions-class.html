@@ -88,14 +88,27 @@
 
     <p>An object of class <code>R6ClassGenerator</code> of length 24.</p>
     
-    <h2 class="hasAnchor" id="signatures"><a class="anchor" href="#signatures"></a>Signatures</h2>
+    <h2 class="hasAnchor" id="initialization"><a class="anchor" href="#initialization"></a>Initialization</h2>
 
     
     <pre>
 Partitions$new(n, k, x = NULL, f = NULL, replace = FALSE)
-.$getnext(d = 1L, type = "r", drop = d == 1L)
-.$collect(type = "r")
+ </pre>
+    
+    <h2 class="hasAnchor" id="methods"><a class="anchor" href="#methods"></a>Methods</h2>
+
+    
+    <pre>
+getnext(d = 1L, type = "r", drop = d == 1L)
+collect(type = "r")
+reset()
 </pre>
+<dl class='dl-horizontal'>
+<dt><code>d</code></dt><dd><p>number of fetched arrangements</p></dd>
+<dt><code>type</code></dt><dd><p>if "r", "c" or "l" is specified, the returned value would be a
+ "row-major" matrix, a "column-major" matrix or a list respectively</p></dd>
+<dt><code>drop</code></dt><dd><p>vectorize a matrix or unlist a list</p></dd>
+</dl>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
@@ -109,7 +122,9 @@ Partitions$new(n, k, x = NULL, f = NULL, replace = FALSE)
       
       <li><a href="#format">Format</a></li>
 
-      <li><a href="#signatures">Signatures</a></li>
+      <li><a href="#initialization">Initialization</a></li>
+
+      <li><a href="#methods">Methods</a></li>
 
       <li><a href="#see-also">See also</a></li>
           </ul>

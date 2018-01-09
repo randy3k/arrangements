@@ -2,12 +2,11 @@
 #'
 #' An R6 class of partitions iterator. [ipartitions] is a convenient wrapper for initializing the class.
 #'
-#' @section Methods:
+#' @section Initialization:
 #' \preformatted{
 #' Partitions$new(n, k, x = NULL, f = NULL, replace = FALSE)
-#' .$getnext(d = 1L, type = "r", drop = d == 1L)
-#' .$collect(type = "r")
-#' }
+#'  }
+#' @template iterator_methods
 #' @name Partitions-class
 #' @seealso [ipartitions]
 #' @export
@@ -22,7 +21,7 @@ Partitions <- R6::R6Class(
         n = NULL,
         k = NULL,
         descending = NULL,
-        initialize = function(n, k=NULL, descending = FALSE) {
+        initialize = function(n, k = NULL, descending = FALSE) {
             (n %% 1 == 0  && n >= 0) || stop("expect non-negative integer")
             self$n <- as.integer(n)
             if (!is.null(k)) {
@@ -184,28 +183,26 @@ next_partitions <- function(n, k, d, state, descending, type) {
 #' @param n an non-negative integer to be partitioned
 #' @param k number of parts
 #' @param descending logical to use reversed lexicographical order
-#' @param type if "r", "c" or "l" is specified, the return results would be a
-#'  "row-major" matrix, "column-major" matrix or a list respectively
-#' @return a matrix if `type` is "r" or "c", a list if `type` is "l".
+#' @template param_type
 #' @seealso [ipartitions] for iterating partitions and [npartitions] to calculate number of partitions
 #' @examples
 #' # all partitions of 6
 #' partitions(6)
-#'
 #' # reversed lexicographical order
 #' partitions(6, descending = TRUE)
 #'
 #' # fixed number of parts
 #' partitions(10, 5)
-#'
 #' # reversed lexicographical order
 #' partitions(10, 5, descending = TRUE)
 #'
 #' # column major
-#' partitions(10, 5, type = "c")
+#' partitions(6, type = "c")
+#' partitions(6, 3, type = "c")
 #'
 #' # list output
-#' partitions(10, 5, type = "l")
+#' partitions(6, type = "l")
+#' partitions(6, 3, type = "l")
 #'
 #' # zero sized partitions
 #' dim(partitions(0))
@@ -215,7 +212,7 @@ next_partitions <- function(n, k, d, state, descending, type) {
 #' dim(partitions(0, 1))
 #'
 #' @export
-partitions <- function(n, k=NULL, descending = FALSE, type = "r") {
+partitions <- function(n, k = NULL, descending = FALSE, type = "r") {
     next_partitions(n, k, -1L, NULL, descending, type)
 }
 
@@ -228,9 +225,22 @@ partitions <- function(n, k=NULL, descending = FALSE, type = "r") {
 #' @param n an non-negative integer to be partitioned
 #' @param k number of parts
 #' @param descending logical to use reversed lexicographical order
+#' @template iterator_methods
 #' @seealso [partitions] for generating all partitions and [npartitions] to calculate number of partitions
+#' @examples
+#' ipart <- ipartitions(10)
+#' ipart$getnext()
+#' ipart$getnext(2)
+#' ipart$getnext(type = "c", drop = FALSE)
+#' # collect remaining partitions
+#' ipart$collect()
+#'
+#' library(foreach)
+#' foreach(x = ipartitions(5, 2), .combine=c) %do% {
+#'   length(x)
+#' }
 #' @export
-ipartitions <- function(n, k=NULL, descending = FALSE) {
+ipartitions <- function(n, k = NULL, descending = FALSE) {
     Partitions$new(n, k, descending)
 }
 
@@ -257,7 +267,7 @@ ipartitions <- function(n, k=NULL, descending = FALSE) {
 #' npartitions(0, 0)
 #' npartitions(0, 1)
 #' @export
-npartitions <- function(n, k=NULL, bigz=FALSE) {
+npartitions <- function(n, k = NULL, bigz = FALSE) {
     (n %% 1 == 0  && n >= 0) || stop("expect non-negative integer")
     if (is.null(k)) {
         if (bigz) {

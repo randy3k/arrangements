@@ -17,11 +17,8 @@ combinations(n, k, x = NULL, f = NULL, replace = FALSE, type = "r")
 
 \item{replace}{an logical to draw items with replacement}
 
-\item{type}{if "r", "c" or "l" is specified, the return results would be a
-"row-major" matrix, "column-major" matrix or a list respectively}
-}
-\value{
-a matrix if \code{type} is "r" or "c", a list if \code{type} is "l".
+\item{type}{if "r", "c" or "l" is specified, the returned value would be a
+"row-major" matrix, a "column-major" matrix or a list respectively}
 }
 \description{
 This function generates all the combinations of selecting \code{k} items from \code{n} items.

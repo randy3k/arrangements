@@ -84,7 +84,7 @@ allows users to fetch the next combination(s) via the <code>getnext()</code> met
 combinations of the iterator can be fetched via the <code>collect()</code> method.</p>
     
 
-    <pre class="usage"><span class='fu'>icombinations</span>(<span class='no'>n</span>, <span class='no'>k</span>, <span class='kw'>x</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>f</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>replace</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+    <pre class="usage"><span class='fu'>icombinations</span>(<span class='no'>n</span>, <span class='no'>k</span>, <span class='kw'>x</span><span class='kw'>=</span><span class='kw'>NULL</span>, <span class='kw'>f</span><span class='kw'>=</span><span class='kw'>NULL</span>, <span class='kw'>replace</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -111,19 +111,56 @@ combinations of the iterator can be fetched via the <code>collect()</code> metho
     </tr>
     </table>
     
+    <h2 class="hasAnchor" id="methods"><a class="anchor" href="#methods"></a>Methods</h2>
+
+    
+    <pre>
+getnext(d = 1L, type = "r", drop = d == 1L)
+collect(type = "r")
+reset()
+</pre>
+<dl class='dl-horizontal'>
+<dt><code>d</code></dt><dd><p>number of fetched arrangements</p></dd>
+<dt><code>type</code></dt><dd><p>if "r", "c" or "l" is specified, the returned value would be a
+ "row-major" matrix, a "column-major" matrix or a list respectively</p></dd>
+<dt><code>drop</code></dt><dd><p>vectorize a matrix or unlist a list</p></dd>
+</dl>
+    
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <p><a href='combinations.html'>combinations</a> for generating all combinations and <a href='ncombinations.html'>ncombinations</a> to calculate number of combinations</p>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='no'>icomb</span> <span class='kw'>&lt;-</span> <span class='fu'>icombinations</span>(<span class='fl'>5</span>, <span class='fl'>2</span>)
+<span class='no'>icomb</span>$<span class='fu'>getnext</span>()</div><div class='output co'>#&gt; [1] 1 2</div><div class='input'><span class='no'>icomb</span>$<span class='fu'>getnext</span>(<span class='fl'>2</span>)</div><div class='output co'>#&gt;      [,1] [,2]
+#&gt; [1,]    1    3
+#&gt; [2,]    1    4</div><div class='input'><span class='no'>icomb</span>$<span class='fu'>getnext</span>(<span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"c"</span>, <span class='kw'>drop</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt;      [,1]
+#&gt; [1,]    1
+#&gt; [2,]    5</div><div class='input'><span class='co'># collect remaining combinations</span>
+<span class='no'>icomb</span>$<span class='fu'>collect</span>()</div><div class='output co'>#&gt;      [,1] [,2]
+#&gt; [1,]    2    3
+#&gt; [2,]    2    4
+#&gt; [3,]    2    5
+#&gt; [4,]    3    4
+#&gt; [5,]    3    5
+#&gt; [6,]    4    5</div><div class='input'>
+<span class='fu'>library</span>(<span class='no'>foreach</span>)
+<span class='fu'><a href='http://www.rdocumentation.org/packages/foreach/topics/foreach'>foreach</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'>icombinations</span>(<span class='fl'>5</span>, <span class='fl'>2</span>), <span class='kw'>.combine</span><span class='kw'>=</span><span class='no'>c</span>) <span class='kw'>%do%</span> {
+  <span class='fu'>sum</span>(<span class='no'>x</span>)
+}</div><div class='output co'>#&gt;  [1] 3 4 5 6 5 6 7 7 8 9</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
       
+      <li><a href="#methods">Methods</a></li>
+
       <li><a href="#see-also">See also</a></li>
-          </ul>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>

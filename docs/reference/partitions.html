@@ -102,14 +102,10 @@ The results are in lexicographical or reversed lexicographical order.</p>
     </tr>
     <tr>
       <th>type</th>
-      <td><p>if "r", "c" or "l" is specified, the return results would be a
-"row-major" matrix, "column-major" matrix or a list respectively</p></td>
+      <td><p>if "r", "c" or "l" is specified, the returned value would be a
+"row-major" matrix, a "column-major" matrix or a list respectively</p></td>
     </tr>
     </table>
-    
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>a matrix if <code>type</code> is "r" or "c", a list if <code>type</code> is "l".</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
@@ -129,8 +125,7 @@ The results are in lexicographical or reversed lexicographical order.</p>
 #&gt;  [8,]    2    2    2    0    0    0
 #&gt;  [9,]    2    4    0    0    0    0
 #&gt; [10,]    3    3    0    0    0    0
-#&gt; [11,]    6    0    0    0    0    0</div><div class='input'>
-<span class='co'># reversed lexicographical order</span>
+#&gt; [11,]    6    0    0    0    0    0</div><div class='input'><span class='co'># reversed lexicographical order</span>
 <span class='fu'>partitions</span>(<span class='fl'>6</span>, <span class='kw'>descending</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt;       [,1] [,2] [,3] [,4] [,5] [,6]
 #&gt;  [1,]    6    0    0    0    0    0
 #&gt;  [2,]    5    1    0    0    0    0
@@ -151,8 +146,7 @@ The results are in lexicographical or reversed lexicographical order.</p>
 #&gt; [4,]    1    1    2    2    4
 #&gt; [5,]    1    1    2    3    3
 #&gt; [6,]    1    2    2    2    3
-#&gt; [7,]    2    2    2    2    2</div><div class='input'>
-<span class='co'># reversed lexicographical order</span>
+#&gt; [7,]    2    2    2    2    2</div><div class='input'><span class='co'># reversed lexicographical order</span>
 <span class='fu'>partitions</span>(<span class='fl'>10</span>, <span class='fl'>5</span>, <span class='kw'>descending</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt;      [,1] [,2] [,3] [,4] [,5]
 #&gt; [1,]    6    1    1    1    1
 #&gt; [2,]    5    2    1    1    1
@@ -162,33 +156,57 @@ The results are in lexicographical or reversed lexicographical order.</p>
 #&gt; [6,]    3    2    2    2    1
 #&gt; [7,]    2    2    2    2    2</div><div class='input'>
 <span class='co'># column major</span>
-<span class='fu'>partitions</span>(<span class='fl'>10</span>, <span class='fl'>5</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"c"</span>)</div><div class='output co'>#&gt;      [,1] [,2] [,3] [,4] [,5] [,6] [,7]
-#&gt; [1,]    1    1    1    1    1    1    2
-#&gt; [2,]    1    1    1    1    1    2    2
-#&gt; [3,]    1    1    1    2    2    2    2
-#&gt; [4,]    1    2    3    2    3    2    2
-#&gt; [5,]    6    5    4    4    3    3    2</div><div class='input'>
+<span class='fu'>partitions</span>(<span class='fl'>6</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"c"</span>)</div><div class='output co'>#&gt;      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11]
+#&gt; [1,]    1    1    1    1    1    1    1    2    2     3     6
+#&gt; [2,]    1    1    1    1    1    2    5    2    4     3     0
+#&gt; [3,]    1    1    1    2    4    3    0    2    0     0     0
+#&gt; [4,]    1    1    3    2    0    0    0    0    0     0     0
+#&gt; [5,]    1    2    0    0    0    0    0    0    0     0     0
+#&gt; [6,]    1    0    0    0    0    0    0    0    0     0     0</div><div class='input'><span class='fu'>partitions</span>(<span class='fl'>6</span>, <span class='fl'>3</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"c"</span>)</div><div class='output co'>#&gt;      [,1] [,2] [,3]
+#&gt; [1,]    1    1    2
+#&gt; [2,]    1    2    2
+#&gt; [3,]    4    3    2</div><div class='input'>
 <span class='co'># list output</span>
-<span class='fu'>partitions</span>(<span class='fl'>10</span>, <span class='fl'>5</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"l"</span>)</div><div class='output co'>#&gt; [[1]]
-#&gt; [1] 1 1 1 1 6
+<span class='fu'>partitions</span>(<span class='fl'>6</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"l"</span>)</div><div class='output co'>#&gt; [[1]]
+#&gt; [1] 1 1 1 1 1 1
 #&gt; 
 #&gt; [[2]]
-#&gt; [1] 1 1 1 2 5
+#&gt; [1] 1 1 1 1 2
 #&gt; 
 #&gt; [[3]]
-#&gt; [1] 1 1 1 3 4
+#&gt; [1] 1 1 1 3
 #&gt; 
 #&gt; [[4]]
-#&gt; [1] 1 1 2 2 4
+#&gt; [1] 1 1 2 2
 #&gt; 
 #&gt; [[5]]
-#&gt; [1] 1 1 2 3 3
+#&gt; [1] 1 1 4
 #&gt; 
 #&gt; [[6]]
-#&gt; [1] 1 2 2 2 3
+#&gt; [1] 1 2 3
 #&gt; 
 #&gt; [[7]]
-#&gt; [1] 2 2 2 2 2
+#&gt; [1] 1 5
+#&gt; 
+#&gt; [[8]]
+#&gt; [1] 2 2 2
+#&gt; 
+#&gt; [[9]]
+#&gt; [1] 2 4
+#&gt; 
+#&gt; [[10]]
+#&gt; [1] 3 3
+#&gt; 
+#&gt; [[11]]
+#&gt; [1] 6
+#&gt; </div><div class='input'><span class='fu'>partitions</span>(<span class='fl'>6</span>, <span class='fl'>3</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"l"</span>)</div><div class='output co'>#&gt; [[1]]
+#&gt; [1] 1 1 4
+#&gt; 
+#&gt; [[2]]
+#&gt; [1] 1 2 3
+#&gt; 
+#&gt; [[3]]
+#&gt; [1] 2 2 2
 #&gt; </div><div class='input'>
 <span class='co'># zero sized partitions</span>
 <span class='fu'>dim</span>(<span class='fu'>partitions</span>(<span class='fl'>0</span>))</div><div class='output co'>#&gt; [1] 1 0</div><div class='input'><span class='fu'>dim</span>(<span class='fu'>partitions</span>(<span class='fl'>5</span>, <span class='fl'>0</span>))</div><div class='output co'>#&gt; [1] 0 0</div><div class='input'><span class='fu'>dim</span>(<span class='fu'>partitions</span>(<span class='fl'>5</span>, <span class='fl'>6</span>))</div><div class='output co'>#&gt; [1] 0 6</div><div class='input'><span class='fu'>dim</span>(<span class='fu'>partitions</span>(<span class='fl'>0</span>, <span class='fl'>0</span>))</div><div class='output co'>#&gt; [1] 1 0</div><div class='input'><span class='fu'>dim</span>(<span class='fu'>partitions</span>(<span class='fl'>0</span>, <span class='fl'>1</span>))</div><div class='output co'>#&gt; [1] 0 1</div><div class='input'>
@@ -199,8 +217,6 @@ The results are in lexicographical or reversed lexicographical order.</p>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
       
-      <li><a href="#value">Value</a></li>
-
       <li><a href="#see-also">See also</a></li>
       
       <li><a href="#examples">Examples</a></li>

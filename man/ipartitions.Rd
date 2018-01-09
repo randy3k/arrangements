@@ -18,6 +18,37 @@ This function returns a \href{Partitions-class.html}{Partitions} iterator which
 allows users to fetch the next partition(s) via the \code{getnext()} method. All remaing
 partitions of the iterator can be fetched via the \code{collect()} method.
 }
+\section{Methods}{
+
+\preformatted{
+getnext(d = 1L, type = "r", drop = d == 1L)
+collect(type = "r")
+reset()
+}
+\describe{
+\item{\code{d}}{number of fetched arrangements}
+\item{\code{type}}{if "r", "c" or "l" is specified, the returned value would be a
+ "row-major" matrix, a "column-major" matrix or a list respectively}
+\item{\code{drop}}{vectorize a matrix or unlist a list}
+}
+}
+
+\examples{
+ipart <- ipartitions(10)
+ipart$getnext()
+ipart$getnext(2)
+ipart$getnext(type = "c", drop = FALSE)
+# collect remaining partitions
+ipart$collect()
+
+library(foreach)
+foreach(x = ipartitions(5, 2), .combine=c) \%do\% {
+  length(x)
+}
+foreach(x = ipartitions(6, type = "l"), .combine=c) \%do\% {
+  length(x)
+}
+}
 \seealso{
 \link{partitions} for generating all partitions and \link{npartitions} to calculate number of partitions
 }

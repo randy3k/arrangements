@@ -4,7 +4,7 @@
 \alias{icombinations}
 \title{Combinations iterator}
 \usage{
-icombinations(n, k, x = NULL, f = NULL, replace = FALSE)
+icombinations(n, k, x=NULL, f=NULL, replace = FALSE)
 }
 \arguments{
 \item{n}{an integer, would be determined implicitly from \code{x} or \code{f} if missing}
@@ -21,6 +21,34 @@ icombinations(n, k, x = NULL, f = NULL, replace = FALSE)
 This function returns a \href{Combinations-class.html}{Combinations} iterator which
 allows users to fetch the next combination(s) via the \code{getnext()} method. All remaing
 combinations of the iterator can be fetched via the \code{collect()} method.
+}
+\section{Methods}{
+
+\preformatted{
+getnext(d = 1L, type = "r", drop = d == 1L)
+collect(type = "r")
+reset()
+}
+\describe{
+\item{\code{d}}{number of fetched arrangements}
+\item{\code{type}}{if "r", "c" or "l" is specified, the returned value would be a
+ "row-major" matrix, a "column-major" matrix or a list respectively}
+\item{\code{drop}}{vectorize a matrix or unlist a list}
+}
+}
+
+\examples{
+icomb <- icombinations(5, 2)
+icomb$getnext()
+icomb$getnext(2)
+icomb$getnext(type = "c", drop = FALSE)
+# collect remaining combinations
+icomb$collect()
+
+library(foreach)
+foreach(x = icombinations(5, 2), .combine=c) \%do\% {
+  sum(x)
+}
 }
 \seealso{
 \link{combinations} for generating all combinations and \link{ncombinations} to calculate number of combinations

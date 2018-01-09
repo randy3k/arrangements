@@ -2,12 +2,11 @@
 #'
 #' An R6 class of combinations iterator. [icombinations] is a convenient wrapper for initializing the class.
 #'
-#' @section Methods:
+#' @section Initialization:
 #' \preformatted{
 #' Combinations$new(n, k, x = NULL, f = NULL, replace = FALSE)
-#' .$getnext(d = 1L, type = "r", drop = d == 1L)
-#' .$collect(type = "r")
 #' }
+#' @template iterator_methods
 #' @name Combinations-class
 #' @seealso [icombinations]
 #' @export
@@ -176,10 +175,8 @@ next_combinations <- function(n, k, d, state, x, f, replace, type) {
 #' This function generates all the combinations of selecting `k` items from `n` items.
 #' The results are in lexicographical order.
 #'
-#' @template pc_param
-#' @param type if "r", "c" or "l" is specified, the return results would be a
-#'  "row-major" matrix, "column-major" matrix or a list respectively
-#' @return a matrix if `type` is "r" or "c", a list if `type` is "l".
+#' @template param_pc
+#' @template param_type
 #' @seealso [icombinations] for iterating combinations and [ncombinations] to calculate number of combinations
 #' @examples
 #' # choose 2 from 4
@@ -205,7 +202,7 @@ next_combinations <- function(n, k, d, state, x, f, replace, type) {
 #' dim(combinations(0, 1))
 #'
 #' @export
-combinations <- function(n, k, x=NULL, f=NULL, replace=FALSE, type = "r") {
+combinations <- function(n, k, x = NULL, f = NULL, replace = FALSE, type = "r") {
     if (missing(n)) {
         if (is.null(f) && !is.null(x)) {
             n <- length(x)
@@ -222,10 +219,28 @@ combinations <- function(n, k, x=NULL, f=NULL, replace=FALSE, type = "r") {
 #' allows users to fetch the next combination(s) via the `getnext()` method. All remaing
 #' combinations of the iterator can be fetched via the `collect()` method.
 #'
-#' @template pc_param
+#' @usage
+#' icombinations(n, k, x=NULL, f=NULL, replace = FALSE)
+#' @template param_pc
+#' @template iterator_methods
 #' @seealso [combinations] for generating all combinations and [ncombinations] to calculate number of combinations
+#' @examples
+#' icomb <- icombinations(5, 2)
+#' icomb$getnext()
+#' icomb$getnext(2)
+#' icomb$getnext(type = "c", drop = FALSE)
+#' # collect remaining combinations
+#' icomb$collect()
+#'
+#' library(foreach)
+#' foreach(x = icombinations(5, 2), .combine=c) %do% {
+#'   sum(x)
+#' }
 #' @export
-icombinations <- function(n, k, x=NULL, f=NULL, replace = FALSE) {
+#' @name icombinations
+NULL
+
+icombinations <- function(n, k, x = NULL, f = NULL, replace = FALSE) {
     if (missing(n)) {
         if (is.null(f) && !is.null(x)) {
             n <- length(x)
@@ -237,7 +252,7 @@ icombinations <- function(n, k, x=NULL, f=NULL, replace = FALSE) {
 }
 
 #' Number of combinations
-#' @template pc_param
+#' @template param_pc
 #' @param bigz an logical to indicate using [gmp::bigz]
 #' @seealso [combinations] for generating all combinations and [icombinations] for iterating combinations
 #' @examples
@@ -259,7 +274,7 @@ icombinations <- function(n, k, x=NULL, f=NULL, replace = FALSE) {
 #' ncombinations(0, 0)
 #'
 #' @export
-ncombinations <- function(n, k, x=NULL, f=NULL, replace=FALSE, bigz=FALSE) {
+ncombinations <- function(n, k, x = NULL, f  =NULL, replace = FALSE, bigz = FALSE) {
     if (missing(n)) {
         if (is.null(f) && !is.null(x)) {
             n <- length(x)
