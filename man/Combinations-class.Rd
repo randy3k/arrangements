@@ -12,7 +12,7 @@ Combinations
 \description{
 An R6 class of combinations iterator. \link{icombinations} is a convenient wrapper for initializing the class.
 }
-\section{Signatures}{
+\section{Methods}{
 
 \preformatted{
 Combinations$new(n, k, x = NULL, f = NULL, replace = FALSE)

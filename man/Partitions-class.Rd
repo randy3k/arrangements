@@ -12,7 +12,7 @@ Partitions
 \description{
 An R6 class of partitions iterator. \link{ipartitions} is a convenient wrapper for initializing the class.
 }
-\section{Signatures}{
+\section{Methods}{
 
 \preformatted{
 Partitions$new(n, k, x = NULL, f = NULL, replace = FALSE)
