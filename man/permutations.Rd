@@ -8,7 +8,7 @@ permutations(n, k = n, x = NULL, f = NULL, replace = FALSE,
   type = "r")
 }
 \arguments{
-\item{n}{an integer, would be determined implicitly from `x` or `f` if missing}
+\item{n}{an integer, would be determined implicitly from \code{x} or \code{f} if missing}
 
 \item{k}{an integer}
 
@@ -16,7 +16,7 @@ permutations(n, k = n, x = NULL, f = NULL, replace = FALSE,
 
 \item{f}{an integer vector of item repeat frequencies}
 
-\item{replace}{an logical to select with replacement}
+\item{replace}{an logical to draw items with replacement}
 
 \item{type}{if "r", "c" or "l" is specified, the return results would be a
 "row-major" matrix, "column-major" matrix or a list respectively}
@@ -27,4 +27,35 @@ a matrix if \code{type} is "r" or "c", a list if \code{type} is "l".
 \description{
 This function generates all the permutations of selecting \code{k} items from \code{n} items.
 The results are in lexicographical order.
+}
+\examples{
+permutations(3)
+permutations(x = LETTERS[1:3])
+
+# choose 2 from 4
+permutations(4, 2)
+permutations(x = LETTERS[1:3], k = 2)
+
+# multiset with frequencies c(2, 3)
+permutations(f = c(2, 3), k = 3)
+
+# with replacement
+permutations(4, 2, replace = TRUE)
+
+# column major
+permutations(4, 2, type = "c")
+
+# list output
+permutations(4, 2, type = "l")
+
+# zero sized partitions
+dim(permutations(0))
+dim(permutations(5, 0))
+dim(permutations(5, 6))
+dim(permutations(0, 0))
+dim(permutations(0, 1))
+
+}
+\seealso{
+\link{ipermutations} for iterating permutations and \link{npermutations} to calculate number of permutations
 }

@@ -2,16 +2,14 @@
 #'
 #' An R6 class of permutation iterator. [ipermutations] is a convenient wrapper for initializing the class.
 #'
-#' @section Usage
+#' @section Signatures:
 #' \preformatted{
 #' Permutations$new(n, k, x = NULL, f = NULL, replace = FALSE)
-#' ...$getnext(d = 1L, type = "r", drop = d == 1L)
-#' ...$collect(type = "r")
+#' .$getnext(d = 1L, type = "r", drop = d == 1L)
+#' .$collect(type = "r")
 #' }
 #' @name Permutations-class
 #' @seealso [ipermutations]
-NULL
-
 #' @export
 Permutations <- R6::R6Class(
     "Permutations",
@@ -186,6 +184,34 @@ next_permutations <- function(n, k, d, state, x, f, replace, type) {
 #' @param type if "r", "c" or "l" is specified, the return results would be a
 #'  "row-major" matrix, "column-major" matrix or a list respectively
 #' @return a matrix if `type` is "r" or "c", a list if `type` is "l".
+#' @seealso [ipermutations] for iterating permutations and [npermutations] to calculate number of permutations
+#' @examples
+#' permutations(3)
+#' permutations(x = LETTERS[1:3])
+#'
+#' # choose 2 from 4
+#' permutations(4, 2)
+#' permutations(x = LETTERS[1:3], k = 2)
+#'
+#' # multiset with frequencies c(2, 3)
+#' permutations(f = c(2, 3), k = 3)
+#'
+#' # with replacement
+#' permutations(4, 2, replace = TRUE)
+#'
+#' # column major
+#' permutations(4, 2, type = "c")
+#'
+#' # list output
+#' permutations(4, 2, type = "l")
+#'
+#' # zero sized partitions
+#' dim(permutations(0))
+#' dim(permutations(5, 0))
+#' dim(permutations(5, 6))
+#' dim(permutations(0, 0))
+#' dim(permutations(0, 1))
+#'
 #' @export
 permutations <- function(n, k=n, x=NULL, f=NULL, replace=FALSE, type = "r") {
     if (missing(n)) {
@@ -201,10 +227,12 @@ permutations <- function(n, k=n, x=NULL, f=NULL, replace=FALSE, type = "r") {
 
 #' Permutations iterator
 #'
-#' This function returns a [Permutations](Permutations-class.html) object which
-#' allows users to fetch the permutations via the `getnext` method.
+#' This function returns a [Permutations](Permutations-class.html) iterator which
+#' allows users to fetch the next permutation(s) via the `getnext()` method. All remaing
+#' permutations of the iterator can be fetched via the `collect()` method.
 #'
 #' @template pc_param
+#' @seealso [permutations] for generating all permutations and [npermutations] to calculate number of permutations
 #' @export
 ipermutations <- function(n, k=n, x=NULL, f=NULL, replace = FALSE) {
     if (missing(n)) {
@@ -220,6 +248,27 @@ ipermutations <- function(n, k=n, x=NULL, f=NULL, replace = FALSE) {
 #' Number of permutations
 #' @template pc_param
 #' @param bigz an logical to indicate using [gmp::bigz]
+#' @seealso [permutations] for generating all permutations and [ipermutations] for iterating permutations
+#' @examples
+#' npermutations(7)
+#' npermutations(x = LETTERS[1:5])
+#' npermutations(5, 2)
+#' npermutations(x = LETTERS, k = 5)
+#'
+#' # integer overflow
+#' \dontrun{npermutations(14, 10)}
+#' npermutations(14, 10, bigz = TRUE)
+#'
+#' # number of permutations of `c("a", "b", "b")`
+#' # they are `c("a", "b")`, `c("b", "b")` and `c("b", "b")`
+#' npermutations(f = c(1, 2), k = 2)
+#'
+#' # zero sized partitions
+#' npermutations(0)
+#' npermutations(5, 0)
+#' npermutations(5, 6)
+#' npermutations(0, 1)
+#' npermutations(0, 0)
 #' @export
 npermutations <- function(n, k=n, x=NULL, f=NULL, replace=FALSE, bigz=FALSE) {
     if (missing(n)) {

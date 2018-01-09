@@ -7,7 +7,7 @@
 combinations(n, k, x = NULL, f = NULL, replace = FALSE, type = "r")
 }
 \arguments{
-\item{n}{an integer, would be determined implicitly from `x` or `f` if missing}
+\item{n}{an integer, would be determined implicitly from \code{x} or \code{f} if missing}
 
 \item{k}{an integer}
 
@@ -15,7 +15,7 @@ combinations(n, k, x = NULL, f = NULL, replace = FALSE, type = "r")
 
 \item{f}{an integer vector of item repeat frequencies}
 
-\item{replace}{an logical to select with replacement}
+\item{replace}{an logical to draw items with replacement}
 
 \item{type}{if "r", "c" or "l" is specified, the return results would be a
 "row-major" matrix, "column-major" matrix or a list respectively}
@@ -26,6 +26,30 @@ a matrix if \code{type} is "r" or "c", a list if \code{type} is "l".
 \description{
 This function generates all the combinations of selecting \code{k} items from \code{n} items.
 The results are in lexicographical order.
+}
+\examples{
+# choose 2 from 4
+combinations(4, 2)
+combinations(x = LETTERS[1:3], k = 2)
+
+# multiset with frequencies c(2, 3)
+combinations(f = c(2, 3), k = 3)
+
+# with replacement
+combinations(4, 2, replace = TRUE)
+
+# column major
+combinations(4, 2, type = "c")
+
+# list output
+combinations(4, 2, type = "l")
+
+# zero sized combinations
+dim(combinations(5, 0))
+dim(combinations(5, 6))
+dim(combinations(0, 0))
+dim(combinations(0, 1))
+
 }
 \seealso{
 \link{icombinations} for iterating combinations and \link{ncombinations} to calculate number of combinations

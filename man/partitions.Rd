@@ -6,6 +6,50 @@
 \usage{
 partitions(n, k = NULL, descending = FALSE, type = "r")
 }
+\arguments{
+\item{n}{an non-negative integer to be partitioned}
+
+\item{k}{number of parts}
+
+\item{descending}{logical to use reversed lexicographical order}
+
+\item{type}{if "r", "c" or "l" is specified, the return results would be a
+"row-major" matrix, "column-major" matrix or a list respectively}
+}
+\value{
+a matrix if \code{type} is "r" or "c", a list if \code{type} is "l".
+}
 \description{
-Partitions generator
+This function partitions an non-negative interger into \code{k} parts or any part size.
+The results are in lexicographical or reversed lexicographical order.
+}
+\examples{
+# all partitions of 6
+partitions(6)
+
+# reversed lexicographical order
+partitions(6, descending = TRUE)
+
+# fixed number of parts
+partitions(10, 5)
+
+# reversed lexicographical order
+partitions(10, 5, descending = TRUE)
+
+# column major
+partitions(10, 5, type = "c")
+
+# list output
+partitions(10, 5, type = "l")
+
+# zero sized partitions
+dim(partitions(0))
+dim(partitions(5, 0))
+dim(partitions(5, 6))
+dim(partitions(0, 0))
+dim(partitions(0, 1))
+
+}
+\seealso{
+\link{ipartitions} for iterating partitions and \link{npartitions} to calculate number of partitions
 }

@@ -79,8 +79,9 @@
     </div>
 
     
-    <p>This function returns a <a href='Permutations-class.html'>Permutations</a> object which
-allows users to fetch the permutations via the <code>getnext</code> method.</p>
+    <p>This function returns a <a href='Permutations-class.html'>Permutations</a> iterator which
+allows users to fetch the next permutation(s) via the <code>getnext()</code> method. All remaing
+permutations of the iterator can be fetched via the <code>collect()</code> method.</p>
     
 
     <pre class="usage"><span class='fu'>ipermutations</span>(<span class='no'>n</span>, <span class='kw'>k</span> <span class='kw'>=</span> <span class='no'>n</span>, <span class='kw'>x</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>f</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>replace</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
@@ -90,7 +91,7 @@ allows users to fetch the permutations via the <code>getnext</code> method.</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>n</th>
-      <td><p>an integer, would be determined implicitly from `x` or `f` if missing</p></td>
+      <td><p>an integer, would be determined implicitly from <code>x</code> or <code>f</code> if missing</p></td>
     </tr>
     <tr>
       <th>k</th>
@@ -106,9 +107,13 @@ allows users to fetch the permutations via the <code>getnext</code> method.</p>
     </tr>
     <tr>
       <th>replace</th>
-      <td><p>an logical to select with replacement</p></td>
+      <td><p>an logical to draw items with replacement</p></td>
     </tr>
     </table>
+    
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <p><a href='permutations.html'>permutations</a> for generating all permutations and <a href='npermutations.html'>npermutations</a> to calculate number of permutations</p>
     
 
   </div>
@@ -116,7 +121,9 @@ allows users to fetch the permutations via the <code>getnext</code> method.</p>
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-                </ul>
+      
+      <li><a href="#see-also">See also</a></li>
+          </ul>
 
   </div>
 </div>

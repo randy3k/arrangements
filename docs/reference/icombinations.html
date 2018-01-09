@@ -79,8 +79,9 @@
     </div>
 
     
-    <p>This function returns a <a href='Combinations-class.html'>Combinations</a> object which
-allows users to fetch the combinations via the <code>getnext</code> method.</p>
+    <p>This function returns a <a href='Combinations-class.html'>Combinations</a> iterator which
+allows users to fetch the next combination(s) via the <code>getnext()</code> method. All remaing
+combinations of the iterator can be fetched via the <code>collect()</code> method.</p>
     
 
     <pre class="usage"><span class='fu'>icombinations</span>(<span class='no'>n</span>, <span class='no'>k</span>, <span class='kw'>x</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>f</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>replace</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
@@ -90,7 +91,7 @@ allows users to fetch the combinations via the <code>getnext</code> method.</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>n</th>
-      <td><p>an integer, would be determined implicitly from `x` or `f` if missing</p></td>
+      <td><p>an integer, would be determined implicitly from <code>x</code> or <code>f</code> if missing</p></td>
     </tr>
     <tr>
       <th>k</th>
@@ -106,13 +107,13 @@ allows users to fetch the combinations via the <code>getnext</code> method.</p>
     </tr>
     <tr>
       <th>replace</th>
-      <td><p>an logical to select with replacement</p></td>
+      <td><p>an logical to draw items with replacement</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p><a href='combinations.html'>combinations</a> for generating combinations and <a href='ncombinations.html'>ncombinations</a> to calculate number of combinations</p>
+    <p><a href='combinations.html'>combinations</a> for generating all combinations and <a href='ncombinations.html'>ncombinations</a> to calculate number of combinations</p>
     
 
   </div>

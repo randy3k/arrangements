@@ -79,18 +79,43 @@
     </div>
 
     
-    <p>This function returns a <a href='Combinations-class.html'>Combinations</a> object which
-allows users to fetch the partitions via the <code>getnext</code> method.</p>
+    <p>This function returns a <a href='Partitions-class.html'>Partitions</a> iterator which
+allows users to fetch the next partition(s) via the <code>getnext()</code> method. All remaing
+partitions of the iterator can be fetched via the <code>collect()</code> method.</p>
     
 
     <pre class="usage"><span class='fu'>ipartitions</span>(<span class='no'>n</span>, <span class='kw'>k</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>descending</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
-        
+    
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>n</th>
+      <td><p>an non-negative integer to be partitioned</p></td>
+    </tr>
+    <tr>
+      <th>k</th>
+      <td><p>number of parts</p></td>
+    </tr>
+    <tr>
+      <th>descending</th>
+      <td><p>logical to use reversed lexicographical order</p></td>
+    </tr>
+    </table>
+    
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <p><a href='partitions.html'>partitions</a> for generating all partitions and <a href='npartitions.html'>npartitions</a> to calculate number of partitions</p>
+    
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-                </ul>
+      <li><a href="#arguments">Arguments</a></li>
+      
+      <li><a href="#see-also">See also</a></li>
+          </ul>
 
   </div>
 </div>

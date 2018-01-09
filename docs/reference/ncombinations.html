@@ -89,7 +89,7 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>n</th>
-      <td><p>an integer, would be determined implicitly from `x` or `f` if missing</p></td>
+      <td><p>an integer, would be determined implicitly from <code>x</code> or <code>f</code> if missing</p></td>
     </tr>
     <tr>
       <th>k</th>
@@ -105,7 +105,7 @@
     </tr>
     <tr>
       <th>replace</th>
-      <td><p>an logical to select with replacement</p></td>
+      <td><p>an logical to draw items with replacement</p></td>
     </tr>
     <tr>
       <th>bigz</th>
@@ -115,9 +115,22 @@
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p><a href='combinations.html'>combinations</a> for generating combinations and <a href='icombinations.html'>icombinations</a> for iterating combinations</p>
+    <p><a href='combinations.html'>combinations</a> for generating all combinations and <a href='icombinations.html'>icombinations</a> for iterating combinations</p>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='fu'>ncombinations</span>(<span class='fl'>5</span>, <span class='fl'>2</span>)</div><div class='output co'>#&gt; [1] 10</div><div class='input'><span class='fu'>ncombinations</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>LETTERS</span>, <span class='kw'>k</span> <span class='kw'>=</span> <span class='fl'>5</span>)</div><div class='output co'>#&gt; [1] 65780</div><div class='input'>
+# integer overflow
+</div><span class='co'># NOT RUN {</span>
+<span class='fu'>ncombinations</span>(<span class='fl'>40</span>, <span class='fl'>15</span>)
+<span class='co'># }</span><div class='input'><span class='fu'>ncombinations</span>(<span class='fl'>40</span>, <span class='fl'>15</span>, <span class='kw'>bigz</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; Big Integer ('bigz') :
+#&gt; [1] 40225345056</div><div class='input'>
+<span class='co'># number of combinations of `c("a", "b", "b")`</span>
+<span class='co'># they are `c("a", "b")` and `c("b", "b")`</span>
+<span class='fu'>ncombinations</span>(<span class='kw'>f</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>1</span>, <span class='fl'>2</span>), <span class='kw'>k</span> <span class='kw'>=</span> <span class='fl'>2</span>)</div><div class='output co'>#&gt; [1] 2</div><div class='input'>
+<span class='co'># zero sized combinations</span>
+<span class='fu'>ncombinations</span>(<span class='fl'>5</span>, <span class='fl'>0</span>)</div><div class='output co'>#&gt; [1] 1</div><div class='input'><span class='fu'>ncombinations</span>(<span class='fl'>5</span>, <span class='fl'>6</span>)</div><div class='output co'>#&gt; [1] 0</div><div class='input'><span class='fu'>ncombinations</span>(<span class='fl'>0</span>, <span class='fl'>1</span>)</div><div class='output co'>#&gt; [1] 0</div><div class='input'><span class='fu'>ncombinations</span>(<span class='fl'>0</span>, <span class='fl'>0</span>)</div><div class='output co'>#&gt; [1] 1</div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -125,7 +138,9 @@
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#see-also">See also</a></li>
-          </ul>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>

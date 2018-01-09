@@ -8,7 +8,7 @@ npermutations(n, k = n, x = NULL, f = NULL, replace = FALSE,
   bigz = FALSE)
 }
 \arguments{
-\item{n}{an integer, would be determined implicitly from `x` or `f` if missing}
+\item{n}{an integer, would be determined implicitly from \code{x} or \code{f} if missing}
 
 \item{k}{an integer}
 
@@ -16,10 +16,34 @@ npermutations(n, k = n, x = NULL, f = NULL, replace = FALSE,
 
 \item{f}{an integer vector of item repeat frequencies}
 
-\item{replace}{an logical to select with replacement}
+\item{replace}{an logical to draw items with replacement}
 
 \item{bigz}{an logical to indicate using \link[gmp:bigz]{gmp::bigz}}
 }
 \description{
 Number of permutations
+}
+\examples{
+npermutations(7)
+npermutations(x = LETTERS[1:5])
+npermutations(5, 2)
+npermutations(x = LETTERS, k = 5)
+
+# integer overflow
+\dontrun{npermutations(14, 10)}
+npermutations(14, 10, bigz = TRUE)
+
+# number of permutations of `c("a", "b", "b")`
+# they are `c("a", "b")`, `c("b", "b")` and `c("b", "b")`
+npermutations(f = c(1, 2), k = 2)
+
+# zero sized partitions
+npermutations(0)
+npermutations(5, 0)
+npermutations(5, 6)
+npermutations(0, 1)
+npermutations(0, 0)
+}
+\seealso{
+\link{permutations} for generating all permutations and \link{ipermutations} for iterating permutations
 }

@@ -2,16 +2,14 @@
 #'
 #' An R6 class of combinations iterator. [icombinations] is a convenient wrapper for initializing the class.
 #'
-#' @section Usage:
+#' @section Signatures:
 #' \preformatted{
 #' Combinations$new(n, k, x = NULL, f = NULL, replace = FALSE)
-#' ...$getnext(d = 1L, type = "r", drop = d == 1L)
-#' ...$collect(type = "r")
+#' .$getnext(d = 1L, type = "r", drop = d == 1L)
+#' .$collect(type = "r")
 #' }
 #' @name Combinations-class
 #' @seealso [icombinations]
-NULL
-
 #' @export
 Combinations <- R6::R6Class(
     "Combinations",
@@ -183,6 +181,29 @@ next_combinations <- function(n, k, d, state, x, f, replace, type) {
 #'  "row-major" matrix, "column-major" matrix or a list respectively
 #' @return a matrix if `type` is "r" or "c", a list if `type` is "l".
 #' @seealso [icombinations] for iterating combinations and [ncombinations] to calculate number of combinations
+#' @examples
+#' # choose 2 from 4
+#' combinations(4, 2)
+#' combinations(x = LETTERS[1:3], k = 2)
+#'
+#' # multiset with frequencies c(2, 3)
+#' combinations(f = c(2, 3), k = 3)
+#'
+#' # with replacement
+#' combinations(4, 2, replace = TRUE)
+#'
+#' # column major
+#' combinations(4, 2, type = "c")
+#'
+#' # list output
+#' combinations(4, 2, type = "l")
+#'
+#' # zero sized combinations
+#' dim(combinations(5, 0))
+#' dim(combinations(5, 6))
+#' dim(combinations(0, 0))
+#' dim(combinations(0, 1))
+#'
 #' @export
 combinations <- function(n, k, x=NULL, f=NULL, replace=FALSE, type = "r") {
     if (missing(n)) {
@@ -197,11 +218,12 @@ combinations <- function(n, k, x=NULL, f=NULL, replace=FALSE, type = "r") {
 
 #' Combinations iterator
 #'
-#' This function returns a [Combinations](Combinations-class.html) object which
-#' allows users to fetch the combinations via the `getnext` method.
+#' This function returns a [Combinations](Combinations-class.html) iterator which
+#' allows users to fetch the next combination(s) via the `getnext()` method. All remaing
+#' combinations of the iterator can be fetched via the `collect()` method.
 #'
 #' @template pc_param
-#' @seealso [combinations] for generating combinations and [ncombinations] to calculate number of combinations
+#' @seealso [combinations] for generating all combinations and [ncombinations] to calculate number of combinations
 #' @export
 icombinations <- function(n, k, x=NULL, f=NULL, replace = FALSE) {
     if (missing(n)) {
@@ -217,7 +239,25 @@ icombinations <- function(n, k, x=NULL, f=NULL, replace = FALSE) {
 #' Number of combinations
 #' @template pc_param
 #' @param bigz an logical to indicate using [gmp::bigz]
-#' @seealso [combinations] for generating combinations and [icombinations] for iterating combinations
+#' @seealso [combinations] for generating all combinations and [icombinations] for iterating combinations
+#' @examples
+#' ncombinations(5, 2)
+#' ncombinations(x = LETTERS, k = 5)
+#'
+#' # integer overflow
+#' \dontrun{ncombinations(40, 15)}
+#' ncombinations(40, 15, bigz = TRUE)
+#'
+#' # number of combinations of `c("a", "b", "b")`
+#' # they are `c("a", "b")` and `c("b", "b")`
+#' ncombinations(f = c(1, 2), k = 2)
+#'
+#' # zero sized combinations
+#' ncombinations(5, 0)
+#' ncombinations(5, 6)
+#' ncombinations(0, 1)
+#' ncombinations(0, 0)
+#'
 #' @export
 ncombinations <- function(n, k, x=NULL, f=NULL, replace=FALSE, bigz=FALSE) {
     if (missing(n)) {

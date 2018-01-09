@@ -7,7 +7,7 @@
 ipermutations(n, k = n, x = NULL, f = NULL, replace = FALSE)
 }
 \arguments{
-\item{n}{an integer, would be determined implicitly from `x` or `f` if missing}
+\item{n}{an integer, would be determined implicitly from \code{x} or \code{f} if missing}
 
 \item{k}{an integer}
 
@@ -15,9 +15,13 @@ ipermutations(n, k = n, x = NULL, f = NULL, replace = FALSE)
 
 \item{f}{an integer vector of item repeat frequencies}
 
-\item{replace}{an logical to select with replacement}
+\item{replace}{an logical to draw items with replacement}
 }
 \description{
-This function returns a \href{Permutations-class.html}{Permutations} object which
-allows users to fetch the permutations via the \code{getnext} method.
+This function returns a \href{Permutations-class.html}{Permutations} iterator which
+allows users to fetch the next permutation(s) via the \code{getnext()} method. All remaing
+permutations of the iterator can be fetched via the \code{collect()} method.
+}
+\seealso{
+\link{permutations} for generating all permutations and \link{npermutations} to calculate number of permutations
 }

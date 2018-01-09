@@ -7,7 +7,7 @@
 ncombinations(n, k, x = NULL, f = NULL, replace = FALSE, bigz = FALSE)
 }
 \arguments{
-\item{n}{an integer, would be determined implicitly from `x` or `f` if missing}
+\item{n}{an integer, would be determined implicitly from \code{x} or \code{f} if missing}
 
 \item{k}{an integer}
 
@@ -15,13 +15,32 @@ ncombinations(n, k, x = NULL, f = NULL, replace = FALSE, bigz = FALSE)
 
 \item{f}{an integer vector of item repeat frequencies}
 
-\item{replace}{an logical to select with replacement}
+\item{replace}{an logical to draw items with replacement}
 
 \item{bigz}{an logical to indicate using \link[gmp:bigz]{gmp::bigz}}
 }
 \description{
 Number of combinations
 }
+\examples{
+ncombinations(5, 2)
+ncombinations(x = LETTERS, k = 5)
+
+# integer overflow
+\dontrun{ncombinations(40, 15)}
+ncombinations(40, 15, bigz = TRUE)
+
+# number of combinations of `c("a", "b", "b")`
+# they are `c("a", "b")` and `c("b", "b")`
+ncombinations(f = c(1, 2), k = 2)
+
+# zero sized combinations
+ncombinations(5, 0)
+ncombinations(5, 6)
+ncombinations(0, 1)
+ncombinations(0, 0)
+
+}
 \seealso{
-\link{combinations} for generating combinations and \link{icombinations} for iterating combinations
+\link{combinations} for generating all combinations and \link{icombinations} for iterating combinations
 }

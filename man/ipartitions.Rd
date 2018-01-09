@@ -6,7 +6,18 @@
 \usage{
 ipartitions(n, k = NULL, descending = FALSE)
 }
+\arguments{
+\item{n}{an non-negative integer to be partitioned}
+
+\item{k}{number of parts}
+
+\item{descending}{logical to use reversed lexicographical order}
+}
 \description{
-This function returns a \href{Combinations-class.html}{Combinations} object which
-allows users to fetch the partitions via the \code{getnext} method.
+This function returns a \href{Partitions-class.html}{Partitions} iterator which
+allows users to fetch the next partition(s) via the \code{getnext()} method. All remaing
+partitions of the iterator can be fetched via the \code{collect()} method.
+}
+\seealso{
+\link{partitions} for generating all partitions and \link{npartitions} to calculate number of partitions
 }

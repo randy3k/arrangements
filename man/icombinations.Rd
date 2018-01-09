@@ -7,7 +7,7 @@
 icombinations(n, k, x = NULL, f = NULL, replace = FALSE)
 }
 \arguments{
-\item{n}{an integer, would be determined implicitly from `x` or `f` if missing}
+\item{n}{an integer, would be determined implicitly from \code{x} or \code{f} if missing}
 
 \item{k}{an integer}
 
@@ -15,12 +15,13 @@ icombinations(n, k, x = NULL, f = NULL, replace = FALSE)
 
 \item{f}{an integer vector of item repeat frequencies}
 
-\item{replace}{an logical to select with replacement}
+\item{replace}{an logical to draw items with replacement}
 }
 \description{
-This function returns a \href{Combinations-class.html}{Combinations} object which
-allows users to fetch the combinations via the \code{getnext} method.
+This function returns a \href{Combinations-class.html}{Combinations} iterator which
+allows users to fetch the next combination(s) via the \code{getnext()} method. All remaing
+combinations of the iterator can be fetched via the \code{collect()} method.
 }
 \seealso{
-\link{combinations} for generating combinations and \link{ncombinations} to calculate number of combinations
+\link{combinations} for generating all combinations and \link{ncombinations} to calculate number of combinations
 }
