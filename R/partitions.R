@@ -1,14 +1,11 @@
-#' Partitions class
-#'
-#' An R6 class of partitions iterator. [ipartitions] is a convenient wrapper for initializing the class.
-#'
-#' @section Initialization:
+#' @details
+#' The `Partitions` class can be initialized by using the convenient wrapper `ipartitions` or
 #' \preformatted{
-#' Partitions$new(n, k, x = NULL, f = NULL, replace = FALSE)
-#'  }
+#' Partitions$new(n, k = NULL, descending = FALSE)
+#' }
 #' @template iterator_methods
+#' @rdname ipartitions
 #' @name Partitions-class
-#' @seealso [ipartitions]
 #' @export
 Partitions <- R6::R6Class(
     "Partitions",
@@ -225,7 +222,6 @@ partitions <- function(n, k = NULL, descending = FALSE, type = "r") {
 #' @param n an non-negative integer to be partitioned
 #' @param k number of parts
 #' @param descending logical to use reversed lexicographical order
-#' @template iterator_methods
 #' @seealso [partitions] for generating all partitions and [npartitions] to calculate number of partitions
 #' @examples
 #' ipart <- ipartitions(10)

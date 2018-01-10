@@ -82,11 +82,20 @@
     <p>An R6 class of partitions iterator. <a href='ipartitions.html'>ipartitions</a> is a convenient wrapper for initializing the class.</p>
     
 
-    <pre class="usage"><span class='no'>Partitions</span></pre>
         
-    <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>An object of class <code>R6ClassGenerator</code> of length 24.</p>
+    <pre>
+getnext(d = 1L, type = NULL, drop = d == 1L &amp;&amp; is.null(type))
+collect(type = "r")
+reset()
+</pre>
+<dl class='dl-horizontal'>
+<dt>d</dt><dd><p>number of fetched arrangements</p></dd>
+    <dt>type</dt><dd><p>if "r", "c" or "l" is specified, the returned value would be a
+ "row-major" matrix, a "column-major" matrix or a list respectively</p></dd>
+    <dt>drop</dt><dd><p>vectorize a matrix or unlist a list</p></dd>
+</dl>
     
     <h2 class="hasAnchor" id="initialization"><a class="anchor" href="#initialization"></a>Initialization</h2>
 
@@ -95,19 +104,13 @@
 Partitions$new(n, k, x = NULL, f = NULL, replace = FALSE)
  </pre>
     
-    <h2 class="hasAnchor" id="methods"><a class="anchor" href="#methods"></a>Methods</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
 
     
-    <pre>
-getnext(d = 1L, type = NULL, drop = d == 1L &amp;&amp; is.null(type))
-collect(type = "r")
-reset()
-</pre>
-<dl class='dl-horizontal'>
-<dt><code>d</code></dt><dd><p>number of fetched arrangements</p></dd>
-<dt><code>type</code></dt><dd><p>if "r", "c" or "l" is specified, the returned value would be a
- "row-major" matrix, a "column-major" matrix or a list respectively</p></dd>
-<dt><code>drop</code></dt><dd><p>vectorize a matrix or unlist a list</p></dd>
+    <dl class='dl-horizontal'>
+<dt>n</dt><dd><p>an non-negative integer to be partitioned</p></dd>
+<dt>k</dt><dd><p>number of parts</p></dd>
+<dt>descending</dt><dd><p>logical to use reversed lexicographical order</p></dd>
 </dl>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
@@ -120,11 +123,11 @@ reset()
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       
-      <li><a href="#format">Format</a></li>
+      <li><a href="#details">Details</a></li>
 
       <li><a href="#initialization">Initialization</a></li>
 
-      <li><a href="#methods">Methods</a></li>
+      <li><a href="#arguments">Arguments</a></li>
 
       <li><a href="#see-also">See also</a></li>
           </ul>

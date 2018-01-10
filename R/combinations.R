@@ -1,14 +1,11 @@
-#' Combinations class
-#'
-#' An R6 class of combinations iterator. [icombinations] is a convenient wrapper for initializing the class.
-#'
-#' @section Initialization:
+#' @details
+#' The `Combinations` class can be initialized by using the convenient wrapper `icombinations` or 
 #' \preformatted{
 #' Combinations$new(n, k, x = NULL, f = NULL, replace = FALSE)
 #' }
 #' @template iterator_methods
+#' @rdname icombinations
 #' @name Combinations-class
-#' @seealso [icombinations]
 #' @export
 Combinations <- R6::R6Class(
     "Combinations",
@@ -170,8 +167,9 @@ next_combinations <- function(n, k, d, state, x, f, replace, type) {
     out
 }
 
-#' Combinations generator
+#' @title Combinations generator
 #'
+#' @description
 #' This function generates all the combinations of selecting `k` items from `n` items.
 #' The results are in lexicographical order.
 #'
@@ -213,14 +211,12 @@ combinations <- function(n, k, x = NULL, f = NULL, replace = FALSE, type = "r") 
     next_combinations(n, k, -1L, NULL, x, f, replace, type)
 }
 
-#' Combinations iterator
-#'
+#' @title Combinations iterator
+#' @description
 #' This function returns a [Combinations](Combinations-class.html) iterator which
 #' allows users to fetch the next combination(s) via the `getnext()` method. All remaing
 #' combinations of the iterator can be fetched via the `collect()` method.
-
 #' @template param_pc
-#' @template iterator_methods
 #' @seealso [combinations] for generating all combinations and [ncombinations] to calculate number of combinations
 #' @examples
 #' icomb <- icombinations(5, 2)
@@ -235,7 +231,6 @@ combinations <- function(n, k, x = NULL, f = NULL, replace = FALSE, type = "r") 
 #'   sum(x)
 #' }
 #' @export
-#' @name icombinations
 icombinations <- function(n, k, x = NULL, f = NULL, replace = FALSE) {
     if (missing(n)) {
         if (is.null(f) && !is.null(x)) {

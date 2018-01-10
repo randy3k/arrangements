@@ -20,6 +20,5 @@ reference:
       - icombinations
       - ipermutations
       - ipartitions
-      - Combinations-class
       - Permutations-class
       - Partitions-class

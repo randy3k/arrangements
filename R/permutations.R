@@ -1,14 +1,11 @@
-#' Permutations class
-#'
-#' An R6 class of permutation iterator. [ipermutations] is a convenient wrapper for initializing the class.
-#'
-#' @section Initialization:
+#' @details
+#' The `Permutations` class can be initialized by using the convenient wrapper `ipermutations` or
 #' \preformatted{
 #' Permutations$new(n, k, x = NULL, f = NULL, replace = FALSE)
 #' }
 #' @template iterator_methods
+#' @rdname ipermutations
 #' @name Permutations-class
-#' @seealso [ipermutations]
 #' @export
 Permutations <- R6::R6Class(
     "Permutations",
@@ -231,7 +228,6 @@ permutations <- function(n, k=n, x = NULL, f = NULL, replace = FALSE, type = "r"
 #' permutations of the iterator can be fetched via the `collect()` method.
 #'
 #' @template param_pc
-#' @template iterator_methods
 #' @seealso [permutations] for generating all permutations and [npermutations] to calculate number of permutations
 #' @examples
 #' iperm <- ipermutations(5, 2)
