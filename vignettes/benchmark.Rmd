@@ -25,7 +25,7 @@ The goal of this document is to compare the performances of some of the existing
     `r packageDescription("RcppAlgos")$Version`
 - [iterpc](https://CRAN.R-project.org/package=iterpc): it is omitted as `arrangements` is thought of a replacement of `iterpc`.
 
-```{r, echo = F}
+```{r}
 suppressPackageStartupMessages({
     library(microbenchmark)
     library(gtools)
@@ -40,8 +40,14 @@ suppressPackageStartupMessages({
     gtools.combinations = gtools::combinations
     ucombn = utils::combn
 })
+```
+
+```{r, echo = FALSE}
 options(digits=3)
 ```
+
+`gtools::permutations`, `gtools::combinations` and `utils::combn` are renamed because they are
+being overwritten by `arrangements::permutations`, `arrangements::combinations` and `combinat::combm` respectively.
 
 ### Permutations
 
