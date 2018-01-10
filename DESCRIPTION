@@ -25,14 +25,7 @@ Suggests:
     foreach,
     testthat,
     knitr,
-    rmarkdown,
-    gtools,
-    combinat,
-    multicool,
-    partitions,
-    permute,
-    permutations,
-    RcppAlgos
+    rmarkdown
 NeedsCompilation: yes
 SystemRequirements: gmp (>= 4.2.3)
 ByteCompile: yes
