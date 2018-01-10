@@ -4,7 +4,7 @@
 \alias{combinations}
 \title{Combinations generator}
 \usage{
-combinations(n, k, x = NULL, f = NULL, replace = FALSE, type = "r")
+combinations(n, k, x = NULL, freq = NULL, replace = FALSE, type = "r")
 }
 \arguments{
 \item{n}{an integer, would be determined implicitly from \code{x} or \code{f} if missing}
@@ -13,7 +13,7 @@ combinations(n, k, x = NULL, f = NULL, replace = FALSE, type = "r")
 
 \item{x}{an optional vector indicating item labels}
 
-\item{f}{an integer vector of item repeat frequencies}
+\item{freq}{an integer vector of item repeat frequencies}
 
 \item{replace}{an logical to draw items with replacement}
 
@@ -30,7 +30,7 @@ combinations(4, 2)
 combinations(x = LETTERS[1:3], k = 2)
 
 # multiset with frequencies c(2, 3)
-combinations(f = c(2, 3), k = 3)
+combinations(freq = c(2, 3), k = 3)
 
 # with replacement
 combinations(4, 2, replace = TRUE)

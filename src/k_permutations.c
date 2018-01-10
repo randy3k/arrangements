@@ -6,9 +6,9 @@
 #include "algorithms/k_permutation.h"
 #include "utils.h"
 
-double npermutations_f(int* f, size_t flen, size_t k);
+double npermutations_f(int* freq, size_t flen, size_t k);
 
-SEXP next_k_permutations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP labels, SEXP f, SEXP _type) {
+SEXP next_k_permutations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP labels, SEXP freq, SEXP _type) {
     size_t i, j, h;
 
     size_t n = as_uint(_n);
@@ -16,10 +16,10 @@ SEXP next_k_permutations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP labels, SEX
     int d;
     double dd;
     if (Rf_asInteger(_d) == -1) {
-        if (f == R_NilValue) {
+        if (freq == R_NilValue) {
             dd = fallfact(n, k);
         } else {
-            dd = npermutations_f(INTEGER(f), Rf_length(f), k);
+            dd = npermutations_f(INTEGER(freq), Rf_length(freq), k);
         }
     } else {
         dd = as_uint(_d);
@@ -66,12 +66,12 @@ SEXP next_k_permutations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP labels, SEX
             UNPROTECT(1);
             ap = (unsigned int*) INTEGER(as);
         }
-        if (f == R_NilValue) {
+        if (freq == R_NilValue) {
             for(i=0; i<n; i++) ap[i] = i;
         } else {
-            fp = INTEGER(f);
+            fp = INTEGER(freq);
             h = 0;
-            for (i = 0; i< Rf_length(f); i++) {
+            for (i = 0; i< Rf_length(freq); i++) {
                 for (j = 0; j< fp[i]; j++) {
                     ap[h++] = i;
                 }
@@ -286,10 +286,10 @@ SEXP nperm_k_bigz(SEXP _n, SEXP _k) {
 }
 
 
-double npermutations_f(int* f, size_t flen, size_t k) {
+double npermutations_f(int* freq, size_t flen, size_t k) {
     int n = 0;
     int i, j, h;
-    for (i=0; i<flen; i++) n += f[i];
+    for (i=0; i<flen; i++) n += freq[i];
     if (k > n) {
         return 0;
     }
@@ -297,7 +297,7 @@ double npermutations_f(int* f, size_t flen, size_t k) {
     int maxf;
     maxf = 0;
     for (i=0; i<flen; i++) {
-        if (f[i] > maxf) maxf = f[i];
+        if (freq[i] > maxf) maxf = freq[i];
     }
 
     double rfact = 1;
@@ -316,21 +316,21 @@ double npermutations_f(int* f, size_t flen, size_t k) {
 
     for (i=0; i<flen; i++) {
         if (i == 0) {
-            for (j=0; j<=k && j<=f[i]; j++) {
+            for (j=0; j<=k && j<=freq[i]; j++) {
                 p[j] = rfact / fact[j];
             }
             ptemp = p[k];
         } else if (i < flen - 1){
             for (j=k; j>0; j--) {
                 ptemp = 0;
-                for(h=0; h<=f[i] && h<=j; h++) {
+                for(h=0; h<=freq[i] && h<=j; h++) {
                     ptemp += p[j-h] / fact[h];
                 }
                 p[j] = ptemp;
             }
         } else {
             ptemp = 0;
-            for(h=0; h<=f[i] && h<=k; h++) {
+            for(h=0; h<=freq[i] && h<=k; h++) {
                 ptemp += p[k-h] / fact[h];
             }
         }
@@ -341,17 +341,17 @@ double npermutations_f(int* f, size_t flen, size_t k) {
     return ptemp;
 }
 
-SEXP nperm_f(SEXP f, SEXP _k) {
-    int* fp = INTEGER(f);
-    size_t flen = Rf_length(f);
+SEXP nperm_f(SEXP freq, SEXP _k) {
+    int* fp = INTEGER(freq);
+    size_t flen = Rf_length(freq);
     size_t k = as_uint(_k);
     return Rf_ScalarReal(npermutations_f(fp, flen, k));
 }
 
-void npermutations_f_bigz(mpz_t z, int* f, size_t flen, size_t k) {
+void npermutations_f_bigz(mpz_t z, int* freq, size_t flen, size_t k) {
     int n = 0;
     int i, j, h;
-    for (i=0; i<flen; i++) n += f[i];
+    for (i=0; i<flen; i++) n += freq[i];
     if (k > n) {
         mpz_set(z, 0);
         return;
@@ -360,7 +360,7 @@ void npermutations_f_bigz(mpz_t z, int* f, size_t flen, size_t k) {
     int maxf;
     maxf = 0;
     for (i=0; i<flen; i++) {
-        if (f[i] > maxf) maxf = f[i];
+        if (freq[i] > maxf) maxf = freq[i];
     }
 
     mpz_t rfact;
@@ -382,14 +382,14 @@ void npermutations_f_bigz(mpz_t z, int* f, size_t flen, size_t k) {
 
     for (i=0; i<flen; i++) {
         if (i == 0) {
-            for (j=0; j<=k && j<=f[i]; j++) {
+            for (j=0; j<=k && j<=freq[i]; j++) {
                 mpz_cdiv_q(p[j], rfact, fact[j]);
             }
             mpz_set(z, p[k]);
         } else if (i < flen - 1){
             for (j=k; j>0; j--) {
                 mpz_set_ui(z, 0);
-                for(h=0; h<=f[i] && h<=j; h++) {
+                for(h=0; h<=freq[i] && h<=j; h++) {
                     mpz_cdiv_q(ptemp, p[j-h], fact[h]);
                     mpz_add(z, z, ptemp);
                 }
@@ -397,7 +397,7 @@ void npermutations_f_bigz(mpz_t z, int* f, size_t flen, size_t k) {
             }
         } else {
             mpz_set_ui(z, 0);
-            for(h=0; h<=f[i] && h<=k; h++) {
+            for(h=0; h<=freq[i] && h<=k; h++) {
                 mpz_cdiv_q(ptemp, p[k-h], fact[h]);
                 mpz_add(z, z, ptemp);
             }
@@ -412,9 +412,9 @@ void npermutations_f_bigz(mpz_t z, int* f, size_t flen, size_t k) {
     mpz_clear(ptemp);
 }
 
-SEXP nperm_f_bigz(SEXP f, SEXP _k) {
-    int* fp = INTEGER(f);
-    size_t flen = Rf_length(f);
+SEXP nperm_f_bigz(SEXP freq, SEXP _k) {
+    int* fp = INTEGER(freq);
+    size_t flen = Rf_length(freq);
     size_t k = as_uint(_k);
     mpz_t z;
     mpz_init(z);

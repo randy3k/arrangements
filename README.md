@@ -16,7 +16,8 @@ memory efficient manner and the generated arrangements are in
 lexicographical (dictionary) order. Permutations and combinations can be
 drawn with/without replacement and support multisets. It has been
 demonstrated that ‘arrangements’ outperforms most of the existing
-packages of similar kind.
+packages of similar kind. Some benchmarks could be found at
+<https://randy3k.github.io/arrangements/articles/benchmark.html>.
 
 ## Installation
 

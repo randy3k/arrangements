@@ -4,7 +4,7 @@
 \alias{npermutations}
 \title{Number of permutations}
 \usage{
-npermutations(n, k = n, x = NULL, f = NULL, replace = FALSE,
+npermutations(n, k = n, x = NULL, freq = NULL, replace = FALSE,
   bigz = FALSE)
 }
 \arguments{
@@ -14,7 +14,7 @@ npermutations(n, k = n, x = NULL, f = NULL, replace = FALSE,
 
 \item{x}{an optional vector indicating item labels}
 
-\item{f}{an integer vector of item repeat frequencies}
+\item{freq}{an integer vector of item repeat frequencies}
 
 \item{replace}{an logical to draw items with replacement}
 
@@ -35,7 +35,7 @@ npermutations(14, 10, bigz = TRUE)
 
 # number of permutations of `c("a", "b", "b")`
 # they are `c("a", "b")`, `c("b", "b")` and `c("b", "b")`
-npermutations(f = c(1, 2), k = 2)
+npermutations(freq = c(1, 2), k = 2)
 
 # zero sized partitions
 npermutations(0)

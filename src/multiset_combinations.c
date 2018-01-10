@@ -6,9 +6,9 @@
 #include "algorithms/multiset_combination.h"
 #include "utils.h"
 
-double ncombinations_f(int* f, size_t flen, size_t k);
+double ncombinations_f(int* freq, size_t flen, size_t k);
 
-SEXP next_multiset_combinations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP labels, SEXP f, SEXP _type) {
+SEXP next_multiset_combinations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP labels, SEXP freq, SEXP _type) {
     size_t i, j, h;
 
     size_t n = as_uint(_n);
@@ -16,7 +16,7 @@ SEXP next_multiset_combinations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP labe
     int d;
     double dd;
     if (Rf_asInteger(_d) == -1) {
-        dd = ncombinations_f(INTEGER(f), Rf_length(f), k);
+        dd = ncombinations_f(INTEGER(freq), Rf_length(freq), k);
     } else {
         dd = as_uint(_d);
     }
@@ -66,9 +66,9 @@ SEXP next_multiset_combinations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP labe
             UNPROTECT(1);
             mp = (unsigned int*) INTEGER(ms);
         }
-        fp = INTEGER(f);
+        fp = INTEGER(freq);
         h = 0;
-        for (i = 0; i< Rf_length(f); i++) {
+        for (i = 0; i< Rf_length(freq); i++) {
             for (j = 0; j< fp[i]; j++) {
                 mp[h++] = i;
             }
@@ -87,7 +87,7 @@ SEXP next_multiset_combinations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP labe
             UNPROTECT(1);
             ap = (unsigned int*) INTEGER(as);
         }
-        fp = INTEGER(f);
+        fp = INTEGER(freq);
         h = 0;
         for (i = 0; i< k; i++) {
             ap[i] = mp[i];
@@ -268,10 +268,10 @@ SEXP next_multiset_combinations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP labe
 }
 
 
-double ncombinations_f(int* f, size_t flen, size_t k) {
+double ncombinations_f(int* freq, size_t flen, size_t k) {
     int n = 0;
     int i, j, h;
-    for (i=0; i<flen; i++) n += f[i];
+    for (i=0; i<flen; i++) n += freq[i];
     if (k > n) {
         return 0;
     }
@@ -283,21 +283,21 @@ double ncombinations_f(int* f, size_t flen, size_t k) {
 
     for (i=0; i<flen; i++) {
         if (i == 0) {
-            for (j=0; j<=k && j<=f[i]; j++) {
+            for (j=0; j<=k && j<=freq[i]; j++) {
                 p[j] = 1;
             }
             ptemp = p[k];
         } else if (i < flen - 1){
             for (j=k; j>0; j--) {
                 ptemp = 0;
-                for(h=0; h<=f[i] && h<=j; h++) {
+                for(h=0; h<=freq[i] && h<=j; h++) {
                     ptemp += p[j-h];
                 }
                 p[j] = ptemp;
             }
         } else {
             ptemp = 0;
-            for(h=0; h<=f[i] && h<=k; h++) {
+            for(h=0; h<=freq[i] && h<=k; h++) {
                 ptemp += p[k-h];
             }
         }
@@ -307,17 +307,17 @@ double ncombinations_f(int* f, size_t flen, size_t k) {
     return ptemp;
 }
 
-SEXP ncomb_f(SEXP f, SEXP _k) {
-    int* fp = INTEGER(f);
-    size_t flen = Rf_length(f);
+SEXP ncomb_f(SEXP freq, SEXP _k) {
+    int* fp = INTEGER(freq);
+    size_t flen = Rf_length(freq);
     size_t k = as_uint(_k);
     return Rf_ScalarReal(ncombinations_f(fp, flen, k));
 }
 
-void ncombinations_f_bigz(mpz_t z, int* f, size_t flen, size_t k) {
+void ncombinations_f_bigz(mpz_t z, int* freq, size_t flen, size_t k) {
     int n = 0;
     int i, j, h;
-    for (i=0; i<flen; i++) n += f[i];
+    for (i=0; i<flen; i++) n += freq[i];
     if (k > n) {
         mpz_set_ui(z, 0);
         return;
@@ -328,30 +328,30 @@ void ncombinations_f_bigz(mpz_t z, int* f, size_t flen, size_t k) {
 
     for (i=0; i<flen; i++) {
         if (i == 0) {
-            for (j=0; j<=k && j<=f[i]; j++) {
+            for (j=0; j<=k && j<=freq[i]; j++) {
                 mpz_set_ui(p[j], 1);
             }
             mpz_set(z, p[k]);
         } else if (i < flen - 1){
             for (j=k; j>0; j--) {
                 mpz_set_ui(z, 0);
-                for(h=0; h<=f[i] && h<=j; h++) {
+                for(h=0; h<=freq[i] && h<=j; h++) {
                     mpz_add(z, z, p[j-h]);
                 }
                 mpz_set(p[j], z);
             }
         } else {
             mpz_set_ui(z, 0);
-            for(h=0; h<=f[i] && h<=k; h++) {
+            for(h=0; h<=freq[i] && h<=k; h++) {
                 mpz_add(z, z, p[k-h]);
             }
         }
     }
 }
 
-SEXP ncomb_f_bigz(SEXP f, SEXP _k) {
-    int* fp = INTEGER(f);
-    size_t flen = Rf_length(f);
+SEXP ncomb_f_bigz(SEXP freq, SEXP _k) {
+    int* fp = INTEGER(freq);
+    size_t flen = Rf_length(freq);
     size_t k = as_uint(_k);
     mpz_t z;
     mpz_init(z);

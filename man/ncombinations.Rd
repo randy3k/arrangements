@@ -4,7 +4,8 @@
 \alias{ncombinations}
 \title{Number of combinations}
 \usage{
-ncombinations(n, k, x = NULL, f = NULL, replace = FALSE, bigz = FALSE)
+ncombinations(n, k, x = NULL, freq = NULL, replace = FALSE,
+  bigz = FALSE)
 }
 \arguments{
 \item{n}{an integer, would be determined implicitly from \code{x} or \code{f} if missing}
@@ -13,7 +14,7 @@ ncombinations(n, k, x = NULL, f = NULL, replace = FALSE, bigz = FALSE)
 
 \item{x}{an optional vector indicating item labels}
 
-\item{f}{an integer vector of item repeat frequencies}
+\item{freq}{an integer vector of item repeat frequencies}
 
 \item{replace}{an logical to draw items with replacement}
 
@@ -32,7 +33,7 @@ ncombinations(40, 15, bigz = TRUE)
 
 # number of combinations of `c("a", "b", "b")`
 # they are `c("a", "b")` and `c("b", "b")`
-ncombinations(f = c(1, 2), k = 2)
+ncombinations(freq = c(1, 2), k = 2)
 
 # zero sized combinations
 ncombinations(5, 0)

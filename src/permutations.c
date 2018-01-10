@@ -6,20 +6,20 @@
 #include "algorithms/permutation.h"
 #include "utils.h"
 
-SEXP next_permutations(SEXP _n, SEXP _d, SEXP state, SEXP labels, SEXP f, SEXP _type) {
+SEXP next_permutations(SEXP _n, SEXP _d, SEXP state, SEXP labels, SEXP freq, SEXP _type) {
     size_t i, j, h;
 
     size_t n = as_uint(_n);
     int d;
     double dd;
     if (Rf_asInteger(_d) == -1) {
-        if (f == R_NilValue) {
+        if (freq == R_NilValue) {
             dd = 1;
             for (i=2; i<=n; i++) {
                 dd = dd * i;
             }
         } else {
-            dd = multichoose(INTEGER(f), Rf_length(f));
+            dd = multichoose(INTEGER(freq), Rf_length(freq));
         }
     } else {
         dd = as_uint(_d);
@@ -66,12 +66,12 @@ SEXP next_permutations(SEXP _n, SEXP _d, SEXP state, SEXP labels, SEXP f, SEXP _
             UNPROTECT(1);
             ap = (unsigned int*) INTEGER(as);
         }
-        if (f == R_NilValue) {
+        if (freq == R_NilValue) {
             for(i=0; i<n; i++) ap[i] = i;
         } else {
-            fp = INTEGER(f);
+            fp = INTEGER(freq);
             h = 0;
-            for (i = 0; i< Rf_length(f); i++) {
+            for (i = 0; i< Rf_length(freq); i++) {
                 for (j = 0; j< fp[i]; j++) {
                     ap[h++] = i;
                 }
@@ -252,18 +252,18 @@ SEXP next_permutations(SEXP _n, SEXP _d, SEXP state, SEXP labels, SEXP f, SEXP _
     return result;
 }
 
-SEXP nperm_n(SEXP f) {
-    int* fp = INTEGER(as_uint_array(f));
-    size_t flen = Rf_length(f);
+SEXP nperm_n(SEXP freq) {
+    int* fp = INTEGER(as_uint_array(freq));
+    size_t flen = Rf_length(freq);
     return Rf_ScalarReal(multichoose(fp, flen));
 }
 
-void npermutations_n_bigz(mpz_t z, int* f, size_t flen) {
+void npermutations_n_bigz(mpz_t z, int* freq, size_t flen) {
     mpz_set_ui(z, 1);
     size_t i, j, h;
     h = 0;
     for (i=0; i<flen; i++) {
-        for (j=1; j<=f[i]; j++) {
+        for (j=1; j<=freq[i]; j++) {
             h++;
             mpz_mul_ui(z, z, h);
             mpz_cdiv_q_ui(z, z, j);
@@ -271,9 +271,9 @@ void npermutations_n_bigz(mpz_t z, int* f, size_t flen) {
     }
 }
 
-SEXP nperm_n_bigz(SEXP f) {
-    int* fp = INTEGER(as_uint_array(f));
-    size_t flen = Rf_length(f);
+SEXP nperm_n_bigz(SEXP freq) {
+    int* fp = INTEGER(as_uint_array(freq));
+    size_t flen = Rf_length(freq);
     mpz_t z;
     mpz_init(z);
     npermutations_n_bigz(z, fp, flen);

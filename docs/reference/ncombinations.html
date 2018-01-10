@@ -94,7 +94,8 @@
     <p>Number of combinations</p>
     
 
-    <pre class="usage"><span class='fu'>ncombinations</span>(<span class='no'>n</span>, <span class='no'>k</span>, <span class='kw'>x</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>f</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>replace</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>bigz</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+    <pre class="usage"><span class='fu'>ncombinations</span>(<span class='no'>n</span>, <span class='no'>k</span>, <span class='kw'>x</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>freq</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>replace</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>bigz</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -112,7 +113,7 @@
       <td><p>an optional vector indicating item labels</p></td>
     </tr>
     <tr>
-      <th>f</th>
+      <th>freq</th>
       <td><p>an integer vector of item repeat frequencies</p></td>
     </tr>
     <tr>
@@ -139,7 +140,7 @@
 #&gt; [1] 40225345056</div><div class='input'>
 <span class='co'># number of combinations of `c("a", "b", "b")`</span>
 <span class='co'># they are `c("a", "b")` and `c("b", "b")`</span>
-<span class='fu'>ncombinations</span>(<span class='kw'>f</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>1</span>, <span class='fl'>2</span>), <span class='kw'>k</span> <span class='kw'>=</span> <span class='fl'>2</span>)</div><div class='output co'>#&gt; [1] 2</div><div class='input'>
+<span class='fu'>ncombinations</span>(<span class='kw'>freq</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>1</span>, <span class='fl'>2</span>), <span class='kw'>k</span> <span class='kw'>=</span> <span class='fl'>2</span>)</div><div class='output co'>#&gt; [1] 2</div><div class='input'>
 <span class='co'># zero sized combinations</span>
 <span class='fu'>ncombinations</span>(<span class='fl'>5</span>, <span class='fl'>0</span>)</div><div class='output co'>#&gt; [1] 1</div><div class='input'><span class='fu'>ncombinations</span>(<span class='fl'>5</span>, <span class='fl'>6</span>)</div><div class='output co'>#&gt; [1] 0</div><div class='input'><span class='fu'>ncombinations</span>(<span class='fl'>0</span>, <span class='fl'>1</span>)</div><div class='output co'>#&gt; [1] 0</div><div class='input'><span class='fu'>ncombinations</span>(<span class='fl'>0</span>, <span class='fl'>0</span>)</div><div class='output co'>#&gt; [1] 1</div><div class='input'>
 </div></pre>

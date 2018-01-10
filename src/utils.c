@@ -153,12 +153,12 @@ double choose(size_t n, size_t k) {
     return out;
 }
 
-double multichoose(int* f, size_t flen) {
+double multichoose(int* freq, size_t flen) {
     double out = 1;
     size_t h, i, j;
     h = 0;
     for (i=0; i<flen; i++) {
-        for (j=1; j<=f[i]; j++) {
+        for (j=1; j<=freq[i]; j++) {
             h++;
             out = out * h / j;
         }

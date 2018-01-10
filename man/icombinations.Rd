@@ -9,7 +9,7 @@
 \usage{
 Combinations
 
-icombinations(n, k, x = NULL, f = NULL, replace = FALSE)
+icombinations(n, k, x = NULL, freq = NULL, replace = FALSE)
 }
 \arguments{
 \item{n}{an integer, would be determined implicitly from \code{x} or \code{f} if missing}
@@ -18,7 +18,7 @@ icombinations(n, k, x = NULL, f = NULL, replace = FALSE)
 
 \item{x}{an optional vector indicating item labels}
 
-\item{f}{an integer vector of item repeat frequencies}
+\item{freq}{an integer vector of item repeat frequencies}
 
 \item{replace}{an logical to draw items with replacement}
 }
@@ -30,7 +30,7 @@ combinations of the iterator can be fetched via the \code{collect()} method.
 \details{
 The \code{Combinations} class can be initialized by using the convenient wrapper \code{icombinations} or
 \preformatted{
-Combinations$new(n, k, x = NULL, f = NULL, replace = FALSE)
+Combinations$new(n, k, x = NULL, freq = NULL, replace = FALSE)
 }
 
 \preformatted{

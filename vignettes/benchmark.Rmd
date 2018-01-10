@@ -86,7 +86,7 @@ x <- rep(1:5, f)
 microbenchmark(
     multicool = allPerm(initMC(x)),
     RcppAlgos = permuteGeneral(1:5, freqs = f),
-    arrangements = permutations(f = f),
+    arrangements = permutations(freq = f),
     unit = "relative"
 )
 ```
@@ -99,7 +99,7 @@ x <- rep(1:5, f)
 microbenchmark(
     multicool = allPerm(initMC(x)),
     RcppAlgos = permuteGeneral(5, 6, freqs = f),
-    arrangements = permutations(f = f, k = 6),
+    arrangements = permutations(freq = f, k = 6),
     unit = "relative"
 )
 ```
@@ -137,7 +137,7 @@ f <- c(2, 1, 2, 1, 2, 2, 1, 2)
 x <- rep(1:8, f)
 microbenchmark(
     RcppAlgos = comboGeneral(8, 6, freqs = f),
-    arrangements = combinations(f = f, k = 6),
+    arrangements = combinations(freq = f, k = 6),
     unit = "relative"
 )
 ```

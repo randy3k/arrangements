@@ -98,7 +98,7 @@ combinations of the iterator can be fetched via the <code>collect()</code> metho
 
     <pre class="usage"><span class='no'>Combinations</span>
 
-<span class='fu'>icombinations</span>(<span class='no'>n</span>, <span class='no'>k</span>, <span class='kw'>x</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>f</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>replace</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+<span class='fu'>icombinations</span>(<span class='no'>n</span>, <span class='no'>k</span>, <span class='kw'>x</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>freq</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>replace</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -116,7 +116,7 @@ combinations of the iterator can be fetched via the <code>collect()</code> metho
       <td><p>an optional vector indicating item labels</p></td>
     </tr>
     <tr>
-      <th>f</th>
+      <th>freq</th>
       <td><p>an integer vector of item repeat frequencies</p></td>
     </tr>
     <tr>
@@ -132,7 +132,7 @@ combinations of the iterator can be fetched via the <code>collect()</code> metho
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>The <code>Combinations</code> class can be initialized by using the convenient wrapper <code>icombinations</code> or</p><pre>
-Combinations$new(n, k, x = NULL, f = NULL, replace = FALSE)
+Combinations$new(n, k, x = NULL, freq = NULL, replace = FALSE)
 </pre>
     <pre>
 getnext(d = 1L, type = NULL, drop = d == 1L &amp;&amp; is.null(type))

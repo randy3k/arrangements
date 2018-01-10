@@ -4,7 +4,7 @@
 \alias{permutations}
 \title{Permutations generator}
 \usage{
-permutations(n, k = n, x = NULL, f = NULL, replace = FALSE,
+permutations(n, k = n, x = NULL, freq = NULL, replace = FALSE,
   type = "r")
 }
 \arguments{
@@ -14,7 +14,7 @@ permutations(n, k = n, x = NULL, f = NULL, replace = FALSE,
 
 \item{x}{an optional vector indicating item labels}
 
-\item{f}{an integer vector of item repeat frequencies}
+\item{freq}{an integer vector of item repeat frequencies}
 
 \item{replace}{an logical to draw items with replacement}
 
@@ -34,7 +34,7 @@ permutations(4, 2)
 permutations(x = LETTERS[1:3], k = 2)
 
 # multiset with frequencies c(2, 3)
-permutations(f = c(2, 3), k = 3)
+permutations(freq = c(2, 3), k = 3)
 
 # with replacement
 permutations(4, 2, replace = TRUE)
