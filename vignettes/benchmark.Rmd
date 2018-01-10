@@ -135,3 +135,26 @@ microbenchmark(
     unit = "relative"
 )
 ```
+
+### Partitions
+
+
+**Partitions of 30**
+
+```{r}
+microbenchmark(
+    partitions = parts(30),
+    arrangements = partitions(30),
+    unit = "relative"
+)
+```
+
+**Partitions of 50 into 10 parts**
+
+```{r}
+microbenchmark(
+    partitions = restrictedparts(50, 10),
+    arrangements = partitions(50, 10),
+    unit = "relative"
+)
+```
