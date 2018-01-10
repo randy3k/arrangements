@@ -1,11 +1,10 @@
 #' @details
-#' The `Combinations` class can be initialized by using the convenient wrapper `icombinations` or 
+#' The `Combinations` class can be initialized by using the convenient wrapper `icombinations` or
 #' \preformatted{
 #' Combinations$new(n, k, x = NULL, f = NULL, replace = FALSE)
 #' }
 #' @template iterator_methods
 #' @rdname icombinations
-#' @name Combinations-class
 #' @export
 Combinations <- R6::R6Class(
     "Combinations",

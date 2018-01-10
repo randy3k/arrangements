@@ -5,7 +5,6 @@
 #' }
 #' @template iterator_methods
 #' @rdname ipermutations
-#' @name Permutations-class
 #' @export
 Permutations <- R6::R6Class(
     "Permutations",

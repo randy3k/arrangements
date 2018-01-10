@@ -5,7 +5,6 @@
 #' }
 #' @template iterator_methods
 #' @rdname ipartitions
-#' @name Partitions-class
 #' @export
 Partitions <- R6::R6Class(
     "Partitions",
