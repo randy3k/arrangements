@@ -1,0 +1,137 @@
+---
+title: "Benchmarking 'arrangements'"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Benchmarking 'arrangements'}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+The goal of this document is to compare the performances of some of the existing packages for generating combinations, permutations and partitions.
+
+- [gtools](https://CRAN.R-project.org/package=gtools) 
+    `r packageDescription("gtools")$Version`
+- [combinat](https://CRAN.R-project.org/package=combinat) 
+    `r packageDescription("combinat")$Version`
+- [multicool](https://CRAN.R-project.org/package=multicool) 
+    `r packageDescription("multicool")$Version`
+- [partitions](https://CRAN.R-project.org/package=partitions)
+    `r packageDescription("partitions")$Version`
+- [permute](https://CRAN.R-project.org/package=permute)
+    `r packageDescription("permute")$Version`
+- [permutations](https://CRAN.R-project.org/package=permutations)
+    `r packageDescription("permutations")$Version`
+- [RcppAlgos](https://CRAN.R-project.org/package=RcppAlgos)
+    `r packageDescription("RcppAlgos")$Version`
+- [iterpc](https://CRAN.R-project.org/package=iterpc): it is omitted as `arrangements` is thought of a replacement of `iterpc`.
+
+```{r, echo = F}
+suppressPackageStartupMessages({
+    library(microbenchmark)
+    library(gtools)
+    library(combinat)
+    library(multicool)
+    library(partitions)
+    library(permute)
+    library(permutations)
+    library(RcppAlgos)
+    library(arrangements)
+    gtools.permutations = gtools::permutations
+    gtools.combinations = gtools::combinations
+    ucombn = utils::combn
+})
+options(digits=3)
+```
+
+### Permutations
+
+**Permutation of 7 items**
+
+```{r}
+microbenchmark(
+    gtools = gtools.permutations(7, 7),
+    multicool = allPerm(initMC(1:7)),
+    partitions = partitions::perms(7),
+    permuate = allPerms(7),
+    permutations = allperms(7),
+    RcppAlgos = permuteGeneral(7, 7),
+    arrangements = permutations(7),
+    times = 10,
+    unit = "relative"
+)
+```
+
+**5-Permutation of 7 items**
+
+```{r}
+microbenchmark(
+    gtools = gtools.permutations(7, 5),
+    RcppAlgos = permuteGeneral(7, 5),
+    arrangements = permutations(7, 5),
+    unit = "relative"
+)
+```
+
+**Permutation of multiset**
+
+```{r}
+f <- c(2, 1, 2, 1, 2)
+x <- rep(1:5, f)
+microbenchmark(
+    multicool = allPerm(initMC(x)),
+    RcppAlgos = permuteGeneral(1:5, freqs = f),
+    arrangements = permutations(f = f),
+    unit = "relative"
+)
+```
+
+**K-Permutation of multiset**
+
+```{r}
+f <- c(2, 1, 2, 1, 2)
+x <- rep(1:5, f)
+microbenchmark(
+    multicool = allPerm(initMC(x)),
+    RcppAlgos = permuteGeneral(5, 6, freqs = f),
+    arrangements = permutations(f = f, k = 6),
+    unit = "relative"
+)
+```
+
+### Combinations
+
+**7-Combinations of 15 items**
+
+```{r}
+microbenchmark(
+    gtools = gtools.combinations(15, 7),
+    combinat = combn(15, 7),
+    utils = ucombn(15, 7),
+    RcppAlgos = comboGeneral(15, 7),
+    arrangements = combinations(15, 7),
+    unit = "relative"
+)
+```
+
+**Combinations with replacement of 9 items**
+
+```{r}
+microbenchmark(
+    gtools = gtools.combinations(9, 6, repeats.allowed = TRUE),
+    RcppAlgos = comboGeneral(9, 6, repetition = TRUE),
+    arrangements = combinations(9, 6, replace = TRUE),
+    unit = "relative"
+)
+```
+
+**Combinations of multiset**
+
+```{r}
+f <- c(2, 1, 2, 1, 2, 2, 1, 2)
+x <- rep(1:8, f)
+microbenchmark(
+    RcppAlgos = comboGeneral(8, 6, freqs = f),
+    arrangements = combinations(f = f, k = 6),
+    unit = "relative"
+)
+```

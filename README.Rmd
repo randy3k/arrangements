@@ -6,11 +6,11 @@ output:
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 ```{r results='asis', echo = FALSE, eval = TRUE}
-d <- desc::desc(package = "arrangements")
+d <- packageDescription("arrangements")
 ```
 
 ```{r results="asis", echo = FALSE, eval = TRUE}
-cat(paste0("# ", paste(trimws(strsplit(d$get("Title"), "\n")$Title), collapse=" ")))
+cat(c("# ", paste(trimws(strsplit(d$Title, "\n")[[1]]), collapse=" ")))
 ```
 
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/arrangements)](https://cran.r-project.org/package=arrangements)
@@ -21,7 +21,7 @@ Documentation: [http://randy3k.github.io/arrangements](https://randy3k.github.io
 
 
 ```{r results="asis", echo = FALSE, eval = TRUE}
-cat(d$get("Description"))
+cat(d$Description)
 ```
 
 ## Installation
