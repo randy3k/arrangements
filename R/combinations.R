@@ -200,7 +200,7 @@ next_combinations <- function(n, k, d, state, x, freq, replace, type) {
 #'
 #' @export
 combinations <- function(n, k, x = NULL, freq = NULL, replace = FALSE, type = "r") {
-    if (!is.null(freq)) {
+    if (!replace && !is.null(freq)) {
         n <- sum(freq)
         is.null(x) || length(freq) == length(x) || stop("length of x and freq should be the same")
     } else if (!is.null(x)) {
@@ -230,7 +230,7 @@ combinations <- function(n, k, x = NULL, freq = NULL, replace = FALSE, type = "r
 #' }
 #' @export
 icombinations <- function(n, k, x = NULL, freq = NULL, replace = FALSE) {
-    if (!is.null(freq)) {
+    if (!replace && !is.null(freq)) {
         n <- sum(freq)
         is.null(x) || length(freq) == length(x) || stop("length of x and freq should be the same")
     } else if (!is.null(x)) {
@@ -263,7 +263,7 @@ icombinations <- function(n, k, x = NULL, freq = NULL, replace = FALSE) {
 #'
 #' @export
 ncombinations <- function(n, k, x = NULL, freq  =NULL, replace = FALSE, bigz = FALSE) {
-    if (!is.null(freq)) {
+    if (!replace && !is.null(freq)) {
         n <- sum(freq)
         is.null(x) || length(freq) == length(x) || stop("length of x and freq should be the same")
     } else if (!is.null(x)) {

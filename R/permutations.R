@@ -209,7 +209,7 @@ next_permutations <- function(n, k, d, state, x, freq, replace, type) {
 #'
 #' @export
 permutations <- function(n, k=n, x = NULL, freq = NULL, replace = FALSE, type = "r") {
-    if (!is.null(freq)) {
+    if (!replace && !is.null(freq)) {
         n <- sum(freq)
         is.null(x) || length(freq) == length(x) || stop("length of x and freq should be the same")
     } else if (!is.null(x)) {
@@ -241,7 +241,7 @@ permutations <- function(n, k=n, x = NULL, freq = NULL, replace = FALSE, type = 
 #' }
 #' @export
 ipermutations <- function(n, k=n, x = NULL, freq = NULL, replace = FALSE) {
-    if (!is.null(freq)) {
+    if (!replace && !is.null(freq)) {
         n <- sum(freq)
         is.null(x) || length(freq) == length(x) || stop("length of x and freq should be the same")
     } else if (!is.null(x)) {
@@ -276,7 +276,7 @@ ipermutations <- function(n, k=n, x = NULL, freq = NULL, replace = FALSE) {
 #' npermutations(0, 0)
 #' @export
 npermutations <- function(n, k=n, x = NULL, freq = NULL, replace = FALSE, bigz = FALSE) {
-    if (!is.null(freq)) {
+    if (!replace && !is.null(freq)) {
         n <- sum(freq)
         is.null(x) || length(freq) == length(x) || stop("length of x and freq should be the same")
     } else if (!is.null(x)) {
