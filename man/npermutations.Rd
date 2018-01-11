@@ -8,7 +8,8 @@ npermutations(n, k = n, x = NULL, freq = NULL, replace = FALSE,
   bigz = FALSE)
 }
 \arguments{
-\item{n}{an integer, would be determined implicitly from \code{x} or \code{f} if missing}
+\item{n}{an integer. If `freq` is not NULL, `n` would be set as `sum(f)`,
+otherwise if `x` is not NULL, `n` would be set as `length(x)`.}
 
 \item{k}{an integer}
 

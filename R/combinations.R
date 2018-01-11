@@ -200,21 +200,20 @@ next_combinations <- function(n, k, d, state, x, freq, replace, type) {
 #'
 #' @export
 combinations <- function(n, k, x = NULL, freq = NULL, replace = FALSE, type = "r") {
-    if (missing(n)) {
-        if (is.null(freq) && !is.null(x)) {
-            n <- length(x)
-        } else if (!is.null(freq)) {
-            n <- sum(freq)
-        }
+    if (!is.null(freq)) {
+        n <- sum(freq)
+        is.null(x) || length(freq) == length(x) || stop("length of x and freq should be the same")
+    } else if (!is.null(x)) {
+        n <- length(x)
     }
     next_combinations(n, k, -1L, NULL, x, freq, replace, type)
 }
 
 #' @title Combinations iterator
 #' @description
-#' This function returns a [Combinations](Combinations-class.html) iterator which
-#' allows users to fetch the next combination(s) via the `getnext()` method. All remaing
-#' combinations of the iterator can be fetched via the `collect()` method.
+#' This function returns a [Combinations](Combinations-class.html) iterator for iterating
+#' combinations of `k` items from `n` items. The iterator allows users to fetch the next
+#' combination(s) via the `getnext()` method.
 #' @template param_pc
 #' @seealso [combinations] for generating all combinations and [ncombinations] to calculate number of combinations
 #' @examples
@@ -231,12 +230,11 @@ combinations <- function(n, k, x = NULL, freq = NULL, replace = FALSE, type = "r
 #' }
 #' @export
 icombinations <- function(n, k, x = NULL, freq = NULL, replace = FALSE) {
-    if (missing(n)) {
-        if (is.null(freq) && !is.null(x)) {
-            n <- length(x)
-        } else if (!is.null(freq)) {
-            n <- sum(freq)
-        }
+    if (!is.null(freq)) {
+        n <- sum(freq)
+        is.null(x) || length(freq) == length(x) || stop("length of x and freq should be the same")
+    } else if (!is.null(x)) {
+        n <- length(x)
     }
     Combinations$new(n, k, x, freq, replace)
 }
@@ -265,18 +263,14 @@ icombinations <- function(n, k, x = NULL, freq = NULL, replace = FALSE) {
 #'
 #' @export
 ncombinations <- function(n, k, x = NULL, freq  =NULL, replace = FALSE, bigz = FALSE) {
-    if (missing(n)) {
-        if (is.null(freq) && !is.null(x)) {
-            n <- length(x)
-        } else if (!is.null(freq)) {
-            n <- sum(freq)
-        }
+    if (!is.null(freq)) {
+        n <- sum(freq)
+        is.null(x) || length(freq) == length(x) || stop("length of x and freq should be the same")
+    } else if (!is.null(x)) {
+        n <- length(x)
     }
     (n %% 1 == 0  && n >= 0) || stop("expect non-negative integer")
     (k %% 1 == 0  && k >= 0) || stop("expect non-negative integer")
-    if (!is.null(freq)) {
-        freq <- as_uint_array(freq)
-    }
     if (bigz) {
         if (replace) {
             out <- gmp::chooseZ(n + k - 1, k)

@@ -25,21 +25,19 @@ The goal of this document is to compare the performances of some of the existing
     `r packageDescription("RcppAlgos")$Version`
 - [iterpc](https://CRAN.R-project.org/package=iterpc): it is omitted as `arrangements` is thought of a replacement of `iterpc`.
 
-```{r}
-suppressPackageStartupMessages({
-    library(microbenchmark)
-    library(gtools)
-    library(combinat)
-    library(multicool)
-    library(partitions)
-    library(permute)
-    library(permutations)
-    library(RcppAlgos)
-    library(arrangements)
-    gtools.permutations = gtools::permutations
-    gtools.combinations = gtools::combinations
-    ucombn = utils::combn
-})
+```{r, warning = FALSE, message = FALSE}
+library(microbenchmark)
+library(gtools)
+library(combinat)
+library(multicool)
+library(partitions)
+library(permute)
+library(permutations)
+library(RcppAlgos)
+library(arrangements)
+gtools.permutations <- gtools::permutations
+gtools.combinations <- gtools::combinations
+utils.combn <- utils::combn
 ```
 
 ```{r, echo = FALSE}
@@ -47,27 +45,34 @@ options(digits=3)
 ```
 
 `gtools::permutations`, `gtools::combinations` and `utils::combn` are renamed because they are
-being overwritten by `arrangements::permutations`, `arrangements::combinations` and `combinat::combm` respectively.
+being overwritten by `arrangements::permutations`, `arrangements::combinations` and `combinat::combn` respectively.
 
 ### Permutations
 
-**Permutation of 7 items**
+**Permutations of 6 items**
+
+```{r, echo = FALSE, results = "hide"}
+gc()
+```
 
 ```{r}
 microbenchmark(
-    gtools = gtools.permutations(7, 7),
-    multicool = allPerm(initMC(1:7)),
-    partitions = partitions::perms(7),
-    permuate = allPerms(7),
-    permutations = allperms(7),
-    RcppAlgos = permuteGeneral(7, 7),
-    arrangements = permutations(7),
-    times = 10,
+    gtools = gtools.permutations(6, 6),
+    multicool = allPerm(initMC(1:6)),
+    partitions = partitions::perms(6),
+    permuate = allPerms(6),
+    permutations = allperms(6),
+    RcppAlgos = permuteGeneral(6, 6),
+    arrangements = permutations(6),
     unit = "relative"
 )
 ```
 
-**5-Permutation of 7 items**
+**5-Permutations of 7 items**
+
+```{r, echo = FALSE, results = "hide"}
+gc()
+```
 
 ```{r}
 microbenchmark(
@@ -78,20 +83,28 @@ microbenchmark(
 )
 ```
 
-**Permutation of multiset**
+**Permutations of multiset**
+
+```{r, echo = FALSE, results = "hide"}
+gc()
+```
 
 ```{r}
 f <- c(2, 1, 2, 1, 2)
 x <- rep(1:5, f)
 microbenchmark(
     multicool = allPerm(initMC(x)),
-    RcppAlgos = permuteGeneral(1:5, freqs = f),
+    RcppAlgos = permuteGeneral(5, freqs = f),
     arrangements = permutations(freq = f),
     unit = "relative"
 )
 ```
 
-**K-Permutation of multiset**
+**K-Permutations of multiset**
+
+```{r, echo = FALSE, results = "hide"}
+gc()
+```
 
 ```{r}
 f <- c(2, 1, 2, 1, 2)
@@ -108,11 +121,15 @@ microbenchmark(
 
 **7-Combinations of 15 items**
 
+```{r, echo = FALSE, results = "hide"}
+gc()
+```
+
 ```{r}
 microbenchmark(
     gtools = gtools.combinations(15, 7),
     combinat = combn(15, 7),
-    utils = ucombn(15, 7),
+    utils = utils.combn(15, 7),
     RcppAlgos = comboGeneral(15, 7),
     arrangements = combinations(15, 7),
     unit = "relative"
@@ -120,6 +137,10 @@ microbenchmark(
 ```
 
 **Combinations with replacement of 9 items**
+
+```{r, echo = FALSE, results = "hide"}
+gc()
+```
 
 ```{r}
 microbenchmark(
@@ -131,6 +152,10 @@ microbenchmark(
 ```
 
 **Combinations of multiset**
+
+```{r, echo = FALSE, results = "hide"}
+gc()
+```
 
 ```{r}
 f <- c(2, 1, 2, 1, 2, 2, 1, 2)
@@ -147,6 +172,10 @@ microbenchmark(
 
 **Partitions of 30**
 
+```{r, echo = FALSE, results = "hide"}
+gc()
+```
+
 ```{r}
 microbenchmark(
     partitions = parts(30),
@@ -156,6 +185,10 @@ microbenchmark(
 ```
 
 **Partitions of 50 into 10 parts**
+
+```{r, echo = FALSE, results = "hide"}
+gc()
+```
 
 ```{r}
 microbenchmark(

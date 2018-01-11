@@ -103,7 +103,8 @@ The results are in lexicographical order.</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>n</th>
-      <td><p>an integer, would be determined implicitly from <code>x</code> or <code>f</code> if missing</p></td>
+      <td><p>an integer. If `freq` is not NULL, `n` would be set as `sum(f)`,
+otherwise if `x` is not NULL, `n` would be set as `length(x)`.</p></td>
     </tr>
     <tr>
       <th>k</th>

@@ -91,9 +91,9 @@
     </div>
 
     
-    <p>This function returns a <a href='Combinations-class.html'>Combinations</a> iterator which
-allows users to fetch the next combination(s) via the <code>getnext()</code> method. All remaing
-combinations of the iterator can be fetched via the <code>collect()</code> method.</p>
+    <p>This function returns a <a href='Combinations-class.html'>Combinations</a> iterator for iterating
+combinations of <code>k</code> items from <code>n</code> items. The iterator allows users to fetch the next
+combination(s) via the <code>getnext()</code> method.</p>
     
 
     <pre class="usage"><span class='no'>Combinations</span>
@@ -105,7 +105,8 @@ combinations of the iterator can be fetched via the <code>collect()</code> metho
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>n</th>
-      <td><p>an integer, would be determined implicitly from <code>x</code> or <code>f</code> if missing</p></td>
+      <td><p>an integer. If `freq` is not NULL, `n` would be set as `sum(f)`,
+otherwise if `x` is not NULL, `n` would be set as `length(x)`.</p></td>
     </tr>
     <tr>
       <th>k</th>

@@ -209,22 +209,21 @@ next_permutations <- function(n, k, d, state, x, freq, replace, type) {
 #'
 #' @export
 permutations <- function(n, k=n, x = NULL, freq = NULL, replace = FALSE, type = "r") {
-    if (missing(n)) {
-        if (is.null(freq) && !is.null(x)) {
-            n <- length(x)
-        } else if (!is.null(freq)) {
-            n <- sum(freq)
-        }
+    if (!is.null(freq)) {
+        n <- sum(freq)
+        is.null(x) || length(freq) == length(x) || stop("length of x and freq should be the same")
+    } else if (!is.null(x)) {
+        n <- length(x)
     }
     next_permutations(n, k, -1L, NULL, x, freq, replace, type)
 }
 
 
-#' Permutations iterator
-#'
-#' This function returns a [Permutations](Permutations-class.html) iterator which
-#' allows users to fetch the next permutation(s) via the `getnext()` method. All remaing
-#' permutations of the iterator can be fetched via the `collect()` method.
+#' @title Permutations iterator
+#' @description
+#' This function returns a [Permutations](Permutations-class.html) iterator for iterating
+#' permutations of `k` items from `n` items. The iterator allows users to fetch the next
+#' permutation(s) via the `getnext()` method.
 #'
 #' @template param_pc
 #' @seealso [permutations] for generating all permutations and [npermutations] to calculate number of permutations
@@ -242,12 +241,11 @@ permutations <- function(n, k=n, x = NULL, freq = NULL, replace = FALSE, type = 
 #' }
 #' @export
 ipermutations <- function(n, k=n, x = NULL, freq = NULL, replace = FALSE) {
-    if (missing(n)) {
-        if (is.null(freq) && !is.null(x)) {
-            n <- length(x)
-        } else if (!is.null(freq)) {
-            n <- sum(freq)
-        }
+    if (!is.null(freq)) {
+        n <- sum(freq)
+        is.null(x) || length(freq) == length(x) || stop("length of x and freq should be the same")
+    } else if (!is.null(x)) {
+        n <- length(x)
     }
     Permutations$new(n, k, x, freq, replace)
 }
@@ -278,12 +276,11 @@ ipermutations <- function(n, k=n, x = NULL, freq = NULL, replace = FALSE) {
 #' npermutations(0, 0)
 #' @export
 npermutations <- function(n, k=n, x = NULL, freq = NULL, replace = FALSE, bigz = FALSE) {
-    if (missing(n)) {
-        if (is.null(freq) && !is.null(x)) {
-            n <- length(x)
-        } else if (!is.null(freq)) {
-            n <- sum(freq)
-        }
+    if (!is.null(freq)) {
+        n <- sum(freq)
+        is.null(x) || length(freq) == length(x) || stop("length of x and freq should be the same")
+    } else if (!is.null(x)) {
+        n <- length(x)
     }
     (n %% 1 == 0  && n >= 0) || stop("expect non-negative integer")
     (k %% 1 == 0  && k >= 0) || stop("expect non-negative integer")

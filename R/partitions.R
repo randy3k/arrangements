@@ -173,7 +173,7 @@ next_partitions <- function(n, k, d, state, descending, type) {
 
 #' Partitions generator
 #'
-#' This function partitions an non-negative interger into `k` parts or any part size.
+#' This function partitions an non-negative interger `n` into `k` parts or any part size.
 #' The results are in lexicographical or reversed lexicographical order.
 #'
 #' @param n an non-negative integer to be partitioned
@@ -212,11 +212,11 @@ partitions <- function(n, k = NULL, descending = FALSE, type = "r") {
     next_partitions(n, k, -1L, NULL, descending, type)
 }
 
-#' Partitions iterator
-#'
-#' This function returns a [Partitions](Partitions-class.html) iterator which
-#' allows users to fetch the next partition(s) via the `getnext()` method. All remaing
-#' partitions of the iterator can be fetched via the `collect()` method.
+#' @title Partitions iterator
+#' @description
+#' This function returns a [Partitions](Partitions-class.html) iterator for iterating
+#' partitions of an non-negative integer `n` into `k` parts or any part size.
+#' The iterator allows users to fetch the next partition(s) via the `getnext()` method.
 #'
 #' @param n an non-negative integer to be partitioned
 #' @param k number of parts

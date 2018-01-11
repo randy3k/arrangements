@@ -17,7 +17,7 @@ partitions(n, k = NULL, descending = FALSE, type = "r")
 "row-major" matrix, a "column-major" matrix or a list respectively}
 }
 \description{
-This function partitions an non-negative interger into \code{k} parts or any part size.
+This function partitions an non-negative interger \code{n} into \code{k} parts or any part size.
 The results are in lexicographical or reversed lexicographical order.
 }
 \examples{

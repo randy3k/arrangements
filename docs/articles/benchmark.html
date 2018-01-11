@@ -88,44 +88,41 @@
 <li>
 <a href="https://CRAN.R-project.org/package=iterpc">iterpc</a>: it is omitted as <code>arrangements</code> is thought of a replacement of <code>iterpc</code>.</li>
 </ul>
-<pre class="sourceCode r" id="cb1"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">suppressPackageStartupMessages</span>({</a>
-<a class="sourceLine" id="cb1-2" data-line-number="2">    <span class="kw">library</span>(microbenchmark)</a>
-<a class="sourceLine" id="cb1-3" data-line-number="3">    <span class="kw">library</span>(gtools)</a>
-<a class="sourceLine" id="cb1-4" data-line-number="4">    <span class="kw">library</span>(combinat)</a>
-<a class="sourceLine" id="cb1-5" data-line-number="5">    <span class="kw">library</span>(multicool)</a>
-<a class="sourceLine" id="cb1-6" data-line-number="6">    <span class="kw">library</span>(partitions)</a>
-<a class="sourceLine" id="cb1-7" data-line-number="7">    <span class="kw">library</span>(permute)</a>
-<a class="sourceLine" id="cb1-8" data-line-number="8">    <span class="kw">library</span>(permutations)</a>
-<a class="sourceLine" id="cb1-9" data-line-number="9">    <span class="kw">library</span>(RcppAlgos)</a>
-<a class="sourceLine" id="cb1-10" data-line-number="10">    <span class="kw">library</span>(arrangements)</a>
-<a class="sourceLine" id="cb1-11" data-line-number="11">    gtools.permutations =<span class="st"> </span>gtools<span class="op">::</span>permutations</a>
-<a class="sourceLine" id="cb1-12" data-line-number="12">    gtools.combinations =<span class="st"> </span>gtools<span class="op">::</span>combinations</a>
-<a class="sourceLine" id="cb1-13" data-line-number="13">    ucombn =<span class="st"> </span>utils<span class="op">::</span>combn</a>
-<a class="sourceLine" id="cb1-14" data-line-number="14">})</a></code></pre>
-<p><code><a href="http://www.rdocumentation.org/packages/gtools/topics/combinations">gtools::permutations</a></code>, <code><a href="http://www.rdocumentation.org/packages/gtools/topics/combinations">gtools::combinations</a></code> and <code><a href="http://www.rdocumentation.org/packages/utils/topics/combn">utils::combn</a></code> are renamed because they are being overwritten by <code><a href="http://www.rdocumentation.org/packages/arrangements/topics/permutations">arrangements::permutations</a></code>, <code><a href="http://www.rdocumentation.org/packages/arrangements/topics/combinations">arrangements::combinations</a></code> and <code>combinat::combm</code> respectively.</p>
+<pre class="sourceCode r" id="cb1"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">library</span>(microbenchmark)</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw">library</span>(gtools)</a>
+<a class="sourceLine" id="cb1-3" data-line-number="3"><span class="kw">library</span>(combinat)</a>
+<a class="sourceLine" id="cb1-4" data-line-number="4"><span class="kw">library</span>(multicool)</a>
+<a class="sourceLine" id="cb1-5" data-line-number="5"><span class="kw">library</span>(partitions)</a>
+<a class="sourceLine" id="cb1-6" data-line-number="6"><span class="kw">library</span>(permute)</a>
+<a class="sourceLine" id="cb1-7" data-line-number="7"><span class="kw">library</span>(permutations)</a>
+<a class="sourceLine" id="cb1-8" data-line-number="8"><span class="kw">library</span>(RcppAlgos)</a>
+<a class="sourceLine" id="cb1-9" data-line-number="9"><span class="kw">library</span>(arrangements)</a>
+<a class="sourceLine" id="cb1-10" data-line-number="10">gtools.permutations &lt;-<span class="st"> </span>gtools<span class="op">::</span>permutations</a>
+<a class="sourceLine" id="cb1-11" data-line-number="11">gtools.combinations &lt;-<span class="st"> </span>gtools<span class="op">::</span>combinations</a>
+<a class="sourceLine" id="cb1-12" data-line-number="12">utils.combn &lt;-<span class="st"> </span>utils<span class="op">::</span>combn</a></code></pre>
+<p><code><a href="http://www.rdocumentation.org/packages/gtools/topics/combinations">gtools::permutations</a></code>, <code><a href="http://www.rdocumentation.org/packages/gtools/topics/combinations">gtools::combinations</a></code> and <code><a href="http://www.rdocumentation.org/packages/utils/topics/combn">utils::combn</a></code> are renamed because they are being overwritten by <code><a href="http://www.rdocumentation.org/packages/arrangements/topics/permutations">arrangements::permutations</a></code>, <code><a href="http://www.rdocumentation.org/packages/arrangements/topics/combinations">arrangements::combinations</a></code> and <code><a href="http://www.rdocumentation.org/packages/combinat/topics/combn">combinat::combn</a></code> respectively.</p>
 <section id="permutations" class="level3"><h3>Permutations</h3>
-<p><strong>Permutation of 7 items</strong></p>
+<p><strong>Permutations of 6 items</strong></p>
 <pre class="sourceCode r" id="cb2"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw"><a href="http://www.rdocumentation.org/packages/microbenchmark/topics/microbenchmark">microbenchmark</a></span>(</a>
-<a class="sourceLine" id="cb2-2" data-line-number="2">    <span class="dt">gtools =</span> <span class="kw">gtools.permutations</span>(<span class="dv">7</span>, <span class="dv">7</span>),</a>
-<a class="sourceLine" id="cb2-3" data-line-number="3">    <span class="dt">multicool =</span> <span class="kw"><a href="http://www.rdocumentation.org/packages/multicool/topics/allPerm">allPerm</a></span>(<span class="kw"><a href="http://www.rdocumentation.org/packages/multicool/topics/initMC">initMC</a></span>(<span class="dv">1</span><span class="op">:</span><span class="dv">7</span>)),</a>
-<a class="sourceLine" id="cb2-4" data-line-number="4">    <span class="dt">partitions =</span> partitions<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/partitions/topics/perms">perms</a></span>(<span class="dv">7</span>),</a>
-<a class="sourceLine" id="cb2-5" data-line-number="5">    <span class="dt">permuate =</span> <span class="kw"><a href="http://www.rdocumentation.org/packages/permute/topics/allPerms">allPerms</a></span>(<span class="dv">7</span>),</a>
-<a class="sourceLine" id="cb2-6" data-line-number="6">    <span class="dt">permutations =</span> <span class="kw"><a href="http://www.rdocumentation.org/packages/permutations/topics/allperms">allperms</a></span>(<span class="dv">7</span>),</a>
-<a class="sourceLine" id="cb2-7" data-line-number="7">    <span class="dt">RcppAlgos =</span> <span class="kw"><a href="http://www.rdocumentation.org/packages/RcppAlgos/topics/combinatoricsGeneral">permuteGeneral</a></span>(<span class="dv">7</span>, <span class="dv">7</span>),</a>
-<a class="sourceLine" id="cb2-8" data-line-number="8">    <span class="dt">arrangements =</span> <span class="kw"><a href="../reference/permutations.html">permutations</a></span>(<span class="dv">7</span>),</a>
-<a class="sourceLine" id="cb2-9" data-line-number="9">    <span class="dt">times =</span> <span class="dv">10</span>,</a>
-<a class="sourceLine" id="cb2-10" data-line-number="10">    <span class="dt">unit =</span> <span class="st">"relative"</span></a>
-<a class="sourceLine" id="cb2-11" data-line-number="11">)</a></code></pre>
+<a class="sourceLine" id="cb2-2" data-line-number="2">    <span class="dt">gtools =</span> <span class="kw">gtools.permutations</span>(<span class="dv">6</span>, <span class="dv">6</span>),</a>
+<a class="sourceLine" id="cb2-3" data-line-number="3">    <span class="dt">multicool =</span> <span class="kw"><a href="http://www.rdocumentation.org/packages/multicool/topics/allPerm">allPerm</a></span>(<span class="kw"><a href="http://www.rdocumentation.org/packages/multicool/topics/initMC">initMC</a></span>(<span class="dv">1</span><span class="op">:</span><span class="dv">6</span>)),</a>
+<a class="sourceLine" id="cb2-4" data-line-number="4">    <span class="dt">partitions =</span> partitions<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/partitions/topics/perms">perms</a></span>(<span class="dv">6</span>),</a>
+<a class="sourceLine" id="cb2-5" data-line-number="5">    <span class="dt">permuate =</span> <span class="kw"><a href="http://www.rdocumentation.org/packages/permute/topics/allPerms">allPerms</a></span>(<span class="dv">6</span>),</a>
+<a class="sourceLine" id="cb2-6" data-line-number="6">    <span class="dt">permutations =</span> <span class="kw"><a href="http://www.rdocumentation.org/packages/permutations/topics/allperms">allperms</a></span>(<span class="dv">6</span>),</a>
+<a class="sourceLine" id="cb2-7" data-line-number="7">    <span class="dt">RcppAlgos =</span> <span class="kw"><a href="http://www.rdocumentation.org/packages/RcppAlgos/topics/combinatoricsGeneral">permuteGeneral</a></span>(<span class="dv">6</span>, <span class="dv">6</span>),</a>
+<a class="sourceLine" id="cb2-8" data-line-number="8">    <span class="dt">arrangements =</span> <span class="kw"><a href="../reference/permutations.html">permutations</a></span>(<span class="dv">6</span>),</a>
+<a class="sourceLine" id="cb2-9" data-line-number="9">    <span class="dt">unit =</span> <span class="st">"relative"</span></a>
+<a class="sourceLine" id="cb2-10" data-line-number="10">)</a></code></pre>
 <pre><code>## Unit: relative
-##          expr     min      lq    mean  median      uq    max neval
-##        gtools  838.14  636.24  92.012  465.20  357.57 15.607    10
-##     multicool 1765.73 1446.62 211.384 1043.35  924.81 34.656    10
-##    partitions    1.86    1.70   0.486    1.29    1.14  0.320    10
-##      permuate 1108.30  857.08 116.606  612.06  453.01 16.122    10
-##  permutations 3228.27 2465.32 337.909 1762.99 1320.27 47.508    10
-##     RcppAlgos    2.64    2.02   0.453    1.43    1.68  0.202    10
-##  arrangements    1.00    1.00   1.000    1.00    1.00  1.000    10</code></pre>
-<p><strong>5-Permutation of 7 items</strong></p>
+##          expr     min      lq   mean median     uq    max neval
+##        gtools  486.52  291.88 249.89 225.93 231.51 158.48   100
+##     multicool  199.34  122.57 115.29  97.56 107.79 141.74   100
+##    partitions    2.25    2.41   2.04   1.98   2.01   1.01   100
+##      permuate  796.81  482.03 392.33 378.81 365.52  83.91   100
+##  permutations 1999.35 1192.09 968.57 926.90 893.16 412.36   100
+##     RcppAlgos    2.06    1.71   1.52   1.44   1.44   1.04   100
+##  arrangements    1.00    1.00   1.00   1.00   1.00   1.00   100</code></pre>
+<p><strong>5-Permutations of 7 items</strong></p>
 <pre class="sourceCode r" id="cb4"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw"><a href="http://www.rdocumentation.org/packages/microbenchmark/topics/microbenchmark">microbenchmark</a></span>(</a>
 <a class="sourceLine" id="cb4-2" data-line-number="2">    <span class="dt">gtools =</span> <span class="kw">gtools.permutations</span>(<span class="dv">7</span>, <span class="dv">5</span>),</a>
 <a class="sourceLine" id="cb4-3" data-line-number="3">    <span class="dt">RcppAlgos =</span> <span class="kw"><a href="http://www.rdocumentation.org/packages/RcppAlgos/topics/combinatoricsGeneral">permuteGeneral</a></span>(<span class="dv">7</span>, <span class="dv">5</span>),</a>
@@ -133,25 +130,25 @@
 <a class="sourceLine" id="cb4-5" data-line-number="5">    <span class="dt">unit =</span> <span class="st">"relative"</span></a>
 <a class="sourceLine" id="cb4-6" data-line-number="6">)</a></code></pre>
 <pre><code>## Unit: relative
-##          expr   min     lq    mean median     uq    max neval
-##        gtools 193.4 189.90 117.399 147.96 145.42 6.6188   100
-##     RcppAlgos   1.2   1.19   0.844   1.11   1.08 0.0595   100
-##  arrangements   1.0   1.00   1.000   1.00   1.00 1.0000   100</code></pre>
-<p><strong>Permutation of multiset</strong></p>
+##          expr    min     lq   mean median     uq   max neval
+##        gtools 201.82 196.33 157.83 146.24 153.13 80.83   100
+##     RcppAlgos   1.25   1.25   1.18   1.13   1.14  2.12   100
+##  arrangements   1.00   1.00   1.00   1.00   1.00  1.00   100</code></pre>
+<p><strong>Permutations of multiset</strong></p>
 <pre class="sourceCode r" id="cb6"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">f &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/permutations/topics/c">c</a></span>(<span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">2</span>)</a>
 <a class="sourceLine" id="cb6-2" data-line-number="2">x &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>, f)</a>
 <a class="sourceLine" id="cb6-3" data-line-number="3"><span class="kw"><a href="http://www.rdocumentation.org/packages/microbenchmark/topics/microbenchmark">microbenchmark</a></span>(</a>
 <a class="sourceLine" id="cb6-4" data-line-number="4">    <span class="dt">multicool =</span> <span class="kw"><a href="http://www.rdocumentation.org/packages/multicool/topics/allPerm">allPerm</a></span>(<span class="kw"><a href="http://www.rdocumentation.org/packages/multicool/topics/initMC">initMC</a></span>(x)),</a>
-<a class="sourceLine" id="cb6-5" data-line-number="5">    <span class="dt">RcppAlgos =</span> <span class="kw"><a href="http://www.rdocumentation.org/packages/RcppAlgos/topics/combinatoricsGeneral">permuteGeneral</a></span>(<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>, <span class="dt">freqs =</span> f),</a>
+<a class="sourceLine" id="cb6-5" data-line-number="5">    <span class="dt">RcppAlgos =</span> <span class="kw"><a href="http://www.rdocumentation.org/packages/RcppAlgos/topics/combinatoricsGeneral">permuteGeneral</a></span>(<span class="dv">5</span>, <span class="dt">freqs =</span> f),</a>
 <a class="sourceLine" id="cb6-6" data-line-number="6">    <span class="dt">arrangements =</span> <span class="kw"><a href="../reference/permutations.html">permutations</a></span>(<span class="dt">freq =</span> f),</a>
 <a class="sourceLine" id="cb6-7" data-line-number="7">    <span class="dt">unit =</span> <span class="st">"relative"</span></a>
 <a class="sourceLine" id="cb6-8" data-line-number="8">)</a></code></pre>
 <pre><code>## Unit: relative
-##          expr     min      lq   mean median      uq   max neval
-##     multicool 1638.70 1623.61 976.75 1339.9 1198.48 168.3   100
-##     RcppAlgos    1.00    1.00   1.00    1.0    1.00   1.0   100
-##  arrangements    1.05    1.12   1.01    1.1    1.03   1.3   100</code></pre>
-<p><strong>K-Permutation of multiset</strong></p>
+##          expr     min      lq    mean median      uq     max neval
+##     multicool 1611.01 1567.29 855.763   1292 1306.96 121.320   100
+##     RcppAlgos    1.03    1.03   0.891      1    1.01   0.984   100
+##  arrangements    1.00    1.00   1.000      1    1.00   1.000   100</code></pre>
+<p><strong>K-Permutations of multiset</strong></p>
 <pre class="sourceCode r" id="cb8"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">f &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/permutations/topics/c">c</a></span>(<span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">2</span>)</a>
 <a class="sourceLine" id="cb8-2" data-line-number="2">x &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>, f)</a>
 <a class="sourceLine" id="cb8-3" data-line-number="3"><span class="kw"><a href="http://www.rdocumentation.org/packages/microbenchmark/topics/microbenchmark">microbenchmark</a></span>(</a>
@@ -161,27 +158,27 @@
 <a class="sourceLine" id="cb8-7" data-line-number="7">    <span class="dt">unit =</span> <span class="st">"relative"</span></a>
 <a class="sourceLine" id="cb8-8" data-line-number="8">)</a></code></pre>
 <pre><code>## Unit: relative
-##          expr     min      lq    mean  median      uq     max neval
-##     multicool 2624.04 2569.80 1756.61 1779.34 1732.86 180.473   100
-##     RcppAlgos    1.26    1.27    1.13    1.16    1.17   0.661   100
-##  arrangements    1.00    1.00    1.00    1.00    1.00   1.000   100</code></pre>
+##          expr     min      lq    mean  median      uq    max neval
+##     multicool 2701.66 2520.87 1750.21 1952.55 1697.37 146.91   100
+##     RcppAlgos    1.33    1.27    1.35    1.12    1.18   1.01   100
+##  arrangements    1.00    1.00    1.00    1.00    1.00   1.00   100</code></pre>
 </section><section id="combinations" class="level3"><h3>Combinations</h3>
 <p><strong>7-Combinations of 15 items</strong></p>
 <pre class="sourceCode r" id="cb10"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="kw"><a href="http://www.rdocumentation.org/packages/microbenchmark/topics/microbenchmark">microbenchmark</a></span>(</a>
 <a class="sourceLine" id="cb10-2" data-line-number="2">    <span class="dt">gtools =</span> <span class="kw">gtools.combinations</span>(<span class="dv">15</span>, <span class="dv">7</span>),</a>
 <a class="sourceLine" id="cb10-3" data-line-number="3">    <span class="dt">combinat =</span> <span class="kw"><a href="http://www.rdocumentation.org/packages/combinat/topics/combn">combn</a></span>(<span class="dv">15</span>, <span class="dv">7</span>),</a>
-<a class="sourceLine" id="cb10-4" data-line-number="4">    <span class="dt">utils =</span> <span class="kw">ucombn</span>(<span class="dv">15</span>, <span class="dv">7</span>),</a>
+<a class="sourceLine" id="cb10-4" data-line-number="4">    <span class="dt">utils =</span> <span class="kw">utils.combn</span>(<span class="dv">15</span>, <span class="dv">7</span>),</a>
 <a class="sourceLine" id="cb10-5" data-line-number="5">    <span class="dt">RcppAlgos =</span> <span class="kw"><a href="http://www.rdocumentation.org/packages/RcppAlgos/topics/combinatoricsGeneral">comboGeneral</a></span>(<span class="dv">15</span>, <span class="dv">7</span>),</a>
 <a class="sourceLine" id="cb10-6" data-line-number="6">    <span class="dt">arrangements =</span> <span class="kw"><a href="../reference/combinations.html">combinations</a></span>(<span class="dv">15</span>, <span class="dv">7</span>),</a>
 <a class="sourceLine" id="cb10-7" data-line-number="7">    <span class="dt">unit =</span> <span class="st">"relative"</span></a>
 <a class="sourceLine" id="cb10-8" data-line-number="8">)</a></code></pre>
 <pre><code>## Unit: relative
-##          expr    min     lq   mean median    uq    max neval
-##        gtools 312.02 271.91 232.89 264.71 231.2 54.660   100
-##      combinat  63.05  54.31  61.21  56.15  54.3 52.765   100
-##         utils  84.58  72.73  66.11  74.11  70.0 11.273   100
-##     RcppAlgos   1.00   1.00   1.00   1.00   1.0  1.000   100
-##  arrangements   1.23   1.21   1.14   1.19   1.2  0.482   100</code></pre>
+##          expr   min      lq   mean median     uq   max neval
+##        gtools 300.2 274.287 268.78 255.52 253.93 360.3   100
+##      combinat  61.6  54.775  69.04  51.41  55.78 357.3   100
+##         utils  82.3  73.184  73.04  69.23  74.10  63.6   100
+##     RcppAlgos   1.0   1.000   1.00   1.00   1.00   1.0   100
+##  arrangements   1.1   0.998   1.85   1.07   1.06  26.5   100</code></pre>
 <p><strong>Combinations with replacement of 9 items</strong></p>
 <pre class="sourceCode r" id="cb12"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="kw"><a href="http://www.rdocumentation.org/packages/microbenchmark/topics/microbenchmark">microbenchmark</a></span>(</a>
 <a class="sourceLine" id="cb12-2" data-line-number="2">    <span class="dt">gtools =</span> <span class="kw">gtools.combinations</span>(<span class="dv">9</span>, <span class="dv">6</span>, <span class="dt">repeats.allowed =</span> <span class="ot">TRUE</span>),</a>
@@ -190,10 +187,10 @@
 <a class="sourceLine" id="cb12-5" data-line-number="5">    <span class="dt">unit =</span> <span class="st">"relative"</span></a>
 <a class="sourceLine" id="cb12-6" data-line-number="6">)</a></code></pre>
 <pre><code>## Unit: relative
-##          expr     min     lq   mean median      uq     max neval
-##        gtools 253.066 246.70 205.06 196.51 191.541 162.501   100
-##     RcppAlgos   1.000   1.00   1.00   1.00   1.000   1.000   100
-##  arrangements   0.993   1.01   1.01   1.02   0.993   0.778   100</code></pre>
+##          expr    min     lq   mean median     uq    max neval
+##        gtools 245.09 233.72 201.20 184.47 179.88 201.35   100
+##     RcppAlgos   1.00   1.00   1.00   1.00   1.00   1.00   100
+##  arrangements   1.04   1.03   1.05   1.09   1.02   1.03   100</code></pre>
 <p><strong>Combinations of multiset</strong></p>
 <pre class="sourceCode r" id="cb14"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1">f &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/permutations/topics/c">c</a></span>(<span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">2</span>)</a>
 <a class="sourceLine" id="cb14-2" data-line-number="2">x &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">8</span>, f)</a>
@@ -203,9 +200,9 @@
 <a class="sourceLine" id="cb14-6" data-line-number="6">    <span class="dt">unit =</span> <span class="st">"relative"</span></a>
 <a class="sourceLine" id="cb14-7" data-line-number="7">)</a></code></pre>
 <pre><code>## Unit: relative
-##          expr  min   lq mean median  uq   max neval
-##     RcppAlgos 1.11 1.09 1.07   1.09 1.1 0.747   100
-##  arrangements 1.00 1.00 1.00   1.00 1.0 1.000   100</code></pre>
+##          expr  min   lq mean median   uq  max neval
+##     RcppAlgos 1.07 1.08 1.07   1.07 1.08 0.76   100
+##  arrangements 1.00 1.00 1.00   1.00 1.00 1.00   100</code></pre>
 </section><section id="partitions" class="level3"><h3>Partitions</h3>
 <p><strong>Partitions of 30</strong></p>
 <pre class="sourceCode r" id="cb16"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1"><span class="kw"><a href="http://www.rdocumentation.org/packages/microbenchmark/topics/microbenchmark">microbenchmark</a></span>(</a>
@@ -214,9 +211,9 @@
 <a class="sourceLine" id="cb16-4" data-line-number="4">    <span class="dt">unit =</span> <span class="st">"relative"</span></a>
 <a class="sourceLine" id="cb16-5" data-line-number="5">)</a></code></pre>
 <pre><code>## Unit: relative
-##          expr  min   lq mean median   uq    max neval
-##    partitions 3.37 3.29 1.21   3.54 5.82 0.0536   100
-##  arrangements 1.00 1.00 1.00   1.00 1.00 1.0000   100</code></pre>
+##          expr  min   lq mean median   uq  max neval
+##    partitions 3.49 3.51 5.58   3.47 6.81 33.4   100
+##  arrangements 1.00 1.00 1.00   1.00 1.00  1.0   100</code></pre>
 <p><strong>Partitions of 50 into 10 parts</strong></p>
 <pre class="sourceCode r" id="cb18"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1"><span class="kw"><a href="http://www.rdocumentation.org/packages/microbenchmark/topics/microbenchmark">microbenchmark</a></span>(</a>
 <a class="sourceLine" id="cb18-2" data-line-number="2">    <span class="dt">partitions =</span> <span class="kw"><a href="http://www.rdocumentation.org/packages/partitions/topics/parts">restrictedparts</a></span>(<span class="dv">50</span>, <span class="dv">10</span>),</a>
@@ -224,9 +221,9 @@
 <a class="sourceLine" id="cb18-4" data-line-number="4">    <span class="dt">unit =</span> <span class="st">"relative"</span></a>
 <a class="sourceLine" id="cb18-5" data-line-number="5">)</a></code></pre>
 <pre><code>## Unit: relative
-##          expr  min lq mean median   uq max neval
-##    partitions 17.7 18 17.7   17.6 15.5  22   100
-##  arrangements  1.0  1  1.0    1.0  1.0   1   100</code></pre>
+##          expr  min   lq mean median   uq  max neval
+##    partitions 17.4 19.4 21.6   20.1 17.4 18.5   100
+##  arrangements  1.0  1.0  1.0    1.0  1.0  1.0   100</code></pre>
 </section>
 </div>
   </div>

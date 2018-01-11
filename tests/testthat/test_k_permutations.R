@@ -132,7 +132,7 @@ test_that("Multiset K-Permutations - permutations", {
     expect_equal(perm[[1]], c(1, 1, 1, 2))
     expect_equal(perm[[70]], c(3, 3, 3, 2))
 
-    perm <- permutations(x = LETTERS[1:5], freq = c(3, 2, 3), k = 4)
+    perm <- permutations(x = LETTERS[1:3], freq = c(3, 2, 3), k = 4)
     expect_equal(nrow(perm), 70)
     expect_equal(ncol(perm), 4)
     expect_equal(perm[1, ], LETTERS[c(1, 1, 1, 2)])

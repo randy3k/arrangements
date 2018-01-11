@@ -19,9 +19,9 @@ ipartitions(n, k = NULL, descending = FALSE)
 \item{descending}{logical to use reversed lexicographical order}
 }
 \description{
-This function returns a \href{Partitions-class.html}{Partitions} iterator which
-allows users to fetch the next partition(s) via the \code{getnext()} method. All remaing
-partitions of the iterator can be fetched via the \code{collect()} method.
+This function returns a \href{Partitions-class.html}{Partitions} iterator for iterating
+partitions of an non-negative integer \code{n} into \code{k} parts or any part size.
+The iterator allows users to fetch the next partition(s) via the \code{getnext()} method.
 }
 \details{
 The \code{Partitions} class can be initialized by using the convenient wrapper \code{ipartitions} or

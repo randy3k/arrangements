@@ -12,7 +12,8 @@ Permutations
 ipermutations(n, k = n, x = NULL, freq = NULL, replace = FALSE)
 }
 \arguments{
-\item{n}{an integer, would be determined implicitly from \code{x} or \code{f} if missing}
+\item{n}{an integer. If `freq` is not NULL, `n` would be set as `sum(f)`,
+otherwise if `x` is not NULL, `n` would be set as `length(x)`.}
 
 \item{k}{an integer}
 
@@ -23,9 +24,9 @@ ipermutations(n, k = n, x = NULL, freq = NULL, replace = FALSE)
 \item{replace}{an logical to draw items with replacement}
 }
 \description{
-This function returns a \href{Permutations-class.html}{Permutations} iterator which
-allows users to fetch the next permutation(s) via the \code{getnext()} method. All remaing
-permutations of the iterator can be fetched via the \code{collect()} method.
+This function returns a \href{Permutations-class.html}{Permutations} iterator for iterating
+permutations of \code{k} items from \code{n} items. The iterator allows users to fetch the next
+permutation(s) via the \code{getnext()} method.
 }
 \details{
 The \code{Permutations} class can be initialized by using the convenient wrapper \code{ipermutations} or
