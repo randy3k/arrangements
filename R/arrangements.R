@@ -1,6 +1,7 @@
 #' @name arrangements-package
 #' @docType package
 #' @importFrom methods new
+#' @importFrom R6 R6Class
 #' @useDynLib arrangements
 "_PACKAGE"
 
