@@ -8,8 +8,8 @@ permutations(n, k = n, x = NULL, freq = NULL, replace = FALSE,
   type = "r")
 }
 \arguments{
-\item{n}{an integer. If `freq` is not NULL, `n` would be set as `sum(f)`,
-otherwise if `x` is not NULL, `n` would be set as `length(x)`.}
+\item{n}{an integer. If \code{freq} is not NULL, \code{n} would be set as \code{sum(freq)},
+otherwise if \code{x} is not NULL, \code{n} would be set as \code{length(x)}.}
 
 \item{k}{an integer}
 
@@ -48,7 +48,7 @@ permutations(4, 2, type = "c")
 permutations(3, type = "l")
 permutations(4, 2, type = "l")
 
-# zero sized partitions
+# zero sized permutations
 dim(permutations(0))
 dim(permutations(5, 0))
 dim(permutations(5, 6))

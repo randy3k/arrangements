@@ -200,7 +200,7 @@ next_permutations <- function(n, k, d, state, x, freq, replace, type) {
 #' permutations(3, type = "l")
 #' permutations(4, 2, type = "l")
 #'
-#' # zero sized partitions
+#' # zero sized permutations
 #' dim(permutations(0))
 #' dim(permutations(5, 0))
 #' dim(permutations(5, 6))
