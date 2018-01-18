@@ -46,6 +46,7 @@ SEXP next_multiset_combinations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP labe
     unsigned int* mp;
     SEXP as;
     unsigned int* ap;
+    int nprotect = 0;
 
     int status = 0;
 
@@ -53,8 +54,9 @@ SEXP next_multiset_combinations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP labe
         ms = R_UnboundValue;
         as = R_UnboundValue;
     } else {
-        ms = Rf_findVarInFrame(state, Rf_install("m"));
-        as = Rf_findVarInFrame(state, Rf_install("a"));
+        ms = PROTECT(Rf_findVarInFrame(state, Rf_install("m")));
+        as = PROTECT(Rf_findVarInFrame(state, Rf_install("a")));
+        nprotect += 2;
     }
 
     if (ms == R_UnboundValue) {
@@ -102,7 +104,6 @@ SEXP next_multiset_combinations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP labe
     SEXP result, resulti;
     int* result_intp;
     double* result_doublep;
-    int nprotect = 0;
 
     if (type == 'r') {
         if (labels == R_NilValue) {

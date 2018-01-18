@@ -38,6 +38,7 @@ SEXP next_asc_k_partitions(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP _type) {
 
     SEXP as;
     unsigned int* ap;
+    int nprotect = 0;
 
     int status = 0;
 
@@ -65,7 +66,6 @@ SEXP next_asc_k_partitions(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP _type) {
     SEXP rdim;
     SEXP result, resulti;
     int* resultp;
-    int nprotect = 0;
 
     if (type == 'r') {
         result = PROTECT(Rf_allocVector(INTSXP, k*d));
@@ -182,6 +182,7 @@ SEXP next_desc_k_partitions(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP _type) {
 
     SEXP as;
     unsigned int* ap;
+    int nprotect = 0;
 
     int status = 0;
 
@@ -209,7 +210,6 @@ SEXP next_desc_k_partitions(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP _type) {
     SEXP rdim;
     SEXP result, resulti;
     int* resultp;
-    int nprotect = 0;
 
     if (type == 'r') {
         result = PROTECT(Rf_allocVector(INTSXP, k*d));

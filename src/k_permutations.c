@@ -48,6 +48,7 @@ SEXP next_k_permutations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP labels, SEX
 
     SEXP as;
     unsigned int* ap;
+    int nprotect = 0;
 
     int status = 0;
 
@@ -87,7 +88,6 @@ SEXP next_k_permutations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP labels, SEX
     SEXP result, resulti;
     int* result_intp;
     double* result_doublep;
-    int nprotect = 0;
 
     if (type == 'r') {
         if (labels == R_NilValue) {

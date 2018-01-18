@@ -37,6 +37,7 @@ SEXP next_asc_partitions(SEXP _n, SEXP _d, SEXP state, SEXP _type) {
 
     SEXP as, ks;
     unsigned int* ap;
+    int nprotect = 0;
 
     int status = 0;
 
@@ -44,8 +45,9 @@ SEXP next_asc_partitions(SEXP _n, SEXP _d, SEXP state, SEXP _type) {
         as = R_UnboundValue;
         ks = R_UnboundValue;
     } else {
-        as = Rf_findVarInFrame(state, Rf_install("a"));
-        ks = Rf_findVarInFrame(state, Rf_install("k"));
+        as = PROTECT(Rf_findVarInFrame(state, Rf_install("a")));
+        ks = PROTECT(Rf_findVarInFrame(state, Rf_install("k")));
+        nprotect += 2;
     }
     if (as == R_UnboundValue) {
         if (state == R_NilValue) {
@@ -68,7 +70,6 @@ SEXP next_asc_partitions(SEXP _n, SEXP _d, SEXP state, SEXP _type) {
     SEXP rdim;
     SEXP result, resulti;
     int* resultp;
-    int nprotect = 0;
 
     if (type == 'r') {
         result = PROTECT(Rf_allocVector(INTSXP, n*d));
@@ -159,7 +160,9 @@ SEXP next_asc_partitions(SEXP _n, SEXP _d, SEXP state, SEXP _type) {
     }
 
     if (state != R_NilValue) {
-        Rf_defineVar(Rf_install("k"), Rf_ScalarInteger((int) k), state);
+        ks = PROTECT(Rf_ScalarInteger((int) k));
+        nprotect++;
+        Rf_defineVar(Rf_install("k"), ks, state);
     }
 
     UNPROTECT(nprotect);
@@ -196,6 +199,7 @@ SEXP next_desc_partitions(SEXP _n, SEXP _d, SEXP state, SEXP _type) {
 
     SEXP as, hs, ks;
     unsigned int* ap;
+    int nprotect = 0;
 
     int status = 0;
 
@@ -204,9 +208,10 @@ SEXP next_desc_partitions(SEXP _n, SEXP _d, SEXP state, SEXP _type) {
         hs = R_UnboundValue;
         ks = R_UnboundValue;
     } else {
-        as = Rf_findVarInFrame(state, Rf_install("a"));
-        hs = Rf_findVarInFrame(state, Rf_install("h"));
-        ks = Rf_findVarInFrame(state, Rf_install("k"));
+        as = PROTECT(Rf_findVarInFrame(state, Rf_install("a")));
+        hs = PROTECT(Rf_findVarInFrame(state, Rf_install("h")));
+        ks = PROTECT(Rf_findVarInFrame(state, Rf_install("k")));
+        nprotect += 3;
     }
     if (as == R_UnboundValue) {
         if (state == R_NilValue) {
@@ -230,7 +235,6 @@ SEXP next_desc_partitions(SEXP _n, SEXP _d, SEXP state, SEXP _type) {
     SEXP rdim;
     SEXP result, resulti;
     int* resultp;
-    int nprotect = 0;
 
     if (type == 'r') {
         result = PROTECT(Rf_allocVector(INTSXP, n*d));
@@ -321,8 +325,12 @@ SEXP next_desc_partitions(SEXP _n, SEXP _d, SEXP state, SEXP _type) {
     }
 
     if (state != R_NilValue) {
-        Rf_defineVar(Rf_install("h"), Rf_ScalarInteger((int) h), state);
-        Rf_defineVar(Rf_install("k"), Rf_ScalarInteger((int) k), state);
+        hs = PROTECT(Rf_ScalarInteger((int) h));
+        nprotect++;
+        ks = PROTECT(Rf_ScalarInteger((int) k));
+        nprotect++;
+        Rf_defineVar(Rf_install("h"), hs, state);
+        Rf_defineVar(Rf_install("k"), ks, state);
     }
 
     UNPROTECT(nprotect);
