@@ -1,6 +1,7 @@
 #ifndef _UTILS_H_
 #define _UTILS_H_ 1
 
+#define R_NO_REMAP
 #include <R.h>
 #include <Rinternals.h>
 

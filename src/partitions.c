@@ -174,9 +174,9 @@ SEXP next_desc_partitions(SEXP _n, SEXP _d, SEXP state, SEXP _type) {
     size_t h, k, i, j;
 
     int n = as_uint(_n);
+    int d;
     double dd;
-    int d = Rf_asInteger(_d);
-    if (d == -1) {
+    if (Rf_asInteger(_d) == -1) {
         dd = npartitions(n);
     } else {
         dd = as_uint(_d);

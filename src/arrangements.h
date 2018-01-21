@@ -1,6 +1,10 @@
 #ifndef _ARRANGEMENTS_H_
 #define _ARRANGEMENTS_H_ 1
 
+#define R_NO_REMAP
+#include <R.h>
+#include <Rinternals.h>
+
 SEXP next_combinations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP labels, SEXP _type);
 
 SEXP next_asc_k_partitions(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP _type);
