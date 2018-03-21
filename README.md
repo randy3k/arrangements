@@ -4,6 +4,8 @@
 # Fast Generators and Iterators for Permutations, Combinations and Partitions
 
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/arrangements)](https://cran.r-project.org/package=arrangements)
+[![](http://cranlogs.r-pkg.org/badges/grand-total/arrangements)](https://cran.r-project.org/package=arrangements)
+
 
 Github: <https://github.com/randy3k/arrangements>
 
