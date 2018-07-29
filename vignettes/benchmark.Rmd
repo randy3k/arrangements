@@ -41,7 +41,7 @@ utils.combn <- utils::combn
 ```
 
 ```{r, echo = FALSE}
-options(digits=3)
+options(digits = 3)
 ```
 
 `gtools::permutations`, `gtools::combinations` and `utils::combn` are renamed because they are
@@ -192,7 +192,7 @@ gc()
 
 ```{r}
 microbenchmark(
-    partitions = restrictedparts(50, 10),
+    partitions = restrictedparts(50, 10, include.zero = FALSE),
     arrangements = partitions(50, 10),
     unit = "relative"
 )
