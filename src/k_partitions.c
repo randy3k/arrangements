@@ -3,7 +3,7 @@
 #include <Rinternals.h>
 #include <gmp.h>
 #include "arrangements.h"
-#include "algorithms/k_partition.h"
+#include "next/k_partition.h"
 #include "utils.h"
 
 double npartitions_k(int n, int k);

@@ -3,7 +3,7 @@
 #include <Rinternals.h>
 #include <gmp.h>
 #include "arrangements.h"
-#include "algorithms/combination.h"
+#include "next/combination.h"
 #include "utils.h"
 
 

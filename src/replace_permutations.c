@@ -2,7 +2,7 @@
 #include <R.h>
 #include <Rinternals.h>
 #include "arrangements.h"
-#include "algorithms/cartesian_product.h"
+#include "next/cartesian_product.h"
 #include "utils.h"
 
 

@@ -3,7 +3,7 @@
 #include <Rinternals.h>
 #include <gmp.h>
 #include "arrangements.h"
-#include "algorithms/multiset_combination.h"
+#include "next/multiset_combination.h"
 #include "utils.h"
 
 double ncombinations_f(int* freq, size_t flen, size_t k);

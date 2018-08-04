@@ -3,7 +3,7 @@
 #include <Rinternals.h>
 #include <gmp.h>
 #include "arrangements.h"
-#include "algorithms/k_permutation.h"
+#include "next/k_permutation.h"
 #include "utils.h"
 
 double npermutations_f(int* freq, size_t flen, size_t k);

@@ -3,7 +3,7 @@
 #include <Rinternals.h>
 #include <gmp.h>
 #include "arrangements.h"
-#include "algorithms/multicombination.h"
+#include "next/multicombination.h"
 #include "utils.h"
 
 
