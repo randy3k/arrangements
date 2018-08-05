@@ -155,9 +155,20 @@ next_permutations <- function(n, k, d, state, x, freq, replace, type) {
             x,
             as_uint_array(freq),
             type)
-    } else {
+    } else if (is.null(freq)) {
         out <- .Call(
             "next_k_permutations",
+            PACKAGE = "arrangements",
+            n,
+            k,
+            d,
+            state,
+            x,
+            as_uint_array(freq),
+            type)
+    } else {
+        out <- .Call(
+            "next_multiset_permutations",
             PACKAGE = "arrangements",
             n,
             k,

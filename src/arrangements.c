@@ -10,6 +10,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"next_k_permutations", (DL_FUNC) &next_k_permutations, 7},
     {"nperm_k", (DL_FUNC) &nperm_k, 2},
     {"nperm_k_bigz", (DL_FUNC) &nperm_k_bigz, 2},
+    {"next_multiset_permutations", (DL_FUNC) &next_multiset_permutations, 7},
     {"nperm_f", (DL_FUNC) &nperm_f, 2},
     {"nperm_f_bigz", (DL_FUNC) &nperm_f_bigz, 2},
     {"next_multiset_combinations", (DL_FUNC) &next_multiset_combinations, 7},

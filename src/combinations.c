@@ -24,8 +24,6 @@ SEXP next_combinations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP labels, SEXP 
     int* labels_intp;
     double* labels_doublep;
 
-    int* fp;
-
     char type;
     if (_type == R_NilValue) {
         type = 'r';

@@ -21,6 +21,8 @@ SEXP nperm_k(SEXP _n, SEXP _k);
 
 SEXP nperm_k_bigz(SEXP _n, SEXP _k);
 
+SEXP next_multiset_permutations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP labels, SEXP freq, SEXP _type);
+
 SEXP nperm_f(SEXP freq, SEXP _k);
 
 SEXP nperm_f_bigz(SEXP freq, SEXP _k);

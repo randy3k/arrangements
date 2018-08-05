@@ -3,19 +3,24 @@
 #include <Rinternals.h>
 #include <gmp.h>
 #include "arrangements.h"
-#include "next/multicombination.h"
+#include "next/multiset_permutation.h"
 #include "utils.h"
 
+double npermutations_f(int* freq, size_t flen, size_t k);
 
-SEXP next_replace_combinations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP labels, SEXP _type) {
-    size_t i, j;
+SEXP next_multiset_permutations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP labels, SEXP freq, SEXP _type) {
+    size_t i, j, h;
 
     size_t n = as_uint(_n);
     size_t k = as_uint(_k);
     int d;
     double dd;
     if (Rf_asInteger(_d) == -1) {
-        dd = choose(n + k - 1, k);
+        if (freq == R_NilValue) {
+            dd = fallfact(n, k);
+        } else {
+            dd = npermutations_f(INTEGER(freq), Rf_length(freq), k);
+        }
     } else {
         dd = as_uint(_d);
     }
@@ -23,6 +28,8 @@ SEXP next_replace_combinations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP label
     int ltype = TYPEOF(labels);
     int* labels_intp;
     double* labels_doublep;
+
+    int* fp;
 
     char type;
     if (_type == R_NilValue) {
@@ -53,14 +60,24 @@ SEXP next_replace_combinations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP label
 
     if (as == R_UnboundValue) {
         if (state == R_NilValue) {
-            ap = (unsigned int*) R_alloc(k, sizeof(int));
+            ap = (unsigned int*) R_alloc(n, sizeof(int));
         } else {
-            as = PROTECT(Rf_allocVector(INTSXP, k));
+            as = PROTECT(Rf_allocVector(INTSXP, n));
             Rf_defineVar(Rf_install("a"), as, state);
             UNPROTECT(1);
             ap = (unsigned int*) INTEGER(as);
         }
-        for(i=0; i<k; i++) ap[i] = 0;
+        if (freq == R_NilValue) {
+            for(i=0; i<n; i++) ap[i] = i;
+        } else {
+            fp = INTEGER(freq);
+            h = 0;
+            for (i = 0; i< Rf_length(freq); i++) {
+                for (j = 0; j< fp[i]; j++) {
+                    ap[h++] = i;
+                }
+            }
+        }
 
     } else {
         ap = (unsigned int*) INTEGER(as);
@@ -91,7 +108,7 @@ SEXP next_replace_combinations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP label
 
         for (j=0; j<d; j++) {
             if (status) {
-                if (!next_multicombination(ap, n, k)) {
+                if (!next_multiset_permutation(ap, n, k)) {
                     status = 0;
                     break;
                 }
@@ -145,7 +162,7 @@ SEXP next_replace_combinations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP label
 
         for (j=0; j<d; j++) {
             if (status) {
-                if (!next_multicombination(ap, n, k)) {
+                if (!next_multiset_permutation(ap, n, k)) {
                     status = 0;
                     break;
                 }
@@ -192,7 +209,7 @@ SEXP next_replace_combinations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP label
 
         for (j=0; j<d; j++) {
             if (status) {
-                if (!next_multicombination(ap, n, k)) {
+                if (!next_multiset_permutation(ap, n, k)) {
                     status = 0;
                     break;
                 }
@@ -233,4 +250,145 @@ SEXP next_replace_combinations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP label
 
     UNPROTECT(nprotect);
     return result;
+}
+
+
+double npermutations_f(int* freq, size_t flen, size_t k) {
+    int n = 0;
+    int i, j, h;
+    for (i=0; i<flen; i++) n += freq[i];
+    if (k > n) {
+        return 0;
+    }
+
+    int maxf;
+    maxf = 0;
+    for (i=0; i<flen; i++) {
+        if (freq[i] > maxf) maxf = freq[i];
+    }
+
+    double rfact = 1;
+    for (j=2; j<=k; j++) {
+        rfact = rfact*j;
+    }
+    size_t factlen = (k < maxf ? k : maxf) + 1;
+    double* fact = (double*) malloc(factlen * sizeof(double));
+    fact[0] = 1;
+    for (j=1; j< factlen; j++) fact[j] = j * fact[j-1];
+
+    double* p = (double*) malloc((k+1) * sizeof(double));
+    for (j=0; j<=k; j++) p[j] = 0;
+
+    double ptemp;
+
+    for (i=0; i<flen; i++) {
+        if (i == 0) {
+            for (j=0; j<=k && j<=freq[i]; j++) {
+                p[j] = rfact / fact[j];
+            }
+            ptemp = p[k];
+        } else if (i < flen - 1){
+            for (j=k; j>0; j--) {
+                ptemp = 0;
+                for(h=0; h<=freq[i] && h<=j; h++) {
+                    ptemp += p[j-h] / fact[h];
+                }
+                p[j] = ptemp;
+            }
+        } else {
+            ptemp = 0;
+            for(h=0; h<=freq[i] && h<=k; h++) {
+                ptemp += p[k-h] / fact[h];
+            }
+        }
+    }
+
+    free(fact);
+    free(p);
+    return ptemp;
+}
+
+SEXP nperm_f(SEXP freq, SEXP _k) {
+    int* fp = INTEGER(freq);
+    size_t flen = Rf_length(freq);
+    size_t k = as_uint(_k);
+    return Rf_ScalarReal(npermutations_f(fp, flen, k));
+}
+
+void npermutations_f_bigz(mpz_t z, int* freq, size_t flen, size_t k) {
+    int n = 0;
+    int i, j, h;
+    for (i=0; i<flen; i++) n += freq[i];
+    if (k > n) {
+        mpz_set(z, 0);
+        return;
+    }
+
+    int maxf;
+    maxf = 0;
+    for (i=0; i<flen; i++) {
+        if (freq[i] > maxf) maxf = freq[i];
+    }
+
+    mpz_t rfact;
+    mpz_init(rfact);
+    mpz_fac_ui(rfact, k);
+
+    size_t factlen = (k < maxf ? k : maxf) + 1;
+    mpz_t* fact = (mpz_t*) malloc(factlen * sizeof(mpz_t));
+    for (j=0; j< factlen; j++) mpz_init(fact[j]);
+
+    mpz_set_ui(fact[0], 1);
+    for (j=1; j< factlen; j++) mpz_mul_ui(fact[j], fact[j-1], j);
+
+    mpz_t* p = (mpz_t*) malloc((k+1) * sizeof(mpz_t));
+    for (j=0; j<=k; j++) mpz_init(p[j]);
+
+    mpz_t ptemp;
+    mpz_init(ptemp);
+
+    for (i=0; i<flen; i++) {
+        if (i == 0) {
+            for (j=0; j<=k && j<=freq[i]; j++) {
+                mpz_cdiv_q(p[j], rfact, fact[j]);
+            }
+            mpz_set(z, p[k]);
+        } else if (i < flen - 1){
+            for (j=k; j>0; j--) {
+                mpz_set_ui(z, 0);
+                for(h=0; h<=freq[i] && h<=j; h++) {
+                    mpz_cdiv_q(ptemp, p[j-h], fact[h]);
+                    mpz_add(z, z, ptemp);
+                }
+                mpz_set(p[j], z);
+            }
+        } else {
+            mpz_set_ui(z, 0);
+            for(h=0; h<=freq[i] && h<=k; h++) {
+                mpz_cdiv_q(ptemp, p[k-h], fact[h]);
+                mpz_add(z, z, ptemp);
+            }
+        }
+    }
+
+    for (j=0; j< factlen; j++) mpz_clear(fact[j]);
+    for (j=0; j<=k; j++) mpz_clear(p[j]);
+    free(fact);
+    free(p);
+    mpz_clear(rfact);
+    mpz_clear(ptemp);
+}
+
+SEXP nperm_f_bigz(SEXP freq, SEXP _k) {
+    int* fp = INTEGER(freq);
+    size_t flen = Rf_length(freq);
+    size_t k = as_uint(_k);
+    mpz_t z;
+    mpz_init(z);
+    npermutations_f_bigz(z, fp, flen, k);
+    char* c = mpz_get_str(NULL, 10, z);
+    SEXP out = Rf_mkString(c);
+    mpz_clear(z);
+    free(c);
+    return out;
 }

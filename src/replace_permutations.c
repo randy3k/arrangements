@@ -26,8 +26,6 @@ SEXP next_replace_permutations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP label
     int* labels_intp;
     double* labels_doublep;
 
-    int* fp;
-
     char type;
     if (_type == R_NilValue) {
         type = 'r';
