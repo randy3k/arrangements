@@ -29,10 +29,9 @@ SEXP next_asc_k_partitions(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP _type) {
         if (type != 'r' && type != 'c' && type != 'l') type = 'r';
     }
 
-    if (type == 'l') {
-        if (dd > INT_MAX) Rf_error("too many results");
-    } else {
-        if (dd * k > INT_MAX) Rf_error("too many results");
+    if (dd > INT_MAX) Rf_error("too many results");
+    if (type != 'l') {
+        if (dd * k > R_XLEN_T_MAX) Rf_error("too many results");
     }
     d = round(dd);
 
@@ -172,10 +171,9 @@ SEXP next_desc_k_partitions(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP _type) {
         if (type != 'r' && type != 'c' && type != 'l') type = 'r';
     }
 
-    if (type == 'l') {
-        if (dd > INT_MAX) Rf_error("too many results");
-    } else {
-        if (dd * k > INT_MAX) Rf_error("too many results");
+    if (dd > INT_MAX) Rf_error("too many results");
+    if (type != 'l') {
+        if (dd * k > R_XLEN_T_MAX) Rf_error("too many results");
     }
     d = round(dd);
 

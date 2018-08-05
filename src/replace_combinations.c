@@ -20,7 +20,7 @@ SEXP next_replace_combinations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP label
         dd = as_uint(_d);
     }
 
-    int ltype = TYPEOF(labels);
+    int labels_type = TYPEOF(labels);
     int* labels_intp;
     double* labels_doublep;
 
@@ -32,10 +32,9 @@ SEXP next_replace_combinations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP label
         if (type != 'r' && type != 'c' && type != 'l') type = 'r';
     }
 
-    if (type == 'l') {
-        if (dd > INT_MAX) Rf_error("too many results");
-    } else {
-        if (dd * k > INT_MAX) Rf_error("too many results");
+    if (dd > INT_MAX) Rf_error("too many results");
+    if (type != 'l') {
+        if (dd * k > R_XLEN_T_MAX) Rf_error("too many results");
     }
     d = round(dd);
 
@@ -78,12 +77,12 @@ SEXP next_replace_combinations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP label
             nprotect++;
             result_intp = INTEGER(result);
         } else {
-            result = PROTECT(Rf_allocVector(ltype, k*d));
+            result = PROTECT(Rf_allocVector(labels_type, k*d));
             nprotect++;
-            if (ltype == INTSXP) {
+            if (labels_type == INTSXP) {
                 result_intp = INTEGER(result);
                 labels_intp = INTEGER(labels);
-            } else if (ltype == REALSXP) {
+            } else if (labels_type == REALSXP) {
                 result_doublep = REAL(result);
                 labels_doublep = REAL(labels);
             }
@@ -98,19 +97,19 @@ SEXP next_replace_combinations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP label
             } else {
                 status = 1;
             }
-            if (ltype == NILSXP) {
+            if (labels_type == NILSXP) {
                 for (i=0; i<k; i++) {
                     result_intp[j + i*d] = ap[i] + 1;
                 }
-            } else if (ltype == INTSXP) {
+            } else if (labels_type == INTSXP) {
                 for (i=0; i<k; i++) {
                     result_intp[j + i*d] = labels_intp[ap[i]];
                 }
-            } else if (ltype == REALSXP) {
+            } else if (labels_type == REALSXP) {
                 for (i=0; i<k; i++) {
                     result_doublep[j + i*d] = labels_doublep[ap[i]];
                 }
-            } else if (ltype == STRSXP) {
+            } else if (labels_type == STRSXP) {
                 for (i=0; i<k; i++) {
                     SET_STRING_ELT(result, j + i*d, STRING_ELT(labels, ap[i]));
                 }
@@ -132,12 +131,12 @@ SEXP next_replace_combinations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP label
             nprotect++;
             result_intp = INTEGER(result);
         } else {
-            result = PROTECT(Rf_allocVector(ltype, k*d));
+            result = PROTECT(Rf_allocVector(labels_type, k*d));
             nprotect++;
-            if (ltype == INTSXP) {
+            if (labels_type == INTSXP) {
                 result_intp = INTEGER(result);
                 labels_intp = INTEGER(labels);
-            } else if (ltype == REALSXP) {
+            } else if (labels_type == REALSXP) {
                 result_doublep = REAL(result);
                 labels_doublep = REAL(labels);
             }
@@ -152,19 +151,19 @@ SEXP next_replace_combinations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP label
             } else {
                 status = 1;
             }
-            if (ltype == NILSXP) {
+            if (labels_type == NILSXP) {
                 for (i=0; i<k; i++) {
                     result_intp[j * k + i] = ap[i] + 1;
                 }
-            } else if (ltype == INTSXP) {
+            } else if (labels_type == INTSXP) {
                 for (i=0; i<k; i++) {
                     result_intp[j * k + i] = labels_intp[ap[i]];
                 }
-            } else if (ltype == REALSXP) {
+            } else if (labels_type == REALSXP) {
                 for (i=0; i<k; i++) {
                     result_doublep[j * k + i] = labels_doublep[ap[i]];
                 }
-            } else if (ltype == STRSXP) {
+            } else if (labels_type == STRSXP) {
                 for (i=0; i<k; i++) {
                     SET_STRING_ELT(result, j * k + i, STRING_ELT(labels, ap[i]));
                 }
@@ -184,9 +183,9 @@ SEXP next_replace_combinations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP label
         // type == "list"
         result = PROTECT(Rf_allocVector(VECSXP, d));
         nprotect++;
-        if (ltype == INTSXP) {
+        if (labels_type == INTSXP) {
             labels_intp = INTEGER(labels);
-        } else if (ltype == REALSXP) {
+        } else if (labels_type == REALSXP) {
             labels_doublep = REAL(labels);
         }
 
@@ -199,25 +198,25 @@ SEXP next_replace_combinations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP label
             } else {
                 status = 1;
             }
-            if (ltype == NILSXP) {
+            if (labels_type == NILSXP) {
                 resulti = Rf_allocVector(INTSXP, k);
                 result_intp = INTEGER(resulti);
                 for (i=0; i<k; i++) {
                     result_intp[i] = ap[i] + 1;
                 }
-            } else if (ltype == INTSXP) {
+            } else if (labels_type == INTSXP) {
                 resulti = Rf_allocVector(INTSXP, k);
                 result_intp = INTEGER(resulti);
                 for (i=0; i<k; i++) {
                     result_intp[i] = labels_intp[ap[i]];
                 }
-            } else if (ltype == REALSXP) {
+            } else if (labels_type == REALSXP) {
                 resulti = Rf_allocVector(REALSXP, k);
                 result_doublep = REAL(resulti);
                 for (i=0; i<k; i++) {
                     result_doublep[i] = labels_doublep[ap[i]];
                 }
-            } else if (ltype == STRSXP) {
+            } else if (labels_type == STRSXP) {
                 resulti = Rf_allocVector(STRSXP, k);
                 for (i=0; i<k; i++) {
                     SET_STRING_ELT(resulti, i, STRING_ELT(labels, ap[i]));
