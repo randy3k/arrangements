@@ -23,9 +23,9 @@ static void reverse(unsigned int *ar, size_t len)
 
 unsigned int next_multiset_permutation(unsigned int *ar, size_t n, size_t k)
 {
-    long i;
-    long j;
-    long edge = k-1;
+    unsigned int i;
+    unsigned int j;
+    unsigned int edge = k-1;
 
     if(k<n){
         j = k;
@@ -40,10 +40,13 @@ unsigned int next_multiset_permutation(unsigned int *ar, size_t n, size_t k)
         }
 
         // find rightmost ascent to left of edge
-        i = edge -1;
-        while(i>=0 && ar[i]>=ar[i+1]) i--;
-
-        if (i<0) return 0;
+        for (i = edge -1; ; i--) {
+            if (ar[i] < ar[i+1]) {
+                break;
+            } else if (i == 0) {
+                return 0;
+            }
+        }
 
         // find smallest j>=i+1 where a_j>a_i (a is decreasing for j>=i+1)
         j = n-1;

@@ -63,7 +63,7 @@ The iterator allows users to fetch the next partition(s) via the getnext() metho
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">arrangements</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">1.0.2</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">1.0.3</span>
       </span>
     </div>
 
@@ -220,9 +220,10 @@ reset()
 #&gt; [36,]    4    6    0    0    0    0    0    0    0     0
 #&gt; [37,]    5    5    0    0    0    0    0    0    0     0
 #&gt; [38,]   10    0    0    0    0    0    0    0    0     0</div><div class='input'>
-<span class='fu'>library</span>(<span class='no'>foreach</span>)</div><div class='output co'>#&gt; <span class='error'>Error in library(foreach): there is no package called ‘foreach’</span></div><div class='input'><span class='fu'>foreach</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'>ipartitions</span>(<span class='fl'>6</span>, <span class='fl'>2</span>), <span class='kw'>.combine</span><span class='kw'>=</span><span class='no'>c</span>) <span class='kw'>%do%</span> {
+<span class='fu'>library</span>(<span class='no'>foreach</span>)
+<span class='fu'><a href='http://www.rdocumentation.org/packages/foreach/topics/foreach'>foreach</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'>ipartitions</span>(<span class='fl'>6</span>, <span class='fl'>2</span>), <span class='kw'>.combine</span><span class='kw'>=</span><span class='no'>c</span>) <span class='kw'>%do%</span> {
   <span class='fu'>prod</span>(<span class='no'>x</span>)
-}</div><div class='output co'>#&gt; <span class='error'>Error in foreach(x = ipartitions(6, 2), .combine = c) %do% {    prod(x)}: could not find function "%do%"</span></div></pre>
+}</div><div class='output co'>#&gt; [1] 5 8 9</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

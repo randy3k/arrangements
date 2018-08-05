@@ -5,17 +5,15 @@
 unsigned int next_combination(unsigned int *ar, size_t n, unsigned int k)
 {
     // ar = [0, 1, ..., r-1]
-    unsigned int found = 0;
     unsigned int i, j, temp;
 
-    for (i = k-1; i >= 0; i--) {
+    for (i = k-1; ; i--) {
         if (ar[i] != i + n - k) {
-            found = 1;
             break;
         }
-    }
-    if (!found) {
-        return 0;
+        else if (i == 0) {
+            return 0;
+        }
     }
 
     // turn the elements after it into a linear sequence

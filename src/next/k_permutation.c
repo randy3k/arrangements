@@ -12,10 +12,9 @@ static void swap(unsigned int *ar, unsigned int first, unsigned int second)
 unsigned int next_k_permutation(unsigned int *ar, unsigned int *cycle, size_t n, size_t k)
 {
     // ar = [0, 1, ..., n], cycle = [n, n-1, ..., n-r+1]
-    long i, j;
-    unsigned int temp;
+    unsigned int i, j, temp;
 
-    for (i = k-1; i >= 0; i--) {
+    for (i = k-1; ; i--) {
         cycle[i] -= 1;
         if (cycle[i] == 0) {
             temp = ar[i];
@@ -28,6 +27,8 @@ unsigned int next_k_permutation(unsigned int *ar, unsigned int *cycle, size_t n,
             swap(ar, i, n - cycle[i]);
             return 1;
         }
+        if (i == 0) {
+            return 0;
+        }
     }
-    return 0;
 }
