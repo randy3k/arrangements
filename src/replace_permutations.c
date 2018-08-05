@@ -37,7 +37,7 @@ SEXP next_replace_permutations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP label
     if (type == 'l') {
         if (dd > INT_MAX) Rf_error("too many results");
     } else {
-        if (dd * k > sizeof(R_xlen_t)) Rf_error("too many results");
+        if (dd * k > INT_MAX) Rf_error("too many results");
     }
     d = round(dd);
 

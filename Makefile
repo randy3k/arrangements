@@ -7,9 +7,9 @@ clean:
 	rm -rf docs
 
 shlib:
-	find 'src/algorithms' -name '*.c' | \
+	find 'src/next' -name '*.c' | \
 		sed -E 's/(.*).c/\1/' | xargs -L1 basename | \
-			xargs -L1 -I {} gcc --shared -fPIC -o inst/jl/{}.so src/algorithms/{}.c
+			xargs -L1 -I {} gcc --shared -fPIC -o inst/jl/{}.so src/next/{}.c
 
 document:
 	R --slave -e "rmarkdown::render('README.Rmd')" &

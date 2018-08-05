@@ -38,35 +38,46 @@ SEXP next_k_permutations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP labels, SEX
     if (type == 'l') {
         if (dd > INT_MAX) Rf_error("too many results");
     } else {
-        if (dd * k > sizeof(R_xlen_t)) Rf_error("too many results");
+        if (dd * k > INT_MAX) Rf_error("too many results");
     }
     d = round(dd);
 
-    SEXP as;
+    SEXP as, cycles;
     unsigned int* ap;
+    unsigned int* cyclep;
     int nprotect = 0;
 
     int status = 0;
 
     if (state == R_NilValue) {
         as = R_UnboundValue;
+        cycles = R_UnboundValue;
     } else {
         as = Rf_findVarInFrame(state, Rf_install("a"));
+        cycles = Rf_findVarInFrame(state, Rf_install("cycle"));
     }
 
     if (as == R_UnboundValue) {
         if (state == R_NilValue) {
             ap = (unsigned int*) R_alloc(n, sizeof(int));
+            cyclep = (unsigned int*) R_alloc(k, sizeof(int));
         } else {
             as = PROTECT(Rf_allocVector(INTSXP, n));
             Rf_defineVar(Rf_install("a"), as, state);
             UNPROTECT(1);
             ap = (unsigned int*) INTEGER(as);
+
+            cycles = PROTECT(Rf_allocVector(INTSXP, k));
+            Rf_defineVar(Rf_install("cycle"), cycles, state);
+            UNPROTECT(1);
+            cyclep = (unsigned int*) INTEGER(cycles);
         }
         for(i=0; i<n; i++) ap[i] = i;
+        for(i=0; i<k; i++) cyclep[i] = n - i;
 
     } else {
         ap = (unsigned int*) INTEGER(as);
+        cyclep = (unsigned int*) INTEGER(cycles);
         status = 1;
     }
 
@@ -94,7 +105,7 @@ SEXP next_k_permutations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP labels, SEX
 
         for (j=0; j<d; j++) {
             if (status) {
-                if (!next_k_permutation(ap, n, k)) {
+                if (!next_k_permutation(ap, cyclep, n, k)) {
                     status = 0;
                     break;
                 }
@@ -148,7 +159,7 @@ SEXP next_k_permutations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP labels, SEX
 
         for (j=0; j<d; j++) {
             if (status) {
-                if (!next_k_permutation(ap, n, k)) {
+                if (!next_k_permutation(ap, cyclep, n, k)) {
                     status = 0;
                     break;
                 }
@@ -195,7 +206,7 @@ SEXP next_k_permutations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP labels, SEX
 
         for (j=0; j<d; j++) {
             if (status) {
-                if (!next_k_permutation(ap, n, k)) {
+                if (!next_k_permutation(ap, cyclep, n, k)) {
                     status = 0;
                     break;
                 }

@@ -31,7 +31,7 @@ SEXP next_asc_partitions(SEXP _n, SEXP _d, SEXP state, SEXP _type) {
     if (type == 'l') {
         if (dd > INT_MAX) Rf_error("too many results");
     } else {
-        if (dd * n > sizeof(R_xlen_t)) Rf_error("too many results");
+        if (dd * n > INT_MAX) Rf_error("too many results");
     }
     d = round(dd);
 
@@ -193,7 +193,7 @@ SEXP next_desc_partitions(SEXP _n, SEXP _d, SEXP state, SEXP _type) {
     if (type == 'l') {
         if (dd > INT_MAX) Rf_error("too many results");
     } else {
-        if (dd * n > sizeof(R_xlen_t)) Rf_error("too many results");
+        if (dd * n > INT_MAX) Rf_error("too many results");
     }
     d = round(dd);
 

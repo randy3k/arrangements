@@ -175,7 +175,6 @@ next_permutations <- function(n, k, d, state, x, freq, replace, type) {
             d,
             state,
             x,
-            as_uint_array(freq),
             type)
     }
     out
