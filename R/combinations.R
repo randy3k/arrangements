@@ -141,17 +141,7 @@ next_combinations <- function(n, k, d, state, x, freq, replace, type) {
         } else {
             out <- list()
         }
-    } else if (is.null(freq)) {
-        out <- .Call(
-            "next_combinations",
-            PACKAGE = "arrangements",
-            n,
-            k,
-            d,
-            state,
-            x,
-            type)
-    } else {
+    } else if (!is.null(freq)) {
         out <- .Call(
             "next_multiset_combinations",
             PACKAGE = "arrangements",
@@ -161,6 +151,16 @@ next_combinations <- function(n, k, d, state, x, freq, replace, type) {
             state,
             x,
             as_uint_array(freq),
+            type)
+    } else {
+        out <- .Call(
+            "next_combinations",
+            PACKAGE = "arrangements",
+            n,
+            k,
+            d,
+            state,
+            x,
             type)
     }
     out

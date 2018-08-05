@@ -15,7 +15,7 @@ SEXP npart_k(SEXP _n, SEXP _k);
 
 SEXP npart_k_bigz(SEXP _n, SEXP _k);
 
-SEXP next_k_permutations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP labels, SEXP freq, SEXP _type);
+SEXP next_k_permutations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP labels, SEXP _type);
 
 SEXP nperm_k(SEXP _n, SEXP _k);
 

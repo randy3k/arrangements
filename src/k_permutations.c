@@ -8,7 +8,7 @@
 
 double npermutations_f(int* freq, size_t flen, size_t k);
 
-SEXP next_k_permutations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP labels, SEXP freq, SEXP _type) {
+SEXP next_k_permutations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP labels, SEXP _type) {
     size_t i, j, h;
 
     size_t n = as_uint(_n);
@@ -16,11 +16,7 @@ SEXP next_k_permutations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP labels, SEX
     int d;
     double dd;
     if (Rf_asInteger(_d) == -1) {
-        if (freq == R_NilValue) {
-            dd = fallfact(n, k);
-        } else {
-            dd = npermutations_f(INTEGER(freq), Rf_length(freq), k);
-        }
+        dd = fallfact(n, k);
     } else {
         dd = as_uint(_d);
     }
@@ -42,7 +38,7 @@ SEXP next_k_permutations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP labels, SEX
     if (type == 'l') {
         if (dd > INT_MAX) Rf_error("too many results");
     } else {
-        if (dd * k > INT_MAX) Rf_error("too many results");
+        if (dd * k > sizeof(R_xlen_t)) Rf_error("too many results");
     }
     d = round(dd);
 
@@ -67,17 +63,7 @@ SEXP next_k_permutations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP labels, SEX
             UNPROTECT(1);
             ap = (unsigned int*) INTEGER(as);
         }
-        if (freq == R_NilValue) {
-            for(i=0; i<n; i++) ap[i] = i;
-        } else {
-            fp = INTEGER(freq);
-            h = 0;
-            for (i = 0; i< Rf_length(freq); i++) {
-                for (j = 0; j< fp[i]; j++) {
-                    ap[h++] = i;
-                }
-            }
-        }
+        for(i=0; i<n; i++) ap[i] = i;
 
     } else {
         ap = (unsigned int*) INTEGER(as);

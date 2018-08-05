@@ -42,7 +42,7 @@ SEXP next_permutations(SEXP _n, SEXP _d, SEXP state, SEXP labels, SEXP freq, SEX
     if (type == 'l') {
         if (dd > INT_MAX) Rf_error("too many results");
     } else {
-        if (dd * n > INT_MAX) Rf_error("too many results");
+        if (dd * n > sizeof(R_xlen_t)) Rf_error("too many results");
     }
     d = round(dd);
 
