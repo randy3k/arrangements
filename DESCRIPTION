@@ -29,5 +29,5 @@ Suggests:
 NeedsCompilation: yes
 SystemRequirements: gmp (>= 4.2.3)
 ByteCompile: yes
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.0
 Roxygen: list(markdown = TRUE)
