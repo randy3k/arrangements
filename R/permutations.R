@@ -145,22 +145,23 @@ next_permutations <- function(n, k, d, state, x, freq, replace, type) {
         } else {
             out <- list()
         }
+    } else if (n == k) {
+        # next_permutations can also handle multiset with r=n
+        out <- .Call(
+            "next_permutations",
+            PACKAGE = "arrangements",
+            n,
+            d,
+            state,
+            x,
+            as_uint_array(freq),
+            type)
     } else if (!is.null(freq)) {
         out <- .Call(
             "next_multiset_permutations",
             PACKAGE = "arrangements",
             n,
             k,
-            d,
-            state,
-            x,
-            as_uint_array(freq),
-            type)
-    } else if (n == k) {
-        out <- .Call(
-            "next_permutations",
-            PACKAGE = "arrangements",
-            n,
             d,
             state,
             x,
