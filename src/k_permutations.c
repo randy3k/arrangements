@@ -9,7 +9,7 @@
 double npermutations_f(int* freq, size_t flen, size_t k);
 
 SEXP next_k_permutations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP labels, SEXP _type) {
-    size_t i, j, h;
+    size_t i, j;
 
     size_t n = as_uint(_n);
     size_t k = as_uint(_k);
@@ -24,8 +24,6 @@ SEXP next_k_permutations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP labels, SEX
     int ltype = TYPEOF(labels);
     int* labels_intp;
     double* labels_doublep;
-
-    int* fp;
 
     char type;
     if (_type == R_NilValue) {

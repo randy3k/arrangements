@@ -123,7 +123,8 @@ SEXP next_asc_k_partitions(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP _type) {
         Rf_setAttrib(result, R_DimSymbol, rdim);
         UNPROTECT(1);
 
-    } else if (type == 'l') {
+    } else {
+        // type == "list"
         result = PROTECT(Rf_allocVector(VECSXP, d));
         nprotect++;
         for (j=0; j<d; j++) {
@@ -267,7 +268,8 @@ SEXP next_desc_k_partitions(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP _type) {
         Rf_setAttrib(result, R_DimSymbol, rdim);
         UNPROTECT(1);
 
-    } else if (type == 'l') {
+    } else {
+        // type == "list"
         result = PROTECT(Rf_allocVector(VECSXP, d));
         nprotect++;
         for (j=0; j<d; j++) {

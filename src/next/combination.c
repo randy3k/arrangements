@@ -1,33 +1,28 @@
 #include "combination.h"
 
+// mirror of python itertools.combinations
+// https://docs.python.org/3/library/itertools.html#itertools.combinations
 unsigned int next_combination(unsigned int *ar, size_t n, unsigned int k)
 {
-    unsigned int finished = 0;
-    unsigned int changed = 0;
-    unsigned int i;
+    // ar = [0, 1, ..., r-1]
+    unsigned int found = 0;
+    unsigned int i, j, temp;
 
-    if (k > 0) {
-        for (i = k - 1; !finished && !changed; i--) {
-            if (ar[i] < (n - 1) - (k - 1) + i) {
-                // increment this element
-                ar[i]++;
-                if (i < k - 1) {
-                    // turn the elements after it into a linear sequence
-                    unsigned int j;
-                    for (j = i + 1; j < k; j++) {
-                        ar[j] = ar[j - 1] + 1;
-                    }
-                }
-                changed = 1;
-            }
-            finished = i == 0;
-        }
-        if (!changed) {
-            // reset to first combination
-            for (i = 0; i < k; i++) {
-                ar[i] = i;
-            }
+    for (i = k-1; i >= 0; i--) {
+        if (ar[i] != i + n - k) {
+            found = 1;
+            break;
         }
     }
-    return changed;
+    if (!found) {
+        return 0;
+    }
+
+    // turn the elements after it into a linear sequence
+    temp = ar[i];
+    for (j = i; j < k; j++) {
+        temp += 1;
+        ar[j] = temp;
+    }
+    return 1;
 }
