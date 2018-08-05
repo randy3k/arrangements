@@ -1,8 +1,8 @@
 Package: arrangements
 Type: Package
 Title: Fast Generators and Iterators for Permutations, Combinations and Partitions
-Version: 1.0.2
-Date: 2018-01-18
+Version: 1.0.3
+Date: 2018-08-05
 Authors@R: c(
     person("Randy", "Lai", , "randy.cs.lai@gmail.com", role = c("aut", "cre"))
     )
