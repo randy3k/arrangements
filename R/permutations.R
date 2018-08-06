@@ -119,7 +119,7 @@ next_permutations <- function(n, k, d, state, x, freq, replace, type) {
         }
     } else if (replace) {
         out <- .Call(
-            "next_replace_permutations",
+            "next_replacement_permutations",
             PACKAGE = "arrangements",
             n,
             k,
@@ -342,12 +342,12 @@ xpermutations <- function(n, k = n, x = NULL, freq = NULL, replace = FALSE, inde
         index <- as.character(index)
     }
     if (replace) {
-        .Call("ith_perm_replace", PACKAGE = "arrangements", n, k, index)
+        .Call("get_ith_replacement_permutation", PACKAGE = "arrangements", n, k, index)
     } else if (!is.null(freq)) {
-        .Call("ith_perm_f", PACKAGE = "arrangements", as_uint_array(freq), k, index)
+        .Call("get_ith_multiset_permutation", PACKAGE = "arrangements", as_uint_array(freq), k, index)
     } else if (k == n) {
-        .Call("ith_perm", PACKAGE = "arrangements", n, index)
+        .Call("get_ith_permutation", PACKAGE = "arrangements", n, index)
     } else {
-        .Call("ith_perm_k", PACKAGE = "arrangements", n, k, index)
+        .Call("get_ith_k_permutation", PACKAGE = "arrangements", n, k, index)
     }
 }

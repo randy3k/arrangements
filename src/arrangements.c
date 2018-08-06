@@ -3,7 +3,7 @@
 
 static const R_CallMethodDef CallEntries[] = {
     {"next_combinations", (DL_FUNC) &next_combinations, 6},
-    {"ith_comb", (DL_FUNC) &ith_comb, 3},
+    {"get_ith_combination", (DL_FUNC) &get_ith_combination, 3},
     {"next_asc_k_partitions", (DL_FUNC) &next_asc_k_partitions, 5},
     {"next_desc_k_partitions", (DL_FUNC) &next_desc_k_partitions, 5},
     {"num_k_partitions", (DL_FUNC) &num_k_partitions, 2},
@@ -11,11 +11,11 @@ static const R_CallMethodDef CallEntries[] = {
     {"next_k_permutations", (DL_FUNC) &next_k_permutations, 6},
     {"num_k_permutations", (DL_FUNC) &num_k_permutations, 2},
     {"num_k_permutations_bigz", (DL_FUNC) &num_k_permutations_bigz, 2},
-    {"ith_perm_k", (DL_FUNC) &ith_perm_k, 3},
+    {"get_ith_k_permutation", (DL_FUNC) &get_ith_k_permutation, 3},
     {"next_multiset_permutations", (DL_FUNC) &next_multiset_permutations, 7},
     {"num_multiset_permutations", (DL_FUNC) &num_multiset_permutations, 2},
     {"num_multiset_permutations_bigz", (DL_FUNC) &num_multiset_permutations_bigz, 2},
-    {"ith_perm_f", (DL_FUNC) &ith_perm_f, 3},
+    {"get_ith_multiset_permutation", (DL_FUNC) &get_ith_multiset_permutation, 3},
     {"next_multiset_combinations", (DL_FUNC) &next_multiset_combinations, 7},
     {"num_multiset_combinations", (DL_FUNC) &num_multiset_combinations, 2},
     {"num_multiset_combinations_bigz", (DL_FUNC) &num_multiset_combinations_bigz, 2},
@@ -26,10 +26,10 @@ static const R_CallMethodDef CallEntries[] = {
     {"next_permutations", (DL_FUNC) &next_permutations, 6},
     {"num_multiset_n_permutations", (DL_FUNC) &num_multiset_n_permutations, 1},
     {"num_multiset_n_permutations_bigz", (DL_FUNC) &num_multiset_n_permutations_bigz, 1},
-    {"ith_perm", (DL_FUNC) &ith_perm, 2},
-    {"next_replace_combinations", (DL_FUNC) &next_replace_combinations, 6},
-    {"next_replace_permutations", (DL_FUNC) &next_replace_permutations, 6},
-    {"ith_perm_replace", (DL_FUNC) &ith_perm_replace, 3},
+    {"get_ith_permutation", (DL_FUNC) &get_ith_permutation, 2},
+    {"next_replacement_combinations", (DL_FUNC) &next_replacement_combinations, 6},
+    {"next_replacement_permutations", (DL_FUNC) &next_replacement_permutations, 6},
+    {"get_ith_replacement_permutation", (DL_FUNC) &get_ith_replacement_permutation, 3},
     {"as_uint_array", (DL_FUNC) &as_uint_array, 1},
     {NULL, NULL, 0}
 };

@@ -1,4 +1,4 @@
-SOURCES = arrangements.c combinations.c k_partitions.c k_permutations.c multiset_combinations.c multiset_permutations.c partitions.c permutations.c replace_combinations.c replace_permutations.c utils.c
+SOURCES = arrangements.c combinations.c k_partitions.c k_permutations.c multiset_combinations.c multiset_permutations.c partitions.c permutations.c replacement_combinations.c replacement_permutations.c utils.c
 ALGS = next/cartesian_product.c next/combination.c next/k_partition.c next/k_permutation.c next/multicombination.c next/multiset_combination.c next/multiset_permutation.c next/partition.c next/permutation.c
 OBJECTS = $(ALGS:.c=.o) $(SOURCES:.c=.o)
 PKG_LIBS = -lgmp

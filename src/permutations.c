@@ -336,7 +336,7 @@ void ith_permutation_bigz(unsigned int* ar, unsigned int n, mpz_t index) {
     free(fact);
 }
 
-SEXP ith_perm(SEXP _n, SEXP _index) {
+SEXP get_ith_permutation(SEXP _n, SEXP _index) {
     unsigned int i;
     int n = as_uint(_n);
     SEXP as = PROTECT(Rf_allocVector(INTSXP, n));

@@ -393,7 +393,7 @@ SEXP num_multiset_permutations_bigz(SEXP freq, SEXP _k) {
 }
 
 
-void ith_permutation_f(unsigned int* ar, int* freq, size_t flen, size_t k, unsigned int index) {
+void ith_multiset_permutation(unsigned int* ar, int* freq, size_t flen, size_t k, unsigned int index) {
     unsigned int i, j;
     unsigned int count, this_count;
     int* subfreq = (int*) malloc(flen * sizeof(int));
@@ -419,7 +419,7 @@ void ith_permutation_f(unsigned int* ar, int* freq, size_t flen, size_t k, unsig
     free(subfreq);
 }
 
-void ith_permutation_f_bigz(unsigned int* ar, int* freq, size_t flen, size_t k, mpz_t index) {
+void ith_multiset_permutation_bigz(unsigned int* ar, int* freq, size_t flen, size_t k, mpz_t index) {
     unsigned int i, j;
     mpz_t count;
     mpz_init(count);
@@ -452,7 +452,7 @@ void ith_permutation_f_bigz(unsigned int* ar, int* freq, size_t flen, size_t k, 
     mpz_clear(this_count);
 }
 
-SEXP ith_perm_f(SEXP freq, SEXP _k, SEXP _index) {
+SEXP get_ith_multiset_permutation(SEXP freq, SEXP _k, SEXP _index) {
     unsigned int i;
     int* fp = INTEGER(freq);
     size_t flen = Rf_length(freq);
@@ -470,10 +470,10 @@ SEXP ith_perm_f(SEXP freq, SEXP _k, SEXP _index) {
         } else {
             mpz_set_ui(z, as_uint(_index) - 1);
         }
-        ith_permutation_f_bigz(ar, fp, flen, k, z);
+        ith_multiset_permutation_bigz(ar, fp, flen, k, z);
         mpz_clear(z);
     } else {
-        ith_permutation_f(ar, fp, flen, k, as_uint(_index) - 1);
+        ith_multiset_permutation(ar, fp, flen, k, as_uint(_index) - 1);
     }
 
     for (i = 0; i < k; i++) {

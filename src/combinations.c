@@ -281,7 +281,7 @@ void ith_combination_bigz(unsigned int* ar, unsigned int n, unsigned int k, mpz_
     mpz_clear(this_count);
 }
 
-SEXP ith_comb(SEXP _n, SEXP _k, SEXP _index) {
+SEXP get_ith_combination(SEXP _n, SEXP _k, SEXP _index) {
     unsigned int i;
     int n = as_uint(_n);
     int k = as_uint(_k);

@@ -278,7 +278,7 @@ SEXP num_k_permutations_bigz(SEXP _n, SEXP _k) {
 }
 
 
-void ith_permutation_k(unsigned int* ar, unsigned int n, unsigned int k, unsigned int index) {
+void ith_k_permutation(unsigned int* ar, unsigned int n, unsigned int k, unsigned int index) {
     unsigned int i, j;
 
     for (i = 0; i < k; i++) {
@@ -297,7 +297,7 @@ void ith_permutation_k(unsigned int* ar, unsigned int n, unsigned int k, unsigne
     }
 }
 
-void ith_permutation_k_bigz(unsigned int* ar, unsigned int n, unsigned int k, mpz_t index) {
+void ith_k_permutation_bigz(unsigned int* ar, unsigned int n, unsigned int k, mpz_t index) {
     unsigned int i, j;
 
     mpz_t q;
@@ -324,7 +324,7 @@ void ith_permutation_k_bigz(unsigned int* ar, unsigned int n, unsigned int k, mp
     mpz_clear(p);
 }
 
-SEXP ith_perm_k(SEXP _n, SEXP _k, SEXP _index) {
+SEXP get_ith_k_permutation(SEXP _n, SEXP _k, SEXP _index) {
     unsigned int i;
     int n = as_uint(_n);
     int k = as_uint(_k);
@@ -341,10 +341,10 @@ SEXP ith_perm_k(SEXP _n, SEXP _k, SEXP _index) {
         } else {
             mpz_set_ui(z, as_uint(_index) - 1);
         }
-        ith_permutation_k_bigz(ar, n, k, z);
+        ith_k_permutation_bigz(ar, n, k, z);
         mpz_clear(z);
     } else {
-        ith_permutation_k(ar, n, k, as_uint(_index) - 1);
+        ith_k_permutation(ar, n, k, as_uint(_index) - 1);
     }
 
     for (i = 0; i < k; i++) {

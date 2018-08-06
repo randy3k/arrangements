@@ -3,11 +3,11 @@
 #include <Rinternals.h>
 #include <gmp.h>
 #include "arrangements.h"
-#include "next/multicombination.h"
+#include "next/cartesian_product.h"
 #include "utils.h"
 
 
-SEXP next_replace_combinations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP labels, SEXP _type) {
+SEXP next_replacement_permutations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP labels, SEXP _type) {
     size_t i, j;
 
     size_t n = as_uint(_n);
@@ -15,7 +15,7 @@ SEXP next_replace_combinations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP label
     int d;
     double dd;
     if (Rf_asInteger(_d) == -1) {
-        dd = choose(n + k - 1, k);
+        dd = pow(n, k);
     } else {
         dd = as_uint(_d);
     }
@@ -37,6 +37,10 @@ SEXP next_replace_combinations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP label
         if (dd * k > R_XLEN_T_MAX) Rf_error("too many results");
     }
     d = round(dd);
+
+    size_t *sizes;
+    sizes = (size_t*) R_alloc(k, sizeof(*sizes));
+    for(i=0; i<k; i++) sizes[i] = n;
 
     SEXP as;
     unsigned int* ap;
@@ -90,7 +94,7 @@ SEXP next_replace_combinations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP label
 
         for (j=0; j<d; j++) {
             if (status) {
-                if (!next_multicombination(ap, n, k)) {
+                if (!next_cartesian_product(ap, k, sizes)) {
                     status = 0;
                     break;
                 }
@@ -144,7 +148,7 @@ SEXP next_replace_combinations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP label
 
         for (j=0; j<d; j++) {
             if (status) {
-                if (!next_multicombination(ap, n, k)) {
+                if (!next_cartesian_product(ap, k, sizes)) {
                     status = 0;
                     break;
                 }
@@ -191,7 +195,7 @@ SEXP next_replace_combinations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP label
 
         for (j=0; j<d; j++) {
             if (status) {
-                if (!next_multicombination(ap, n, k)) {
+                if (!next_cartesian_product(ap, k, sizes)) {
                     status = 0;
                     break;
                 }
@@ -232,4 +236,62 @@ SEXP next_replace_combinations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP label
 
     UNPROTECT(nprotect);
     return result;
+}
+
+void ith_replacement_permutation(unsigned int* ar, unsigned int n, unsigned int k, unsigned int index) {
+    unsigned int i, j;
+
+    for (i = 0; i < k; i++) {
+        j = pow(n, k - 1 - i);
+        ar[i] = index / j;
+        index = index % j;
+    }
+}
+
+void ith_replacement_permutation_bigz(unsigned int* ar, unsigned int n, unsigned int k, mpz_t index) {
+    unsigned int i;
+
+    mpz_t q;
+    mpz_init(q);
+    mpz_t p;
+    mpz_init(p);
+
+    for (i = 0; i < k; i++) {
+        mpz_ui_pow_ui(p, n, k - 1 - i);
+        mpz_tdiv_qr(q, index, index, p);
+        ar[i] = mpz_get_ui(q);
+    }
+
+    mpz_clear(q);
+    mpz_clear(p);
+}
+
+SEXP get_ith_replacement_permutation(SEXP _n, SEXP _k, SEXP _index) {
+    unsigned int i;
+    int n = as_uint(_n);
+    int k = as_uint(_k);
+    SEXP as = PROTECT(Rf_allocVector(INTSXP, k));
+    unsigned int* ar = (unsigned int*) INTEGER(as);
+
+    if (pow(n, k) > INT_MAX || TYPEOF(_index) == STRSXP) {
+        mpz_t z;
+        mpz_init(z);
+
+        if (TYPEOF(_index) == STRSXP) {
+            mpz_set_str(z, CHAR(STRING_ELT(_index, 0)), 10);
+            mpz_sub_ui(z, z, 1);
+        } else {
+            mpz_set_ui(z, as_uint(_index) - 1);
+        }
+        ith_replacement_permutation_bigz(ar, n, k, z);
+        mpz_clear(z);
+    } else {
+        ith_replacement_permutation(ar, n, k, as_uint(_index) - 1);
+    }
+
+    for (i = 0; i < k; i++) {
+        ar[i]++;
+    }
+    UNPROTECT(1);
+    return as;
 }

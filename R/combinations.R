@@ -115,7 +115,7 @@ next_combinations <- function(n, k, d, state, x, freq, replace, type) {
         }
     } else if (replace) {
         out <- .Call(
-            "next_replace_combinations",
+            "next_replacement_combinations",
             PACKAGE = "arrangements",
             n,
             k,
@@ -303,10 +303,10 @@ xcombinations <- function(n, k = n, x = NULL, freq = NULL, replace = FALSE, inde
         index <- as.character(index)
     }
     if (replace) {
-        .Call("ith_comb_replace", PACKAGE = "arrangements", n, k, index)
+        .Call("get_ith_combination_replace", PACKAGE = "arrangements", n, k, index)
     } else if (!is.null(freq)) {
-        .Call("ith_comb_f", PACKAGE = "arrangements", as_uint_array(freq), k, index)
+        .Call("get_ith_combination_f", PACKAGE = "arrangements", as_uint_array(freq), k, index)
     } else {
-        .Call("ith_comb", PACKAGE = "arrangements", n, k, index)
+        .Call("get_ith_combination", PACKAGE = "arrangements", n, k, index)
     }
 }
