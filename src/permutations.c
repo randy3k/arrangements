@@ -248,13 +248,13 @@ SEXP next_permutations(SEXP _n, SEXP _d, SEXP state, SEXP labels, SEXP freq, SEX
     return result;
 }
 
-SEXP nperm_n(SEXP freq) {
+SEXP num_multiset_n_permutations(SEXP freq) {
     int* fp = INTEGER(as_uint_array(freq));
     size_t flen = Rf_length(freq);
     return Rf_ScalarReal(multichoose(fp, flen));
 }
 
-void npermutations_n_bigz(mpz_t z, int* freq, size_t flen) {
+void n_multiset_n_permutations_bigz(mpz_t z, int* freq, size_t flen) {
     mpz_set_ui(z, 1);
     size_t i, j, h;
     h = 0;
@@ -267,12 +267,12 @@ void npermutations_n_bigz(mpz_t z, int* freq, size_t flen) {
     }
 }
 
-SEXP nperm_n_bigz(SEXP freq) {
+SEXP num_multiset_n_permutations_bigz(SEXP freq) {
     int* fp = INTEGER(as_uint_array(freq));
     size_t flen = Rf_length(freq);
     mpz_t z;
     mpz_init(z);
-    npermutations_n_bigz(z, fp, flen);
+    n_multiset_n_permutations_bigz(z, fp, flen);
     char* c = mpz_get_str(NULL, 10, z);
     SEXP out = Rf_mkString(c);
     mpz_clear(z);

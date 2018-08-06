@@ -6,7 +6,7 @@
 #include "next/k_partition.h"
 #include "utils.h"
 
-double npartitions_k(int n, int k);
+double n_k_partitions(int n, int k);
 
 SEXP next_asc_k_partitions(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP _type) {
     size_t i, j;
@@ -16,7 +16,7 @@ SEXP next_asc_k_partitions(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP _type) {
     int d;
     double dd;
     if (Rf_asInteger(_d) == -1) {
-        dd = npartitions_k(n, k);
+        dd = n_k_partitions(n, k);
     } else {
         dd = as_uint(_d);
     }
@@ -158,7 +158,7 @@ SEXP next_desc_k_partitions(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP _type) {
     int d;
     double dd;
     if (Rf_asInteger(_d) == -1) {
-        dd = npartitions_k(n, k);
+        dd = n_k_partitions(n, k);
     } else {
         dd = as_uint(_d);
     }
@@ -296,7 +296,7 @@ SEXP next_desc_k_partitions(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP _type) {
     return result;
 }
 
-double npartitions_k(int n, int k) {
+double n_k_partitions(int n, int k) {
     if (n < k) {
         return 0;
     } else if (n == 0 && k == 0) {
@@ -328,14 +328,14 @@ double npartitions_k(int n, int k) {
 }
 
 
-SEXP npart_k(SEXP _n, SEXP _k) {
+SEXP num_k_partitions(SEXP _n, SEXP _k) {
     int n = as_uint(_n);
     int k = as_uint(_k);
-    return Rf_ScalarReal(npartitions_k(n, k));
+    return Rf_ScalarReal(n_k_partitions(n, k));
 }
 
 
-void npartitions_k_bigz(mpz_t z, int n, int k) {
+void n_k_partitions_bigz(mpz_t z, int n, int k) {
     if (n < k) {
         mpz_set_ui(z, 0);
         return;
@@ -372,12 +372,12 @@ void npartitions_k_bigz(mpz_t z, int n, int k) {
     free(p);
 }
 
-SEXP npart_k_bigz(SEXP _n, SEXP _k) {
+SEXP num_k_partitions_bigz(SEXP _n, SEXP _k) {
     int n = as_uint(_n);
     int k = as_uint(_k);
     mpz_t z;
     mpz_init(z);
-    npartitions_k_bigz(z, n, k);
+    n_k_partitions_bigz(z, n, k);
     char* c = mpz_get_str(NULL, 10, z);
     SEXP out = Rf_mkString(c);
     mpz_clear(z);

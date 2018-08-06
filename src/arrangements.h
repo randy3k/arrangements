@@ -7,51 +7,53 @@
 
 SEXP next_combinations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP labels, SEXP _type);
 
+SEXP ith_comb(SEXP _n, SEXP _k, SEXP _index);
+
 SEXP next_asc_k_partitions(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP _type);
 
 SEXP next_desc_k_partitions(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP _type);
 
-SEXP npart_k(SEXP _n, SEXP _k);
+SEXP num_k_partitions(SEXP _n, SEXP _k);
 
-SEXP npart_k_bigz(SEXP _n, SEXP _k);
+SEXP num_k_partitions_bigz(SEXP _n, SEXP _k);
 
 SEXP next_k_permutations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP labels, SEXP _type);
 
-SEXP nperm_k(SEXP _n, SEXP _k);
+SEXP num_k_permutations(SEXP _n, SEXP _k);
 
-SEXP nperm_k_bigz(SEXP _n, SEXP _k);
+SEXP num_k_permutations_bigz(SEXP _n, SEXP _k);
 
-SEXP ith_perm_k(SEXP _n, SEXP _k, SEXP _pos);
+SEXP ith_perm_k(SEXP _n, SEXP _k, SEXP _index);
 
 SEXP next_multiset_permutations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP labels, SEXP freq, SEXP _type);
 
-SEXP nperm_f(SEXP freq, SEXP _k);
+SEXP num_multiset_permutations(SEXP freq, SEXP _k);
 
-SEXP nperm_f_bigz(SEXP freq, SEXP _k);
+SEXP num_multiset_permutations_bigz(SEXP freq, SEXP _k);
 
 SEXP ith_perm_f(SEXP freq, SEXP _k, SEXP _index);
 
 SEXP next_multiset_combinations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP labels, SEXP freq, SEXP _type);
 
-SEXP ncomb_f(SEXP freq, SEXP _k);
+SEXP num_multiset_combinations(SEXP freq, SEXP _k);
 
-SEXP ncomb_f_bigz(SEXP freq, SEXP _k);
+SEXP num_multiset_combinations_bigz(SEXP freq, SEXP _k);
 
 SEXP next_asc_partitions(SEXP _n, SEXP _d, SEXP state, SEXP _type);
 
 SEXP next_desc_partitions(SEXP _n, SEXP _d, SEXP state, SEXP _type);
 
-SEXP npart(SEXP _n);
+SEXP num_partitions(SEXP _n);
 
-SEXP npart_bigz(SEXP _n);
+SEXP num_partitions_bigz(SEXP _n);
 
 SEXP next_permutations(SEXP _n, SEXP _d, SEXP state, SEXP labels, SEXP freq, SEXP _type);
 
-SEXP nperm_n(SEXP freq);
+SEXP num_multiset_n_permutations(SEXP freq);
 
-SEXP nperm_n_bigz(SEXP freq);
+SEXP num_multiset_n_permutations_bigz(SEXP freq);
 
-SEXP ith_perm(SEXP _n, SEXP _pos);
+SEXP ith_perm(SEXP _n, SEXP _index);
 
 SEXP next_replace_combinations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP labels, SEXP _type);
 

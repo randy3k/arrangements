@@ -246,13 +246,13 @@ SEXP next_k_permutations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP labels, SEX
     return result;
 }
 
-SEXP nperm_k(SEXP _n, SEXP _k) {
+SEXP num_k_permutations(SEXP _n, SEXP _k) {
     size_t n = as_uint(_n);
     size_t k = as_uint(_k);
     return Rf_ScalarReal(fallfact(n, k));
 }
 
-void npermutations_k_bigz(mpz_t p, size_t n, size_t k) {
+void n_k_permutations_bigz(mpz_t p, size_t n, size_t k) {
     size_t i;
     if (n < k) {
         mpz_set_ui(p, 0);
@@ -264,12 +264,12 @@ void npermutations_k_bigz(mpz_t p, size_t n, size_t k) {
     }
 }
 
-SEXP nperm_k_bigz(SEXP _n, SEXP _k) {
+SEXP num_k_permutations_bigz(SEXP _n, SEXP _k) {
     size_t n = as_uint(_n);
     size_t k = as_uint(_k);
     mpz_t p;
     mpz_init(p);
-    npermutations_k_bigz(p, n, k);
+    n_k_permutations_bigz(p, n, k);
     char* c = mpz_get_str(NULL, 10, p);
     SEXP out = Rf_mkString(c);
     free(c);
@@ -306,7 +306,7 @@ void ith_permutation_k_bigz(unsigned int* ar, unsigned int n, unsigned int k, mp
     mpz_init(p);
 
     for (i = 0; i < k; i++) {
-        npermutations_k_bigz(p, n - 1 - i, k - 1 - i);
+        n_k_permutations_bigz(p, n - 1 - i, k - 1 - i);
         mpz_tdiv_qr(q, index, index, p);
         ar[i] = mpz_get_ui(q);
     }

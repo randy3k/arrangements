@@ -6,7 +6,7 @@
 #include "next/multiset_combination.h"
 #include "utils.h"
 
-double ncombinations_f(int* freq, size_t flen, size_t k);
+double n_multiset_combinations(int* freq, size_t flen, size_t k);
 
 SEXP next_multiset_combinations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP labels, SEXP freq, SEXP _type) {
     size_t i, j, h;
@@ -16,7 +16,7 @@ SEXP next_multiset_combinations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP labe
     int d;
     double dd;
     if (Rf_asInteger(_d) == -1) {
-        dd = ncombinations_f(INTEGER(freq), Rf_length(freq), k);
+        dd = n_multiset_combinations(INTEGER(freq), Rf_length(freq), k);
     } else {
         dd = as_uint(_d);
     }
@@ -268,7 +268,7 @@ SEXP next_multiset_combinations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP labe
 }
 
 
-double ncombinations_f(int* freq, size_t flen, size_t k) {
+double n_multiset_combinations(int* freq, size_t flen, size_t k) {
     int n = 0;
     int i, j, h;
     for (i=0; i<flen; i++) n += freq[i];
@@ -307,14 +307,14 @@ double ncombinations_f(int* freq, size_t flen, size_t k) {
     return ptemp;
 }
 
-SEXP ncomb_f(SEXP freq, SEXP _k) {
+SEXP num_multiset_combinations(SEXP freq, SEXP _k) {
     int* fp = INTEGER(freq);
     size_t flen = Rf_length(freq);
     size_t k = as_uint(_k);
-    return Rf_ScalarReal(ncombinations_f(fp, flen, k));
+    return Rf_ScalarReal(n_multiset_combinations(fp, flen, k));
 }
 
-void ncombinations_f_bigz(mpz_t z, int* freq, size_t flen, size_t k) {
+void n_multiset_combinations_bigz(mpz_t z, int* freq, size_t flen, size_t k) {
     int n = 0;
     int i, j, h;
     for (i=0; i<flen; i++) n += freq[i];
@@ -349,13 +349,13 @@ void ncombinations_f_bigz(mpz_t z, int* freq, size_t flen, size_t k) {
     }
 }
 
-SEXP ncomb_f_bigz(SEXP freq, SEXP _k) {
+SEXP num_multiset_combinations_bigz(SEXP freq, SEXP _k) {
     int* fp = INTEGER(freq);
     size_t flen = Rf_length(freq);
     size_t k = as_uint(_k);
     mpz_t z;
     mpz_init(z);
-    ncombinations_f_bigz(z, fp, flen, k);
+    n_multiset_combinations_bigz(z, fp, flen, k);
     char* c = mpz_get_str(NULL, 10, z);
     SEXP out = Rf_mkString(c);
     mpz_clear(z);

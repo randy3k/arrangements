@@ -6,7 +6,7 @@
 #include "next/partition.h"
 #include "utils.h"
 
-double npartitions(int n);
+double n_partitions(int n);
 
 SEXP next_asc_partitions(SEXP _n, SEXP _d, SEXP state, SEXP _type) {
     size_t i, j, k;
@@ -15,7 +15,7 @@ SEXP next_asc_partitions(SEXP _n, SEXP _d, SEXP state, SEXP _type) {
     int d;
     double dd;
     if (Rf_asInteger(_d) == -1) {
-        dd = npartitions(n);
+        dd = n_partitions(n);
     } else {
         dd = as_uint(_d);
     }
@@ -177,7 +177,7 @@ SEXP next_desc_partitions(SEXP _n, SEXP _d, SEXP state, SEXP _type) {
     int d;
     double dd;
     if (Rf_asInteger(_d) == -1) {
-        dd = npartitions(n);
+        dd = n_partitions(n);
     } else {
         dd = as_uint(_d);
     }
@@ -337,7 +337,7 @@ SEXP next_desc_partitions(SEXP _n, SEXP _d, SEXP state, SEXP _type) {
     return result;
 }
 
-double npartitions(int n) {
+double n_partitions(int n) {
     if (n == 0) return 1;
     // find P(1),...,P(n) sequentially
     int i, j, k, s;
@@ -358,12 +358,12 @@ double npartitions(int n) {
     return out;
 }
 
-SEXP npart(SEXP _n) {
+SEXP num_partitions(SEXP _n) {
     int n = as_uint(_n);
-    return Rf_ScalarReal(npartitions(n));
+    return Rf_ScalarReal(n_partitions(n));
 }
 
-void npartitions_bigz(mpz_t z, int n) {
+void n_partitions_bigz(mpz_t z, int n) {
     // find P(1),...,P(n) sequentially
     if (n == 0) {
         mpz_set_ui(z, 1);
@@ -396,11 +396,11 @@ void npartitions_bigz(mpz_t z, int n) {
     free(p);
 }
 
-SEXP npart_bigz(SEXP _n) {
+SEXP num_partitions_bigz(SEXP _n) {
     int n = as_uint(_n);
     mpz_t z;
     mpz_init(z);
-    npartitions_bigz(z, n);
+    n_partitions_bigz(z, n);
     char* c = mpz_get_str(NULL, 10, z);
     SEXP out = Rf_mkString(c);
     mpz_clear(z);

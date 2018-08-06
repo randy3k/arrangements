@@ -279,7 +279,7 @@ ncombinations <- function(n, k, x = NULL, freq  =NULL, replace = FALSE, bigz = F
         } else if (is.null(freq)) {
             out <- gmp::chooseZ(n, k)
         } else {
-            out <- .Call("ncomb_f_bigz", PACKAGE = "arrangements", as_uint_array(freq), k)
+            out <- .Call("num_multiset_combinations_bigz", PACKAGE = "arrangements", as_uint_array(freq), k)
         }
 
     } else {
@@ -290,8 +290,23 @@ ncombinations <- function(n, k, x = NULL, freq  =NULL, replace = FALSE, bigz = F
         } else if (is.null(freq)) {
             out <- choose(n, k)
         } else {
-            out <- .Call("ncomb_f", PACKAGE = "arrangements", as_uint_array(freq), k)
+            out <- .Call("num_multiset_combinations", PACKAGE = "arrangements", as_uint_array(freq), k)
         }
     }
     convertz(out, bigz)
+}
+
+
+#' @export
+xcombinations <- function(n, k = n, x = NULL, freq = NULL, replace = FALSE, index = 1) {
+    if (gmp::is.bigz(index)) {
+        index <- as.character(index)
+    }
+    if (replace) {
+        .Call("ith_comb_replace", PACKAGE = "arrangements", n, k, index)
+    } else if (!is.null(freq)) {
+        .Call("ith_comb_f", PACKAGE = "arrangements", as_uint_array(freq), k, index)
+    } else {
+        .Call("ith_comb", PACKAGE = "arrangements", n, k, index)
+    }
 }

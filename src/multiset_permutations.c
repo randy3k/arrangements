@@ -6,7 +6,7 @@
 #include "next/multiset_permutation.h"
 #include "utils.h"
 
-double npermutations_f(int* freq, size_t flen, size_t k);
+double n_multiset_permutations(int* freq, size_t flen, size_t k);
 
 SEXP next_multiset_permutations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP labels, SEXP freq, SEXP _type) {
     size_t i, j, h;
@@ -19,7 +19,7 @@ SEXP next_multiset_permutations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP labe
         if (freq == R_NilValue) {
             dd = fallfact(n, k);
         } else {
-            dd = npermutations_f(INTEGER(freq), Rf_length(freq), k);
+            dd = n_multiset_permutations(INTEGER(freq), Rf_length(freq), k);
         }
     } else {
         dd = as_uint(_d);
@@ -252,7 +252,7 @@ SEXP next_multiset_permutations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP labe
 }
 
 
-double npermutations_f(int* freq, size_t flen, size_t k) {
+double n_multiset_permutations(int* freq, size_t flen, size_t k) {
     int n = 0;
     int i, j, h;
     for (i=0; i<flen; i++) n += freq[i];
@@ -307,14 +307,14 @@ double npermutations_f(int* freq, size_t flen, size_t k) {
     return ptemp;
 }
 
-SEXP nperm_f(SEXP freq, SEXP _k) {
+SEXP num_multiset_permutations(SEXP freq, SEXP _k) {
     int* fp = INTEGER(freq);
     size_t flen = Rf_length(freq);
     size_t k = as_uint(_k);
-    return Rf_ScalarReal(npermutations_f(fp, flen, k));
+    return Rf_ScalarReal(n_multiset_permutations(fp, flen, k));
 }
 
-void npermutations_f_bigz(mpz_t z, int* freq, size_t flen, size_t k) {
+void n_multiset_permutations_bigz(mpz_t z, int* freq, size_t flen, size_t k) {
     int n = 0;
     int i, j, h;
     for (i=0; i<flen; i++) n += freq[i];
@@ -378,13 +378,13 @@ void npermutations_f_bigz(mpz_t z, int* freq, size_t flen, size_t k) {
     mpz_clear(ptemp);
 }
 
-SEXP nperm_f_bigz(SEXP freq, SEXP _k) {
+SEXP num_multiset_permutations_bigz(SEXP freq, SEXP _k) {
     int* fp = INTEGER(freq);
     size_t flen = Rf_length(freq);
     size_t k = as_uint(_k);
     mpz_t z;
     mpz_init(z);
-    npermutations_f_bigz(z, fp, flen, k);
+    n_multiset_permutations_bigz(z, fp, flen, k);
     char* c = mpz_get_str(NULL, 10, z);
     SEXP out = Rf_mkString(c);
     mpz_clear(z);
@@ -405,7 +405,7 @@ void ith_permutation_f(unsigned int* ar, int* freq, size_t flen, size_t k, unsig
         for (j = 0; j < flen; j++) {
             if (subfreq[j] == 0) continue;
             subfreq[j]--;
-            this_count = count + npermutations_f(subfreq, flen, k - i - 1);
+            this_count = count + n_multiset_permutations(subfreq, flen, k - i - 1);
             if (this_count > index) {
                 ar[i] = j;
                 index -= count;
@@ -435,7 +435,7 @@ void ith_permutation_f_bigz(unsigned int* ar, int* freq, size_t flen, size_t k, 
         for (j = 0; j < flen; j++) {
             if (subfreq[j] == 0) continue;
             subfreq[j]--;
-            npermutations_f_bigz(this_count, subfreq, flen, k - i - 1);
+            n_multiset_permutations_bigz(this_count, subfreq, flen, k - i - 1);
             mpz_add(this_count, this_count, count);
             if (mpz_cmp(this_count, index) > 0) {
                 ar[i] = j;
@@ -460,7 +460,7 @@ SEXP ith_perm_f(SEXP freq, SEXP _k, SEXP _index) {
     SEXP as = PROTECT(Rf_allocVector(INTSXP, k));
     unsigned int* ar = (unsigned int*) INTEGER(as);
 
-    if (npermutations_f(fp, flen, k) > INT_MAX || TYPEOF(_index) == STRSXP) {
+    if (n_multiset_permutations(fp, flen, k) > INT_MAX || TYPEOF(_index) == STRSXP) {
         mpz_t z;
         mpz_init(z);
 

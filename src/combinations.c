@@ -233,3 +233,80 @@ SEXP next_combinations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP labels, SEXP 
     UNPROTECT(nprotect);
     return result;
 }
+
+
+void ith_combination(unsigned int* ar, unsigned int n, unsigned int k, unsigned int index) {
+    unsigned int i, j;
+    unsigned int start = 0;
+    unsigned int count, this_count;
+
+    for (i = 0; i < k; i++) {
+        count = 0;
+        for (j = start; j < n; j++) {
+            this_count = count + choose(n - j - 1, k - i - 1);
+            if (this_count > index) {
+                ar[i] = j;
+                start = j + 1;
+                index -= count;
+                break;
+            }
+            count = this_count;
+        }
+    }
+}
+
+void ith_combination_bigz(unsigned int* ar, unsigned int n, unsigned int k, mpz_t index) {
+    unsigned int i, j;
+    unsigned int start = 0;
+    mpz_t count, this_count;
+    mpz_init(count);
+    mpz_init(this_count);
+
+    for (i = 0; i < k; i++) {
+        mpz_set_ui(count, 0);
+        for (j = start; j < n; j++) {
+            mpz_bin_uiui(this_count, n - j - 1, k - i - 1);
+            mpz_add(this_count, this_count, count);
+            if (mpz_cmp(this_count, index) > 0) {
+                ar[i] = j;
+                start = j + 1;
+                mpz_sub(index, index, count);
+                break;
+            }
+            mpz_set(count, this_count);
+        }
+    }
+
+    mpz_clear(count);
+    mpz_clear(this_count);
+}
+
+SEXP ith_comb(SEXP _n, SEXP _k, SEXP _index) {
+    unsigned int i;
+    int n = as_uint(_n);
+    int k = as_uint(_k);
+    SEXP as = PROTECT(Rf_allocVector(INTSXP, k));
+    unsigned int* ar = (unsigned int*) INTEGER(as);
+
+    if (choose(n, k) > INT_MAX || TYPEOF(_index) == STRSXP) {
+        mpz_t z;
+        mpz_init(z);
+
+        if (TYPEOF(_index) == STRSXP) {
+            mpz_set_str(z, CHAR(STRING_ELT(_index, 0)), 10);
+            mpz_sub_ui(z, z, 1);
+        } else {
+            mpz_set_ui(z, as_uint(_index) - 1);
+        }
+        ith_combination_bigz(ar, n, k, z);
+        mpz_clear(z);
+    } else {
+        ith_combination(ar, n, k, as_uint(_index) - 1);
+    }
+
+    for (i = 0; i < k; i++) {
+        ar[i]++;
+    }
+    UNPROTECT(1);
+    return as;
+}

@@ -266,16 +266,16 @@ npartitions <- function(n, k = NULL, bigz = FALSE) {
     (n %% 1 == 0  && n >= 0) || stop("expect non-negative integer")
     if (is.null(k)) {
         if (bigz) {
-            out <- .Call("npart_bigz", PACKAGE = "arrangements", n)
+            out <- .Call("num_partitions_bigz", PACKAGE = "arrangements", n)
         } else {
-            out <- .Call("npart", PACKAGE = "arrangements", n)
+            out <- .Call("num_partitions", PACKAGE = "arrangements", n)
         }
     } else {
         (k %% 1 == 0  && k >= 0) || stop("expect non-negative integer")
         if (bigz) {
-            out <- .Call("npart_k_bigz", PACKAGE = "arrangements", n, k)
+            out <- .Call("num_k_partitions_bigz", PACKAGE = "arrangements", n, k)
         } else {
-            out <- .Call("npart_k", PACKAGE = "arrangements", n, k)
+            out <- .Call("num_k_partitions", PACKAGE = "arrangements", n, k)
         }
     }
     convertz(out, bigz)

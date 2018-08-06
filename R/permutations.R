@@ -304,13 +304,13 @@ npermutations <- function(n, k = n, x = NULL, freq = NULL, replace = FALSE, bigz
             if (n == k) {
                 out <- gmp::factorialZ(n)
             } else {
-                out <- out <- .Call("nperm_k_bigz", PACKAGE = "arrangements", n, k)
+                out <- out <- .Call("num_k_permutations_bigz", PACKAGE = "arrangements", n, k)
             }
         } else {
             if (n == k) {
-                out <- .Call("nperm_n_bigz", PACKAGE = "arrangements", as_uint_array(freq))
+                out <- .Call("num_multiset_n_permutations_bigz", PACKAGE = "arrangements", as_uint_array(freq))
             } else {
-                out <- .Call("nperm_f_bigz", PACKAGE = "arrangements", as_uint_array(freq), k)
+                out <- .Call("num_multiset_permutations_bigz", PACKAGE = "arrangements", as_uint_array(freq), k)
             }
         }
 
@@ -323,13 +323,13 @@ npermutations <- function(n, k = n, x = NULL, freq = NULL, replace = FALSE, bigz
             if (n == k) {
                 out <- factorial(n)
             } else {
-                out <- .Call("nperm_k", PACKAGE = "arrangements", n, k)
+                out <- .Call("num_k_permutations", PACKAGE = "arrangements", n, k)
             }
         } else {
             if (n == k) {
-                out <- .Call("nperm_n", PACKAGE = "arrangements", as_uint_array(freq))
+                out <- .Call("num_multiset_n_permutations", PACKAGE = "arrangements", as_uint_array(freq))
             } else {
-                out <- .Call("nperm_f", PACKAGE = "arrangements", as_uint_array(freq), k)
+                out <- .Call("num_multiset_permutations", PACKAGE = "arrangements", as_uint_array(freq), k)
             }
         }
     }
