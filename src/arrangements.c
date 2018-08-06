@@ -10,9 +10,11 @@ static const R_CallMethodDef CallEntries[] = {
     {"next_k_permutations", (DL_FUNC) &next_k_permutations, 6},
     {"nperm_k", (DL_FUNC) &nperm_k, 2},
     {"nperm_k_bigz", (DL_FUNC) &nperm_k_bigz, 2},
+    {"ith_perm_k", (DL_FUNC) &ith_perm_k, 3},
     {"next_multiset_permutations", (DL_FUNC) &next_multiset_permutations, 7},
     {"nperm_f", (DL_FUNC) &nperm_f, 2},
     {"nperm_f_bigz", (DL_FUNC) &nperm_f_bigz, 2},
+    {"ith_perm_f", (DL_FUNC) &ith_perm_f, 3},
     {"next_multiset_combinations", (DL_FUNC) &next_multiset_combinations, 7},
     {"ncomb_f", (DL_FUNC) &ncomb_f, 2},
     {"ncomb_f_bigz", (DL_FUNC) &ncomb_f_bigz, 2},
@@ -23,8 +25,10 @@ static const R_CallMethodDef CallEntries[] = {
     {"next_permutations", (DL_FUNC) &next_permutations, 6},
     {"nperm_n", (DL_FUNC) &nperm_n, 1},
     {"nperm_n_bigz", (DL_FUNC) &nperm_n_bigz, 1},
+    {"ith_perm", (DL_FUNC) &ith_perm, 2},
     {"next_replace_combinations", (DL_FUNC) &next_replace_combinations, 6},
     {"next_replace_permutations", (DL_FUNC) &next_replace_permutations, 6},
+    {"ith_perm_replace", (DL_FUNC) &ith_perm_replace, 3},
     {"as_uint_array", (DL_FUNC) &as_uint_array, 1},
     {NULL, NULL, 0}
 };

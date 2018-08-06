@@ -118,6 +118,16 @@ SEXP as_uint_array(SEXP x) {
     return x;
 }
 
+double fact(size_t n) {
+    double out;
+    size_t i;
+    out = 1;
+    for(i=0; i<n; i++) {
+        out = out * (n - i);
+    }
+    return out;
+}
+
 double fallfact(size_t n, size_t k) {
     double out;
     size_t i;

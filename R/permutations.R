@@ -19,7 +19,7 @@ Permutations <- R6::R6Class(
         x = NULL,
         freq = NULL,
         replace = NULL,
-        initialize = function(n, k, x = NULL, freq = NULL, replace = FALSE) {
+        initialize = function(n, k = n, x = NULL, freq = NULL, replace = FALSE) {
             (n %% 1 == 0  && n >= 0) || stop("expect non-negative integer")
             (k %% 1 == 0  && k >= 0) || stop("expect non-negative integer")
             self$n <- as.integer(n)
@@ -219,7 +219,7 @@ next_permutations <- function(n, k, d, state, x, freq, replace, type) {
 #' dim(permutations(0, 1))
 #'
 #' @export
-permutations <- function(n, k=n, x = NULL, freq = NULL, replace = FALSE, type = "r") {
+permutations <- function(n, k = n, x = NULL, freq = NULL, replace = FALSE, type = "r") {
     if (!replace && !is.null(freq)) {
         n <- sum(freq)
         is.null(x) || length(freq) == length(x) || stop("length of x and freq should be the same")
@@ -251,7 +251,7 @@ permutations <- function(n, k=n, x = NULL, freq = NULL, replace = FALSE, type = 
 #'   sum(x)
 #' }
 #' @export
-ipermutations <- function(n, k=n, x = NULL, freq = NULL, replace = FALSE) {
+ipermutations <- function(n, k = n, x = NULL, freq = NULL, replace = FALSE) {
     if (!replace && !is.null(freq)) {
         n <- sum(freq)
         is.null(x) || length(freq) == length(x) || stop("length of x and freq should be the same")
@@ -286,7 +286,7 @@ ipermutations <- function(n, k=n, x = NULL, freq = NULL, replace = FALSE) {
 #' npermutations(0, 1)
 #' npermutations(0, 0)
 #' @export
-npermutations <- function(n, k=n, x = NULL, freq = NULL, replace = FALSE, bigz = FALSE) {
+npermutations <- function(n, k = n, x = NULL, freq = NULL, replace = FALSE, bigz = FALSE) {
     if (!replace && !is.null(freq)) {
         n <- sum(freq)
         is.null(x) || length(freq) == length(x) || stop("length of x and freq should be the same")
@@ -334,4 +334,20 @@ npermutations <- function(n, k=n, x = NULL, freq = NULL, replace = FALSE, bigz =
         }
     }
     convertz(out, bigz)
+}
+
+#' @export
+xpermutations <- function(n, k = n, x = NULL, freq = NULL, replace = FALSE, index = 1) {
+    if (gmp::is.bigz(index)) {
+        index <- as.character(index)
+    }
+    if (replace) {
+        .Call("ith_perm_replace", PACKAGE = "arrangements", n, k, index)
+    } else if (!is.null(freq)) {
+        .Call("ith_perm_f", PACKAGE = "arrangements", as_uint_array(freq), k, index)
+    } else if (k == n) {
+        .Call("ith_perm", PACKAGE = "arrangements", n, index)
+    } else {
+        .Call("ith_perm_k", PACKAGE = "arrangements", n, k, index)
+    }
 }

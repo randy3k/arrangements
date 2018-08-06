@@ -1,6 +1,7 @@
 #define R_NO_REMAP
 #include <R.h>
 #include <Rinternals.h>
+#include <gmp.h>
 #include "arrangements.h"
 #include "next/cartesian_product.h"
 #include "utils.h"
@@ -14,10 +15,7 @@ SEXP next_replace_permutations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP label
     int d;
     double dd;
     if (Rf_asInteger(_d) == -1) {
-        dd = 1;
-        for (i=0; i<k; i++) {
-            dd = dd * n;
-        }
+        dd = pow(n, k);
     } else {
         dd = as_uint(_d);
     }
@@ -238,4 +236,62 @@ SEXP next_replace_permutations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP label
 
     UNPROTECT(nprotect);
     return result;
+}
+
+void ith_permutation_replace(unsigned int* ar, unsigned int n, unsigned int k, unsigned int index) {
+    unsigned int i, j;
+
+    for (i = 0; i < k; i++) {
+        j = pow(n, k - 1 - i);
+        ar[i] = index / j;
+        index = index % j;
+    }
+}
+
+void ith_permutation_replace_bigz(unsigned int* ar, unsigned int n, unsigned int k, mpz_t index) {
+    unsigned int i;
+
+    mpz_t q;
+    mpz_init(q);
+    mpz_t p;
+    mpz_init(p);
+
+    for (i = 0; i < k; i++) {
+        mpz_ui_pow_ui(p, n, k - 1 - i);
+        mpz_tdiv_qr(q, index, index, p);
+        ar[i] = mpz_get_ui(q);
+    }
+
+    mpz_clear(q);
+    mpz_clear(p);
+}
+
+SEXP ith_perm_replace(SEXP _n, SEXP _k, SEXP _index) {
+    unsigned int i;
+    int n = as_uint(_n);
+    int k = as_uint(_k);
+    SEXP as = PROTECT(Rf_allocVector(INTSXP, k));
+    unsigned int* ar = (unsigned int*) INTEGER(as);
+
+    if (pow(n, k) > INT_MAX || TYPEOF(_index) == STRSXP) {
+        mpz_t z;
+        mpz_init(z);
+
+        if (TYPEOF(_index) == STRSXP) {
+            mpz_set_str(z, CHAR(STRING_ELT(_index, 0)), 10);
+            mpz_sub_ui(z, z, 1);
+        } else {
+            mpz_set_ui(z, as_uint(_index) - 1);
+        }
+        ith_permutation_replace_bigz(ar, n, k, z);
+        mpz_clear(z);
+    } else {
+        ith_permutation_replace(ar, n, k, as_uint(_index) - 1);
+    }
+
+    for (i = 0; i < k; i++) {
+        ar[i]++;
+    }
+    UNPROTECT(1);
+    return as;
 }

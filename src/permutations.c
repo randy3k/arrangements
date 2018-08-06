@@ -14,10 +14,7 @@ SEXP next_permutations(SEXP _n, SEXP _d, SEXP state, SEXP labels, SEXP freq, SEX
     double dd;
     if (Rf_asInteger(_d) == -1) {
         if (freq == R_NilValue) {
-            dd = 1;
-            for (i=2; i<=n; i++) {
-                dd = dd * i;
-            }
+            dd = fact(n);
         } else {
             dd = multichoose(INTEGER(freq), Rf_length(freq));
         }
@@ -281,4 +278,89 @@ SEXP nperm_n_bigz(SEXP freq) {
     mpz_clear(z);
     free(c);
     return out;
+}
+
+void ith_permutation(unsigned int* ar, unsigned int n, unsigned int index) {
+    unsigned int i, j;
+    unsigned int* fact = (unsigned int*) malloc(n * sizeof(unsigned int));
+
+    fact[0] = 1;
+    for (i = 1; i < n; i++) {
+        fact[i] = fact[i-1] * i;
+    }
+    for (i = 0; i < n; i++) {
+        ar[i] = index / fact[n - 1 - i];
+        index = index % fact[n - 1 - i];
+    }
+
+    for (i = n - 1; i > 0; i--) {
+        j = i;
+        while (j-- > 0) {
+            if (ar[j] <= ar[i]) {
+                ar[i]++;
+            }
+        }
+    }
+
+    free(fact);
+}
+
+void ith_permutation_bigz(unsigned int* ar, unsigned int n, mpz_t index) {
+    unsigned int i, j;
+
+    mpz_t q;
+    mpz_init(q);
+
+    mpz_t* fact = (mpz_t*) malloc(n * sizeof(mpz_t));
+    for (i=0; i< n; i++) mpz_init(fact[i]);
+
+    mpz_set_ui(fact[0], 1);
+    for (i=1; i< n; i++) mpz_mul_ui(fact[i], fact[i-1], i);
+
+    for (i = 0; i < n; i++) {
+        mpz_tdiv_qr(q, index, index, fact[n - 1 - i]);
+        ar[i] = mpz_get_ui(q);
+    }
+
+    for (i = n - 1; i > 0; i--) {
+        j = i;
+        while (j-- > 0) {
+            if (ar[j] <= ar[i]) {
+                ar[i]++;
+            }
+        }
+    }
+
+    mpz_clear(q);
+    for (i=0; i< n; i++) mpz_clear(fact[i]);
+    free(fact);
+}
+
+SEXP ith_perm(SEXP _n, SEXP _index) {
+    unsigned int i;
+    int n = as_uint(_n);
+    SEXP as = PROTECT(Rf_allocVector(INTSXP, n));
+    unsigned int* ar = (unsigned int*) INTEGER(as);
+
+    if (n > 12 || TYPEOF(_index) == STRSXP) {
+        mpz_t z;
+        mpz_init(z);
+
+        if (TYPEOF(_index) == STRSXP) {
+            mpz_set_str(z, CHAR(STRING_ELT(_index, 0)), 10);
+            mpz_sub_ui(z, z, 1);
+        } else {
+            mpz_set_ui(z, as_uint(_index) - 1);
+        }
+        ith_permutation_bigz(ar, n, z);
+        mpz_clear(z);
+    } else {
+        ith_permutation(ar, n, as_uint(_index) - 1);
+    }
+
+    for (i = 0; i < n; i++) {
+        ar[i]++;
+    }
+    UNPROTECT(1);
+    return as;
 }

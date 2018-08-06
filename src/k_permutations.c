@@ -252,29 +252,104 @@ SEXP nperm_k(SEXP _n, SEXP _k) {
     return Rf_ScalarReal(fallfact(n, k));
 }
 
-char* _nperm_k_bigz(size_t n, size_t k) {
-    char* out;
+void npermutations_k_bigz(mpz_t p, size_t n, size_t k) {
     size_t i;
     if (n < k) {
-        out = (char*) malloc(sizeof(char));
-        out[0] = '0';
-        return out;
+        mpz_set_ui(p, 0);
+        return;
     }
-    mpz_t p;
-    mpz_init_set_ui(p, 1);
+    mpz_set_ui(p, 1);
     for(i=0; i<k; i++) {
         mpz_mul_ui(p, p, n - i);
     }
-    out = mpz_get_str(NULL, 10, p);
-    mpz_clear(p);
-    return out;
 }
 
 SEXP nperm_k_bigz(SEXP _n, SEXP _k) {
     size_t n = as_uint(_n);
     size_t k = as_uint(_k);
-    char* c = _nperm_k_bigz(n, k);
+    mpz_t p;
+    mpz_init(p);
+    npermutations_k_bigz(p, n, k);
+    char* c = mpz_get_str(NULL, 10, p);
     SEXP out = Rf_mkString(c);
     free(c);
+    mpz_clear(p);
     return out;
+}
+
+
+void ith_permutation_k(unsigned int* ar, unsigned int n, unsigned int k, unsigned int index) {
+    unsigned int i, j;
+
+    for (i = 0; i < k; i++) {
+        j = fallfact(n - 1 - i, k - 1 - i);
+        ar[i] = index / j;
+        index = index % j;
+    }
+
+    for (i = k - 1; i > 0; i--) {
+        j = i;
+        while (j-- > 0) {
+            if (ar[j] <= ar[i]) {
+                ar[i]++;
+            }
+        }
+    }
+}
+
+void ith_permutation_k_bigz(unsigned int* ar, unsigned int n, unsigned int k, mpz_t index) {
+    unsigned int i, j;
+
+    mpz_t q;
+    mpz_init(q);
+    mpz_t p;
+    mpz_init(p);
+
+    for (i = 0; i < k; i++) {
+        npermutations_k_bigz(p, n - 1 - i, k - 1 - i);
+        mpz_tdiv_qr(q, index, index, p);
+        ar[i] = mpz_get_ui(q);
+    }
+
+    for (i = k - 1; i > 0; i--) {
+        j = i;
+        while (j-- > 0) {
+            if (ar[j] <= ar[i]) {
+                ar[i]++;
+            }
+        }
+    }
+
+    mpz_clear(q);
+    mpz_clear(p);
+}
+
+SEXP ith_perm_k(SEXP _n, SEXP _k, SEXP _index) {
+    unsigned int i;
+    int n = as_uint(_n);
+    int k = as_uint(_k);
+    SEXP as = PROTECT(Rf_allocVector(INTSXP, k));
+    unsigned int* ar = (unsigned int*) INTEGER(as);
+
+    if (fallfact(n, k) > INT_MAX || TYPEOF(_index) == STRSXP) {
+        mpz_t z;
+        mpz_init(z);
+
+        if (TYPEOF(_index) == STRSXP) {
+            mpz_set_str(z, CHAR(STRING_ELT(_index, 0)), 10);
+            mpz_sub_ui(z, z, 1);
+        } else {
+            mpz_set_ui(z, as_uint(_index) - 1);
+        }
+        ith_permutation_k_bigz(ar, n, k, z);
+        mpz_clear(z);
+    } else {
+        ith_permutation_k(ar, n, k, as_uint(_index) - 1);
+    }
+
+    for (i = 0; i < k; i++) {
+        ar[i]++;
+    }
+    UNPROTECT(1);
+    return as;
 }

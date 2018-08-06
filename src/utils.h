@@ -15,6 +15,8 @@ int as_uint(SEXP x);
 
 SEXP as_uint_array(SEXP x);
 
+double fact(size_t n);
+
 double fallfact(size_t n, size_t k);
 
 double choose(size_t n, size_t k);
