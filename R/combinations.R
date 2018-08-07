@@ -20,8 +20,6 @@ Combinations <- R6::R6Class(
         freq = NULL,
         replace = NULL,
         initialize = function(n, k, x = NULL, freq = NULL, replace = FALSE) {
-            (n %% 1 == 0  && n >= 0) || stop("expect non-negative integer")
-            (k %% 1 == 0  && k >= 0) || stop("expect non-negative integer")
             self$n <- as.integer(n)
             self$k <- as.integer(k)
             self$x <- x
@@ -206,6 +204,8 @@ combinations <- function(n, k, x = NULL, freq = NULL, replace = FALSE, layout = 
     } else if (!is.null(x)) {
         n <- length(x)
     }
+    (n %% 1 == 0  && n >= 0) || stop("expect non-negative integer")
+    (k %% 1 == 0  && k >= 0) || stop("expect non-negative integer")
     next_combinations(n, k, -1L, NULL, x, freq, replace, layout)
 }
 
@@ -236,6 +236,8 @@ icombinations <- function(n, k, x = NULL, freq = NULL, replace = FALSE) {
     } else if (!is.null(x)) {
         n <- length(x)
     }
+    (n %% 1 == 0  && n >= 0) || stop("expect non-negative integer")
+    (k %% 1 == 0  && k >= 0) || stop("expect non-negative integer")
     Combinations$new(n, k, x, freq, replace)
 }
 

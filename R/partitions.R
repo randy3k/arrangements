@@ -18,10 +18,8 @@ Partitions <- R6::R6Class(
         k = NULL,
         descending = NULL,
         initialize = function(n, k = NULL, descending = FALSE) {
-            (n %% 1 == 0  && n >= 0) || stop("expect non-negative integer")
             self$n <- as.integer(n)
             if (!is.null(k)) {
-                (k %% 1 == 0 && k >= 0) || stop("expect non-negative integer")
                 self$k <- as.integer(k)
             }
             self$descending <- descending
@@ -209,6 +207,10 @@ next_partitions <- function(n, k, d, state, descending, layout) {
 #'
 #' @export
 partitions <- function(n, k = NULL, descending = FALSE, layout = "row") {
+    (n %% 1 == 0  && n >= 0) || stop("expect non-negative integer")
+    if (!is.null(k)) {
+        (k %% 1 == 0 && k >= 0) || stop("expect non-negative integer")
+    }
     next_partitions(n, k, -1L, NULL, descending, layout)
 }
 
@@ -236,6 +238,10 @@ partitions <- function(n, k = NULL, descending = FALSE, layout = "row") {
 #' }
 #' @export
 ipartitions <- function(n, k = NULL, descending = FALSE) {
+    (n %% 1 == 0  && n >= 0) || stop("expect non-negative integer")
+    if (!is.null(k)) {
+        (k %% 1 == 0 && k >= 0) || stop("expect non-negative integer")
+    }
     Partitions$new(n, k, descending)
 }
 

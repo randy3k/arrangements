@@ -20,8 +20,6 @@ Permutations <- R6::R6Class(
         freq = NULL,
         replace = NULL,
         initialize = function(n, k = n, x = NULL, freq = NULL, replace = FALSE) {
-            (n %% 1 == 0  && n >= 0) || stop("expect non-negative integer")
-            (k %% 1 == 0  && k >= 0) || stop("expect non-negative integer")
             self$n <- as.integer(n)
             self$k <- as.integer(k)
             self$x <- x
@@ -226,6 +224,8 @@ permutations <- function(n, k = n, x = NULL, freq = NULL, replace = FALSE, layou
     } else if (!is.null(x)) {
         n <- length(x)
     }
+    (n %% 1 == 0  && n >= 0) || stop("expect non-negative integer")
+    (k %% 1 == 0  && k >= 0) || stop("expect non-negative integer")
     next_permutations(n, k, -1L, NULL, x, freq, replace, layout)
 }
 
@@ -258,6 +258,8 @@ ipermutations <- function(n, k = n, x = NULL, freq = NULL, replace = FALSE) {
     } else if (!is.null(x)) {
         n <- length(x)
     }
+    (n %% 1 == 0  && n >= 0) || stop("expect non-negative integer")
+    (k %% 1 == 0  && k >= 0) || stop("expect non-negative integer")
     Permutations$new(n, k, x, freq, replace)
 }
 
