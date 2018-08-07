@@ -33,19 +33,19 @@ Combinations <- R6::R6Class(
             private$state <- new.env()
             private$null_pending <- FALSE
         },
-        collect = function(type = "r") {
-            out <- self$getnext(-1L, type, drop = FALSE)
+        collect = function(layout = "row") {
+            out <- self$getnext(-1L, layout, drop = FALSE)
             self$reset()
             out
         },
-        getnext = function(d = 1L, type = NULL, drop = d == 1L && is.null(type)) {
+        getnext = function(d = 1L, layout = NULL, drop = d == 1L && is.null(layout)) {
             if (private$null_pending) {
                 out <- NULL
                 self$reset()
             } else {
                 out <- next_combinations(
-                    self$n, self$k, d, private$state, self$x, self$freq, self$replace, type)
-                if (type == "r" || is.null(type)){
+                    self$n, self$k, d, private$state, self$x, self$freq, self$replace, layout)
+                if (layout == "row" || is.null(layout)){
                     if (nrow(out) == 0) {
                         out <- NULL
                         self$reset()
@@ -55,7 +55,7 @@ Combinations <- R6::R6Class(
                     if (!is.null(out) && drop) {
                         dim(out) <- NULL
                     }
-                } else if (type == "c"){
+                } else if (layout == "column"){
                     if (ncol(out) == 0) {
                         out <- NULL
                         self$reset()
@@ -65,7 +65,7 @@ Combinations <- R6::R6Class(
                     if (!is.null(out) && drop) {
                         dim(out) <- NULL
                     }
-                } else if (type == "l"){
+                } else if (layout == "list"){
                     if (length(out) == 0) {
                         out <- NULL
                         self$reset()
@@ -86,16 +86,16 @@ Combinations <- R6::R6Class(
     )
 )
 
-next_combinations <- function(n, k, d, state, x, freq, replace, type) {
+next_combinations <- function(n, k, d, state, x, freq, replace, layout) {
     if (k == 0) {
-        if (type == "r" || is.null(type)) {
+        if (layout == "row" || is.null(layout)) {
             if (is.null(x)) {
                 out <- integer(0)
             } else {
                 out <- new(typeof(x))
             }
             dim(out) <- c(1, 0)
-        } else if (type == "c") {
+        } else if (layout == "column") {
             if (is.null(x)) {
                 out <- integer(0)
             } else {
@@ -122,16 +122,16 @@ next_combinations <- function(n, k, d, state, x, freq, replace, type) {
             d,
             state,
             x,
-            type)
+            layout)
     } else if (n < k) {
-        if (type == "r" || is.null(type)) {
+        if (layout == "row" || is.null(layout)) {
             if (is.null(x)) {
                 out <- integer(0)
             } else {
                 out <- new(typeof(x))
             }
             dim(out) <- c(0, k)
-        } else if (type == "c") {
+        } else if (layout == "column") {
             if (is.null(x)) {
                 out <- integer(0)
             } else {
@@ -151,7 +151,7 @@ next_combinations <- function(n, k, d, state, x, freq, replace, type) {
             state,
             x,
             as_uint_array(freq),
-            type)
+            layout)
     } else {
         out <- .Call(
             "next_combinations",
@@ -161,7 +161,7 @@ next_combinations <- function(n, k, d, state, x, freq, replace, type) {
             d,
             state,
             x,
-            type)
+            layout)
     }
     out
 }
@@ -187,10 +187,10 @@ next_combinations <- function(n, k, d, state, x, freq, replace, type) {
 #' combinations(4, 2, replace = TRUE)
 #'
 #' # column major
-#' combinations(4, 2, type = "c")
+#' combinations(4, 2, layout = "column")
 #'
 #' # list output
-#' combinations(4, 2, type = "l")
+#' combinations(4, 2, layout = "list")
 #'
 #' # zero sized combinations
 #' dim(combinations(5, 0))
@@ -199,14 +199,14 @@ next_combinations <- function(n, k, d, state, x, freq, replace, type) {
 #' dim(combinations(0, 1))
 #'
 #' @export
-combinations <- function(n, k, x = NULL, freq = NULL, replace = FALSE, type = "r") {
+combinations <- function(n, k, x = NULL, freq = NULL, replace = FALSE, layout = "row") {
     if (!replace && !is.null(freq)) {
         n <- sum(freq)
         is.null(x) || length(freq) == length(x) || stop("length of x and freq should be the same")
     } else if (!is.null(x)) {
         n <- length(x)
     }
-    next_combinations(n, k, -1L, NULL, x, freq, replace, type)
+    next_combinations(n, k, -1L, NULL, x, freq, replace, layout)
 }
 
 #' @title Combinations iterator
@@ -220,7 +220,7 @@ combinations <- function(n, k, x = NULL, freq = NULL, replace = FALSE, type = "r
 #' icomb <- icombinations(5, 2)
 #' icomb$getnext()
 #' icomb$getnext(2)
-#' icomb$getnext(type = "c", drop = FALSE)
+#' icomb$getnext(layout = "column", drop = FALSE)
 #' # collect remaining combinations
 #' icomb$collect()
 #'

@@ -6,7 +6,7 @@
 #include "next/permutation.h"
 #include "utils.h"
 
-SEXP next_permutations(SEXP _n, SEXP _d, SEXP state, SEXP labels, SEXP freq, SEXP _type) {
+SEXP next_permutations(SEXP _n, SEXP _d, SEXP state, SEXP labels, SEXP freq, SEXP _layout) {
     size_t i, j, h;
 
     size_t n = as_uint(_n);
@@ -28,16 +28,16 @@ SEXP next_permutations(SEXP _n, SEXP _d, SEXP state, SEXP labels, SEXP freq, SEX
 
     int* fp;
 
-    char type;
-    if (_type == R_NilValue) {
-        type = 'r';
+    char layout;
+    if (_layout == R_NilValue) {
+        layout = 'r';
     } else {
-        type = CHAR(Rf_asChar(_type))[0];
-        if (type != 'r' && type != 'c' && type != 'l') type = 'r';
+        layout = CHAR(Rf_asChar(_layout))[0];
+        if (layout != 'r' && layout != 'c' && layout != 'l') layout = 'r';
     }
 
     if (dd > INT_MAX) Rf_error("too many results");
-    if (type != 'l') {
+    if (layout != 'l') {
         if (dd * n > R_XLEN_T_MAX) Rf_error("too many results");
     }
     d = round(dd);
@@ -85,7 +85,7 @@ SEXP next_permutations(SEXP _n, SEXP _d, SEXP state, SEXP labels, SEXP freq, SEX
     int* result_intp;
     double* result_doublep;
 
-    if (type == 'r') {
+    if (layout == 'r') {
         if (labels == R_NilValue) {
             result = PROTECT(Rf_allocVector(INTSXP, n*d));
             nprotect++;
@@ -139,7 +139,7 @@ SEXP next_permutations(SEXP _n, SEXP _d, SEXP state, SEXP labels, SEXP freq, SEX
         Rf_setAttrib(result, R_DimSymbol, rdim);
         UNPROTECT(1);
 
-    } else if (type == 'c') {
+    } else if (layout == 'c') {
         if (labels == R_NilValue) {
             result = PROTECT(Rf_allocVector(INTSXP, n*d));
             nprotect++;
@@ -194,7 +194,7 @@ SEXP next_permutations(SEXP _n, SEXP _d, SEXP state, SEXP labels, SEXP freq, SEX
         UNPROTECT(1);
 
     } else {
-        // type == "list"
+        // layout == 'l'
         result = PROTECT(Rf_allocVector(VECSXP, d));
         nprotect++;
         if (labels_type == INTSXP) {

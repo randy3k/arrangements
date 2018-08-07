@@ -33,19 +33,19 @@ Permutations <- R6::R6Class(
             private$state <- new.env()
             private$null_pending <- FALSE
         },
-        collect = function(type = "r") {
-            out <- self$getnext(-1L, type, drop = FALSE)
+        collect = function(layout = "row") {
+            out <- self$getnext(-1L, layout, drop = FALSE)
             self$reset()
             out
         },
-        getnext = function(d = 1L, type = NULL, drop = d == 1L && is.null(type)) {
+        getnext = function(d = 1L, layout = NULL, drop = d == 1L && is.null(layout)) {
             if (private$null_pending) {
                 out <- NULL
                 self$reset()
             } else {
                 out <- next_permutations(
-                    self$n, self$k, d, private$state, self$x, self$freq, self$replace, type)
-                if (type == "r" || is.null(type)){
+                    self$n, self$k, d, private$state, self$x, self$freq, self$replace, layout)
+                if (layout == "row" || is.null(layout)){
                     if (nrow(out) == 0) {
                         out <- NULL
                         self$reset()
@@ -55,7 +55,7 @@ Permutations <- R6::R6Class(
                     if (!is.null(out) && drop) {
                         dim(out) <- NULL
                     }
-                } else if (type == "c"){
+                } else if (layout == "column"){
                     if (ncol(out) == 0) {
                         out <- NULL
                         self$reset()
@@ -65,7 +65,7 @@ Permutations <- R6::R6Class(
                     if (!is.null(out) && drop) {
                         dim(out) <- NULL
                     }
-                } else if (type == "l"){
+                } else if (layout == "list"){
                     if (length(out) == 0) {
                         out <- NULL
                         self$reset()
@@ -90,16 +90,16 @@ Permutations <- R6::R6Class(
     )
 )
 
-next_permutations <- function(n, k, d, state, x, freq, replace, type) {
+next_permutations <- function(n, k, d, state, x, freq, replace, layout) {
     if (k == 0) {
-        if (type == "r" || is.null(type)) {
+        if (layout == "row" || is.null(layout)) {
             if (is.null(x)) {
                 out <- integer(0)
             } else {
                 out <- new(typeof(x))
             }
             dim(out) <- c(1, 0)
-        } else if (type == "c") {
+        } else if (layout == "column") {
             if (is.null(x)) {
                 out <- integer(0)
             } else {
@@ -126,16 +126,16 @@ next_permutations <- function(n, k, d, state, x, freq, replace, type) {
             d,
             state,
             x,
-            type)
+            layout)
     } else if (n < k) {
-        if (type == "r" || is.null(type)) {
+        if (layout == "row" || is.null(layout)) {
             if (is.null(x)) {
                 out <- integer(0)
             } else {
                 out <- new(typeof(x))
             }
             dim(out) <- c(0, k)
-        } else if (type == "c") {
+        } else if (layout == "column") {
             if (is.null(x)) {
                 out <- integer(0)
             } else {
@@ -155,7 +155,7 @@ next_permutations <- function(n, k, d, state, x, freq, replace, type) {
             state,
             x,
             as_uint_array(freq),
-            type)
+            layout)
     } else if (!is.null(freq)) {
         out <- .Call(
             "next_multiset_permutations",
@@ -166,7 +166,7 @@ next_permutations <- function(n, k, d, state, x, freq, replace, type) {
             state,
             x,
             as_uint_array(freq),
-            type)
+            layout)
     } else {
         out <- .Call(
             "next_k_permutations",
@@ -176,7 +176,7 @@ next_permutations <- function(n, k, d, state, x, freq, replace, type) {
             d,
             state,
             x,
-            type)
+            layout)
     }
     out
 }
@@ -204,12 +204,12 @@ next_permutations <- function(n, k, d, state, x, freq, replace, type) {
 #' permutations(4, 2, replace = TRUE)
 #'
 #' # column major
-#' permutations(3, type = "c")
-#' permutations(4, 2, type = "c")
+#' permutations(3, layout = "column")
+#' permutations(4, 2, layout = "column")
 #'
 #' # list output
-#' permutations(3, type = "l")
-#' permutations(4, 2, type = "l")
+#' permutations(3, layout = "list")
+#' permutations(4, 2, layout = "list")
 #'
 #' # zero sized permutations
 #' dim(permutations(0))
@@ -219,14 +219,14 @@ next_permutations <- function(n, k, d, state, x, freq, replace, type) {
 #' dim(permutations(0, 1))
 #'
 #' @export
-permutations <- function(n, k = n, x = NULL, freq = NULL, replace = FALSE, type = "r") {
+permutations <- function(n, k = n, x = NULL, freq = NULL, replace = FALSE, layout = "row") {
     if (!replace && !is.null(freq)) {
         n <- sum(freq)
         is.null(x) || length(freq) == length(x) || stop("length of x and freq should be the same")
     } else if (!is.null(x)) {
         n <- length(x)
     }
-    next_permutations(n, k, -1L, NULL, x, freq, replace, type)
+    next_permutations(n, k, -1L, NULL, x, freq, replace, layout)
 }
 
 
@@ -242,7 +242,7 @@ permutations <- function(n, k = n, x = NULL, freq = NULL, replace = FALSE, type 
 #' iperm <- ipermutations(5, 2)
 #' iperm$getnext()
 #' iperm$getnext(2)
-#' iperm$getnext(type = "c", drop = FALSE)
+#' iperm$getnext(layout = "column", drop = FALSE)
 #' # collect remaining permutations
 #' iperm$collect()
 #'

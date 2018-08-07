@@ -8,7 +8,7 @@
 
 double n_k_partitions(int n, int k);
 
-SEXP next_asc_k_partitions(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP _type) {
+SEXP next_asc_k_partitions(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP _layout) {
     size_t i, j;
 
     int n = as_uint(_n);
@@ -21,16 +21,16 @@ SEXP next_asc_k_partitions(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP _type) {
         dd = as_uint(_d);
     }
 
-    char type;
-    if (_type == R_NilValue) {
-        type = 'r';
+    char layout;
+    if (_layout == R_NilValue) {
+        layout = 'r';
     } else {
-        type = CHAR(Rf_asChar(_type))[0];
-        if (type != 'r' && type != 'c' && type != 'l') type = 'r';
+        layout = CHAR(Rf_asChar(_layout))[0];
+        if (layout != 'r' && layout != 'c' && layout != 'l') layout = 'r';
     }
 
     if (dd > INT_MAX) Rf_error("too many results");
-    if (type != 'l') {
+    if (layout != 'l') {
         if (dd * k > R_XLEN_T_MAX) Rf_error("too many results");
     }
     d = round(dd);
@@ -66,7 +66,7 @@ SEXP next_asc_k_partitions(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP _type) {
     SEXP result, resulti;
     int* resultp;
 
-    if (type == 'r') {
+    if (layout == 'r') {
         result = PROTECT(Rf_allocVector(INTSXP, k*d));
         nprotect++;
         resultp = INTEGER(result);
@@ -94,7 +94,7 @@ SEXP next_asc_k_partitions(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP _type) {
         Rf_setAttrib(result, R_DimSymbol, rdim);
         UNPROTECT(1);
 
-    } else if (type == 'c') {
+    } else if (layout == 'c') {
         result = PROTECT(Rf_allocVector(INTSXP, k*d));
         nprotect++;
         resultp = INTEGER(result);
@@ -123,7 +123,7 @@ SEXP next_asc_k_partitions(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP _type) {
         UNPROTECT(1);
 
     } else {
-        // type == "list"
+        // layout = 'l'
         result = PROTECT(Rf_allocVector(VECSXP, d));
         nprotect++;
         for (j=0; j<d; j++) {
@@ -152,7 +152,7 @@ SEXP next_asc_k_partitions(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP _type) {
     return result;
 }
 
-SEXP next_desc_k_partitions(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP _type) {
+SEXP next_desc_k_partitions(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP _layout) {
     int n = as_uint(_n);
     int k = as_uint(_k);
     int d;
@@ -163,16 +163,16 @@ SEXP next_desc_k_partitions(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP _type) {
         dd = as_uint(_d);
     }
 
-    char type;
-    if (_type == R_NilValue) {
-        type = 'r';
+    char layout;
+    if (_layout == R_NilValue) {
+        layout = 'r';
     } else {
-        type = CHAR(Rf_asChar(_type))[0];
-        if (type != 'r' && type != 'c' && type != 'l') type = 'r';
+        layout = CHAR(Rf_asChar(_layout))[0];
+        if (layout != 'r' && layout != 'c' && layout != 'l') layout = 'r';
     }
 
     if (dd > INT_MAX) Rf_error("too many results");
-    if (type != 'l') {
+    if (layout != 'l') {
         if (dd * k > R_XLEN_T_MAX) Rf_error("too many results");
     }
     d = round(dd);
@@ -210,7 +210,7 @@ SEXP next_desc_k_partitions(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP _type) {
     SEXP result, resulti;
     int* resultp;
 
-    if (type == 'r') {
+    if (layout == 'r') {
         result = PROTECT(Rf_allocVector(INTSXP, k*d));
         nprotect++;
         resultp = INTEGER(result);
@@ -238,7 +238,7 @@ SEXP next_desc_k_partitions(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP _type) {
         Rf_setAttrib(result, R_DimSymbol, rdim);
         UNPROTECT(1);
 
-    } else if (type == 'c') {
+    } else if (layout == 'c') {
         result = PROTECT(Rf_allocVector(INTSXP, k*d));
         nprotect++;
         resultp = INTEGER(result);
@@ -267,7 +267,7 @@ SEXP next_desc_k_partitions(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP _type) {
         UNPROTECT(1);
 
     } else {
-        // type == "list"
+        // layout == 'l'
         result = PROTECT(Rf_allocVector(VECSXP, d));
         nprotect++;
         for (j=0; j<d; j++) {

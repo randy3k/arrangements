@@ -5,7 +5,7 @@
 \title{Permutations generator}
 \usage{
 permutations(n, k = n, x = NULL, freq = NULL, replace = FALSE,
-  type = "r")
+  layout = "row")
 }
 \arguments{
 \item{n}{an integer. If \code{freq} is not NULL, \code{n} would be set as \code{sum(freq)},
@@ -19,7 +19,7 @@ otherwise if \code{x} is not NULL, \code{n} would be set as \code{length(x)}.}
 
 \item{replace}{an logical to draw items with replacement}
 
-\item{type}{if "r", "c" or "l" is specified, the returned value would be a
+\item{layout}{if "row", "column" or "list" is specified, the returned value would be a
 "row-major" matrix, a "column-major" matrix or a list respectively}
 }
 \description{
@@ -41,12 +41,12 @@ permutations(freq = c(2, 3), k = 3)
 permutations(4, 2, replace = TRUE)
 
 # column major
-permutations(3, type = "c")
-permutations(4, 2, type = "c")
+permutations(3, layout = "column")
+permutations(4, 2, layout = "column")
 
 # list output
-permutations(3, type = "l")
-permutations(4, 2, type = "l")
+permutations(3, layout = "list")
+permutations(4, 2, layout = "list")
 
 # zero sized permutations
 dim(permutations(0))

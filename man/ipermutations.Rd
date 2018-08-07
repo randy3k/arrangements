@@ -35,14 +35,14 @@ Permutations$new(n, k, x = NULL, freq = NULL, replace = FALSE)
 }
 
 \preformatted{
-getnext(d = 1L, type = NULL, drop = d == 1L && is.null(type))
-collect(type = "r")
+getnext(d = 1L, layout = NULL, drop = d == 1L && is.null(layout))
+collect(layout = "row")
 reset()
 }
 \describe{
 \item{d}{number of fetched arrangements}
 
-\item{type}{if "r", "c" or "l" is specified, the returned value would be a
+\item{layout}{if "row", "column" or "list" is specified, the returned value would be a
 "row-major" matrix, a "column-major" matrix or a list respectively}
 
 \item{drop}{vectorize a matrix or unlist a list}
@@ -52,7 +52,7 @@ reset()
 iperm <- ipermutations(5, 2)
 iperm$getnext()
 iperm$getnext(2)
-iperm$getnext(type = "c", drop = FALSE)
+iperm$getnext(layout = "column", drop = FALSE)
 # collect remaining permutations
 iperm$collect()
 

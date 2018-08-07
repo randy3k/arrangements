@@ -31,19 +31,19 @@ Partitions <- R6::R6Class(
             private$state <- new.env()
             private$null_pending <- FALSE
         },
-        collect = function(type = "r") {
-            out <- self$getnext(-1L, type, drop = FALSE)
+        collect = function(layout = "row") {
+            out <- self$getnext(-1L, layout, drop = FALSE)
             self$reset()
             out
         },
-        getnext = function(d = 1L, type = NULL, drop = d == 1L && is.null(type)) {
+        getnext = function(d = 1L, layout = NULL, drop = d == 1L && is.null(layout)) {
             if (private$null_pending) {
                 out <- NULL
                 self$reset()
             } else {
                 out <- next_partitions(
-                    self$n, self$k, d, private$state, self$descending, type)
-                if (type == "r" || is.null(type)){
+                    self$n, self$k, d, private$state, self$descending, layout)
+                if (layout == "row" || is.null(layout)){
                     if (nrow(out) == 0) {
                         out <- NULL
                         self$reset()
@@ -53,7 +53,7 @@ Partitions <- R6::R6Class(
                     if (!is.null(out) && drop) {
                         dim(out) <- NULL
                     }
-                } else if (type == "c"){
+                } else if (layout == "column"){
                     if (ncol(out) == 0) {
                         out <- NULL
                         self$reset()
@@ -63,7 +63,7 @@ Partitions <- R6::R6Class(
                     if (!is.null(out) && drop) {
                         dim(out) <- NULL
                     }
-                } else if (type == "l"){
+                } else if (layout == "list"){
                     if (length(out) == 0) {
                         out <- list()
                         self$reset()
@@ -88,13 +88,13 @@ Partitions <- R6::R6Class(
     )
 )
 
-next_partitions <- function(n, k, d, state, descending, type) {
+next_partitions <- function(n, k, d, state, descending, layout) {
     if (is.null(k)) {
         if (n == 0) {
-            if (type == "r" || is.null(type)) {
+            if (layout == "row" || is.null(layout)) {
                 out <- integer(0)
                 dim(out) <- c(1, 0)
-            } else if (type == "c") {
+            } else if (layout == "column") {
                 out <- integer(0)
                 dim(out) <- c(0, 1)
             } else {
@@ -107,7 +107,7 @@ next_partitions <- function(n, k, d, state, descending, type) {
                 n,
                 d,
                 state,
-                type)
+                layout)
         } else {
             out <- .Call(
                 "next_asc_partitions",
@@ -115,34 +115,34 @@ next_partitions <- function(n, k, d, state, descending, type) {
                 n,
                 d,
                 state,
-                type)
+                layout)
         }
     } else {
         if (n < k) {
-            if (type == "r" || is.null(type)) {
+            if (layout == "row" || is.null(layout)) {
                 out <- integer(0)
                 dim(out) <- c(0, k)
-            } else if (type == "c") {
+            } else if (layout == "column") {
                 out <- integer(0)
                 dim(out) <- c(k, 0)
             } else {
                 out <- list()
             }
         } else if (n == 0 && k == 0) {
-            if (type == "r" || is.null(type)) {
+            if (layout == "row" || is.null(layout)) {
                 out <- integer(0)
                 dim(out) <- c(1, 0)
-            } else if (type == "c") {
+            } else if (layout == "column") {
                 out <- integer(0)
                 dim(out) <- c(0, 1)
             } else {
                 out <- list(integer(0))
             }
         } else if (k == 0) {
-            if (type == "r" || is.null(type)) {
+            if (layout == "row" || is.null(layout)) {
                 out <- integer(0)
                 dim(out) <- c(0, 0)
-            } else if (type == "c") {
+            } else if (layout == "column") {
                 out <- integer(0)
                 dim(out) <- c(0, 0)
             } else {
@@ -156,7 +156,7 @@ next_partitions <- function(n, k, d, state, descending, type) {
                 k,
                 d,
                 state,
-                type)
+                layout)
         } else {
             out <- .Call(
                 "next_asc_k_partitions",
@@ -165,7 +165,7 @@ next_partitions <- function(n, k, d, state, descending, type) {
                 k,
                 d,
                 state,
-                type)
+                layout)
         }
     }
     out
@@ -193,12 +193,12 @@ next_partitions <- function(n, k, d, state, descending, type) {
 #' partitions(10, 5, descending = TRUE)
 #'
 #' # column major
-#' partitions(6, type = "c")
-#' partitions(6, 3, type = "c")
+#' partitions(6, layout = "column")
+#' partitions(6, 3, layout = "column")
 #'
 #' # list output
-#' partitions(6, type = "l")
-#' partitions(6, 3, type = "l")
+#' partitions(6, layout = "list")
+#' partitions(6, 3, layout = "list")
 #'
 #' # zero sized partitions
 #' dim(partitions(0))
@@ -208,8 +208,8 @@ next_partitions <- function(n, k, d, state, descending, type) {
 #' dim(partitions(0, 1))
 #'
 #' @export
-partitions <- function(n, k = NULL, descending = FALSE, type = "r") {
-    next_partitions(n, k, -1L, NULL, descending, type)
+partitions <- function(n, k = NULL, descending = FALSE, layout = "row") {
+    next_partitions(n, k, -1L, NULL, descending, layout)
 }
 
 #' @title Partitions iterator
@@ -226,7 +226,7 @@ partitions <- function(n, k = NULL, descending = FALSE, type = "r") {
 #' ipart <- ipartitions(10)
 #' ipart$getnext()
 #' ipart$getnext(2)
-#' ipart$getnext(type = "c", drop = FALSE)
+#' ipart$getnext(layout = "column", drop = FALSE)
 #' # collect remaining partitions
 #' ipart$collect()
 #'

@@ -5,7 +5,7 @@
 \title{Combinations generator}
 \usage{
 combinations(n, k, x = NULL, freq = NULL, replace = FALSE,
-  type = "r")
+  layout = "row")
 }
 \arguments{
 \item{n}{an integer. If \code{freq} is not NULL, \code{n} would be set as \code{sum(freq)},
@@ -19,7 +19,7 @@ otherwise if \code{x} is not NULL, \code{n} would be set as \code{length(x)}.}
 
 \item{replace}{an logical to draw items with replacement}
 
-\item{type}{if "r", "c" or "l" is specified, the returned value would be a
+\item{layout}{if "row", "column" or "list" is specified, the returned value would be a
 "row-major" matrix, a "column-major" matrix or a list respectively}
 }
 \description{
@@ -38,10 +38,10 @@ combinations(freq = c(2, 3), k = 3)
 combinations(4, 2, replace = TRUE)
 
 # column major
-combinations(4, 2, type = "c")
+combinations(4, 2, layout = "column")
 
 # list output
-combinations(4, 2, type = "l")
+combinations(4, 2, layout = "list")
 
 # zero sized combinations
 dim(combinations(5, 0))

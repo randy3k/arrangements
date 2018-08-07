@@ -4,7 +4,7 @@
 \alias{partitions}
 \title{Partitions generator}
 \usage{
-partitions(n, k = NULL, descending = FALSE, type = "r")
+partitions(n, k = NULL, descending = FALSE, layout = "row")
 }
 \arguments{
 \item{n}{an non-negative integer to be partitioned}
@@ -13,7 +13,7 @@ partitions(n, k = NULL, descending = FALSE, type = "r")
 
 \item{descending}{logical to use reversed lexicographical order}
 
-\item{type}{if "r", "c" or "l" is specified, the returned value would be a
+\item{layout}{if "row", "column" or "list" is specified, the returned value would be a
 "row-major" matrix, a "column-major" matrix or a list respectively}
 }
 \description{
@@ -32,12 +32,12 @@ partitions(10, 5)
 partitions(10, 5, descending = TRUE)
 
 # column major
-partitions(6, type = "c")
-partitions(6, 3, type = "c")
+partitions(6, layout = "column")
+partitions(6, 3, layout = "column")
 
 # list output
-partitions(6, type = "l")
-partitions(6, 3, type = "l")
+partitions(6, layout = "list")
+partitions(6, 3, layout = "list")
 
 # zero sized partitions
 dim(partitions(0))

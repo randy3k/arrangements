@@ -30,14 +30,14 @@ Partitions$new(n, k = NULL, descending = FALSE)
 }
 
 \preformatted{
-getnext(d = 1L, type = NULL, drop = d == 1L && is.null(type))
-collect(type = "r")
+getnext(d = 1L, layout = NULL, drop = d == 1L && is.null(layout))
+collect(layout = "row")
 reset()
 }
 \describe{
 \item{d}{number of fetched arrangements}
 
-\item{type}{if "r", "c" or "l" is specified, the returned value would be a
+\item{layout}{if "row", "column" or "list" is specified, the returned value would be a
 "row-major" matrix, a "column-major" matrix or a list respectively}
 
 \item{drop}{vectorize a matrix or unlist a list}
@@ -47,7 +47,7 @@ reset()
 ipart <- ipartitions(10)
 ipart$getnext()
 ipart$getnext(2)
-ipart$getnext(type = "c", drop = FALSE)
+ipart$getnext(layout = "column", drop = FALSE)
 # collect remaining partitions
 ipart$collect()
 
