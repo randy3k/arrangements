@@ -362,3 +362,98 @@ SEXP num_multiset_combinations_bigz(SEXP freq, SEXP _k) {
     free(c);
     return out;
 }
+
+
+void ith_multiset_combination(unsigned int* ar, int* freq, size_t flen, size_t k, unsigned int index) {
+    unsigned int i, j;
+    unsigned int start = 0;
+    unsigned int count, this_count;
+    int* subfreq = (int*) malloc(flen * sizeof(int));
+
+    for (i = 0; i < flen; i++) subfreq[i] = freq[i];
+
+    for (i = 0; i < k; i++) {
+        count = 0;
+        for (j = start; j < flen; j++) {
+            if (subfreq[j] == 0) continue;
+            subfreq[j]--;
+            this_count = count + n_multiset_combinations(subfreq, flen, k - i - 1);
+            if (this_count > index) {
+                ar[i] = j;
+                start = j;
+                index -= count;
+                break;
+            }
+            count = this_count;
+            subfreq[j] = 0;
+        }
+    }
+
+    free(subfreq);
+}
+
+void ith_multiset_combination_bigz(unsigned int* ar, int* freq, size_t flen, size_t k, mpz_t index) {
+    unsigned int i, j;
+    unsigned int start = 0;
+    mpz_t count;
+    mpz_init(count);
+    mpz_t this_count;
+    mpz_init(this_count);
+
+    int* subfreq = (int*) malloc(flen * sizeof(int));
+
+    for (i = 0; i < flen; i++) subfreq[i] = freq[i];
+
+    for (i = 0; i < k; i++) {
+        mpz_set_ui(count, 0);
+        for (j = start; j < flen; j++) {
+            if (subfreq[j] == 0) continue;
+            subfreq[j]--;
+            n_multiset_combinations_bigz(this_count, subfreq, flen, k - i - 1);
+            mpz_add(this_count, this_count, count);
+            if (mpz_cmp(this_count, index) > 0) {
+                ar[i] = j;
+                start = j;
+                mpz_sub(index, index, count);
+                break;
+            }
+            mpz_set(count, this_count);
+            subfreq[j] = 0;
+        }
+    }
+
+    free(subfreq);
+    mpz_clear(count);
+    mpz_clear(this_count);
+}
+
+SEXP get_ith_multiset_combination(SEXP freq, SEXP _k, SEXP _index) {
+    unsigned int i;
+    int* fp = INTEGER(freq);
+    size_t flen = Rf_length(freq);
+    int k = as_uint(_k);
+    SEXP as = PROTECT(Rf_allocVector(INTSXP, k));
+    unsigned int* ar = (unsigned int*) INTEGER(as);
+
+    if (TYPEOF(_index) == STRSXP || n_multiset_combinations(fp, flen, k) > INT_MAX) {
+        mpz_t z;
+        mpz_init(z);
+
+        if (TYPEOF(_index) == STRSXP) {
+            mpz_set_str(z, CHAR(STRING_ELT(_index, 0)), 10);
+            mpz_sub_ui(z, z, 1);
+        } else {
+            mpz_set_ui(z, as_uint(_index) - 1);
+        }
+        ith_multiset_combination_bigz(ar, fp, flen, k, z);
+        mpz_clear(z);
+    } else {
+        ith_multiset_combination(ar, fp, flen, k, as_uint(_index) - 1);
+    }
+
+    for (i = 0; i < k; i++) {
+        ar[i]++;
+    }
+    UNPROTECT(1);
+    return as;
+}

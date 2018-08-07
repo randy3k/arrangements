@@ -303,9 +303,9 @@ xcombinations <- function(n, k = n, x = NULL, freq = NULL, replace = FALSE, inde
         index <- as.character(index)
     }
     if (replace) {
-        .Call("get_ith_combination_replace", PACKAGE = "arrangements", n, k, index)
+        .Call("get_ith_replacement_combination", PACKAGE = "arrangements", n, k, index)
     } else if (!is.null(freq)) {
-        .Call("get_ith_combination_f", PACKAGE = "arrangements", as_uint_array(freq), k, index)
+        .Call("get_ith_multiset_combination", PACKAGE = "arrangements", as_uint_array(freq), k, index)
     } else {
         .Call("get_ith_combination", PACKAGE = "arrangements", n, k, index)
     }

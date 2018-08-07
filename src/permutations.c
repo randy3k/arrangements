@@ -342,7 +342,7 @@ SEXP get_ith_permutation(SEXP _n, SEXP _index) {
     SEXP as = PROTECT(Rf_allocVector(INTSXP, n));
     unsigned int* ar = (unsigned int*) INTEGER(as);
 
-    if (n > 12 || TYPEOF(_index) == STRSXP) {
+    if (TYPEOF(_index) == STRSXP || n > 12) {
         mpz_t z;
         mpz_init(z);
 

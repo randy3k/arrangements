@@ -288,7 +288,7 @@ SEXP get_ith_combination(SEXP _n, SEXP _k, SEXP _index) {
     SEXP as = PROTECT(Rf_allocVector(INTSXP, k));
     unsigned int* ar = (unsigned int*) INTEGER(as);
 
-    if (choose(n, k) > INT_MAX || TYPEOF(_index) == STRSXP) {
+    if (TYPEOF(_index) == STRSXP || choose(n, k) > INT_MAX) {
         mpz_t z;
         mpz_init(z);
 

@@ -460,7 +460,7 @@ SEXP get_ith_multiset_permutation(SEXP freq, SEXP _k, SEXP _index) {
     SEXP as = PROTECT(Rf_allocVector(INTSXP, k));
     unsigned int* ar = (unsigned int*) INTEGER(as);
 
-    if (n_multiset_permutations(fp, flen, k) > INT_MAX || TYPEOF(_index) == STRSXP) {
+    if (TYPEOF(_index) == STRSXP || n_multiset_permutations(fp, flen, k) > INT_MAX) {
         mpz_t z;
         mpz_init(z);
 
