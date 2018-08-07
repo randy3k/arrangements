@@ -5,246 +5,63 @@
 #include "arrangements.h"
 #include "next/k_permutation.h"
 #include "utils.h"
+#include "macros.h"
 
 double npermutations_f(int* freq, size_t flen, size_t k);
 
 SEXP next_k_permutations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP labels, SEXP _layout) {
-    size_t i, j;
+    int i, j;
+    int nprotect = 0;
+    int status = 1;
+    SEXP result;
 
-    size_t n = as_uint(_n);
-    size_t k = as_uint(_k);
-    int d;
-    double dd;
-    if (Rf_asInteger(_d) == -1) {
-        dd = fallfact(n, k);
-    } else {
-        dd = as_uint(_d);
-    }
+    int n = as_uint(_n);
+    int k = as_uint(_k);
+    char layout = check_layout(_layout);
 
-    int labels_type = TYPEOF(labels);
-    int* labels_intp;
-    double* labels_doublep;
+    double dd = Rf_asInteger(_d) == -1 ? fallfact(n, k) : as_uint(_d);
+    int d = check_dimension(dd, k, layout);
 
-    char layout;
-    if (_layout == R_NilValue) {
-        layout = 'r';
-    } else {
-        layout = CHAR(Rf_asChar(_layout))[0];
-        if (layout != 'r' && layout != 'c' && layout != 'l') layout = 'r';
-    }
-
-    if (dd > INT_MAX) Rf_error("too many results");
-    if (layout != 'l') {
-        if (dd * k > R_XLEN_T_MAX) Rf_error("too many results");
-    }
-    d = round(dd);
-
-    SEXP as, cycles;
     unsigned int* ap;
     unsigned int* cyclep;
-    int nprotect = 0;
 
-    int status = 0;
-
-    if (state == R_NilValue) {
-        as = R_UnboundValue;
-        cycles = R_UnboundValue;
-    } else {
-        as = Rf_findVarInFrame(state, Rf_install("a"));
-        cycles = Rf_findVarInFrame(state, Rf_install("cycle"));
-    }
-
-    if (as == R_UnboundValue) {
-        if (state == R_NilValue) {
-            ap = (unsigned int*) R_alloc(n, sizeof(int));
-            cyclep = (unsigned int*) R_alloc(k, sizeof(int));
-        } else {
-            as = PROTECT(Rf_allocVector(INTSXP, n));
-            Rf_defineVar(Rf_install("a"), as, state);
-            UNPROTECT(1);
-            ap = (unsigned int*) INTEGER(as);
-
-            cycles = PROTECT(Rf_allocVector(INTSXP, k));
-            Rf_defineVar(Rf_install("cycle"), cycles, state);
-            UNPROTECT(1);
-            cyclep = (unsigned int*) INTEGER(cycles);
-        }
+    if (!variable_exist(state, "a", INTSXP, n, (void**) &ap)) {
         for(i=0; i<n; i++) ap[i] = i;
-        for(i=0; i<k; i++) cyclep[i] = n - i;
-
-    } else {
-        ap = (unsigned int*) INTEGER(as);
-        cyclep = (unsigned int*) INTEGER(cycles);
-        status = 1;
+        status = 0;
+    }
+    if (!variable_exist(state, "cycle", INTSXP, k, (void**) &cyclep)) {
+        for(i=0; i<k; i++) cyclep[i] = n - i;;
+        status = 0;
     }
 
-    SEXP rdim;
-    SEXP result, resulti;
-    int* result_intp;
-    double* result_doublep;
-
-    if (layout == 'r') {
-        if (labels == R_NilValue) {
-            result = PROTECT(Rf_allocVector(INTSXP, k*d));
-            nprotect++;
-            result_intp = INTEGER(result);
-        } else {
-            result = PROTECT(Rf_allocVector(labels_type, k*d));
-            nprotect++;
-            if (labels_type == INTSXP) {
-                result_intp = INTEGER(result);
-                labels_intp = INTEGER(labels);
-            } else if (labels_type == REALSXP) {
-                result_doublep = REAL(result);
-                labels_doublep = REAL(labels);
-            }
+    #define NEXT() \
+        if (status == 0) { \
+            status = 1; \
+        } else if (!next_k_permutation(ap, cyclep, n, k)) { \
+            status = 0; \
+            break; \
         }
 
-        for (j=0; j<d; j++) {
-            if (status) {
-                if (!next_k_permutation(ap, cyclep, n, k)) {
-                    status = 0;
-                    break;
-                }
-            } else {
-                status = 1;
-            }
-            if (labels_type == NILSXP) {
-                for (i=0; i<k; i++) {
-                    result_intp[j + i*d] = ap[i] + 1;
-                }
-            } else if (labels_type == INTSXP) {
-                for (i=0; i<k; i++) {
-                    result_intp[j + i*d] = labels_intp[ap[i]];
-                }
-            } else if (labels_type == REALSXP) {
-                for (i=0; i<k; i++) {
-                    result_doublep[j + i*d] = labels_doublep[ap[i]];
-                }
-            } else if (labels_type == STRSXP) {
-                for (i=0; i<k; i++) {
-                    SET_STRING_ELT(result, j + i*d, STRING_ELT(labels, ap[i]));
-                }
-            }
-        }
-        if (status == 0) {
-            result = PROTECT(resize_row(result, k, d, j));
-            nprotect++;
-        }
-        PROTECT(rdim = Rf_allocVector(INTSXP, 2));
-        INTEGER(rdim)[0] = j;
-        INTEGER(rdim)[1] = k;
-        Rf_setAttrib(result, R_DimSymbol, rdim);
-        UNPROTECT(1);
+    int labels_type = TYPEOF(labels);
+    if (labels_type == NILSXP) {
+        RESULT_NILSXP(k);
+    } else if (labels_type == INTSXP) {
+        RESULT_INTSXP(k);
+    } else if (labels_type == REALSXP) {
+        RESULT_REALSXP(k);
+    } else if (labels_type == STRSXP) {
+        RESULT_STRSXP(k);
+    }
 
-    } else if (layout == 'c') {
-        if (labels == R_NilValue) {
-            result = PROTECT(Rf_allocVector(INTSXP, k*d));
-            nprotect++;
-            result_intp = INTEGER(result);
-        } else {
-            result = PROTECT(Rf_allocVector(labels_type, k*d));
-            nprotect++;
-            if (labels_type == INTSXP) {
-                result_intp = INTEGER(result);
-                labels_intp = INTEGER(labels);
-            } else if (labels_type == REALSXP) {
-                result_doublep = REAL(result);
-                labels_doublep = REAL(labels);
-            }
-        }
-
-        for (j=0; j<d; j++) {
-            if (status) {
-                if (!next_k_permutation(ap, cyclep, n, k)) {
-                    status = 0;
-                    break;
-                }
-            } else {
-                status = 1;
-            }
-            if (labels_type == NILSXP) {
-                for (i=0; i<k; i++) {
-                    result_intp[j * k + i] = ap[i] + 1;
-                }
-            } else if (labels_type == INTSXP) {
-                for (i=0; i<k; i++) {
-                    result_intp[j * k + i] = labels_intp[ap[i]];
-                }
-            } else if (labels_type == REALSXP) {
-                for (i=0; i<k; i++) {
-                    result_doublep[j * k + i] = labels_doublep[ap[i]];
-                }
-            } else if (labels_type == STRSXP) {
-                for (i=0; i<k; i++) {
-                    SET_STRING_ELT(result, j * k + i, STRING_ELT(labels, ap[i]));
-                }
-            }
-        }
-        if (status == 0) {
-            result = PROTECT(resize_col(result, k, d, j));
-            nprotect++;
-        }
-        PROTECT(rdim = Rf_allocVector(INTSXP, 2));
-        INTEGER(rdim)[0] = k;
-        INTEGER(rdim)[1] = j;
-        Rf_setAttrib(result, R_DimSymbol, rdim);
-        UNPROTECT(1);
-
-    } else {
-        // layout == 'l'
-        result = PROTECT(Rf_allocVector(VECSXP, d));
+    if (status == 0) {
+        result = PROTECT(resize_layout(result, j, layout));
         nprotect++;
-        if (labels_type == INTSXP) {
-            labels_intp = INTEGER(labels);
-        } else if (labels_type == REALSXP) {
-            labels_doublep = REAL(labels);
-        }
-
-        for (j=0; j<d; j++) {
-            if (status) {
-                if (!next_k_permutation(ap, cyclep, n, k)) {
-                    status = 0;
-                    break;
-                }
-            } else {
-                status = 1;
-            }
-            if (labels_type == NILSXP) {
-                resulti = Rf_allocVector(INTSXP, k);
-                result_intp = INTEGER(resulti);
-                for (i=0; i<k; i++) {
-                    result_intp[i] = ap[i] + 1;
-                }
-            } else if (labels_type == INTSXP) {
-                resulti = Rf_allocVector(INTSXP, k);
-                result_intp = INTEGER(resulti);
-                for (i=0; i<k; i++) {
-                    result_intp[i] = labels_intp[ap[i]];
-                }
-            } else if (labels_type == REALSXP) {
-                resulti = Rf_allocVector(REALSXP, k);
-                result_doublep = REAL(resulti);
-                for (i=0; i<k; i++) {
-                    result_doublep[i] = labels_doublep[ap[i]];
-                }
-            } else if (labels_type == STRSXP) {
-                resulti = Rf_allocVector(STRSXP, k);
-                for (i=0; i<k; i++) {
-                    SET_STRING_ELT(resulti, i, STRING_ELT(labels, ap[i]));
-                }
-            }
-            SET_VECTOR_ELT(result, j, resulti);
-        }
-        if (status == 0) {
-            result = PROTECT(resize_list(result, d, j));
-            nprotect++;
-        }
     }
-
+    check_factor(result, labels);
     UNPROTECT(nprotect);
     return result;
 }
+
 
 SEXP num_k_permutations(SEXP _n, SEXP _k) {
     size_t n = as_uint(_n);

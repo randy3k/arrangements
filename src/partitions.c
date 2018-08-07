@@ -5,334 +5,103 @@
 #include "arrangements.h"
 #include "next/partition.h"
 #include "utils.h"
+#include "macros.h"
 
 double n_partitions(int n);
 
 SEXP next_asc_partitions(SEXP _n, SEXP _d, SEXP state, SEXP _layout) {
-    size_t i, j, k;
+    int i, j, k;
+    int nprotect = 0;
+    int status = 1;
+    SEXP result;
 
     int n = as_uint(_n);
-    int d;
-    double dd;
-    if (Rf_asInteger(_d) == -1) {
-        dd = n_partitions(n);
-    } else {
-        dd = as_uint(_d);
-    }
+    char layout = check_layout(_layout);
 
-    char layout;
-    if (_layout == R_NilValue) {
-        layout = 'r';
-    } else {
-        layout = CHAR(Rf_asChar(_layout))[0];
-        if (layout != 'r' && layout != 'c' && layout != 'l') layout = 'r';
-    }
+    double dd = Rf_asInteger(_d) == -1 ? n_partitions(n) : as_uint(_d);
+    int d = check_dimension(dd, n, layout);
 
-    if (dd > INT_MAX) Rf_error("too many results");
-    if (layout != 'l') {
-        if (dd * n > R_XLEN_T_MAX) Rf_error("too many results");
-    }
-    d = round(dd);
-
-    SEXP as, ks;
     unsigned int* ap;
-    int nprotect = 0;
+    size_t* kp;
 
-    int status = 0;
-
-    if (state == R_NilValue) {
-        as = R_UnboundValue;
-        ks = R_UnboundValue;
-    } else {
-        as = PROTECT(Rf_findVarInFrame(state, Rf_install("a")));
-        ks = PROTECT(Rf_findVarInFrame(state, Rf_install("k")));
-        nprotect += 2;
-    }
-    if (as == R_UnboundValue) {
-        if (state == R_NilValue) {
-            ap = (unsigned int*) R_alloc(n, sizeof(int));
-        } else {
-            as = PROTECT(Rf_allocVector(INTSXP, n));
-            Rf_defineVar(Rf_install("a"), as, state);
-            UNPROTECT(1);
-            ap = (unsigned int*) INTEGER(as);
-        }
+    if (!variable_exist(state, "a", INTSXP, n, (void**) &ap)) {
         for(i=0; i<n; i++) ap[i] = 1;
-
-    } else {
-        ap = (unsigned int*) INTEGER(as);
-        status = 1;
+        status = 0;
     }
 
-    k = (ks == R_UnboundValue) ? n-1 : Rf_asInteger(ks);
-
-    SEXP rdim;
-    SEXP result, resulti;
-    int* resultp;
-
-    if (layout == 'r') {
-        result = PROTECT(Rf_allocVector(INTSXP, n*d));
-        nprotect++;
-        resultp = INTEGER(result);
-
-        for (j=0; j<d; j++) {
-            if (status) {
-                if (!next_asc_partition(ap, &k)) {
-                    status = 0;
-                    break;
-                }
-            } else {
-                status = 1;
-            }
-            for (i=0; i<=k; i++) {
-                resultp[j + i*d] = ap[i];
-            }
-            for (i=k+1; i<n; i++) {
-                resultp[j + i*d] = 0;
-            }
-        }
-        if (status == 0) {
-            result = PROTECT(resize_row(result, n, d, j));
-            nprotect++;
-        }
-        PROTECT(rdim = Rf_allocVector(INTSXP, 2));
-        INTEGER(rdim)[0] = j;
-        INTEGER(rdim)[1] = n;
-        Rf_setAttrib(result, R_DimSymbol, rdim);
-        UNPROTECT(1);
-
-    } else if (layout == 'c') {
-        result = PROTECT(Rf_allocVector(INTSXP, n*d));
-        nprotect++;
-        resultp = INTEGER(result);
-
-        for (j=0; j<d; j++) {
-            if (status) {
-                if (!next_asc_partition(ap, &k)) {
-                    status = 0;
-                    break;
-                }
-            } else {
-                status = 1;
-            }
-            for (i=0; i<=k; i++) {
-                resultp[j*n + i] = ap[i];
-            }
-            for (i=k+1; i<n; i++) {
-                resultp[j*n + i] = 0;
-            }
-        }
-        if (status == 0) {
-            result = PROTECT(resize_col(result, n, d, j));
-            nprotect++;
-        }
-        PROTECT(rdim = Rf_allocVector(INTSXP, 2));
-        INTEGER(rdim)[0] = n;
-        INTEGER(rdim)[1] = j;
-        Rf_setAttrib(result, R_DimSymbol, rdim);
-        UNPROTECT(1);
-
-    } else {
-        // layout == 'l'
-        result = PROTECT(Rf_allocVector(VECSXP, d));
-        nprotect++;
-        for (j=0; j<d; j++) {
-            if (status) {
-                if (!next_asc_partition(ap, &k)) {
-                    status = 0;
-                    break;
-                }
-            } else {
-                status = 1;
-            }
-            resulti = Rf_allocVector(INTSXP, k+1);
-            SET_VECTOR_ELT(result, j, resulti);
-            resultp = INTEGER(resulti);
-
-            for (i=0; i<=k; i++) {
-                resultp[i] = ap[i];
-            }
-        }
-        if (status == 0) {
-            result = PROTECT(resize_list(result, d, j));
-            nprotect++;
-        }
+    if (!variable_exist(state, "k", INTSXP, 1, (void**) &kp)) {
+        kp[0] = n - 1;
+        status = 0;
     }
 
-    if (state != R_NilValue) {
-        ks = PROTECT(Rf_ScalarInteger((int) k));
-        nprotect++;
-        Rf_defineVar(Rf_install("k"), ks, state);
-    }
+    #define NEXT() \
+        if (status == 0) { \
+            status = 1; \
+        } else if (!next_asc_partition(ap, kp)) { \
+            status = 0; \
+            break; \
+        } \
+        k = kp[0] + 1;
 
+    RESULT_NILSXP_PART();
+
+    if (status == 0) {
+        result = PROTECT(resize_layout(result, j, layout));
+        nprotect++;
+    }
     UNPROTECT(nprotect);
     return result;
 }
 
+#undef NEXT
 
 SEXP next_desc_partitions(SEXP _n, SEXP _d, SEXP state, SEXP _layout) {
-    size_t h, k, i, j;
+    int i, j, k;
+    int nprotect = 0;
+    int status = 1;
+    SEXP result;
 
     int n = as_uint(_n);
-    int d;
-    double dd;
-    if (Rf_asInteger(_d) == -1) {
-        dd = n_partitions(n);
-    } else {
-        dd = as_uint(_d);
-    }
+    char layout = check_layout(_layout);
 
-    char layout;
-    if (_layout == R_NilValue) {
-        layout = 'r';
-    } else {
-        layout = CHAR(Rf_asChar(_layout))[0];
-        if (layout != 'r' && layout != 'c' && layout != 'l') layout = 'r';
-    }
+    double dd = Rf_asInteger(_d) == -1 ? n_partitions(n) : as_uint(_d);
+    int d = check_dimension(dd, n, layout);
 
-    if (dd > INT_MAX) Rf_error("too many results");
-    if (layout != 'l') {
-        if (dd * n > R_XLEN_T_MAX) Rf_error("too many results");
-    }
-    d = round(dd);
-
-    SEXP as, hs, ks;
     unsigned int* ap;
-    int nprotect = 0;
+    size_t* hp;
+    size_t* kp;
 
-    int status = 0;
-
-    if (state == R_NilValue) {
-        as = R_UnboundValue;
-        hs = R_UnboundValue;
-        ks = R_UnboundValue;
-    } else {
-        as = PROTECT(Rf_findVarInFrame(state, Rf_install("a")));
-        hs = PROTECT(Rf_findVarInFrame(state, Rf_install("h")));
-        ks = PROTECT(Rf_findVarInFrame(state, Rf_install("k")));
-        nprotect += 3;
-    }
-    if (as == R_UnboundValue) {
-        if (state == R_NilValue) {
-            ap = (unsigned int*) R_alloc(n, sizeof(int));
-        } else {
-            as = PROTECT(Rf_allocVector(INTSXP, n));
-            Rf_defineVar(Rf_install("a"), as, state);
-            UNPROTECT(1);
-            ap = (unsigned int*) INTEGER(as);
-        }
+    if (!variable_exist(state, "a", INTSXP, n, (void**) &ap)) {
         ap[0] = n;
         for(i=1; i<n; i++) ap[i] = 1;
-    } else {
-        ap = (unsigned int*) INTEGER(as);
-        status = 1;
+        status = 0;
     }
 
-    h = (hs == R_UnboundValue) ? 0 : Rf_asInteger(hs);
-    k = (ks == R_UnboundValue) ? 1 : Rf_asInteger(ks);
-
-    SEXP rdim;
-    SEXP result, resulti;
-    int* resultp;
-
-    if (layout == 'r') {
-        result = PROTECT(Rf_allocVector(INTSXP, n*d));
-        nprotect++;
-        resultp = INTEGER(result);
-
-        for (j=0; j<d; j++) {
-            if (status) {
-                if(!next_desc_partition(ap, &h, &k)) {
-                    status = 0;
-                    break;
-                }
-            } else {
-                status = 1;
-            }
-            for (i=0; i<k; i++) {
-                resultp[j + i*d] = ap[i];
-            }
-            for (i=k; i<n; i++) {
-                resultp[j + i*d] = 0;
-            }
-        }
-        if (status == 0) {
-            result = PROTECT(resize_row(result, n, d, j));
-            nprotect++;
-        }
-        PROTECT(rdim = Rf_allocVector(INTSXP, 2));
-        INTEGER(rdim)[0] = j;
-        INTEGER(rdim)[1] = n;
-        Rf_setAttrib(result, R_DimSymbol, rdim);
-        UNPROTECT(1);
-
-    } else if (layout == 'c') {
-        result = PROTECT(Rf_allocVector(INTSXP, n*d));
-        nprotect++;
-        resultp = INTEGER(result);
-
-        for (j=0; j<d; j++) {
-            if (status) {
-                if(!next_desc_partition(ap, &h, &k)) {
-                    status = 0;
-                    break;
-                }
-            } else {
-                status = 1;
-            }
-            for (i=0; i<k; i++) {
-                resultp[j*n + i] = ap[i];
-            }
-            for (i=k; i<n; i++) {
-                resultp[j*n + i] = 0;
-            }
-        }
-        if (status == 0) {
-            result = PROTECT(resize_col(result, n, d, j));
-            nprotect++;
-        }
-        PROTECT(rdim = Rf_allocVector(INTSXP, 2));
-        INTEGER(rdim)[0] = n;
-        INTEGER(rdim)[1] = j;
-        Rf_setAttrib(result, R_DimSymbol, rdim);
-        UNPROTECT(1);
-
-    } else {
-        // layout == 'l'
-        result = PROTECT(Rf_allocVector(VECSXP, d));
-        nprotect++;
-        for (j=0; j<d; j++) {
-            if (status) {
-                if (!next_desc_partition(ap, &h, &k)) {
-                    status = 0;
-                    break;
-                }
-            } else {
-                status = 1;
-            }
-            resulti = Rf_allocVector(INTSXP, k);
-            SET_VECTOR_ELT(result, j, resulti);
-            resultp = INTEGER(resulti);
-
-            for (i=0; i<k; i++) {
-                resultp[i] = ap[i];
-            }
-        }
-        if (status == 0) {
-            result = PROTECT(resize_list(result, d, j));
-            nprotect++;
-        }
+    if (!variable_exist(state, "h", INTSXP, 1, (void**) &hp)) {
+        hp[0] = 0;
+        status = 0;
     }
 
-    if (state != R_NilValue) {
-        hs = PROTECT(Rf_ScalarInteger((int) h));
-        nprotect++;
-        ks = PROTECT(Rf_ScalarInteger((int) k));
-        nprotect++;
-        Rf_defineVar(Rf_install("h"), hs, state);
-        Rf_defineVar(Rf_install("k"), ks, state);
+    if (!variable_exist(state, "k", INTSXP, 1, (void**) &kp)) {
+        kp[0] = 1;
+        status = 0;
     }
 
+    #define NEXT() \
+        if (status == 0) { \
+            status = 1; \
+        } else if (!next_desc_partition(ap, hp, kp)) { \
+            status = 0; \
+            break; \
+        } \
+        k = kp[0];
+
+    RESULT_NILSXP_PART();
+
+    if (status == 0) {
+        result = PROTECT(resize_layout(result, j, layout));
+        nprotect++;
+    }
     UNPROTECT(nprotect);
     return result;
 }
