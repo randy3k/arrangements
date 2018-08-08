@@ -34,6 +34,8 @@ double choose(size_t n, size_t k);
 
 double multichoose(int* f, size_t flen);
 
+SEXP verify_parameters(SEXP _n, SEXP _k, SEXP _x, SEXP _freq);
+
 void set_gmp_randstate(gmp_randstate_t randstate);
 
 #endif

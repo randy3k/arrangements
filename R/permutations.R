@@ -1,7 +1,7 @@
 #' @details
 #' The `Permutations` class can be initialized by using the convenient wrapper `ipermutations` or
 #' \preformatted{
-#' Permutations$new(n, k, x = NULL, freq = NULL, replace = FALSE)
+#' Permutations$new(n, k, v = NULL, freq = NULL, replace = FALSE)
 #' }
 #' @template iterator_methods
 #' @rdname ipermutations
@@ -16,13 +16,13 @@ Permutations <- R6::R6Class(
     public = list(
         n = NULL,
         k = NULL,
-        x = NULL,
+        v = NULL,
         freq = NULL,
         replace = NULL,
-        initialize = function(n, k = n, x = NULL, freq = NULL, replace = FALSE) {
+        initialize = function(n, k, v = NULL, freq = NULL, replace = FALSE) {
             self$n <- as.integer(n)
             self$k <- as.integer(k)
-            self$x <- x
+            self$v <- v
             self$freq <- freq
             self$replace <- replace
             self$reset()
@@ -42,7 +42,7 @@ Permutations <- R6::R6Class(
                 self$reset()
             } else {
                 out <- next_permutations(
-                    self$n, self$k, d, private$state, self$x, self$freq, self$replace, layout)
+                    self$n, self$k, d, private$state, self$v, self$freq, self$replace, layout)
                 if (layout == "row" || is.null(layout)){
                     if (nrow(out) == 0) {
                         out <- NULL
@@ -88,28 +88,28 @@ Permutations <- R6::R6Class(
     )
 )
 
-next_permutations <- function(n, k, d, state, x, freq, replace, layout) {
+next_permutations <- function(n, k, d, state, v, freq, replace, layout) {
     if (k == 0) {
         if (layout == "row" || is.null(layout)) {
-            if (is.null(x)) {
+            if (is.null(v)) {
                 out <- integer(0)
             } else {
-                out <- new(typeof(x))
+                out <- new(typeof(v))
             }
             dim(out) <- c(1, 0)
         } else if (layout == "column") {
-            if (is.null(x)) {
+            if (is.null(v)) {
                 out <- integer(0)
             } else {
-                out <- new(typeof(x))
+                out <- new(typeof(v))
             }
             dim(out) <- c(0, 1)
         } else {
             if (n == 0) {
-                if (is.null(x)) {
+                if (is.null(v)) {
                     out <- list(integer(0))
                 } else {
-                    out <- list(new(typeof(x)))
+                    out <- list(new(typeof(v)))
                 }
             } else {
                 out <- list()
@@ -117,20 +117,20 @@ next_permutations <- function(n, k, d, state, x, freq, replace, layout) {
         }
     } else if (replace) {
         out <- .Call("next_replacement_permutations", PACKAGE = "arrangements",
-                        n, k, d, state, x, layout)
+                        n, k, d, state, v, layout)
     } else if (n < k) {
         if (layout == "row" || is.null(layout)) {
-            if (is.null(x)) {
+            if (is.null(v)) {
                 out <- integer(0)
             } else {
-                out <- new(typeof(x))
+                out <- new(typeof(v))
             }
             dim(out) <- c(0, k)
         } else if (layout == "column") {
-            if (is.null(x)) {
+            if (is.null(v)) {
                 out <- integer(0)
             } else {
-                out <- new(typeof(x))
+                out <- new(typeof(v))
             }
             dim(out) <- c(k, 0)
         } else {
@@ -139,13 +139,13 @@ next_permutations <- function(n, k, d, state, x, freq, replace, layout) {
     } else if (n == k) {
         # next_permutations can also handle multiset with r=n
         out <- .Call("next_permutations", PACKAGE = "arrangements",
-                        n, d, state, x, freq, layout)
+                        n, d, state, v, freq, layout)
     } else if (!is.null(freq)) {
         out <- .Call("next_multiset_permutations", PACKAGE = "arrangements",
-                        n, k, d, state, x, freq, layout)
+                        n, k, d, state, v, freq, layout)
     } else {
         out <- .Call("next_k_permutations", PACKAGE = "arrangements",
-                        n, k, d, state, x, layout)
+                        n, k, d, state, v, layout)
     }
     out
 }
@@ -162,14 +162,14 @@ next_permutations <- function(n, k, d, state, x, freq, replace, layout) {
 #' @seealso [ipermutations] for iterating permutations and [npermutations] to calculate number of permutations
 #' @examples
 #' permutations(3)
-#' permutations(x = LETTERS[1:3])
+#' permutations(LETTERS[1:3])
 #'
 #' # choose 2 from 4
 #' permutations(4, 2)
-#' permutations(x = LETTERS[1:3], k = 2)
+#' permutations(LETTERS[1:3], k = 2)
 #'
 #' # multiset with frequencies c(2, 3)
-#' permutations(freq = c(2, 3), k = 3)
+#' permutations(k = 3, freq = c(2, 3))
 #'
 #' # with replacement
 #' permutations(4, 2, replace = TRUE)
@@ -191,33 +191,36 @@ next_permutations <- function(n, k, d, state, x, freq, replace, layout) {
 #'
 #' @export
 permutations <- function(
-        n, k = n, x = NULL, freq = NULL, replace = FALSE, layout = "row",
+        x, k = n, n = NULL, v = NULL, freq = NULL, replace = FALSE, layout = "row",
         index = NULL, nsample = NULL) {
-    if (!replace && !is.null(freq)) {
-        n <- sum(freq)
-        is.null(x) || length(freq) == length(x) || stop("length of x and freq should be the same")
-    } else if (!is.null(x)) {
-        n <- length(x)
+    if (missing(x)) {
+        n <- validate_n_value(n, v, freq)
+    } else {
+        if (length(x) == 1 && is.numeric(x)) {
+            n <- validate_n_value(x, v, freq)
+        } else {
+            v <- x
+            n <- validate_n_value(n, v, freq)
+        }
     }
-    (n %% 1 == 0  && n >= 0) || stop("expect non-negative integer")
-    (k %% 1 == 0  && k >= 0) || stop("expect non-negative integer")
+    (k %% 1 == 0 && k >= 0) || stop("expect non-negative integer")
 
     if (is.null(index) && is.null(nsample)) {
-        next_permutations(n, k, -1L, NULL, x, freq, replace, layout)
+        next_permutations(n, k, -1L, NULL, v, freq, replace, layout)
     } else {
         if (gmp::is.bigz(index)) {
             index <- as.character(index)
         }
         if (replace) {
             .Call("get_replacement_permutation", PACKAGE = "arrangements",
-                n, k, x, layout, index, nsample)
+                n, k, v, layout, index, nsample)
         } else if (!is.null(freq)) {
             .Call("get_multiset_permutation", PACKAGE = "arrangements",
-                freq, k, x, layout, index, nsample)
+                freq, k, v, layout, index, nsample)
         } else if (k == n) {
-            .Call("get_permutation", PACKAGE = "arrangements", n, x, layout, index, nsample)
+            .Call("get_permutation", PACKAGE = "arrangements", n, v, layout, index, nsample)
         } else {
-            .Call("get_k_permutations", PACKAGE = "arrangements", n, k, x, layout, index, nsample)
+            .Call("get_k_permutations", PACKAGE = "arrangements", n, k, v, layout, index, nsample)
         }
     }
 }
@@ -244,16 +247,20 @@ permutations <- function(
 #'   sum(x)
 #' }
 #' @export
-ipermutations <- function(n, k = n, x = NULL, freq = NULL, replace = FALSE) {
-    if (!replace && !is.null(freq)) {
-        n <- sum(freq)
-        is.null(x) || length(freq) == length(x) || stop("length of x and freq should be the same")
-    } else if (!is.null(x)) {
-        n <- length(x)
+ipermutations <- function(x, k = n, n = NULL, v = NULL, freq = NULL, replace = FALSE) {
+    if (missing(x)) {
+        n <- validate_n_value(n, v, freq)
+    } else {
+        if (length(x) == 1 && is.numeric(x)) {
+            n <- validate_n_value(x, v, freq)
+        } else {
+            v <- x
+            n <- validate_n_value(n, v, freq)
+        }
     }
-    (n %% 1 == 0  && n >= 0) || stop("expect non-negative integer")
-    (k %% 1 == 0  && k >= 0) || stop("expect non-negative integer")
-    Permutations$new(n, k, x, freq, replace)
+    (k %% 1 == 0 && k >= 0) || stop("expect non-negative integer")
+
+    Permutations$new(n, k, v, freq, replace)
 }
 
 #' Number of permutations
@@ -262,9 +269,9 @@ ipermutations <- function(n, k = n, x = NULL, freq = NULL, replace = FALSE) {
 #' @seealso [permutations] for generating all permutations and [ipermutations] for iterating permutations
 #' @examples
 #' npermutations(7)
-#' npermutations(x = LETTERS[1:5])
+#' npermutations(LETTERS[1:5])
 #' npermutations(5, 2)
-#' npermutations(x = LETTERS, k = 5)
+#' npermutations(LETTERS, k = 5)
 #'
 #' # integer overflow
 #' \dontrun{npermutations(14, 10)}
@@ -272,7 +279,7 @@ ipermutations <- function(n, k = n, x = NULL, freq = NULL, replace = FALSE) {
 #'
 #' # number of permutations of `c("a", "b", "b")`
 #' # they are `c("a", "b")`, `c("b", "b")` and `c("b", "b")`
-#' npermutations(freq = c(1, 2), k = 2)
+#' npermutations(k = 2, freq = c(1, 2))
 #'
 #' # zero sized partitions
 #' npermutations(0)
@@ -281,15 +288,19 @@ ipermutations <- function(n, k = n, x = NULL, freq = NULL, replace = FALSE) {
 #' npermutations(0, 1)
 #' npermutations(0, 0)
 #' @export
-npermutations <- function(n, k = n, x = NULL, freq = NULL, replace = FALSE, bigz = FALSE) {
-    if (!replace && !is.null(freq)) {
-        n <- sum(freq)
-        is.null(x) || length(freq) == length(x) || stop("length of x and freq should be the same")
-    } else if (!is.null(x)) {
-        n <- length(x)
+npermutations <- function(x, k = n, n = NULL, v = NULL, freq = NULL, replace = FALSE, bigz = FALSE) {
+    if (missing(x)) {
+        n <- validate_n_value(n, v, freq)
+    } else {
+        if (length(x) == 1 && is.numeric(x)) {
+            n <- validate_n_value(x, v, freq)
+        } else {
+            v <- x
+            n <- validate_n_value(n, v, freq)
+        }
     }
-    (n %% 1 == 0  && n >= 0) || stop("expect non-negative integer")
-    (k %% 1 == 0  && k >= 0) || stop("expect non-negative integer")
+    (k %% 1 == 0 && k >= 0) || stop("expect non-negative integer")
+
     if (bigz) {
         if (replace) {
             out <- gmp::as.bigz(n) ^ k
