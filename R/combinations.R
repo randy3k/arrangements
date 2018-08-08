@@ -197,8 +197,6 @@ combinations <- function(
     } else {
         if (gmp::is.bigz(index)) {
             index <- as.character(index)
-        } else if (is.numeric(index)) {
-            index <- index
         }
         if (replace) {
             .Call("get_replacement_combination", PACKAGE = "arrangements",
