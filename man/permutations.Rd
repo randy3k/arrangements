@@ -5,7 +5,7 @@
 \title{Permutations generator}
 \usage{
 permutations(n, k = n, x = NULL, freq = NULL, replace = FALSE,
-  layout = "row")
+  layout = "row", index = NULL, nsample = NULL)
 }
 \arguments{
 \item{n}{an integer. If \code{freq} is not NULL, \code{n} would be set as \code{sum(freq)},
@@ -21,6 +21,10 @@ otherwise if \code{x} is not NULL, \code{n} would be set as \code{length(x)}.}
 
 \item{layout}{if "row", "column" or "list" is specified, the returned value would be a
 "row-major" matrix, a "column-major" matrix or a list respectively}
+
+\item{index}{a vector of indices of the desired permutations}
+
+\item{nsample}{sampling random permutations}
 }
 \description{
 This function generates all the permutations of selecting \code{k} items from \code{n} items.

@@ -186,6 +186,8 @@ next_permutations <- function(n, k, d, state, x, freq, replace, layout) {
 #'
 #' @template param_pc
 #' @template param_type
+#' @param index a vector of indices of the desired permutations
+#' @param nsample sampling random permutations
 #' @seealso [ipermutations] for iterating permutations and [npermutations] to calculate number of permutations
 #' @examples
 #' permutations(3)
@@ -217,7 +219,9 @@ next_permutations <- function(n, k, d, state, x, freq, replace, layout) {
 #' dim(permutations(0, 1))
 #'
 #' @export
-permutations <- function(n, k = n, x = NULL, freq = NULL, replace = FALSE, layout = "row") {
+permutations <- function(
+        n, k = n, x = NULL, freq = NULL, replace = FALSE, layout = "row",
+        index = NULL, nsample = NULL) {
     if (!replace && !is.null(freq)) {
         n <- sum(freq)
         is.null(x) || length(freq) == length(x) || stop("length of x and freq should be the same")
@@ -226,7 +230,25 @@ permutations <- function(n, k = n, x = NULL, freq = NULL, replace = FALSE, layou
     }
     (n %% 1 == 0  && n >= 0) || stop("expect non-negative integer")
     (k %% 1 == 0  && k >= 0) || stop("expect non-negative integer")
-    next_permutations(n, k, -1L, NULL, x, freq, replace, layout)
+
+    if (is.null(index) && is.null(nsample)) {
+        next_permutations(n, k, -1L, NULL, x, freq, replace, layout)
+    } else {
+        if (gmp::is.bigz(index)) {
+            index <- as.character(index)
+        }
+        if (replace) {
+            .Call("get_replacement_permutation", PACKAGE = "arrangements",
+                n, k, x, layout, index, nsample)
+        } else if (!is.null(freq)) {
+            .Call("get_multiset_permutation", PACKAGE = "arrangements",
+                as_uint_array(freq), k, x, layout, index, nsample)
+        } else if (k == n) {
+            .Call("get_permutation", PACKAGE = "arrangements", n, x, layout, index, nsample)
+        } else {
+            .Call("get_k_permutations", PACKAGE = "arrangements", n, k, x, layout, index, nsample)
+        }
+    }
 }
 
 
@@ -310,9 +332,11 @@ npermutations <- function(n, k = n, x = NULL, freq = NULL, replace = FALSE, bigz
             }
         } else {
             if (n == k) {
-                out <- .Call("num_multiset_n_permutations_bigz", PACKAGE = "arrangements", as_uint_array(freq))
+                out <- .Call("num_multiset_n_permutations_bigz", PACKAGE = "arrangements",
+                    as_uint_array(freq))
             } else {
-                out <- .Call("num_multiset_permutations_bigz", PACKAGE = "arrangements", as_uint_array(freq), k)
+                out <- .Call("num_multiset_permutations_bigz", PACKAGE = "arrangements",
+                    as_uint_array(freq), k)
             }
         }
 
@@ -336,20 +360,4 @@ npermutations <- function(n, k = n, x = NULL, freq = NULL, replace = FALSE, bigz
         }
     }
     convertz(out, bigz)
-}
-
-#' @export
-spermutations <- function(n, k = n, x = NULL, freq = NULL, replace = FALSE, layout = "row", index = NULL, nsample = 1L) {
-    if (gmp::is.bigz(index)) {
-        index <- as.character(index)
-    }
-    if (replace) {
-        .Call("get_replacement_permutation", PACKAGE = "arrangements", n, k, x, layout, index, nsample)
-    } else if (!is.null(freq)) {
-        .Call("get_multiset_permutation", PACKAGE = "arrangements", as_uint_array(freq), k, x, layout, index, nsample)
-    } else if (k == n) {
-        .Call("get_permutation", PACKAGE = "arrangements", n, x, layout, index, nsample)
-    } else {
-        .Call("get_k_permutations", PACKAGE = "arrangements", n, k, x, layout, index, nsample)
-    }
 }

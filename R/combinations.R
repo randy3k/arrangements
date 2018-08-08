@@ -172,6 +172,8 @@ next_combinations <- function(n, k, d, state, x, freq, replace, layout) {
 #'
 #' @template param_pc
 #' @template param_type
+#' @param index a vector of indices of the desired combinations
+#' @param nsample sampling random combinations
 #' @seealso [icombinations] for iterating combinations and [ncombinations] to calculate number of combinations
 #' @examples
 #' # choose 2 from 4
@@ -197,7 +199,9 @@ next_combinations <- function(n, k, d, state, x, freq, replace, layout) {
 #' dim(combinations(0, 1))
 #'
 #' @export
-combinations <- function(n, k, x = NULL, freq = NULL, replace = FALSE, layout = "row") {
+combinations <- function(
+        n, k, x = NULL, freq = NULL, replace = FALSE, layout = "row",
+        index = NULL, nsample = NULL) {
     if (!replace && !is.null(freq)) {
         n <- sum(freq)
         is.null(x) || length(freq) == length(x) || stop("length of x and freq should be the same")
@@ -206,7 +210,25 @@ combinations <- function(n, k, x = NULL, freq = NULL, replace = FALSE, layout = 
     }
     (n %% 1 == 0  && n >= 0) || stop("expect non-negative integer")
     (k %% 1 == 0  && k >= 0) || stop("expect non-negative integer")
-    next_combinations(n, k, -1L, NULL, x, freq, replace, layout)
+
+    if (is.null(index) && is.null(nsample)) {
+        next_combinations(n, k, -1L, NULL, x, freq, replace, layout)
+    } else {
+        if (gmp::is.bigz(index)) {
+            index <- as.character(index)
+        } else if (is.numeric(index)) {
+            index <- as_uint_array(index)
+        }
+        if (replace) {
+            .Call("get_replacement_combination", PACKAGE = "arrangements",
+                n, k, x, layout, index, nsample)
+        } else if (!is.null(freq)) {
+            .Call("get_multiset_combination", PACKAGE = "arrangements",
+                as_uint_array(freq), k, x, layout, index, nsample)
+        } else {
+            .Call("get_combinations", PACKAGE = "arrangements", n, k, x, layout, index, nsample)
+        }
+    }
 }
 
 #' @title Combinations iterator
@@ -281,7 +303,8 @@ ncombinations <- function(n, k, x = NULL, freq  =NULL, replace = FALSE, bigz = F
         } else if (is.null(freq)) {
             out <- gmp::chooseZ(n, k)
         } else {
-            out <- .Call("num_multiset_combinations_bigz", PACKAGE = "arrangements", as_uint_array(freq), k)
+            out <- .Call("num_multiset_combinations_bigz", PACKAGE = "arrangements",
+                as_uint_array(freq), k)
         }
 
     } else {
@@ -292,25 +315,9 @@ ncombinations <- function(n, k, x = NULL, freq  =NULL, replace = FALSE, bigz = F
         } else if (is.null(freq)) {
             out <- choose(n, k)
         } else {
-            out <- .Call("num_multiset_combinations", PACKAGE = "arrangements", as_uint_array(freq), k)
+            out <- .Call("num_multiset_combinations", PACKAGE = "arrangements",
+                as_uint_array(freq), k)
         }
     }
     convertz(out, bigz)
-}
-
-
-#' @export
-scombinations <- function(n, k = n, x = NULL, freq = NULL, replace = FALSE, layout = "row", index = NULL, nsample = 1L) {
-    if (gmp::is.bigz(index)) {
-        index <- as.character(index)
-    } else if (is.numeric(index)) {
-        index <- as_uint_array(index)
-    }
-    if (replace) {
-        .Call("get_replacement_combination", PACKAGE = "arrangements", n, k, x, layout, index, nsample)
-    } else if (!is.null(freq)) {
-        .Call("get_multiset_combination", PACKAGE = "arrangements", as_uint_array(freq), k, x, layout, index, nsample)
-    } else {
-        .Call("get_combinations", PACKAGE = "arrangements", n, k, x, layout, index, nsample)
-    }
 }
