@@ -39,7 +39,7 @@ SEXP next_asc_k_partitions(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP _layout) 
             break; \
         }
 
-    RESULT_NILSXP_K_PART();
+    RESULT_K_PART();
 
     if (status == 0) {
         result = PROTECT(resize_layout(result, j, layout));
@@ -80,7 +80,7 @@ SEXP next_desc_k_partitions(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP _layout)
             break; \
         }
 
-    RESULT_NILSXP_K_PART();
+    RESULT_K_PART();
 
     if (status == 0) {
         result = PROTECT(resize_layout(result, j, layout));

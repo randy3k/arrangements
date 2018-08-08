@@ -1,4 +1,4 @@
-#define RESULT_NILSXP_PART() \
+#define RESULT_PART() \
     if (layout == 'r') { \
         result = PROTECT(Rf_allocMatrix(INTSXP, d, n)); \
         nprotect++; \
@@ -41,7 +41,7 @@
         } \
     }
 
-#define RESULT_NILSXP_K_PART() \
+#define RESULT_K_PART() \
     if (layout == 'r') { \
         result = PROTECT(Rf_allocMatrix(INTSXP, d, k)); \
         nprotect++; \

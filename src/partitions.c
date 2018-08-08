@@ -43,7 +43,7 @@ SEXP next_asc_partitions(SEXP _n, SEXP _d, SEXP state, SEXP _layout) {
         } \
         k = kp[0] + 1;
 
-    RESULT_NILSXP_PART();
+    RESULT_PART();
 
     if (status == 0) {
         result = PROTECT(resize_layout(result, j, layout));
@@ -96,7 +96,7 @@ SEXP next_desc_partitions(SEXP _n, SEXP _d, SEXP state, SEXP _layout) {
         } \
         k = kp[0];
 
-    RESULT_NILSXP_PART();
+    RESULT_PART();
 
     if (status == 0) {
         result = PROTECT(resize_layout(result, j, layout));
