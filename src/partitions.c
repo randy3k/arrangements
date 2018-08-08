@@ -16,10 +16,10 @@ SEXP next_asc_partitions(SEXP _n, SEXP _d, SEXP state, SEXP _layout) {
     SEXP result;
 
     int n = as_uint(_n);
-    char layout = check_layout(_layout);
+    char layout = layout_flag(_layout);
 
     double dd = Rf_asInteger(_d) == -1 ? n_partitions(n) : as_uint(_d);
-    int d = check_dimension(dd, n, layout);
+    int d = verify_dimension(dd, n, layout);
 
     unsigned int* ap;
     size_t* kp;
@@ -62,10 +62,10 @@ SEXP next_desc_partitions(SEXP _n, SEXP _d, SEXP state, SEXP _layout) {
     SEXP result;
 
     int n = as_uint(_n);
-    char layout = check_layout(_layout);
+    char layout = layout_flag(_layout);
 
     double dd = Rf_asInteger(_d) == -1 ? n_partitions(n) : as_uint(_d);
-    int d = check_dimension(dd, n, layout);
+    int d = verify_dimension(dd, n, layout);
 
     unsigned int* ap;
     size_t* hp;

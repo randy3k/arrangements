@@ -14,17 +14,17 @@ SEXP resize_list(SEXP x, size_t k, size_t d);
 
 SEXP resize_layout(SEXP x, size_t d, char layout);
 
-void check_factor(SEXP result, SEXP lables);
+void attach_factor_levels(SEXP result, SEXP lables);
 
-char check_layout(SEXP _layout);
+char layout_flag(SEXP _layout);
 
-int check_dimension(double dd, int k, char layout);
+int verify_dimension(double dd, int k, char layout);
 
 int variable_exist(SEXP state, char* name, int TYPE, int k, void** p);
 
 int as_uint(SEXP x);
 
-SEXP as_uint_array(SEXP x);
+int* as_uint_array(SEXP x);
 
 double fact(size_t n);
 
@@ -34,6 +34,6 @@ double choose(size_t n, size_t k);
 
 double multichoose(int* f, size_t flen);
 
-void set_gmp_state(gmp_randstate_t randstate);
+void set_gmp_randstate(gmp_randstate_t randstate);
 
 #endif

@@ -32,7 +32,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"get_replacement_combination", (DL_FUNC) &get_replacement_combination, 6},
     {"next_replacement_permutations", (DL_FUNC) &next_replacement_permutations, 6},
     {"get_replacement_permutation", (DL_FUNC) &get_replacement_permutation, 6},
-    {"as_uint_array", (DL_FUNC) &as_uint_array, 1},
     {NULL, NULL, 0}
 };
 

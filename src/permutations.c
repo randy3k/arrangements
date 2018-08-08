@@ -16,9 +16,9 @@ SEXP next_permutations(SEXP _n, SEXP _d, SEXP state, SEXP labels, SEXP freq, SEX
     int n = as_uint(_n);
     int* fp;
     if (freq != R_NilValue) {
-        fp = INTEGER(freq);
+        fp = as_uint_array(freq);
     }
-    char layout = check_layout(_layout);
+    char layout = layout_flag(_layout);
 
     double dd;
     if (Rf_asInteger(_d) == -1) {
@@ -30,7 +30,7 @@ SEXP next_permutations(SEXP _n, SEXP _d, SEXP state, SEXP labels, SEXP freq, SEX
     } else {
         dd = as_uint(_d);
     }
-    int d = check_dimension(dd, n, layout);
+    int d = verify_dimension(dd, n, layout);
 
     unsigned int* ap;
 
@@ -71,13 +71,13 @@ SEXP next_permutations(SEXP _n, SEXP _d, SEXP state, SEXP labels, SEXP freq, SEX
         result = PROTECT(resize_layout(result, j, layout));
         nprotect++;
     }
-    check_factor(result, labels);
+    attach_factor_levels(result, labels);
     UNPROTECT(nprotect);
     return result;
 }
 
 SEXP num_multiset_n_permutations(SEXP freq) {
-    int* fp = INTEGER(as_uint_array(freq));
+    int* fp = as_uint_array(freq);
     size_t flen = Rf_length(freq);
     return Rf_ScalarReal(multichoose(fp, flen));
 }
@@ -96,7 +96,7 @@ void n_multiset_n_permutations_bigz(mpz_t z, int* freq, size_t flen) {
 }
 
 SEXP num_multiset_n_permutations_bigz(SEXP freq) {
-    int* fp = INTEGER(as_uint_array(freq));
+    int* fp = as_uint_array(freq);
     size_t flen = Rf_length(freq);
     mpz_t z;
     mpz_init(z);
@@ -170,10 +170,10 @@ SEXP get_permutation(SEXP _n, SEXP labels, SEXP _layout, SEXP _index, SEXP _nsam
     SEXP result = R_NilValue;
 
     int n = as_uint(_n);
-    char layout = check_layout(_layout);
+    char layout = layout_flag(_layout);
 
     double dd = _index == R_NilValue ? as_uint(_nsample) : Rf_length(_index);
-    int d = check_dimension(dd, n, layout);
+    int d = verify_dimension(dd, n, layout);
 
     unsigned int* ap;
     ap = (unsigned int*) R_alloc(n, sizeof(int));
@@ -190,7 +190,7 @@ SEXP get_permutation(SEXP _n, SEXP labels, SEXP _layout, SEXP _index, SEXP _nsam
 
         if (sampling) {
             GetRNGstate();
-            set_gmp_state(randstate);
+            set_gmp_randstate(randstate);
             mpz_init(maxz);
             mpz_fac_ui(maxz, n);
         } else {
@@ -259,7 +259,7 @@ SEXP get_permutation(SEXP _n, SEXP labels, SEXP _layout, SEXP _index, SEXP _nsam
         }
     }
 
-    check_factor(result, labels);
+    attach_factor_levels(result, labels);
     UNPROTECT(nprotect);
     return result;
 }

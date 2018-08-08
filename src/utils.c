@@ -89,7 +89,7 @@ SEXP resize_layout(SEXP x, size_t d, char layout) {
     return result;
 }
 
-void check_factor(SEXP result, SEXP labels) {
+void attach_factor_levels(SEXP result, SEXP labels) {
     SEXP resulti;
     int result_type = TYPEOF(result);
     int i, n;
@@ -108,7 +108,7 @@ void check_factor(SEXP result, SEXP labels) {
     }
 }
 
-char check_layout(SEXP _layout) {
+char layout_flag(SEXP _layout) {
     char layout;
     if (_layout == R_NilValue) {
         layout = 'r';
@@ -119,7 +119,7 @@ char check_layout(SEXP _layout) {
     return layout;
 }
 
-int check_dimension(double dd, int k, char layout) {
+int verify_dimension(double dd, int k, char layout) {
     if (dd > INT_MAX) Rf_error("too many results");
     if (layout != 'l') {
         if (dd * k > R_XLEN_T_MAX) Rf_error("too many results");
@@ -171,38 +171,35 @@ int as_uint(SEXP x) {
     return z;
 }
 
-SEXP as_uint_array(SEXP x) {
-    SEXP y;
+int* as_uint_array(SEXP x) {
     size_t i, n;
-    double w;
     int z;
-    int* x_intp;
-    double* x_doublep;
-    int* yp;
 
     if (TYPEOF(x) == INTSXP) {
+        int* xp = INTEGER(x);
         n = Rf_length(x);
-        x_intp = INTEGER(x);
         for (i=0; i<n; i++) {
-            z = x_intp[i];
+            z = xp[i];
             if (z < 0) Rf_error("expect non-negative integer");
         }
-        return x;
+        return xp;
     } else if (TYPEOF(x) == REALSXP) {
+        int* yp;
+        double* xp;
+        double w;
         n = Rf_length(x);
-        PROTECT(y = Rf_allocVector(INTSXP, n));
-        yp = INTEGER(y);
-        x_doublep = REAL(x);
+        yp = (int*) R_alloc(n, sizeof(int));
+        xp = REAL(x);
         for (i=0; i<n; i++) {
-            w = x_doublep[i];
+            w = xp[i];
             z = (int) w;
             if (w != z || w < 0) Rf_error("expect non-negative integer");
-            yp[i] = (int) x_doublep[i];
+            yp[i] = z;
         }
-        UNPROTECT(1);
-        return y;
+        return yp;
     }
-    return x;
+    Rf_error("expect non-negative integer");
+    return NULL;
 }
 
 double fact(size_t n) {
@@ -270,7 +267,7 @@ static SEXP GetSeedsFromVar(void)
     return seeds;
 }
 
-void set_gmp_state(gmp_randstate_t randstate) {
+void set_gmp_randstate(gmp_randstate_t randstate) {
     int i;
     mpz_t z;
     mpz_init(z);

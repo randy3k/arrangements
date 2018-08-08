@@ -16,10 +16,10 @@ SEXP next_replacement_permutations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP l
 
     int n = as_uint(_n);
     int k = as_uint(_k);
-    char layout = check_layout(_layout);
+    char layout = layout_flag(_layout);
 
     double dd = Rf_asInteger(_d) == -1 ? pow(n, k) : as_uint(_d);
-    int d = check_dimension(dd, k, layout);
+    int d = verify_dimension(dd, k, layout);
 
     size_t *sizes;
     sizes = (size_t*) R_alloc(k, sizeof(*sizes));
@@ -55,7 +55,7 @@ SEXP next_replacement_permutations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP l
         result = PROTECT(resize_layout(result, j, layout));
         nprotect++;
     }
-    check_factor(result, labels);
+    attach_factor_levels(result, labels);
     UNPROTECT(nprotect);
     return result;
 }
@@ -95,10 +95,10 @@ SEXP get_replacement_permutation(SEXP _n, SEXP _k, SEXP labels, SEXP _layout, SE
 
     int n = as_uint(_n);
     int k = as_uint(_k);
-    char layout = check_layout(_layout);
+    char layout = layout_flag(_layout);
 
     double dd = _index == R_NilValue ? as_uint(_nsample) : Rf_length(_index);
-    int d = check_dimension(dd, k, layout);
+    int d = verify_dimension(dd, k, layout);
 
     unsigned int* ap;
     ap = (unsigned int*) R_alloc(k, sizeof(int));
@@ -115,7 +115,7 @@ SEXP get_replacement_permutation(SEXP _n, SEXP _k, SEXP labels, SEXP _layout, SE
 
         if (sampling) {
             GetRNGstate();
-            set_gmp_state(randstate);
+            set_gmp_randstate(randstate);
             mpz_init(maxz);
             mpz_ui_pow_ui(maxz, n, k);
         } else {
@@ -184,7 +184,7 @@ SEXP get_replacement_permutation(SEXP _n, SEXP _k, SEXP labels, SEXP _layout, SE
         }
     }
 
-    check_factor(result, labels);
+    attach_factor_levels(result, labels);
     UNPROTECT(nprotect);
     return result;
 }

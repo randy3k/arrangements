@@ -17,11 +17,11 @@ SEXP next_multiset_combinations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP labe
 
     int n = as_uint(_n);
     int k = as_uint(_k);
-    int* fp = INTEGER(freq);
-    char layout = check_layout(_layout);
+    int* fp = as_uint_array(freq);
+    char layout = layout_flag(_layout);
 
     double dd = Rf_asInteger(_d) == -1 ? n_multiset_combinations(fp, Rf_length(freq), k) : as_uint(_d);
-    int d = check_dimension(dd, k, layout);
+    int d = verify_dimension(dd, k, layout);
 
     unsigned int* mp;
     unsigned int* ap;
@@ -66,7 +66,7 @@ SEXP next_multiset_combinations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP labe
         result = PROTECT(resize_layout(result, j, layout));
         nprotect++;
     }
-    check_factor(result, labels);
+    attach_factor_levels(result, labels);
     UNPROTECT(nprotect);
     return result;
 }
@@ -112,7 +112,7 @@ double n_multiset_combinations(int* freq, size_t flen, size_t k) {
 }
 
 SEXP num_multiset_combinations(SEXP freq, SEXP _k) {
-    int* fp = INTEGER(freq);
+    int* fp = as_uint_array(freq);
     size_t flen = Rf_length(freq);
     size_t k = as_uint(_k);
     return Rf_ScalarReal(n_multiset_combinations(fp, flen, k));
@@ -154,7 +154,7 @@ void n_multiset_combinations_bigz(mpz_t z, int* freq, size_t flen, size_t k) {
 }
 
 SEXP num_multiset_combinations_bigz(SEXP freq, SEXP _k) {
-    int* fp = INTEGER(freq);
+    int* fp = as_uint_array(freq);
     size_t flen = Rf_length(freq);
     size_t k = as_uint(_k);
     mpz_t z;
@@ -237,13 +237,13 @@ SEXP get_multiset_combination(SEXP freq, SEXP _k, SEXP labels, SEXP _layout, SEX
     int nprotect = 0;
     SEXP result = R_NilValue;
 
-    int* fp = INTEGER(freq);
+    int* fp = as_uint_array(freq);
     size_t flen = Rf_length(freq);
     int k = as_uint(_k);
-    char layout = check_layout(_layout);
+    char layout = layout_flag(_layout);
 
     double dd = _index == R_NilValue ? as_uint(_nsample) : Rf_length(_index);
-    int d = check_dimension(dd, k, layout);
+    int d = verify_dimension(dd, k, layout);
 
     unsigned int* ap;
     ap = (unsigned int*) R_alloc(k, sizeof(int));
@@ -260,7 +260,7 @@ SEXP get_multiset_combination(SEXP freq, SEXP _k, SEXP labels, SEXP _layout, SEX
 
         if (sampling) {
             GetRNGstate();
-            set_gmp_state(randstate);
+            set_gmp_randstate(randstate);
             mpz_init(maxz);
             n_multiset_combinations_bigz(maxz, fp, flen, k);
         } else {
@@ -329,7 +329,7 @@ SEXP get_multiset_combination(SEXP freq, SEXP _k, SEXP labels, SEXP _layout, SEX
         }
     }
 
-    check_factor(result, labels);
+    attach_factor_levels(result, labels);
     UNPROTECT(nprotect);
     return result;
 }

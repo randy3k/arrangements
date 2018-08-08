@@ -7,7 +7,3 @@ convertz <- function(z, bigz){
         stop("integer overflow, consider using big integer")
     }
 }
-
-as_uint_array <- function(a) {
-    .Call("as_uint_array", PACKAGE = "arrangements", a)
-}
