@@ -4,16 +4,17 @@
 \alias{combinations}
 \title{Combinations generator}
 \usage{
-combinations(n, k, x = NULL, freq = NULL, replace = FALSE,
-  layout = "row", index = NULL, nsample = NULL)
+combinations(x, k = n, n = NULL, v = NULL, freq = NULL,
+  replace = FALSE, layout = "row", index = NULL, nsample = NULL)
 }
 \arguments{
-\item{n}{an integer. If \code{freq} is not NULL, \code{n} would be set as \code{sum(freq)},
-otherwise if \code{x} is not NULL, \code{n} would be set as \code{length(x)}.}
+\item{x}{an integer or a vector, will be treated as \code{n} if integer; otherwise, will be treated as \code{v}}
 
-\item{k}{an integer}
+\item{k}{an integer, the number of items drawn}
 
-\item{x}{an optional vector indicating item labels}
+\item{n}{an integer, the total number of items, its actual value may be determined by other variables}
+
+\item{v}{a vector to be drawn}
 
 \item{freq}{an integer vector of item repeat frequencies}
 
@@ -33,10 +34,10 @@ The results are in lexicographical order.
 \examples{
 # choose 2 from 4
 combinations(4, 2)
-combinations(x = LETTERS[1:3], k = 2)
+combinations(LETTERS[1:3], k = 2)
 
 # multiset with frequencies c(2, 3)
-combinations(freq = c(2, 3), k = 3)
+combinations(k = 3, freq = c(2, 3))
 
 # with replacement
 combinations(4, 2, replace = TRUE)

@@ -4,16 +4,17 @@
 \alias{ncombinations}
 \title{Number of combinations}
 \usage{
-ncombinations(n, k, x = NULL, freq = NULL, replace = FALSE,
-  bigz = FALSE)
+ncombinations(x, k = n, n = NULL, v = NULL, freq = NULL,
+  replace = FALSE, bigz = FALSE)
 }
 \arguments{
-\item{n}{an integer. If \code{freq} is not NULL, \code{n} would be set as \code{sum(freq)},
-otherwise if \code{x} is not NULL, \code{n} would be set as \code{length(x)}.}
+\item{x}{an integer or a vector, will be treated as \code{n} if integer; otherwise, will be treated as \code{v}}
 
-\item{k}{an integer}
+\item{k}{an integer, the number of items drawn}
 
-\item{x}{an optional vector indicating item labels}
+\item{n}{an integer, the total number of items, its actual value may be determined by other variables}
+
+\item{v}{a vector to be drawn}
 
 \item{freq}{an integer vector of item repeat frequencies}
 
@@ -26,7 +27,7 @@ Number of combinations
 }
 \examples{
 ncombinations(5, 2)
-ncombinations(x = LETTERS, k = 5)
+ncombinations(LETTERS, k = 5)
 
 # integer overflow
 \dontrun{ncombinations(40, 15)}
@@ -34,7 +35,7 @@ ncombinations(40, 15, bigz = TRUE)
 
 # number of combinations of `c("a", "b", "b")`
 # they are `c("a", "b")` and `c("b", "b")`
-ncombinations(freq = c(1, 2), k = 2)
+ncombinations(k = 2, freq = c(1, 2))
 
 # zero sized combinations
 ncombinations(5, 0)

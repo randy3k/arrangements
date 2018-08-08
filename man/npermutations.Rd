@@ -4,16 +4,17 @@
 \alias{npermutations}
 \title{Number of permutations}
 \usage{
-npermutations(n, k = n, x = NULL, freq = NULL, replace = FALSE,
-  bigz = FALSE)
+npermutations(x, k = n, n = NULL, v = NULL, freq = NULL,
+  replace = FALSE, bigz = FALSE)
 }
 \arguments{
-\item{n}{an integer. If \code{freq} is not NULL, \code{n} would be set as \code{sum(freq)},
-otherwise if \code{x} is not NULL, \code{n} would be set as \code{length(x)}.}
+\item{x}{an integer or a vector, will be treated as \code{n} if integer; otherwise, will be treated as \code{v}}
 
-\item{k}{an integer}
+\item{k}{an integer, the number of items drawn}
 
-\item{x}{an optional vector indicating item labels}
+\item{n}{an integer, the total number of items, its actual value may be determined by other variables}
+
+\item{v}{a vector to be drawn}
 
 \item{freq}{an integer vector of item repeat frequencies}
 
@@ -26,9 +27,9 @@ Number of permutations
 }
 \examples{
 npermutations(7)
-npermutations(x = LETTERS[1:5])
+npermutations(LETTERS[1:5])
 npermutations(5, 2)
-npermutations(x = LETTERS, k = 5)
+npermutations(LETTERS, k = 5)
 
 # integer overflow
 \dontrun{npermutations(14, 10)}
@@ -36,7 +37,7 @@ npermutations(14, 10, bigz = TRUE)
 
 # number of permutations of `c("a", "b", "b")`
 # they are `c("a", "b")`, `c("b", "b")` and `c("b", "b")`
-npermutations(freq = c(1, 2), k = 2)
+npermutations(k = 2, freq = c(1, 2))
 
 # zero sized partitions
 npermutations(0)

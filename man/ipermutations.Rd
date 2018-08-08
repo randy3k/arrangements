@@ -9,15 +9,17 @@
 \usage{
 Permutations
 
-ipermutations(n, k = n, x = NULL, freq = NULL, replace = FALSE)
+ipermutations(x, k = n, n = NULL, v = NULL, freq = NULL,
+  replace = FALSE)
 }
 \arguments{
-\item{n}{an integer. If \code{freq} is not NULL, \code{n} would be set as \code{sum(freq)},
-otherwise if \code{x} is not NULL, \code{n} would be set as \code{length(x)}.}
+\item{x}{an integer or a vector, will be treated as \code{n} if integer; otherwise, will be treated as \code{v}}
 
-\item{k}{an integer}
+\item{k}{an integer, the number of items drawn}
 
-\item{x}{an optional vector indicating item labels}
+\item{n}{an integer, the total number of items, its actual value may be determined by other variables}
+
+\item{v}{a vector to be drawn}
 
 \item{freq}{an integer vector of item repeat frequencies}
 
@@ -31,7 +33,7 @@ permutation(s) via the \code{getnext()} method.
 \details{
 The \code{Permutations} class can be initialized by using the convenient wrapper \code{ipermutations} or
 \preformatted{
-Permutations$new(n, k, x = NULL, freq = NULL, replace = FALSE)
+Permutations$new(n, k, v = NULL, freq = NULL, replace = FALSE)
 }
 
 \preformatted{

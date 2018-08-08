@@ -61,7 +61,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">arrangements</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">1.0.3</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">1.0.3.9999</span>
       </span>
     </div>
 
@@ -115,24 +115,27 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'>ncombinations</span>(<span class='no'>n</span>, <span class='no'>k</span>, <span class='kw'>x</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>freq</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>replace</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>bigz</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+    <pre class="usage"><span class='fu'>ncombinations</span>(<span class='no'>x</span>, <span class='kw'>k</span> <span class='kw'>=</span> <span class='no'>n</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>v</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>freq</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>replace</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>bigz</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>n</th>
-      <td><p>an integer. If <code>freq</code> is not NULL, <code>n</code> would be set as <code>sum(freq)</code>,
-otherwise if <code>x</code> is not NULL, <code>n</code> would be set as <code>length(x)</code>.</p></td>
+      <th>x</th>
+      <td><p>an integer or a vector, will be treated as <code>n</code> if integer; otherwise, will be treated as <code>v</code></p></td>
     </tr>
     <tr>
       <th>k</th>
-      <td><p>an integer</p></td>
+      <td><p>an integer, the number of items drawn</p></td>
     </tr>
     <tr>
-      <th>x</th>
-      <td><p>an optional vector indicating item labels</p></td>
+      <th>n</th>
+      <td><p>an integer, the total number of items, its actual value may be determined by other variables</p></td>
+    </tr>
+    <tr>
+      <th>v</th>
+      <td><p>a vector to be drawn</p></td>
     </tr>
     <tr>
       <th>freq</th>
@@ -154,7 +157,7 @@ otherwise if <code>x</code> is not NULL, <code>n</code> would be set as <code>le
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>ncombinations</span>(<span class='fl'>5</span>, <span class='fl'>2</span>)</div><div class='output co'>#&gt; [1] 10</div><div class='input'><span class='fu'>ncombinations</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>LETTERS</span>, <span class='kw'>k</span> <span class='kw'>=</span> <span class='fl'>5</span>)</div><div class='output co'>#&gt; [1] 65780</div><div class='input'>
+    <pre class="examples"><div class='input'><span class='fu'>ncombinations</span>(<span class='fl'>5</span>, <span class='fl'>2</span>)</div><div class='output co'>#&gt; [1] 10</div><div class='input'><span class='fu'>ncombinations</span>(<span class='no'>LETTERS</span>, <span class='kw'>k</span> <span class='kw'>=</span> <span class='fl'>5</span>)</div><div class='output co'>#&gt; [1] 65780</div><div class='input'>
 # integer overflow
 </div><span class='co'># NOT RUN {</span>
 <span class='fu'>ncombinations</span>(<span class='fl'>40</span>, <span class='fl'>15</span>)
@@ -162,7 +165,7 @@ otherwise if <code>x</code> is not NULL, <code>n</code> would be set as <code>le
 #&gt; [1] 40225345056</div><div class='input'>
 <span class='co'># number of combinations of `c("a", "b", "b")`</span>
 <span class='co'># they are `c("a", "b")` and `c("b", "b")`</span>
-<span class='fu'>ncombinations</span>(<span class='kw'>freq</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>1</span>, <span class='fl'>2</span>), <span class='kw'>k</span> <span class='kw'>=</span> <span class='fl'>2</span>)</div><div class='output co'>#&gt; [1] 2</div><div class='input'>
+<span class='fu'>ncombinations</span>(<span class='kw'>k</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>freq</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>1</span>, <span class='fl'>2</span>))</div><div class='output co'>#&gt; [1] 2</div><div class='input'>
 <span class='co'># zero sized combinations</span>
 <span class='fu'>ncombinations</span>(<span class='fl'>5</span>, <span class='fl'>0</span>)</div><div class='output co'>#&gt; [1] 1</div><div class='input'><span class='fu'>ncombinations</span>(<span class='fl'>5</span>, <span class='fl'>6</span>)</div><div class='output co'>#&gt; [1] 0</div><div class='input'><span class='fu'>ncombinations</span>(<span class='fl'>0</span>, <span class='fl'>1</span>)</div><div class='output co'>#&gt; [1] 0</div><div class='input'><span class='fu'>ncombinations</span>(<span class='fl'>0</span>, <span class='fl'>0</span>)</div><div class='output co'>#&gt; [1] 1</div><div class='input'>
 </div></pre>

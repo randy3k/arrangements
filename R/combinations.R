@@ -181,13 +181,13 @@ combinations <- function(
         x, k = n, n = NULL, v = NULL, freq = NULL, replace = FALSE, layout = "row",
         index = NULL, nsample = NULL) {
     if (missing(x)) {
-        n <- validate_n_value(n, v, freq)
+        n <- validate_n_value(n, v, freq, replace)
     } else {
         if (length(x) == 1 && is.numeric(x)) {
             n <- validate_n_value(x, v, freq)
         } else {
             v <- x
-            n <- validate_n_value(n, v, freq)
+            n <- validate_n_value(n, v, freq, replace)
         }
     }
     (k %% 1 == 0 && k >= 0) || stop("expect non-negative integer")
@@ -234,13 +234,13 @@ combinations <- function(
 #' @export
 icombinations <- function(x, k = n, n = NULL, v = NULL, freq = NULL, replace = FALSE) {
     if (missing(x)) {
-        n <- validate_n_value(n, v, freq)
+        n <- validate_n_value(n, v, freq, replace)
     } else {
         if (length(x) == 1 && is.numeric(x)) {
             n <- validate_n_value(x, v, freq)
         } else {
             v <- x
-            n <- validate_n_value(n, v, freq)
+            n <- validate_n_value(n, v, freq, replace)
         }
     }
     (k %% 1 == 0 && k >= 0) || stop("expect non-negative integer")
@@ -273,13 +273,13 @@ icombinations <- function(x, k = n, n = NULL, v = NULL, freq = NULL, replace = F
 #' @export
 ncombinations <- function(x, k = n, n = NULL, v = NULL, freq = NULL, replace = FALSE, bigz = FALSE) {
     if (missing(x)) {
-        n <- validate_n_value(n, v, freq)
+        n <- validate_n_value(n, v, freq, replace)
     } else {
         if (length(x) == 1 && is.numeric(x)) {
             n <- validate_n_value(x, v, freq)
         } else {
             v <- x
-            n <- validate_n_value(n, v, freq)
+            n <- validate_n_value(n, v, freq, replace)
         }
     }
     (k %% 1 == 0 && k >= 0) || stop("expect non-negative integer")

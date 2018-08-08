@@ -258,41 +258,6 @@ double multichoose(int* freq, size_t flen) {
     return out;
 }
 
-SEXP verify_parameters(SEXP _n, SEXP _k, SEXP _x, SEXP _freq){
-    int i;
-    int n;
-    int t = 0;
-    int* fp;
-    if (_n != R_NilValue) n = as_uint(_n);
-    if (_k != R_NilValue) as_uint(_k);
-    if (_freq != R_NilValue) {
-        fp = as_uint_array(_k);
-        for (i = 0; i < Rf_length(_freq); i++) {
-            t += fp[i];
-        }
-        if (_n != R_NilValue) {
-            if (t != n) {
-                Rf_error("n should equal to sum(freq)");
-            }
-        } else  {
-            n = t;
-        }
-    }
-    if (_x != R_NilValue) {
-        if (_freq != R_NilValue) {
-            if (Rf_length(_x) != n) {
-                Rf_error("length of x and freq should be the same");
-            }
-        }
-        if (_n != R_NilValue) {
-            if (Rf_length(_x) != n) {
-                Rf_error("n should equal to length(x)");
-            }
-        }
-    }
-    return Rf_ScalarInteger(n);
-}
-
 // from RNG.c
 static SEXP GetSeedsFromVar(void)
 {
