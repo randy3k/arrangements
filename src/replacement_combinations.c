@@ -102,32 +102,103 @@ void ith_replacement_combination_bigz(unsigned int* ar, unsigned int n, unsigned
     mpz_clear(this_count);
 }
 
-SEXP get_ith_replacement_combination(SEXP _n, SEXP _k, SEXP _index) {
-    unsigned int i;
+SEXP get_replacement_combination(SEXP _n, SEXP _k, SEXP labels, SEXP _layout, SEXP _index, SEXP _nsample) {
+    int i, j;
+    int nprotect = 0;
+    SEXP result = R_NilValue;
+
     int n = as_uint(_n);
     int k = as_uint(_k);
-    SEXP as = PROTECT(Rf_allocVector(INTSXP, k));
-    unsigned int* ar = (unsigned int*) INTEGER(as);
+    char layout = check_layout(_layout);
 
-    if (TYPEOF(_index) == STRSXP || choose(n + k - 1, k) > INT_MAX) {
+    double dd = _index == R_NilValue ? as_uint(_nsample) : Rf_length(_index);
+    int d = check_dimension(dd, k, layout);
+
+    unsigned int* ap;
+    ap = (unsigned int*) R_alloc(k, sizeof(int));
+
+    double max = choose(n + k - 1, k);
+    int sampling = _index == R_NilValue;
+    int bigz = TYPEOF(_index) == STRSXP || max > INT_MAX;
+
+    if (bigz) {
+        gmp_randstate_t randstate;
         mpz_t z;
+        mpz_t maxz;
         mpz_init(z);
 
-        if (TYPEOF(_index) == STRSXP) {
-            mpz_set_str(z, CHAR(STRING_ELT(_index, 0)), 10);
-            mpz_sub_ui(z, z, 1);
+        if (sampling) {
+            GetRNGstate();
+            set_gmp_state(randstate);
+            mpz_init(maxz);
+            mpz_bin_uiui(maxz, n + k - 1, k);
         } else {
-            mpz_set_ui(z, as_uint(_index) - 1);
+            if (TYPEOF(_index) != STRSXP) {
+                _index = Rf_coerceVector(_index, STRSXP);
+            }
         }
-        ith_replacement_combination_bigz(ar, n, k, z);
+
+        #undef NEXT
+        #define NEXT() \
+            if (sampling) { \
+                mpz_urandomm(z, randstate, maxz); \
+            } else { \
+                mpz_set_str(z, CHAR(STRING_ELT(_index, j)), 10); \
+                mpz_sub_ui(z, z, 1); \
+            } \
+            ith_replacement_combination_bigz(ap, n, k, z);
+
+        int labels_type = TYPEOF(labels);
+        if (labels_type == NILSXP) {
+            RESULT_NILSXP(k);
+        } else if (labels_type == INTSXP) {
+            RESULT_INTSXP(k);
+        } else if (labels_type == REALSXP) {
+            RESULT_REALSXP(k);
+        } else if (labels_type == STRSXP) {
+            RESULT_STRSXP(k);
+        }
+
         mpz_clear(z);
+        if (sampling){
+            mpz_clear(maxz);
+            gmp_randclear(randstate);
+            PutRNGstate();
+        }
+
     } else {
-        ith_replacement_combination(ar, n, k, as_uint(_index) - 1);
+        int* index;
+        if (sampling) {
+            GetRNGstate();
+        } else {
+            index = INTEGER(_index);
+        }
+
+        #undef NEXT
+        #define NEXT() \
+            if (sampling) { \
+                ith_replacement_combination(ap, n, k, floor(max * unif_rand())); \
+            } else { \
+                ith_replacement_combination(ap, n, k, index[j] - 1); \
+            }
+
+        int labels_type = TYPEOF(labels);
+        if (labels_type == NILSXP) {
+            RESULT_NILSXP(k);
+        } else if (labels_type == INTSXP) {
+            RESULT_INTSXP(k);
+        } else if (labels_type == REALSXP) {
+            RESULT_REALSXP(k);
+        } else if (labels_type == STRSXP) {
+            RESULT_STRSXP(k);
+        }
+
+        if (sampling){
+            PutRNGstate();
+        }
     }
 
-    for (i = 0; i < k; i++) {
-        ar[i]++;
-    }
-    UNPROTECT(1);
-    return as;
+    check_factor(result, labels);
+    UNPROTECT(nprotect);
+    return result;
 }

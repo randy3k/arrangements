@@ -339,17 +339,17 @@ npermutations <- function(n, k = n, x = NULL, freq = NULL, replace = FALSE, bigz
 }
 
 #' @export
-xpermutations <- function(n, k = n, x = NULL, freq = NULL, replace = FALSE, index = 1) {
+spermutations <- function(n, k = n, x = NULL, freq = NULL, replace = FALSE, layout = "row", index = NULL, nsample = 1L) {
     if (gmp::is.bigz(index)) {
         index <- as.character(index)
     }
     if (replace) {
-        .Call("get_ith_replacement_permutation", PACKAGE = "arrangements", n, k, index)
+        .Call("get_replacement_permutation", PACKAGE = "arrangements", n, k, x, layout, index, nsample)
     } else if (!is.null(freq)) {
-        .Call("get_ith_multiset_permutation", PACKAGE = "arrangements", as_uint_array(freq), k, index)
+        .Call("get_multiset_permutation", PACKAGE = "arrangements", as_uint_array(freq), k, x, layout, index, nsample)
     } else if (k == n) {
-        .Call("get_ith_permutation", PACKAGE = "arrangements", n, index)
+        .Call("get_permutation", PACKAGE = "arrangements", n, x, layout, index, nsample)
     } else {
-        .Call("get_ith_k_permutation", PACKAGE = "arrangements", n, k, index)
+        .Call("get_k_permutations", PACKAGE = "arrangements", n, k, x, layout, index, nsample)
     }
 }

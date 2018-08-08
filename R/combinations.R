@@ -300,15 +300,17 @@ ncombinations <- function(n, k, x = NULL, freq  =NULL, replace = FALSE, bigz = F
 
 
 #' @export
-xcombinations <- function(n, k = n, x = NULL, freq = NULL, replace = FALSE, index = 1) {
+scombinations <- function(n, k = n, x = NULL, freq = NULL, replace = FALSE, layout = "row", index = NULL, nsample = 1L) {
     if (gmp::is.bigz(index)) {
         index <- as.character(index)
+    } else if (is.numeric(index)) {
+        index <- as_uint_array(index)
     }
     if (replace) {
-        .Call("get_ith_replacement_combination", PACKAGE = "arrangements", n, k, index)
+        .Call("get_replacement_combination", PACKAGE = "arrangements", n, k, x, layout, index, nsample)
     } else if (!is.null(freq)) {
-        .Call("get_ith_multiset_combination", PACKAGE = "arrangements", as_uint_array(freq), k, index)
+        .Call("get_multiset_combination", PACKAGE = "arrangements", as_uint_array(freq), k, x, layout, index, nsample)
     } else {
-        .Call("get_ith_combination", PACKAGE = "arrangements", n, k, index)
+        .Call("get_combinations", PACKAGE = "arrangements", n, k, x, layout, index, nsample)
     }
 }

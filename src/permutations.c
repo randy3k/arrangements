@@ -164,31 +164,102 @@ void ith_permutation_bigz(unsigned int* ar, unsigned int n, mpz_t index) {
     free(fact);
 }
 
-SEXP get_ith_permutation(SEXP _n, SEXP _index) {
-    unsigned int i;
-    int n = as_uint(_n);
-    SEXP as = PROTECT(Rf_allocVector(INTSXP, n));
-    unsigned int* ar = (unsigned int*) INTEGER(as);
+SEXP get_permutation(SEXP _n, SEXP labels, SEXP _layout, SEXP _index, SEXP _nsample) {
+    int i, j;
+    int nprotect = 0;
+    SEXP result = R_NilValue;
 
-    if (TYPEOF(_index) == STRSXP || n > 12) {
+    int n = as_uint(_n);
+    char layout = check_layout(_layout);
+
+    double dd = _index == R_NilValue ? as_uint(_nsample) : Rf_length(_index);
+    int d = check_dimension(dd, n, layout);
+
+    unsigned int* ap;
+    ap = (unsigned int*) R_alloc(n, sizeof(int));
+
+    double max = fact(n);
+    int sampling = _index == R_NilValue;
+    int bigz = TYPEOF(_index) == STRSXP || max > INT_MAX;
+
+    if (bigz) {
+        gmp_randstate_t randstate;
         mpz_t z;
+        mpz_t maxz;
         mpz_init(z);
 
-        if (TYPEOF(_index) == STRSXP) {
-            mpz_set_str(z, CHAR(STRING_ELT(_index, 0)), 10);
-            mpz_sub_ui(z, z, 1);
+        if (sampling) {
+            GetRNGstate();
+            set_gmp_state(randstate);
+            mpz_init(maxz);
+            mpz_fac_ui(maxz, n);
         } else {
-            mpz_set_ui(z, as_uint(_index) - 1);
+            if (TYPEOF(_index) != STRSXP) {
+                _index = Rf_coerceVector(_index, STRSXP);
+            }
         }
-        ith_permutation_bigz(ar, n, z);
+
+        #undef NEXT
+        #define NEXT() \
+            if (sampling) { \
+                mpz_urandomm(z, randstate, maxz); \
+            } else { \
+                mpz_set_str(z, CHAR(STRING_ELT(_index, j)), 10); \
+                mpz_sub_ui(z, z, 1); \
+            } \
+            ith_permutation_bigz(ap, n, z);
+
+        int labels_type = TYPEOF(labels);
+        if (labels_type == NILSXP) {
+            RESULT_NILSXP(n);
+        } else if (labels_type == INTSXP) {
+            RESULT_INTSXP(n);
+        } else if (labels_type == REALSXP) {
+            RESULT_REALSXP(n);
+        } else if (labels_type == STRSXP) {
+            RESULT_STRSXP(n);
+        }
+
         mpz_clear(z);
+        if (sampling){
+            mpz_clear(maxz);
+            gmp_randclear(randstate);
+            PutRNGstate();
+        }
+
     } else {
-        ith_permutation(ar, n, as_uint(_index) - 1);
+        int* index;
+        if (sampling) {
+            GetRNGstate();
+        } else {
+            index = INTEGER(_index);
+        }
+
+        #undef NEXT
+        #define NEXT() \
+            if (sampling) { \
+                ith_permutation(ap, n, floor(max * unif_rand())); \
+            } else { \
+                ith_permutation(ap, n, index[j] - 1); \
+            }
+
+        int labels_type = TYPEOF(labels);
+        if (labels_type == NILSXP) {
+            RESULT_NILSXP(n);
+        } else if (labels_type == INTSXP) {
+            RESULT_INTSXP(n);
+        } else if (labels_type == REALSXP) {
+            RESULT_REALSXP(n);
+        } else if (labels_type == STRSXP) {
+            RESULT_STRSXP(n);
+        }
+
+        if (sampling){
+            PutRNGstate();
+        }
     }
 
-    for (i = 0; i < n; i++) {
-        ar[i]++;
-    }
-    UNPROTECT(1);
-    return as;
+    check_factor(result, labels);
+    UNPROTECT(nprotect);
+    return result;
 }

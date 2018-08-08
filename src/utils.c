@@ -260,3 +260,33 @@ double multichoose(int* freq, size_t flen) {
     }
     return out;
 }
+
+// from RNG.c
+static SEXP GetSeedsFromVar(void)
+{
+    SEXP seeds = Rf_findVarInFrame(R_GlobalEnv, R_SeedsSymbol);
+    if (TYPEOF(seeds) == PROMSXP)
+    seeds = Rf_eval(R_SeedsSymbol, R_GlobalEnv);
+    return seeds;
+}
+
+void set_gmp_state(gmp_randstate_t randstate) {
+    int i;
+    mpz_t z;
+    mpz_init(z);
+
+    SEXP seeds = GetSeedsFromVar();
+    if (seeds == R_UnboundValue) {
+        PutRNGstate();
+        seeds = GetSeedsFromVar();
+    }
+
+    unsigned int* seedsp = (unsigned int*) INTEGER(seeds);
+    mpz_set_ui(z, round(INT_MAX * unif_rand()));
+    for (i = 0; i < Rf_length(seeds); i++) {
+        mpz_add_ui(z, z, INT_MAX * seedsp[i]);
+    }
+    gmp_randinit_mt(randstate);
+    gmp_randseed(randstate, z);
+    mpz_clear(z);
+}
