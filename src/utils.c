@@ -281,7 +281,7 @@ void set_gmp_randstate(gmp_randstate_t randstate) {
     unsigned int* seedsp = (unsigned int*) INTEGER(seeds);
     mpz_set_ui(z, round(INT_MAX * unif_rand()));
     for (i = 0; i < Rf_length(seeds); i++) {
-        mpz_add_ui(z, z, INT_MAX * seedsp[i]);
+        mpz_add_ui(z, z, seedsp[i] << 16);
     }
     gmp_randinit_mt(randstate);
     gmp_randseed(randstate, z);
