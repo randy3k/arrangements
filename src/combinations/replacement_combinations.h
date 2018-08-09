@@ -3,22 +3,18 @@
 #include <Rinternals.h>
 #include <gmp.h>
 #include "../combinatorics.h"
-#include "../utils.h"
 #include "../macros.h"
+#include "../utils.h"
 
 
-SEXP next_replacement_combinations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP labels, SEXP _layout) {
+SEXP next_replacement_combinations(int n, int k, SEXP labels, char layout, int d, SEXP state) {
     int i, j;
     int nprotect = 0;
     int status = 1;
     SEXP result;
 
-    int n = as_uint(_n);
-    int k = as_uint(_k);
-    char layout = layout_flag(_layout);
-
-    double dd = Rf_asInteger(_d) == -1 ? choose(n + k - 1, k) : as_uint(_d);
-    int d = verify_dimension(dd, k, layout);
+    double dd = d == -1 ? choose(n + k - 1, k) : d;
+    d = verify_dimension(dd, k, layout);
 
     unsigned int* ap;
 

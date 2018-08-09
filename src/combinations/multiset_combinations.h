@@ -3,31 +3,29 @@
 #include <Rinternals.h>
 #include <gmp.h>
 #include "../combinatorics.h"
-#include "../utils.h"
 #include "../macros.h"
+#include "../utils.h"
 
-double n_multiset_combinations(int* freq, size_t flen, size_t k);
+double n_multiset_combinations(int* fp, size_t flen, size_t k);
 
-SEXP next_multiset_combinations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP labels, SEXP freq, SEXP _layout) {
+SEXP next_multiset_combinations(int* fp, size_t flen, int k, SEXP labels, char layout, int d, SEXP state) {
     int i, j, h;
     int nprotect = 0;
     int status = 1;
     SEXP result;
 
-    int n = as_uint(_n);
-    int k = as_uint(_k);
-    int* fp = as_uint_array(freq);
-    char layout = layout_flag(_layout);
+    int n = 0;
+    for (i=0; i<flen; i++) n += fp[i];
 
-    double dd = Rf_asInteger(_d) == -1 ? n_multiset_combinations(fp, Rf_length(freq), k) : as_uint(_d);
-    int d = verify_dimension(dd, k, layout);
+    double dd = d == -1 ? n_multiset_combinations(fp, flen, k) : d;
+    d = verify_dimension(dd, k, layout);
 
     unsigned int* mp;
     unsigned int* ap;
 
     if (!variable_exist(state, "m", INTSXP, n, (void**) &mp)) {
         h = 0;
-        for (i = 0; i < Rf_length(freq); i++) {
+        for (i = 0; i < flen; i++) {
             for (j = 0; j < fp[i]; j++) {
                 mp[h++] = i;
             }
@@ -72,10 +70,10 @@ SEXP next_multiset_combinations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP labe
 }
 
 
-double n_multiset_combinations(int* freq, size_t flen, size_t k) {
+double n_multiset_combinations(int* fp, size_t flen, size_t k) {
     int n = 0;
     int i, j, h;
-    for (i=0; i<flen; i++) n += freq[i];
+    for (i=0; i<flen; i++) n += fp[i];
     if (k > n) {
         return 0;
     }
@@ -87,21 +85,21 @@ double n_multiset_combinations(int* freq, size_t flen, size_t k) {
 
     for (i=0; i<flen; i++) {
         if (i == 0) {
-            for (j=0; j<=k && j<=freq[i]; j++) {
+            for (j=0; j<=k && j<=fp[i]; j++) {
                 p[j] = 1;
             }
             ptemp = p[k];
         } else if (i < flen - 1){
             for (j=k; j>0; j--) {
                 ptemp = 0;
-                for(h=0; h<=freq[i] && h<=j; h++) {
+                for(h=0; h<=fp[i] && h<=j; h++) {
                     ptemp += p[j-h];
                 }
                 p[j] = ptemp;
             }
         } else {
             ptemp = 0;
-            for(h=0; h<=freq[i] && h<=k; h++) {
+            for(h=0; h<=fp[i] && h<=k; h++) {
                 ptemp += p[k-h];
             }
         }
@@ -111,17 +109,10 @@ double n_multiset_combinations(int* freq, size_t flen, size_t k) {
     return ptemp;
 }
 
-SEXP num_multiset_combinations(SEXP freq, SEXP _k) {
-    int* fp = as_uint_array(freq);
-    size_t flen = Rf_length(freq);
-    size_t k = as_uint(_k);
-    return Rf_ScalarReal(n_multiset_combinations(fp, flen, k));
-}
-
-void n_multiset_combinations_bigz(mpz_t z, int* freq, size_t flen, size_t k) {
+void n_multiset_combinations_bigz(mpz_t z, int* fp, size_t flen, size_t k) {
     int n = 0;
     int i, j, h;
-    for (i=0; i<flen; i++) n += freq[i];
+    for (i=0; i<flen; i++) n += fp[i];
     if (k > n) {
         mpz_set_ui(z, 0);
         return;
@@ -132,49 +123,35 @@ void n_multiset_combinations_bigz(mpz_t z, int* freq, size_t flen, size_t k) {
 
     for (i=0; i<flen; i++) {
         if (i == 0) {
-            for (j=0; j<=k && j<=freq[i]; j++) {
+            for (j=0; j<=k && j<=fp[i]; j++) {
                 mpz_set_ui(p[j], 1);
             }
             mpz_set(z, p[k]);
         } else if (i < flen - 1){
             for (j=k; j>0; j--) {
                 mpz_set_ui(z, 0);
-                for(h=0; h<=freq[i] && h<=j; h++) {
+                for(h=0; h<=fp[i] && h<=j; h++) {
                     mpz_add(z, z, p[j-h]);
                 }
                 mpz_set(p[j], z);
             }
         } else {
             mpz_set_ui(z, 0);
-            for(h=0; h<=freq[i] && h<=k; h++) {
+            for(h=0; h<=fp[i] && h<=k; h++) {
                 mpz_add(z, z, p[k-h]);
             }
         }
     }
 }
 
-SEXP num_multiset_combinations_bigz(SEXP freq, SEXP _k) {
-    int* fp = as_uint_array(freq);
-    size_t flen = Rf_length(freq);
-    size_t k = as_uint(_k);
-    mpz_t z;
-    mpz_init(z);
-    n_multiset_combinations_bigz(z, fp, flen, k);
-    char* c = mpz_get_str(NULL, 10, z);
-    SEXP out = Rf_mkString(c);
-    mpz_clear(z);
-    free(c);
-    return out;
-}
 
-
-void ith_multiset_combination(unsigned int* ar, int* freq, size_t flen, size_t k, unsigned int index) {
+void ith_multiset_combination(unsigned int* ar, int* fp, size_t flen, size_t k, unsigned int index) {
     unsigned int i, j;
     unsigned int start = 0;
     unsigned int count, this_count;
     int* subfreq = (int*) malloc(flen * sizeof(int));
 
-    for (i = 0; i < flen; i++) subfreq[i] = freq[i];
+    for (i = 0; i < flen; i++) subfreq[i] = fp[i];
 
     for (i = 0; i < k; i++) {
         count = 0;
@@ -196,7 +173,7 @@ void ith_multiset_combination(unsigned int* ar, int* freq, size_t flen, size_t k
     free(subfreq);
 }
 
-void ith_multiset_combination_bigz(unsigned int* ar, int* freq, size_t flen, size_t k, mpz_t index) {
+void ith_multiset_combination_bigz(unsigned int* ar, int* fp, size_t flen, size_t k, mpz_t index) {
     unsigned int i, j;
     unsigned int start = 0;
     mpz_t count;
@@ -206,7 +183,7 @@ void ith_multiset_combination_bigz(unsigned int* ar, int* freq, size_t flen, siz
 
     int* subfreq = (int*) malloc(flen * sizeof(int));
 
-    for (i = 0; i < flen; i++) subfreq[i] = freq[i];
+    for (i = 0; i < flen; i++) subfreq[i] = fp[i];
 
     for (i = 0; i < k; i++) {
         mpz_set_ui(count, 0);

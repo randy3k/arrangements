@@ -120,6 +120,7 @@ char layout_flag(SEXP _layout) {
 }
 
 int verify_dimension(double dd, int k, char layout) {
+    if (dd <= 0) Rf_error("d should be positive");
     if (dd > INT_MAX) Rf_error("too many results");
     if (layout != 'l') {
         if (dd * k > R_XLEN_T_MAX) Rf_error("too many results");
@@ -202,9 +203,9 @@ int* as_uint_array(SEXP x) {
     return NULL;
 }
 
-double fact(size_t n) {
+double fact(int n) {
     double out;
-    size_t i;
+    int i;
     out = 1;
     for(i=0; i<n; i++) {
         out = out * (n - i);
@@ -212,9 +213,9 @@ double fact(size_t n) {
     return out;
 }
 
-double fallfact(size_t n, size_t k) {
+double fallfact(int n, int k) {
     double out;
-    size_t i;
+    int i;
     if (n < k) {
         return 0;
     }
@@ -226,20 +227,20 @@ double fallfact(size_t n, size_t k) {
 }
 
 
-double choose(size_t n, size_t k) {
+double choose(int n, int k) {
     double out = 1;
-    size_t h, i;
-    if (n < k) {
+    int i;
+    if (n >= 0 && n < k) {
         return 0;
+    } else if (k == 0) {
+        return 1;
     }
-    h = 0;
-    for (i=1; i<=k; i++){
-        h++;
-        out = out * h / i;
-    }
-    for (i=1; i<=n-k; i++){
-        h++;
-        out = out * h / i;
+
+    if (k > n / 2) k = n - k;
+
+    for (i = 1; i <= k; i++) {
+        out *= n - k + i;
+        out /= i;
     }
 
     return out;

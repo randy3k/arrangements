@@ -26,11 +26,11 @@ int as_uint(SEXP x);
 
 int* as_uint_array(SEXP x);
 
-double fact(size_t n);
+double fact(int n);
 
-double fallfact(size_t n, size_t k);
+double fallfact(int n, int k);
 
-double choose(size_t n, size_t k);
+double choose(int n, int k);
 
 double multichoose(int* f, size_t flen);
 

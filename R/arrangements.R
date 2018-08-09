@@ -2,6 +2,7 @@
 #' @docType package
 #' @importFrom methods new
 #' @importFrom R6 R6Class
+#' @import gmp
 #' @useDynLib arrangements
 "_PACKAGE"
 

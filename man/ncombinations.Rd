@@ -4,7 +4,7 @@
 \alias{ncombinations}
 \title{Number of combinations}
 \usage{
-ncombinations(x, k = n, n = NULL, v = NULL, freq = NULL,
+ncombinations(x = NULL, k = n, n = NULL, v = NULL, freq = NULL,
   replace = FALSE, bigz = FALSE)
 }
 \arguments{
