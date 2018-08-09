@@ -136,7 +136,7 @@ next_combinations <- function(n, k, d, state, v, freq, replace, layout) {
         out <- .Call("next_multiset_combinations", PACKAGE = "arrangements",
                         n, k, d, state, v, freq, layout)
     } else {
-        out <- .Call("next_combinations", PACKAGE = "arrangements",
+        out <- .Call("next_ordinary_combinations", PACKAGE = "arrangements",
                         n, k, d, state, v, layout)
     }
     out
@@ -199,13 +199,13 @@ combinations <- function(
             index <- as.character(index)
         }
         if (replace) {
-            .Call("get_replacement_combination", PACKAGE = "arrangements",
+            .Call("get_replacement_combinations", PACKAGE = "arrangements",
                     n, k, v, layout, index, nsample)
         } else if (!is.null(freq)) {
             .Call("get_multiset_combination", PACKAGE = "arrangements",
                     freq, k, v, layout, index, nsample)
         } else {
-            .Call("get_combinations", PACKAGE = "arrangements", n, k, v, layout, index, nsample)
+            .Call("get_ordinary_combinations", PACKAGE = "arrangements", n, k, v, layout, index, nsample)
         }
     }
 }

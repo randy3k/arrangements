@@ -6,7 +6,7 @@
 #include "../utils.h"
 #include "../macros.h"
 
-SEXP next_permutations(SEXP _n, SEXP _d, SEXP state, SEXP labels, SEXP freq, SEXP _layout) {
+SEXP next_ordinary_permutations(SEXP _n, SEXP _d, SEXP state, SEXP labels, SEXP freq, SEXP _layout) {
     int i, j, h;
     int nprotect = 0;
     int status = 1;
@@ -108,7 +108,7 @@ SEXP num_multiset_n_permutations_bigz(SEXP freq) {
     return out;
 }
 
-void ith_permutation(unsigned int* ar, unsigned int n, unsigned int index) {
+void ith_ordinary_permutation(unsigned int* ar, unsigned int n, unsigned int index) {
     unsigned int i, j;
     unsigned int* fact = (unsigned int*) malloc(n * sizeof(unsigned int));
 
@@ -133,7 +133,7 @@ void ith_permutation(unsigned int* ar, unsigned int n, unsigned int index) {
     free(fact);
 }
 
-void ith_permutation_bigz(unsigned int* ar, unsigned int n, mpz_t index) {
+void ith_ordinary_permutation_bigz(unsigned int* ar, unsigned int n, mpz_t index) {
     unsigned int i, j;
 
     mpz_t q;
@@ -164,7 +164,7 @@ void ith_permutation_bigz(unsigned int* ar, unsigned int n, mpz_t index) {
     free(fact);
 }
 
-SEXP get_permutation(SEXP _n, SEXP labels, SEXP _layout, SEXP _index, SEXP _nsample) {
+SEXP get_ordinary_permutations(SEXP _n, SEXP labels, SEXP _layout, SEXP _index, SEXP _nsample) {
     int i, j;
     int nprotect = 0;
     SEXP result = R_NilValue;
@@ -207,7 +207,7 @@ SEXP get_permutation(SEXP _n, SEXP labels, SEXP _layout, SEXP _index, SEXP _nsam
                 mpz_set_str(z, CHAR(STRING_ELT(_index, j)), 10); \
                 mpz_sub_ui(z, z, 1); \
             } \
-            ith_permutation_bigz(ap, n, z);
+            ith_ordinary_permutation_bigz(ap, n, z);
 
         int labels_type = TYPEOF(labels);
         if (labels_type == NILSXP) {
@@ -238,9 +238,9 @@ SEXP get_permutation(SEXP _n, SEXP labels, SEXP _layout, SEXP _index, SEXP _nsam
         #undef NEXT
         #define NEXT() \
             if (sampling) { \
-                ith_permutation(ap, n, floor(max * unif_rand())); \
+                ith_ordinary_permutation(ap, n, floor(max * unif_rand())); \
             } else { \
-                ith_permutation(ap, n, index[j] - 1); \
+                ith_ordinary_permutation(ap, n, index[j] - 1); \
             }
 
         int labels_type = TYPEOF(labels);

@@ -138,7 +138,7 @@ next_permutations <- function(n, k, d, state, v, freq, replace, layout) {
         }
     } else if (n == k) {
         # next_permutations can also handle multiset with r=n
-        out <- .Call("next_permutations", PACKAGE = "arrangements",
+        out <- .Call("next_ordinary_permutations", PACKAGE = "arrangements",
                         n, d, state, v, freq, layout)
     } else if (!is.null(freq)) {
         out <- .Call("next_multiset_permutations", PACKAGE = "arrangements",
@@ -212,13 +212,13 @@ permutations <- function(
             index <- as.character(index)
         }
         if (replace) {
-            .Call("get_replacement_permutation", PACKAGE = "arrangements",
+            .Call("get_replacement_permutations", PACKAGE = "arrangements",
                 n, k, v, layout, index, nsample)
         } else if (!is.null(freq)) {
             .Call("get_multiset_permutation", PACKAGE = "arrangements",
                 freq, k, v, layout, index, nsample)
         } else if (k == n) {
-            .Call("get_permutation", PACKAGE = "arrangements", n, v, layout, index, nsample)
+            .Call("get_ordinary_permutations", PACKAGE = "arrangements", n, v, layout, index, nsample)
         } else {
             .Call("get_k_permutations", PACKAGE = "arrangements", n, k, v, layout, index, nsample)
         }

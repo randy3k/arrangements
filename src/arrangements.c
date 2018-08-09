@@ -7,8 +7,8 @@
 #include "utils.h"
 
 static const R_CallMethodDef CallEntries[] = {
-    {"next_combinations", (DL_FUNC) &next_combinations, 6},
-    {"get_combinations", (DL_FUNC) &get_combinations, 6},
+    {"next_ordinary_combinations", (DL_FUNC) &next_ordinary_combinations, 6},
+    {"get_ordinary_combinations", (DL_FUNC) &get_ordinary_combinations, 6},
     {"next_asc_k_partitions", (DL_FUNC) &next_asc_k_partitions, 5},
     {"next_desc_k_partitions", (DL_FUNC) &next_desc_k_partitions, 5},
     {"num_k_partitions", (DL_FUNC) &num_k_partitions, 2},
@@ -29,14 +29,14 @@ static const R_CallMethodDef CallEntries[] = {
     {"next_desc_partitions", (DL_FUNC) &next_desc_partitions, 4},
     {"num_partitions", (DL_FUNC) &num_partitions, 1},
     {"num_partitions_bigz", (DL_FUNC) &num_partitions_bigz, 1},
-    {"next_permutations", (DL_FUNC) &next_permutations, 6},
+    {"next_ordinary_permutations", (DL_FUNC) &next_ordinary_permutations, 6},
     {"num_multiset_n_permutations", (DL_FUNC) &num_multiset_n_permutations, 1},
     {"num_multiset_n_permutations_bigz", (DL_FUNC) &num_multiset_n_permutations_bigz, 1},
-    {"get_permutation", (DL_FUNC) &get_permutation, 5},
+    {"get_ordinary_permutations", (DL_FUNC) &get_ordinary_permutations, 5},
     {"next_replacement_combinations", (DL_FUNC) &next_replacement_combinations, 6},
-    {"get_replacement_combination", (DL_FUNC) &get_replacement_combination, 6},
+    {"get_replacement_combinations", (DL_FUNC) &get_replacement_combinations, 6},
     {"next_replacement_permutations", (DL_FUNC) &next_replacement_permutations, 6},
-    {"get_replacement_permutation", (DL_FUNC) &get_replacement_permutation, 6},
+    {"get_replacement_permutations", (DL_FUNC) &get_replacement_permutations, 6},
     {NULL, NULL, 0}
 };
 

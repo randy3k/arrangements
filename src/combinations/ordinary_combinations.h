@@ -9,7 +9,7 @@
 #include "../macros.h"
 
 
-SEXP next_combinations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP labels, SEXP _layout) {
+SEXP next_ordinary_combinations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP labels, SEXP _layout) {
     int i, j;
     int nprotect = 0;
     int status = 1;
@@ -59,7 +59,7 @@ SEXP next_combinations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP labels, SEXP 
 }
 
 
-void ith_combination(unsigned int* ar, unsigned int n, unsigned int k, unsigned int index) {
+void ith_ordinary_combination(unsigned int* ar, unsigned int n, unsigned int k, unsigned int index) {
     unsigned int i, j;
     unsigned int start = 0;
     unsigned int count, this_count;
@@ -79,7 +79,7 @@ void ith_combination(unsigned int* ar, unsigned int n, unsigned int k, unsigned 
     }
 }
 
-void ith_combination_bigz(unsigned int* ar, unsigned int n, unsigned int k, mpz_t index) {
+void ith_ordinary_combination_bigz(unsigned int* ar, unsigned int n, unsigned int k, mpz_t index) {
     unsigned int i, j;
     unsigned int start = 0;
     mpz_t count, this_count;
@@ -105,7 +105,7 @@ void ith_combination_bigz(unsigned int* ar, unsigned int n, unsigned int k, mpz_
     mpz_clear(this_count);
 }
 
-SEXP get_combinations(SEXP _n, SEXP _k, SEXP labels, SEXP _layout, SEXP _index, SEXP _nsample) {
+SEXP get_ordinary_combinations(SEXP _n, SEXP _k, SEXP labels, SEXP _layout, SEXP _index, SEXP _nsample) {
     int i, j;
     int nprotect = 0;
     SEXP result = R_NilValue;
@@ -149,7 +149,7 @@ SEXP get_combinations(SEXP _n, SEXP _k, SEXP labels, SEXP _layout, SEXP _index, 
                 mpz_set_str(z, CHAR(STRING_ELT(_index, j)), 10); \
                 mpz_sub_ui(z, z, 1); \
             } \
-            ith_combination_bigz(ap, n, k, z);
+            ith_ordinary_combination_bigz(ap, n, k, z);
 
         int labels_type = TYPEOF(labels);
         if (labels_type == NILSXP) {
@@ -180,9 +180,9 @@ SEXP get_combinations(SEXP _n, SEXP _k, SEXP labels, SEXP _layout, SEXP _index, 
         #undef NEXT
         #define NEXT() \
             if (sampling) { \
-                ith_combination(ap, n, k, floor(max * unif_rand())); \
+                ith_ordinary_combination(ap, n, k, floor(max * unif_rand())); \
             } else { \
-                ith_combination(ap, n, k, index[j] - 1); \
+                ith_ordinary_combination(ap, n, k, index[j] - 1); \
             }
 
         int labels_type = TYPEOF(labels);

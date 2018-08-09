@@ -88,7 +88,7 @@ void ith_replacement_permutation_bigz(unsigned int* ar, unsigned int n, unsigned
     mpz_clear(p);
 }
 
-SEXP get_replacement_permutation(SEXP _n, SEXP _k, SEXP labels, SEXP _layout, SEXP _index, SEXP _nsample) {
+SEXP get_replacement_permutations(SEXP _n, SEXP _k, SEXP labels, SEXP _layout, SEXP _index, SEXP _nsample) {
     int i, j;
     int nprotect = 0;
     SEXP result = R_NilValue;
