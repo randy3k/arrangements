@@ -2,10 +2,9 @@
 #include <R.h>
 #include <Rinternals.h>
 #include <gmp.h>
-#include "arrangements.h"
-#include "next/multiset_permutation.h"
-#include "utils.h"
-#include "macros.h"
+#include "../combinatorics.h"
+#include "../utils.h"
+#include "../macros.h"
 
 double n_multiset_permutations(int* freq, size_t flen, size_t k);
 
@@ -39,6 +38,7 @@ SEXP next_multiset_permutations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP labe
         status = 0;
     }
 
+    #undef NEXT
     #define NEXT() \
         if (status == 0) { \
             status = 1; \

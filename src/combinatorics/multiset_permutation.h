@@ -1,25 +1,13 @@
-#include "multiset_permutation.h"
+#ifndef _M_PERM_H
+#define _M_PERM_H 1
+
+#include <stddef.h>
+#include "utils.h"
 
 // A Simple, Efficient P(n,k) Algorithm by Alistair Israel
 // http://alistairisrael.wordpress.com/2009/09/22/simple-efficient-pnk-algorithm/
 // c implementation by 2017 Randy Lai
 // http://randycity.github.io
-
-static void swap(unsigned int *ar, unsigned int first, unsigned int second)
-{
-    unsigned int temp = ar[first];
-    ar[first] = ar[second];
-    ar[second] = temp;
-}
-
-static void reverse(unsigned int *ar, size_t len)
-{
-    unsigned int i, j;
-
-    for (i = 0, j = len - 1; i < j; i++, j--) {
-        swap(ar, i, j);
-    }
-}
 
 unsigned int next_multiset_permutation(unsigned int *ar, size_t n, size_t k)
 {
@@ -59,3 +47,6 @@ unsigned int next_multiset_permutation(unsigned int *ar, size_t n, size_t k)
 
     return 1;
 }
+
+
+#endif

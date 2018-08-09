@@ -1,4 +1,9 @@
-#include "arrangements.h"
+#define R_NO_REMAP
+#include <R.h>
+#include <Rinternals.h>
+#include "combinations.h"
+#include "permutations.h"
+#include "partitions.h"
 #include "utils.h"
 
 static const R_CallMethodDef CallEntries[] = {

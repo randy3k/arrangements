@@ -1,4 +1,7 @@
-#include "combination.h"
+#ifndef _COMB_H
+#define _COMB_H 1
+
+#include <stddef.h>
 
 // mirror of python itertools.combinations
 // https://docs.python.org/3/library/itertools.html#itertools.combinations
@@ -24,3 +27,5 @@ unsigned int next_combination(unsigned int *ar, size_t n, unsigned int k)
     }
     return 1;
 }
+
+#endif

@@ -2,10 +2,9 @@
 #include <R.h>
 #include <Rinternals.h>
 #include <gmp.h>
-#include "arrangements.h"
-#include "next/k_partition.h"
-#include "utils.h"
-#include "macros.h"
+#include "../combinatorics.h"
+#include "../utils.h"
+#include "../macros.h"
 
 
 double n_k_partitions(int n, int k);
@@ -31,6 +30,7 @@ SEXP next_asc_k_partitions(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP _layout) 
         status = 0;
     }
 
+    #undef NEXT
     #define NEXT() \
         if (status == 0) { \
             status = 1; \
@@ -49,7 +49,6 @@ SEXP next_asc_k_partitions(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP _layout) 
     return result;
 }
 
-#undef NEXT
 
 SEXP next_desc_k_partitions(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP _layout) {
     int i, j;
@@ -72,6 +71,7 @@ SEXP next_desc_k_partitions(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP _layout)
         status = 0;
     }
 
+    #undef NEXT
     #define NEXT() \
         if (status == 0) { \
             status = 1; \

@@ -2,10 +2,9 @@
 #include <R.h>
 #include <Rinternals.h>
 #include <gmp.h>
-#include "arrangements.h"
-#include "next/multicombination.h"
-#include "utils.h"
-#include "macros.h"
+#include "../combinatorics.h"
+#include "../utils.h"
+#include "../macros.h"
 
 
 SEXP next_replacement_combinations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP labels, SEXP _layout) {
@@ -28,6 +27,7 @@ SEXP next_replacement_combinations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP l
         status = 0;
     }
 
+    #undef NEXT
     #define NEXT() \
         if (status == 0) { \
             status = 1; \

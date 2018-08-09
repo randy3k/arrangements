@@ -1,11 +1,8 @@
-#include "k_permutation.h"
+#ifndef _K_PERM_H
+#define _K_PERM_H 1
 
-static void swap(unsigned int *ar, unsigned int first, unsigned int second)
-{
-    unsigned int temp = ar[first];
-    ar[first] = ar[second];
-    ar[second] = temp;
-}
+#include <stddef.h>
+#include "utils.h"
 
 // mirror of python itertools.permutations
 // https://docs.python.org/3/library/itertools.html#itertools.permutations
@@ -32,3 +29,5 @@ unsigned int next_k_permutation(unsigned int *ar, unsigned int *cycle, size_t n,
         }
     }
 }
+
+#endif

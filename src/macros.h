@@ -1,3 +1,6 @@
+#ifndef _MACROS_H_
+#define _MACROS_H_ 1
+
 #define RESULT_PART() \
     if (layout == 'r') { \
         result = PROTECT(Rf_allocMatrix(INTSXP, d, n)); \
@@ -224,3 +227,5 @@
             SET_VECTOR_ELT(result, j, resulti); \
         } \
     }
+
+#endif
