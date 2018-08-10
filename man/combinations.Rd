@@ -4,7 +4,7 @@
 \alias{combinations}
 \title{Combinations generator}
 \usage{
-combinations(x, k = n, n = NULL, v = NULL, freq = NULL,
+combinations(x = NULL, k = n, n = NULL, v = NULL, freq = NULL,
   replace = FALSE, layout = "row", index = NULL, nsample = NULL)
 }
 \arguments{
