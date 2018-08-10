@@ -6,67 +6,6 @@
 #include "../utils.h"
 #include "../macros.h"
 
-double n_multiset_permutations(int* freq, size_t flen, size_t k);
-
-SEXP next_multiset_permutations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP labels, SEXP freq, SEXP _layout) {
-    int i, j, h;
-    int nprotect = 0;
-    int status = 1;
-    SEXP result;
-
-    int n = as_uint(_n);
-    int k = as_uint(_k);
-    int* fp = as_uint_array(freq);
-    char layout = layout_flag(_layout);
-
-    double dd = Rf_asInteger(_d) == -1 ? n_multiset_permutations(fp, Rf_length(freq), k) : as_uint(_d);
-    int d = verify_dimension(dd, k, layout);
-
-    unsigned int* ap;
-
-    if (!variable_exist(state, "a", INTSXP, n, (void**) &ap)) {
-        if (freq == R_NilValue) {
-            for(i=0; i<n; i++) ap[i] = i;
-        } else {
-            h = 0;
-            for (i = 0; i< Rf_length(freq); i++) {
-                for (j = 0; j< fp[i]; j++) {
-                    ap[h++] = i;
-                }
-            }
-        }
-        status = 0;
-    }
-
-    #undef NEXT
-    #define NEXT() \
-        if (status == 0) { \
-            status = 1; \
-        } else if (!next_multiset_permutation(ap, n, k)) { \
-            status = 0; \
-            break; \
-        }
-
-    int labels_type = TYPEOF(labels);
-    if (labels_type == NILSXP) {
-        RESULT_NILSXP(k);
-    } else if (labels_type == INTSXP) {
-        RESULT_INTSXP(k);
-    } else if (labels_type == REALSXP) {
-        RESULT_REALSXP(k);
-    } else if (labels_type == STRSXP) {
-        RESULT_STRSXP(k);
-    }
-
-    if (status == 0) {
-        result = PROTECT(resize_layout(result, j, layout));
-        nprotect++;
-    }
-    attach_factor_levels(result, labels);
-    UNPROTECT(nprotect);
-    return result;
-}
-
 
 double n_multiset_permutations(int* freq, size_t flen, size_t k) {
     int n = 0;
@@ -123,12 +62,6 @@ double n_multiset_permutations(int* freq, size_t flen, size_t k) {
     return ptemp;
 }
 
-SEXP num_multiset_permutations(SEXP freq, SEXP _k) {
-    int* fp = as_uint_array(freq);
-    size_t flen = Rf_length(freq);
-    size_t k = as_uint(_k);
-    return Rf_ScalarReal(n_multiset_permutations(fp, flen, k));
-}
 
 void n_multiset_permutations_bigz(mpz_t z, int* freq, size_t flen, size_t k) {
     int n = 0;
@@ -194,22 +127,22 @@ void n_multiset_permutations_bigz(mpz_t z, int* freq, size_t flen, size_t k) {
     mpz_clear(ptemp);
 }
 
-SEXP num_multiset_permutations_bigz(SEXP freq, SEXP _k) {
-    int* fp = as_uint_array(freq);
-    size_t flen = Rf_length(freq);
-    size_t k = as_uint(_k);
-    mpz_t z;
-    mpz_init(z);
-    n_multiset_permutations_bigz(z, fp, flen, k);
-    char* c = mpz_get_str(NULL, 10, z);
-    SEXP out = Rf_mkString(c);
-    mpz_clear(z);
-    free(c);
-    return out;
+
+void n_multiset_n_permutations_bigz(mpz_t z, int* freq, size_t flen) {
+    mpz_set_ui(z, 1);
+    size_t i, j, h;
+    h = 0;
+    for (i=0; i<flen; i++) {
+        for (j=1; j<=freq[i]; j++) {
+            h++;
+            mpz_mul_ui(z, z, h);
+            mpz_cdiv_q_ui(z, z, j);
+        }
+    }
 }
 
 
-void ith_multiset_permutation(unsigned int* ar, int* freq, size_t flen, size_t k, unsigned int index) {
+void a_multiset_permutation(unsigned int* ar, int* freq, size_t flen, size_t k, unsigned int index) {
     unsigned int i, j;
     unsigned int count, this_count;
     int* subfreq = (int*) malloc(flen * sizeof(int));
@@ -235,7 +168,8 @@ void ith_multiset_permutation(unsigned int* ar, int* freq, size_t flen, size_t k
     free(subfreq);
 }
 
-void ith_multiset_permutation_bigz(unsigned int* ar, int* freq, size_t flen, size_t k, mpz_t index) {
+
+void a_multiset_permutation_bigz(unsigned int* ar, int* freq, size_t flen, size_t k, mpz_t index) {
     unsigned int i, j;
     mpz_t count;
     mpz_init(count);
@@ -268,15 +202,65 @@ void ith_multiset_permutation_bigz(unsigned int* ar, int* freq, size_t flen, siz
     mpz_clear(this_count);
 }
 
-SEXP get_multiset_permutation(SEXP freq, SEXP _k, SEXP labels, SEXP _layout, SEXP _index, SEXP _nsample) {
+
+SEXP next_multiset_permutations(int* fp, size_t flen, int k, SEXP labels, char layout, int d, SEXP state) {
+    int i, j, h;
+    int nprotect = 0;
+    int status = 1;
+    SEXP result;
+
+    int n = 0;
+    for (i=0; i<flen; i++) n += fp[i];
+
+    double dd = d == -1 ? n_multiset_permutations(fp, flen, k) : d;
+    d = verify_dimension(dd, k, layout);
+
+    unsigned int* ap;
+
+    if (!variable_exist(state, "a", INTSXP, n, (void**) &ap)) {
+        h = 0;
+        for (i = 0; i< flen; i++) {
+            for (j = 0; j< fp[i]; j++) {
+                ap[h++] = i;
+            }
+        }
+        status = 0;
+    }
+
+    #undef NEXT
+    #define NEXT() \
+        if (status == 0) { \
+            status = 1; \
+        } else if (!next_multiset_permutation(ap, n, k)) { \
+            status = 0; \
+            break; \
+        }
+
+    int labels_type = TYPEOF(labels);
+    if (labels_type == NILSXP) {
+        RESULT_NILSXP(k);
+    } else if (labels_type == INTSXP) {
+        RESULT_INTSXP(k);
+    } else if (labels_type == REALSXP) {
+        RESULT_REALSXP(k);
+    } else if (labels_type == STRSXP) {
+        RESULT_STRSXP(k);
+    }
+
+    if (status == 0) {
+        result = PROTECT(resize_layout(result, j, layout));
+        nprotect++;
+    }
+    attach_factor_levels(result, labels);
+    UNPROTECT(nprotect);
+    return result;
+}
+
+
+SEXP some_multiset_permutations(int* fp, size_t flen, int k, SEXP labels, char layout, SEXP _index, SEXP _nsample) {
     int i, j;
     int nprotect = 0;
     SEXP result = R_NilValue;
-
-    int* fp = as_uint_array(freq);
-    size_t flen = Rf_length(freq);
-    int k = as_uint(_k);
-    char layout = layout_flag(_layout);
 
     double dd = _index == R_NilValue ? as_uint(_nsample) : Rf_length(_index);
     int d = verify_dimension(dd, k, layout);
@@ -313,7 +297,7 @@ SEXP get_multiset_permutation(SEXP freq, SEXP _k, SEXP labels, SEXP _layout, SEX
                 mpz_set_str(z, CHAR(STRING_ELT(_index, j)), 10); \
                 mpz_sub_ui(z, z, 1); \
             } \
-            ith_multiset_permutation_bigz(ap, fp, flen, k, z);
+            a_multiset_permutation_bigz(ap, fp, flen, k, z);
 
         int labels_type = TYPEOF(labels);
         if (labels_type == NILSXP) {
@@ -344,9 +328,9 @@ SEXP get_multiset_permutation(SEXP freq, SEXP _k, SEXP labels, SEXP _layout, SEX
         #undef NEXT
         #define NEXT() \
             if (sampling) { \
-                ith_multiset_permutation(ap, fp, flen, k, floor(max * unif_rand())); \
+                a_multiset_permutation(ap, fp, flen, k, floor(max * unif_rand())); \
             } else { \
-                ith_multiset_permutation(ap, fp, flen, k, index[j] - 1); \
+                a_multiset_permutation(ap, fp, flen, k, index[j] - 1); \
             }
 
         int labels_type = TYPEOF(labels);

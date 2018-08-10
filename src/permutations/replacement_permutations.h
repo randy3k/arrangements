@@ -7,18 +7,43 @@
 #include "../macros.h"
 
 
-SEXP next_replacement_permutations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP labels, SEXP _layout) {
+void a_replacement_permutation(unsigned int* ar, unsigned int n, unsigned int k, unsigned int index) {
+    unsigned int i, j;
+
+    for (i = 0; i < k; i++) {
+        j = pow(n, k - 1 - i);
+        ar[i] = index / j;
+        index = index % j;
+    }
+}
+
+void a_replacement_permutation_bigz(unsigned int* ar, unsigned int n, unsigned int k, mpz_t index) {
+    unsigned int i;
+
+    mpz_t q;
+    mpz_init(q);
+    mpz_t p;
+    mpz_init(p);
+
+    for (i = 0; i < k; i++) {
+        mpz_ui_pow_ui(p, n, k - 1 - i);
+        mpz_tdiv_qr(q, index, index, p);
+        ar[i] = mpz_get_ui(q);
+    }
+
+    mpz_clear(q);
+    mpz_clear(p);
+}
+
+
+SEXP next_replacement_permutations(int n, int k, SEXP labels, char layout, int d, SEXP state) {
     int i, j;
     int nprotect = 0;
     int status = 1;
     SEXP result;
 
-    int n = as_uint(_n);
-    int k = as_uint(_k);
-    char layout = layout_flag(_layout);
-
-    double dd = Rf_asInteger(_d) == -1 ? pow(n, k) : as_uint(_d);
-    int d = verify_dimension(dd, k, layout);
+    double dd = d == -1 ? pow(n, k) : d;
+    d = verify_dimension(dd, k, layout);
 
     size_t *sizes;
     sizes = (size_t*) R_alloc(k, sizeof(*sizes));
@@ -60,42 +85,11 @@ SEXP next_replacement_permutations(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP l
     return result;
 }
 
-void ith_replacement_permutation(unsigned int* ar, unsigned int n, unsigned int k, unsigned int index) {
-    unsigned int i, j;
 
-    for (i = 0; i < k; i++) {
-        j = pow(n, k - 1 - i);
-        ar[i] = index / j;
-        index = index % j;
-    }
-}
-
-void ith_replacement_permutation_bigz(unsigned int* ar, unsigned int n, unsigned int k, mpz_t index) {
-    unsigned int i;
-
-    mpz_t q;
-    mpz_init(q);
-    mpz_t p;
-    mpz_init(p);
-
-    for (i = 0; i < k; i++) {
-        mpz_ui_pow_ui(p, n, k - 1 - i);
-        mpz_tdiv_qr(q, index, index, p);
-        ar[i] = mpz_get_ui(q);
-    }
-
-    mpz_clear(q);
-    mpz_clear(p);
-}
-
-SEXP get_replacement_permutations(SEXP _n, SEXP _k, SEXP labels, SEXP _layout, SEXP _index, SEXP _nsample) {
+SEXP some_replacement_permutations(int n, int k, SEXP labels, char layout, SEXP _index, SEXP _nsample) {
     int i, j;
     int nprotect = 0;
     SEXP result = R_NilValue;
-
-    int n = as_uint(_n);
-    int k = as_uint(_k);
-    char layout = layout_flag(_layout);
 
     double dd = _index == R_NilValue ? as_uint(_nsample) : Rf_length(_index);
     int d = verify_dimension(dd, k, layout);
@@ -132,7 +126,7 @@ SEXP get_replacement_permutations(SEXP _n, SEXP _k, SEXP labels, SEXP _layout, S
                 mpz_set_str(z, CHAR(STRING_ELT(_index, j)), 10); \
                 mpz_sub_ui(z, z, 1); \
             } \
-            ith_replacement_permutation_bigz(ap, n, k, z);
+            a_replacement_permutation_bigz(ap, n, k, z);
 
         int labels_type = TYPEOF(labels);
         if (labels_type == NILSXP) {
@@ -163,9 +157,9 @@ SEXP get_replacement_permutations(SEXP _n, SEXP _k, SEXP labels, SEXP _layout, S
         #undef NEXT
         #define NEXT() \
             if (sampling) { \
-                ith_replacement_permutation(ap, n, k, floor(max * unif_rand())); \
+                a_replacement_permutation(ap, n, k, floor(max * unif_rand())); \
             } else { \
-                ith_replacement_permutation(ap, n, k, index[j] - 1); \
+                a_replacement_permutation(ap, n, k, index[j] - 1); \
             }
 
         int labels_type = TYPEOF(labels);

@@ -1,3 +1,81 @@
+#' Number of permutations
+#' @template param_pc
+#' @param bigz an logical to indicate using [gmp::bigz]
+#' @seealso [permutations] for generating all permutations and [ipermutations] for iterating permutations
+#' @examples
+#' npermutations(7)
+#' npermutations(LETTERS[1:5])
+#' npermutations(5, 2)
+#' npermutations(LETTERS, k = 5)
+#'
+#' # integer overflow
+#' \dontrun{npermutations(14, 10)}
+#' npermutations(14, 10, bigz = TRUE)
+#'
+#' # number of permutations of `c("a", "b", "b")`
+#' # they are `c("a", "b")`, `c("b", "b")` and `c("b", "b")`
+#' npermutations(k = 2, freq = c(1, 2))
+#'
+#' # zero sized partitions
+#' npermutations(0)
+#' npermutations(5, 0)
+#' npermutations(5, 6)
+#' npermutations(0, 1)
+#' npermutations(0, 0)
+#' @export
+npermutations <- function(x = NULL, k = n, n = NULL, v = NULL, freq = NULL, replace = FALSE,
+                          bigz = FALSE) {
+    .Call("npermutations", PACKAGE = "arrangements", x, k, n, v, freq, replace, bigz)
+}
+
+
+#' Permutations generator
+#'
+#' This function generates all the permutations of selecting `k` items from `n` items.
+#' The results are in lexicographical order.
+#'
+#' @template param_pc
+#' @template param_type
+#' @param index a vector of indices of the desired permutations
+#' @param nsample sampling random permutations
+#' @seealso [ipermutations] for iterating permutations and [npermutations] to calculate number of permutations
+#' @examples
+#' permutations(3)
+#' permutations(LETTERS[1:3])
+#'
+#' # choose 2 from 4
+#' permutations(4, 2)
+#' permutations(LETTERS[1:3], k = 2)
+#'
+#' # multiset with frequencies c(2, 3)
+#' permutations(k = 3, freq = c(2, 3))
+#'
+#' # with replacement
+#' permutations(4, 2, replace = TRUE)
+#'
+#' # column major
+#' permutations(3, layout = "column")
+#' permutations(4, 2, layout = "column")
+#'
+#' # list output
+#' permutations(3, layout = "list")
+#' permutations(4, 2, layout = "list")
+#'
+#' # zero sized permutations
+#' dim(permutations(0))
+#' dim(permutations(5, 0))
+#' dim(permutations(5, 6))
+#' dim(permutations(0, 0))
+#' dim(permutations(0, 1))
+#'
+#' @export
+permutations <- function(x = NULL, k = n, n = NULL, v = NULL, freq = NULL, replace = FALSE,
+                         layout = "row", index = NULL, nsample = NULL) {
+    .Call("get_permutations", PACKAGE = "arrangements",
+          x, k, n, v, freq, replace, layout, -1L, index, nsample, NULL, 0L, FALSE)
+}
+
+
 #' @details
 #' The `Permutations` class can be initialized by using the convenient wrapper `ipermutations` or
 #' \preformatted{
@@ -41,8 +119,10 @@ Permutations <- R6::R6Class(
                 out <- NULL
                 self$reset()
             } else {
-                out <- next_permutations(
-                    self$n, self$k, d, private$state, self$v, self$freq, self$replace, layout)
+                out <- .Call("get_permutations", PACKAGE = "arrangements",
+                             NULL, self$k, self$n, self$v, self$freq, self$replace, layout,
+                             d, NULL, NULL, private$state, 0L, drop)
+
                 if (layout == "row" || is.null(layout)){
                     if (nrow(out) == 0) {
                         out <- NULL
@@ -88,143 +168,6 @@ Permutations <- R6::R6Class(
     )
 )
 
-next_permutations <- function(n, k, d, state, v, freq, replace, layout) {
-    if (k == 0) {
-        if (layout == "row" || is.null(layout)) {
-            if (is.null(v)) {
-                out <- integer(0)
-            } else {
-                out <- new(typeof(v))
-            }
-            dim(out) <- c(1, 0)
-        } else if (layout == "column") {
-            if (is.null(v)) {
-                out <- integer(0)
-            } else {
-                out <- new(typeof(v))
-            }
-            dim(out) <- c(0, 1)
-        } else {
-            if (n == 0) {
-                if (is.null(v)) {
-                    out <- list(integer(0))
-                } else {
-                    out <- list(new(typeof(v)))
-                }
-            } else {
-                out <- list()
-            }
-        }
-    } else if (replace) {
-        out <- .Call("next_replacement_permutations", PACKAGE = "arrangements",
-                        n, k, d, state, v, layout)
-    } else if (n < k) {
-        if (layout == "row" || is.null(layout)) {
-            if (is.null(v)) {
-                out <- integer(0)
-            } else {
-                out <- new(typeof(v))
-            }
-            dim(out) <- c(0, k)
-        } else if (layout == "column") {
-            if (is.null(v)) {
-                out <- integer(0)
-            } else {
-                out <- new(typeof(v))
-            }
-            dim(out) <- c(k, 0)
-        } else {
-            out <- list()
-        }
-    } else if (n == k) {
-        # next_permutations can also handle multiset with r=n
-        out <- .Call("next_ordinary_permutations", PACKAGE = "arrangements",
-                        n, d, state, v, freq, layout)
-    } else if (!is.null(freq)) {
-        out <- .Call("next_multiset_permutations", PACKAGE = "arrangements",
-                        n, k, d, state, v, freq, layout)
-    } else {
-        out <- .Call("next_k_permutations", PACKAGE = "arrangements",
-                        n, k, d, state, v, layout)
-    }
-    out
-}
-
-#' Permutations generator
-#'
-#' This function generates all the permutations of selecting `k` items from `n` items.
-#' The results are in lexicographical order.
-#'
-#' @template param_pc
-#' @template param_type
-#' @param index a vector of indices of the desired permutations
-#' @param nsample sampling random permutations
-#' @seealso [ipermutations] for iterating permutations and [npermutations] to calculate number of permutations
-#' @examples
-#' permutations(3)
-#' permutations(LETTERS[1:3])
-#'
-#' # choose 2 from 4
-#' permutations(4, 2)
-#' permutations(LETTERS[1:3], k = 2)
-#'
-#' # multiset with frequencies c(2, 3)
-#' permutations(k = 3, freq = c(2, 3))
-#'
-#' # with replacement
-#' permutations(4, 2, replace = TRUE)
-#'
-#' # column major
-#' permutations(3, layout = "column")
-#' permutations(4, 2, layout = "column")
-#'
-#' # list output
-#' permutations(3, layout = "list")
-#' permutations(4, 2, layout = "list")
-#'
-#' # zero sized permutations
-#' dim(permutations(0))
-#' dim(permutations(5, 0))
-#' dim(permutations(5, 6))
-#' dim(permutations(0, 0))
-#' dim(permutations(0, 1))
-#'
-#' @export
-permutations <- function(
-        x, k = n, n = NULL, v = NULL, freq = NULL, replace = FALSE, layout = "row",
-        index = NULL, nsample = NULL) {
-    if (missing(x)) {
-        n <- validate_n_value(n, v, freq, replace)
-    } else {
-        if (length(x) == 1 && is.numeric(x)) {
-            n <- validate_n_value(x, v, freq)
-        } else {
-            v <- x
-            n <- validate_n_value(n, v, freq, replace)
-        }
-    }
-    (k %% 1 == 0 && k >= 0) || stop("expect non-negative integer")
-
-    if (is.null(index) && is.null(nsample)) {
-        next_permutations(n, k, -1L, NULL, v, freq, replace, layout)
-    } else {
-        if (gmp::is.bigz(index)) {
-            index <- as.character(index)
-        }
-        if (replace) {
-            .Call("get_replacement_permutations", PACKAGE = "arrangements",
-                n, k, v, layout, index, nsample)
-        } else if (!is.null(freq)) {
-            .Call("get_multiset_permutation", PACKAGE = "arrangements",
-                freq, k, v, layout, index, nsample)
-        } else if (k == n) {
-            .Call("get_ordinary_permutations", PACKAGE = "arrangements", n, v, layout, index, nsample)
-        } else {
-            .Call("get_k_permutations", PACKAGE = "arrangements", n, k, v, layout, index, nsample)
-        }
-    }
-}
-
 
 #' @title Permutations iterator
 #' @description
@@ -261,83 +204,4 @@ ipermutations <- function(x, k = n, n = NULL, v = NULL, freq = NULL, replace = F
     (k %% 1 == 0 && k >= 0) || stop("expect non-negative integer")
 
     Permutations$new(n, k, v, freq, replace)
-}
-
-#' Number of permutations
-#' @template param_pc
-#' @param bigz an logical to indicate using [gmp::bigz]
-#' @seealso [permutations] for generating all permutations and [ipermutations] for iterating permutations
-#' @examples
-#' npermutations(7)
-#' npermutations(LETTERS[1:5])
-#' npermutations(5, 2)
-#' npermutations(LETTERS, k = 5)
-#'
-#' # integer overflow
-#' \dontrun{npermutations(14, 10)}
-#' npermutations(14, 10, bigz = TRUE)
-#'
-#' # number of permutations of `c("a", "b", "b")`
-#' # they are `c("a", "b")`, `c("b", "b")` and `c("b", "b")`
-#' npermutations(k = 2, freq = c(1, 2))
-#'
-#' # zero sized partitions
-#' npermutations(0)
-#' npermutations(5, 0)
-#' npermutations(5, 6)
-#' npermutations(0, 1)
-#' npermutations(0, 0)
-#' @export
-npermutations <- function(x, k = n, n = NULL, v = NULL, freq = NULL, replace = FALSE, bigz = FALSE) {
-    if (missing(x)) {
-        n <- validate_n_value(n, v, freq, replace)
-    } else {
-        if (length(x) == 1 && is.numeric(x)) {
-            n <- validate_n_value(x, v, freq)
-        } else {
-            v <- x
-            n <- validate_n_value(n, v, freq, replace)
-        }
-    }
-    (k %% 1 == 0 && k >= 0) || stop("expect non-negative integer")
-
-    if (bigz) {
-        if (replace) {
-            out <- gmp::as.bigz(n) ^ k
-        } else if (n < k) {
-            out <- 0
-        } else if (is.null(freq)) {
-            if (n == k) {
-                out <- gmp::factorialZ(n)
-            } else {
-                out <- out <- .Call("num_k_permutations_bigz", PACKAGE = "arrangements", n, k)
-            }
-        } else {
-            if (n == k) {
-                out <- .Call("num_multiset_n_permutations_bigz", PACKAGE = "arrangements", freq)
-            } else {
-                out <- .Call("num_multiset_permutations_bigz", PACKAGE = "arrangements", freq, k)
-            }
-        }
-
-    } else {
-        if (replace) {
-            out <- n ^ k
-        } else if (n < k) {
-            out <- 0
-        } else if (is.null(freq)) {
-            if (n == k) {
-                out <- factorial(n)
-            } else {
-                out <- .Call("num_k_permutations", PACKAGE = "arrangements", n, k)
-            }
-        } else {
-            if (n == k) {
-                out <- .Call("num_multiset_n_permutations", PACKAGE = "arrangements", freq)
-            } else {
-                out <- .Call("num_multiset_permutations", PACKAGE = "arrangements", freq, k)
-            }
-        }
-    }
-    convertz(out, bigz)
 }

@@ -7,6 +7,53 @@
 #include "../utils.h"
 
 
+void a_replacement_combination(unsigned int* ar, unsigned int n, unsigned int k, unsigned int index) {
+    unsigned int i, j;
+    unsigned int start = 0;
+    unsigned int count, this_count;
+
+    for (i = 0; i < k; i++) {
+        count = 0;
+        for (j = start; j < n; j++) {
+            this_count = count + choose(n - j + k - i - 1 - 1, k - i - 1);
+            if (this_count > index) {
+                ar[i] = j;
+                start = j;
+                index -= count;
+                break;
+            }
+            count = this_count;
+        }
+    }
+}
+
+void a_replacement_combination_bigz(unsigned int* ar, unsigned int n, unsigned int k, mpz_t index) {
+    unsigned int i, j;
+    unsigned int start = 0;
+    mpz_t count, this_count;
+    mpz_init(count);
+    mpz_init(this_count);
+
+    for (i = 0; i < k; i++) {
+        mpz_set_ui(count, 0);
+        for (j = start; j < n; j++) {
+            mpz_bin_uiui(this_count, n - j + k - i - 1 - 1, k - i - 1);
+            mpz_add(this_count, this_count, count);
+            if (mpz_cmp(this_count, index) > 0) {
+                ar[i] = j;
+                start = j;
+                mpz_sub(index, index, count);
+                break;
+            }
+            mpz_set(count, this_count);
+        }
+    }
+
+    mpz_clear(count);
+    mpz_clear(this_count);
+}
+
+
 SEXP next_replacement_combinations(int n, int k, SEXP labels, char layout, int d, SEXP state) {
     int i, j;
     int nprotect = 0;
@@ -52,60 +99,11 @@ SEXP next_replacement_combinations(int n, int k, SEXP labels, char layout, int d
     return result;
 }
 
-void ith_replacement_combination(unsigned int* ar, unsigned int n, unsigned int k, unsigned int index) {
-    unsigned int i, j;
-    unsigned int start = 0;
-    unsigned int count, this_count;
 
-    for (i = 0; i < k; i++) {
-        count = 0;
-        for (j = start; j < n; j++) {
-            this_count = count + choose(n - j + k - i - 1 - 1, k - i - 1);
-            if (this_count > index) {
-                ar[i] = j;
-                start = j;
-                index -= count;
-                break;
-            }
-            count = this_count;
-        }
-    }
-}
-
-void ith_replacement_combination_bigz(unsigned int* ar, unsigned int n, unsigned int k, mpz_t index) {
-    unsigned int i, j;
-    unsigned int start = 0;
-    mpz_t count, this_count;
-    mpz_init(count);
-    mpz_init(this_count);
-
-    for (i = 0; i < k; i++) {
-        mpz_set_ui(count, 0);
-        for (j = start; j < n; j++) {
-            mpz_bin_uiui(this_count, n - j + k - i - 1 - 1, k - i - 1);
-            mpz_add(this_count, this_count, count);
-            if (mpz_cmp(this_count, index) > 0) {
-                ar[i] = j;
-                start = j;
-                mpz_sub(index, index, count);
-                break;
-            }
-            mpz_set(count, this_count);
-        }
-    }
-
-    mpz_clear(count);
-    mpz_clear(this_count);
-}
-
-SEXP get_replacement_combinations(SEXP _n, SEXP _k, SEXP labels, SEXP _layout, SEXP _index, SEXP _nsample) {
+SEXP some_replacement_combinations(int n, int k, SEXP labels, char layout, SEXP _index, SEXP _nsample) {
     int i, j;
     int nprotect = 0;
     SEXP result = R_NilValue;
-
-    int n = as_uint(_n);
-    int k = as_uint(_k);
-    char layout = layout_flag(_layout);
 
     double dd = _index == R_NilValue ? as_uint(_nsample) : Rf_length(_index);
     int d = verify_dimension(dd, k, layout);
@@ -142,7 +140,7 @@ SEXP get_replacement_combinations(SEXP _n, SEXP _k, SEXP labels, SEXP _layout, S
                 mpz_set_str(z, CHAR(STRING_ELT(_index, j)), 10); \
                 mpz_sub_ui(z, z, 1); \
             } \
-            ith_replacement_combination_bigz(ap, n, k, z);
+            a_replacement_combination_bigz(ap, n, k, z);
 
         int labels_type = TYPEOF(labels);
         if (labels_type == NILSXP) {
@@ -173,9 +171,9 @@ SEXP get_replacement_combinations(SEXP _n, SEXP _k, SEXP labels, SEXP _layout, S
         #undef NEXT
         #define NEXT() \
             if (sampling) { \
-                ith_replacement_combination(ap, n, k, floor(max * unif_rand())); \
+                a_replacement_combination(ap, n, k, floor(max * unif_rand())); \
             } else { \
-                ith_replacement_combination(ap, n, k, index[j] - 1); \
+                a_replacement_combination(ap, n, k, index[j] - 1); \
             }
 
         int labels_type = TYPEOF(labels);

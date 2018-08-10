@@ -9,6 +9,53 @@
 #include "../utils.h"
 
 
+void a_ordinary_combination(unsigned int* ar, unsigned int n, unsigned int k, unsigned int index) {
+    unsigned int i, j;
+    unsigned int start = 0;
+    unsigned int count, this_count;
+
+    for (i = 0; i < k; i++) {
+        count = 0;
+        for (j = start; j < n; j++) {
+            this_count = count + choose(n - j - 1, k - i - 1);
+            if (this_count > index) {
+                ar[i] = j;
+                start = j + 1;
+                index -= count;
+                break;
+            }
+            count = this_count;
+        }
+    }
+}
+
+void a_ordinary_combination_bigz(unsigned int* ar, unsigned int n, unsigned int k, mpz_t index) {
+    unsigned int i, j;
+    unsigned int start = 0;
+    mpz_t count, this_count;
+    mpz_init(count);
+    mpz_init(this_count);
+
+    for (i = 0; i < k; i++) {
+        mpz_set_ui(count, 0);
+        for (j = start; j < n; j++) {
+            mpz_bin_uiui(this_count, n - j - 1, k - i - 1);
+            mpz_add(this_count, this_count, count);
+            if (mpz_cmp(this_count, index) > 0) {
+                ar[i] = j;
+                start = j + 1;
+                mpz_sub(index, index, count);
+                break;
+            }
+            mpz_set(count, this_count);
+        }
+    }
+
+    mpz_clear(count);
+    mpz_clear(this_count);
+}
+
+
 SEXP next_ordinary_combinations(int n, int k, SEXP labels, char layout, int d, SEXP state) {
     int i, j;
     int nprotect = 0;
@@ -55,60 +102,10 @@ SEXP next_ordinary_combinations(int n, int k, SEXP labels, char layout, int d, S
 }
 
 
-void ith_ordinary_combination(unsigned int* ar, unsigned int n, unsigned int k, unsigned int index) {
-    unsigned int i, j;
-    unsigned int start = 0;
-    unsigned int count, this_count;
-
-    for (i = 0; i < k; i++) {
-        count = 0;
-        for (j = start; j < n; j++) {
-            this_count = count + choose(n - j - 1, k - i - 1);
-            if (this_count > index) {
-                ar[i] = j;
-                start = j + 1;
-                index -= count;
-                break;
-            }
-            count = this_count;
-        }
-    }
-}
-
-void ith_ordinary_combination_bigz(unsigned int* ar, unsigned int n, unsigned int k, mpz_t index) {
-    unsigned int i, j;
-    unsigned int start = 0;
-    mpz_t count, this_count;
-    mpz_init(count);
-    mpz_init(this_count);
-
-    for (i = 0; i < k; i++) {
-        mpz_set_ui(count, 0);
-        for (j = start; j < n; j++) {
-            mpz_bin_uiui(this_count, n - j - 1, k - i - 1);
-            mpz_add(this_count, this_count, count);
-            if (mpz_cmp(this_count, index) > 0) {
-                ar[i] = j;
-                start = j + 1;
-                mpz_sub(index, index, count);
-                break;
-            }
-            mpz_set(count, this_count);
-        }
-    }
-
-    mpz_clear(count);
-    mpz_clear(this_count);
-}
-
-SEXP get_ordinary_combinations(SEXP _n, SEXP _k, SEXP labels, SEXP _layout, SEXP _index, SEXP _nsample) {
+SEXP some_ordinary_combinations(int n, int k, SEXP labels, char layout, SEXP _index, SEXP _nsample) {
     int i, j;
     int nprotect = 0;
     SEXP result = R_NilValue;
-
-    int n = as_uint(_n);
-    int k = as_uint(_k);
-    char layout = layout_flag(_layout);
 
     double dd = _index == R_NilValue ? as_uint(_nsample) : Rf_length(_index);
     int d = verify_dimension(dd, k, layout);
@@ -145,7 +142,7 @@ SEXP get_ordinary_combinations(SEXP _n, SEXP _k, SEXP labels, SEXP _layout, SEXP
                 mpz_set_str(z, CHAR(STRING_ELT(_index, j)), 10); \
                 mpz_sub_ui(z, z, 1); \
             } \
-            ith_ordinary_combination_bigz(ap, n, k, z);
+            a_ordinary_combination_bigz(ap, n, k, z);
 
         int labels_type = TYPEOF(labels);
         if (labels_type == NILSXP) {
@@ -176,9 +173,9 @@ SEXP get_ordinary_combinations(SEXP _n, SEXP _k, SEXP labels, SEXP _layout, SEXP
         #undef NEXT
         #define NEXT() \
             if (sampling) { \
-                ith_ordinary_combination(ap, n, k, floor(max * unif_rand())); \
+                a_ordinary_combination(ap, n, k, floor(max * unif_rand())); \
             } else { \
-                ith_ordinary_combination(ap, n, k, index[j] - 1); \
+                a_ordinary_combination(ap, n, k, index[j] - 1); \
             }
 
         int labels_type = TYPEOF(labels);
