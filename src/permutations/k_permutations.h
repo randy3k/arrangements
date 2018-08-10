@@ -20,7 +20,7 @@ void n_k_permutations_bigz(mpz_t p, size_t n, size_t k) {
 }
 
 
-void a_k_permutation(unsigned int* ar, unsigned int n, unsigned int k, unsigned int index) {
+void identify_k_permutation(unsigned int* ar, unsigned int n, unsigned int k, unsigned int index) {
     unsigned int i, j;
 
     for (i = 0; i < k; i++) {
@@ -39,7 +39,7 @@ void a_k_permutation(unsigned int* ar, unsigned int n, unsigned int k, unsigned 
     }
 }
 
-void a_k_permutation_bigz(unsigned int* ar, unsigned int n, unsigned int k, mpz_t index) {
+void identify_k_permutation_bigz(unsigned int* ar, unsigned int n, unsigned int k, mpz_t index) {
     unsigned int i, j;
 
     mpz_t q;
@@ -118,7 +118,7 @@ SEXP next_k_permutations(int n, int k, SEXP labels, char layout, int d, SEXP sta
 }
 
 
-SEXP some_k_permutations(int n, int k, SEXP labels, char layout, SEXP _index, SEXP _nsample) {
+SEXP obtain_k_permutations(int n, int k, SEXP labels, char layout, SEXP _index, SEXP _nsample) {
     int i, j;
     int nprotect = 0;
     SEXP result = R_NilValue;
@@ -158,7 +158,7 @@ SEXP some_k_permutations(int n, int k, SEXP labels, char layout, SEXP _index, SE
                 mpz_set_str(z, CHAR(STRING_ELT(_index, j)), 10); \
                 mpz_sub_ui(z, z, 1); \
             } \
-            a_k_permutation_bigz(ap, n, k, z);
+            identify_k_permutation_bigz(ap, n, k, z);
 
         int labels_type = TYPEOF(labels);
         if (labels_type == NILSXP) {
@@ -189,9 +189,9 @@ SEXP some_k_permutations(int n, int k, SEXP labels, char layout, SEXP _index, SE
         #undef NEXT
         #define NEXT() \
             if (sampling) { \
-                a_k_permutation(ap, n, k, floor(max * unif_rand())); \
+                identify_k_permutation(ap, n, k, floor(max * unif_rand())); \
             } else { \
-                a_k_permutation(ap, n, k, index[j] - 1); \
+                identify_k_permutation(ap, n, k, index[j] - 1); \
             }
 
         int labels_type = TYPEOF(labels);

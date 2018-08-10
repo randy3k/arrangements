@@ -142,7 +142,7 @@ void n_multiset_n_permutations_bigz(mpz_t z, int* freq, size_t flen) {
 }
 
 
-void a_multiset_permutation(unsigned int* ar, int* freq, size_t flen, size_t k, unsigned int index) {
+void identify_multiset_permutation(unsigned int* ar, int* freq, size_t flen, size_t k, unsigned int index) {
     unsigned int i, j;
     unsigned int count, this_count;
     int* subfreq = (int*) malloc(flen * sizeof(int));
@@ -169,7 +169,7 @@ void a_multiset_permutation(unsigned int* ar, int* freq, size_t flen, size_t k, 
 }
 
 
-void a_multiset_permutation_bigz(unsigned int* ar, int* freq, size_t flen, size_t k, mpz_t index) {
+void identify_multiset_permutation_bigz(unsigned int* ar, int* freq, size_t flen, size_t k, mpz_t index) {
     unsigned int i, j;
     mpz_t count;
     mpz_init(count);
@@ -257,7 +257,7 @@ SEXP next_multiset_permutations(int* fp, size_t flen, int k, SEXP labels, char l
 }
 
 
-SEXP some_multiset_permutations(int* fp, size_t flen, int k, SEXP labels, char layout, SEXP _index, SEXP _nsample) {
+SEXP obtain_multiset_permutations(int* fp, size_t flen, int k, SEXP labels, char layout, SEXP _index, SEXP _nsample) {
     int i, j;
     int nprotect = 0;
     SEXP result = R_NilValue;
@@ -297,7 +297,7 @@ SEXP some_multiset_permutations(int* fp, size_t flen, int k, SEXP labels, char l
                 mpz_set_str(z, CHAR(STRING_ELT(_index, j)), 10); \
                 mpz_sub_ui(z, z, 1); \
             } \
-            a_multiset_permutation_bigz(ap, fp, flen, k, z);
+            identify_multiset_permutation_bigz(ap, fp, flen, k, z);
 
         int labels_type = TYPEOF(labels);
         if (labels_type == NILSXP) {
@@ -328,9 +328,9 @@ SEXP some_multiset_permutations(int* fp, size_t flen, int k, SEXP labels, char l
         #undef NEXT
         #define NEXT() \
             if (sampling) { \
-                a_multiset_permutation(ap, fp, flen, k, floor(max * unif_rand())); \
+                identify_multiset_permutation(ap, fp, flen, k, floor(max * unif_rand())); \
             } else { \
-                a_multiset_permutation(ap, fp, flen, k, index[j] - 1); \
+                identify_multiset_permutation(ap, fp, flen, k, index[j] - 1); \
             }
 
         int labels_type = TYPEOF(labels);

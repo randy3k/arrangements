@@ -7,7 +7,7 @@
 #include "../macros.h"
 
 
-void a_ordinary_permutation(unsigned int* ar, unsigned int n, unsigned int index) {
+void identify_ordinary_permutation(unsigned int* ar, unsigned int n, unsigned int index) {
     unsigned int i, j;
     unsigned int* fact = (unsigned int*) malloc(n * sizeof(unsigned int));
 
@@ -33,7 +33,7 @@ void a_ordinary_permutation(unsigned int* ar, unsigned int n, unsigned int index
 }
 
 
-void a_ordinary_permutation_bigz(unsigned int* ar, unsigned int n, mpz_t index) {
+void identify_ordinary_permutation_bigz(unsigned int* ar, unsigned int n, mpz_t index) {
     unsigned int i, j;
 
     mpz_t q;
@@ -136,7 +136,7 @@ SEXP next_ordinary_permutations(int n, int k, SEXP labels, SEXP freq, char layou
 }
 
 
-SEXP some_ordinary_permutations(int n, int k, SEXP labels, char layout, SEXP _index, SEXP _nsample) {
+SEXP obtain_ordinary_permutations(int n, int k, SEXP labels, char layout, SEXP _index, SEXP _nsample) {
     int i, j;
     int nprotect = 0;
     SEXP result = R_NilValue;
@@ -176,7 +176,7 @@ SEXP some_ordinary_permutations(int n, int k, SEXP labels, char layout, SEXP _in
                 mpz_set_str(z, CHAR(STRING_ELT(_index, j)), 10); \
                 mpz_sub_ui(z, z, 1); \
             } \
-            a_ordinary_permutation_bigz(ap, n, z);
+            identify_ordinary_permutation_bigz(ap, n, z);
 
         int labels_type = TYPEOF(labels);
         if (labels_type == NILSXP) {
@@ -207,9 +207,9 @@ SEXP some_ordinary_permutations(int n, int k, SEXP labels, char layout, SEXP _in
         #undef NEXT
         #define NEXT() \
             if (sampling) { \
-                a_ordinary_permutation(ap, n, floor(max * unif_rand())); \
+                identify_ordinary_permutation(ap, n, floor(max * unif_rand())); \
             } else { \
-                a_ordinary_permutation(ap, n, index[j] - 1); \
+                identify_ordinary_permutation(ap, n, index[j] - 1); \
             }
 
         int labels_type = TYPEOF(labels);

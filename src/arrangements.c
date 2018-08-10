@@ -13,15 +13,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"npermutations", (DL_FUNC) &npermutations, 7},
     {"get_permutations", (DL_FUNC) &get_permutations, 13},
 
-    {"next_asc_k_partitions", (DL_FUNC) &next_asc_k_partitions, 5},
-    {"next_desc_k_partitions", (DL_FUNC) &next_desc_k_partitions, 5},
-    {"num_k_partitions", (DL_FUNC) &num_k_partitions, 2},
-    {"num_k_partitions_bigz", (DL_FUNC) &num_k_partitions_bigz, 2},
-
-    {"next_asc_partitions", (DL_FUNC) &next_asc_partitions, 4},
-    {"next_desc_partitions", (DL_FUNC) &next_desc_partitions, 4},
-    {"num_partitions", (DL_FUNC) &num_partitions, 1},
-    {"num_partitions_bigz", (DL_FUNC) &num_partitions_bigz, 1},
+    {"npartitions", (DL_FUNC) &npartitions, 3},
+    {"get_partitions", (DL_FUNC) &get_partitions, 9},
 
     {NULL, NULL, 0}
 };

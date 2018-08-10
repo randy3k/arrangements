@@ -7,89 +7,6 @@
 #include "../macros.h"
 
 
-double n_k_partitions(int n, int k);
-
-SEXP next_asc_k_partitions(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP _layout) {
-    int i, j;
-    int nprotect = 0;
-    int status = 1;
-    SEXP result;
-
-    int n = as_uint(_n);
-    int k = as_uint(_k);
-    char layout = layout_flag(_layout);
-
-    double dd = Rf_asInteger(_d) == -1 ? n_k_partitions(n, k) : as_uint(_d);
-    int d = verify_dimension(dd, k, layout);
-
-    unsigned int* ap;
-
-    if (!variable_exist(state, "a", INTSXP, k, (void**) &ap)) {
-        for(i=0; i<k-1; i++) ap[i] = 1;
-        ap[k-1] = n - k + 1;
-        status = 0;
-    }
-
-    #undef NEXT
-    #define NEXT() \
-        if (status == 0) { \
-            status = 1; \
-        } else if (!next_asc_k_partition(ap, n, k)) { \
-            status = 0; \
-            break; \
-        }
-
-    RESULT_K_PART();
-
-    if (status == 0) {
-        result = PROTECT(resize_layout(result, j, layout));
-        nprotect++;
-    }
-    UNPROTECT(nprotect);
-    return result;
-}
-
-
-SEXP next_desc_k_partitions(SEXP _n, SEXP _k, SEXP _d, SEXP state, SEXP _layout) {
-    int i, j;
-    int nprotect = 0;
-    int status = 1;
-    SEXP result;
-
-    int n = as_uint(_n);
-    int k = as_uint(_k);
-    char layout = layout_flag(_layout);
-
-    double dd = Rf_asInteger(_d) == -1 ? n_k_partitions(n, k) : as_uint(_d);
-    int d = verify_dimension(dd, k, layout);
-
-    unsigned int* ap;
-
-    if (!variable_exist(state, "a", INTSXP, k, (void**) &ap)) {
-        for(i=1; i<k; i++) ap[i] = 1;
-        ap[0] = n - k + 1;
-        status = 0;
-    }
-
-    #undef NEXT
-    #define NEXT() \
-        if (status == 0) { \
-            status = 1; \
-        } else if (!next_desc_k_partition(ap, n, k)) { \
-            status = 0; \
-            break; \
-        }
-
-    RESULT_K_PART();
-
-    if (status == 0) {
-        result = PROTECT(resize_layout(result, j, layout));
-        nprotect++;
-    }
-    UNPROTECT(nprotect);
-    return result;
-}
-
 double n_k_partitions(int n, int k) {
     if (n < k) {
         return 0;
@@ -119,13 +36,6 @@ double n_k_partitions(int n, int k) {
     double out = p[n1*k - 1];
     free(p);
     return out;
-}
-
-
-SEXP num_k_partitions(SEXP _n, SEXP _k) {
-    int n = as_uint(_n);
-    int k = as_uint(_k);
-    return Rf_ScalarReal(n_k_partitions(n, k));
 }
 
 
@@ -166,15 +76,76 @@ void n_k_partitions_bigz(mpz_t z, int n, int k) {
     free(p);
 }
 
-SEXP num_k_partitions_bigz(SEXP _n, SEXP _k) {
-    int n = as_uint(_n);
-    int k = as_uint(_k);
-    mpz_t z;
-    mpz_init(z);
-    n_k_partitions_bigz(z, n, k);
-    char* c = mpz_get_str(NULL, 10, z);
-    SEXP out = Rf_mkString(c);
-    mpz_clear(z);
-    free(c);
-    return out;
+
+SEXP next_asc_k_partitions(int n, int k, char layout, int d, SEXP state) {
+    int i, j;
+    int nprotect = 0;
+    int status = 1;
+    SEXP result;
+
+    double dd = d == -1 ? n_k_partitions(n, k) : d;
+    d = verify_dimension(dd, k, layout);
+
+    unsigned int* ap;
+
+    if (!variable_exist(state, "a", INTSXP, k, (void**) &ap)) {
+        for(i=0; i<k-1; i++) ap[i] = 1;
+        ap[k-1] = n - k + 1;
+        status = 0;
+    }
+
+    #undef NEXT
+    #define NEXT() \
+        if (status == 0) { \
+            status = 1; \
+        } else if (!next_asc_k_partition(ap, n, k)) { \
+            status = 0; \
+            break; \
+        }
+
+    RESULT_K_PART();
+
+    if (status == 0) {
+        result = PROTECT(resize_layout(result, j, layout));
+        nprotect++;
+    }
+    UNPROTECT(nprotect);
+    return result;
+}
+
+
+SEXP next_desc_k_partitions(int n, int k, char layout, int d, SEXP state) {
+    int i, j;
+    int nprotect = 0;
+    int status = 1;
+    SEXP result;
+
+    double dd = d == -1 ? n_k_partitions(n, k) : d;
+    d = verify_dimension(dd, k, layout);
+
+    unsigned int* ap;
+
+    if (!variable_exist(state, "a", INTSXP, k, (void**) &ap)) {
+        for(i=1; i<k; i++) ap[i] = 1;
+        ap[0] = n - k + 1;
+        status = 0;
+    }
+
+    #undef NEXT
+    #define NEXT() \
+        if (status == 0) { \
+            status = 1; \
+        } else if (!next_desc_k_partition(ap, n, k)) { \
+            status = 0; \
+            break; \
+        }
+
+    RESULT_K_PART();
+
+    if (status == 0) {
+        result = PROTECT(resize_layout(result, j, layout));
+        nprotect++;
+    }
+    UNPROTECT(nprotect);
+    return result;
 }

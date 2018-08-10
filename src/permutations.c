@@ -103,7 +103,7 @@ SEXP get_permutations(SEXP _x, SEXP _k, SEXP _n, SEXP _v, SEXP _freq, SEXP _repl
                 if (has_labels) {
                     ans = Rf_allocMatrix(TYPEOF(_v), 0, 1);
                 } else {
-                    ans = Rf_allocMatrix(INTSXP, 1, 0);
+                    ans = Rf_allocMatrix(INTSXP, 0, 1);
                 }
             } else if (layout == 'l') {
                 if (n == 0) {
@@ -142,13 +142,13 @@ SEXP get_permutations(SEXP _x, SEXP _k, SEXP _n, SEXP _v, SEXP _freq, SEXP _repl
         }
     } else {
         if (replace) {
-            ans = some_replacement_permutations(n, k, _v, layout, _index, _nsample);
+            ans = obtain_replacement_permutations(n, k, _v, layout, _index, _nsample);
         } else if (multiset) {
-            ans = some_multiset_permutations(fp, flen, k, _v, layout, _index, _nsample);
+            ans = obtain_multiset_permutations(fp, flen, k, _v, layout, _index, _nsample);
         } else if (n < k) {
-            ans = some_k_permutations(n, k, _v, layout, _index, _nsample);
+            ans = obtain_k_permutations(n, k, _v, layout, _index, _nsample);
         } else {
-            ans = some_ordinary_permutations(n, k, _v, layout, _index, _nsample);
+            ans = obtain_ordinary_permutations(n, k, _v, layout, _index, _nsample);
         }
     }
 

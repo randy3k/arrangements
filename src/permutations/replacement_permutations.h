@@ -7,7 +7,7 @@
 #include "../macros.h"
 
 
-void a_replacement_permutation(unsigned int* ar, unsigned int n, unsigned int k, unsigned int index) {
+void identify_replacement_permutation(unsigned int* ar, unsigned int n, unsigned int k, unsigned int index) {
     unsigned int i, j;
 
     for (i = 0; i < k; i++) {
@@ -17,7 +17,7 @@ void a_replacement_permutation(unsigned int* ar, unsigned int n, unsigned int k,
     }
 }
 
-void a_replacement_permutation_bigz(unsigned int* ar, unsigned int n, unsigned int k, mpz_t index) {
+void identify_replacement_permutation_bigz(unsigned int* ar, unsigned int n, unsigned int k, mpz_t index) {
     unsigned int i;
 
     mpz_t q;
@@ -86,7 +86,7 @@ SEXP next_replacement_permutations(int n, int k, SEXP labels, char layout, int d
 }
 
 
-SEXP some_replacement_permutations(int n, int k, SEXP labels, char layout, SEXP _index, SEXP _nsample) {
+SEXP obtain_replacement_permutations(int n, int k, SEXP labels, char layout, SEXP _index, SEXP _nsample) {
     int i, j;
     int nprotect = 0;
     SEXP result = R_NilValue;
@@ -126,7 +126,7 @@ SEXP some_replacement_permutations(int n, int k, SEXP labels, char layout, SEXP 
                 mpz_set_str(z, CHAR(STRING_ELT(_index, j)), 10); \
                 mpz_sub_ui(z, z, 1); \
             } \
-            a_replacement_permutation_bigz(ap, n, k, z);
+            identify_replacement_permutation_bigz(ap, n, k, z);
 
         int labels_type = TYPEOF(labels);
         if (labels_type == NILSXP) {
@@ -157,9 +157,9 @@ SEXP some_replacement_permutations(int n, int k, SEXP labels, char layout, SEXP 
         #undef NEXT
         #define NEXT() \
             if (sampling) { \
-                a_replacement_permutation(ap, n, k, floor(max * unif_rand())); \
+                identify_replacement_permutation(ap, n, k, floor(max * unif_rand())); \
             } else { \
-                a_replacement_permutation(ap, n, k, index[j] - 1); \
+                identify_replacement_permutation(ap, n, k, index[j] - 1); \
             }
 
         int labels_type = TYPEOF(labels);

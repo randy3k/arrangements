@@ -113,7 +113,7 @@ test_that("Integer k-partitions - ascending ipartitions", {
     expect_equal(ipart$getnext(layout = "row"), part[1, , drop = FALSE])
     expect_equal(ipart$getnext(layout = "row"), part[2, , drop = FALSE])
     expect_equal(ipart$getnext(2, layout = "row"), part[3:4, ])
-    ipart$getnext(30, layout ="row")
+    ipart$getnext(30, layout = "row")
     expect_equal(nrow(ipart$getnext(30, layout = "row")), 8)
     expect_equal(ipart$getnext(layout = "row"), NULL)
 
@@ -123,7 +123,7 @@ test_that("Integer k-partitions - ascending ipartitions", {
     expect_equal(ipart$getnext(layout = "column"), part[, 1, drop = FALSE])
     expect_equal(ipart$getnext(layout = "column"), part[, 2, drop = FALSE])
     expect_equal(ipart$getnext(2, layout = "column"), part[, 3:4])
-    ipart$getnext(30, layout ="column")
+    ipart$getnext(30, layout = "column")
     expect_equal(ncol(ipart$getnext(30, layout = "column")), 8)
     expect_equal(ipart$getnext(layout = "column"), NULL)
 
@@ -133,7 +133,7 @@ test_that("Integer k-partitions - ascending ipartitions", {
     expect_equal(ipart$getnext(layout = "list"), part[1])
     expect_equal(ipart$getnext(layout = "list"), part[2])
     expect_equal(ipart$getnext(2, layout = "list"), part[3:4])
-    ipart$getnext(30, layout ="list")
+    ipart$getnext(30, layout = "list")
     expect_equal(length(ipart$getnext(30, layout = "list")), 8)
     expect_equal(ipart$getnext(layout = "list"), NULL)
 

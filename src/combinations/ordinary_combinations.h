@@ -9,7 +9,7 @@
 #include "../utils.h"
 
 
-void a_ordinary_combination(unsigned int* ar, unsigned int n, unsigned int k, unsigned int index) {
+void identify_ordinary_combination(unsigned int* ar, unsigned int n, unsigned int k, unsigned int index) {
     unsigned int i, j;
     unsigned int start = 0;
     unsigned int count, this_count;
@@ -29,7 +29,7 @@ void a_ordinary_combination(unsigned int* ar, unsigned int n, unsigned int k, un
     }
 }
 
-void a_ordinary_combination_bigz(unsigned int* ar, unsigned int n, unsigned int k, mpz_t index) {
+void identify_ordinary_combination_bigz(unsigned int* ar, unsigned int n, unsigned int k, mpz_t index) {
     unsigned int i, j;
     unsigned int start = 0;
     mpz_t count, this_count;
@@ -102,7 +102,7 @@ SEXP next_ordinary_combinations(int n, int k, SEXP labels, char layout, int d, S
 }
 
 
-SEXP some_ordinary_combinations(int n, int k, SEXP labels, char layout, SEXP _index, SEXP _nsample) {
+SEXP obtain_ordinary_combinations(int n, int k, SEXP labels, char layout, SEXP _index, SEXP _nsample) {
     int i, j;
     int nprotect = 0;
     SEXP result = R_NilValue;
@@ -142,7 +142,7 @@ SEXP some_ordinary_combinations(int n, int k, SEXP labels, char layout, SEXP _in
                 mpz_set_str(z, CHAR(STRING_ELT(_index, j)), 10); \
                 mpz_sub_ui(z, z, 1); \
             } \
-            a_ordinary_combination_bigz(ap, n, k, z);
+            identify_ordinary_combination_bigz(ap, n, k, z);
 
         int labels_type = TYPEOF(labels);
         if (labels_type == NILSXP) {
@@ -173,9 +173,9 @@ SEXP some_ordinary_combinations(int n, int k, SEXP labels, char layout, SEXP _in
         #undef NEXT
         #define NEXT() \
             if (sampling) { \
-                a_ordinary_combination(ap, n, k, floor(max * unif_rand())); \
+                identify_ordinary_combination(ap, n, k, floor(max * unif_rand())); \
             } else { \
-                a_ordinary_combination(ap, n, k, index[j] - 1); \
+                identify_ordinary_combination(ap, n, k, index[j] - 1); \
             }
 
         int labels_type = TYPEOF(labels);

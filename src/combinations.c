@@ -87,7 +87,7 @@ SEXP get_combinations(SEXP _x, SEXP _k, SEXP _n, SEXP _v, SEXP _freq, SEXP _repl
                 if (has_labels) {
                     ans = Rf_allocMatrix(TYPEOF(_v), 0, 1);
                 } else {
-                    ans = Rf_allocMatrix(INTSXP, 1, 0);
+                    ans = Rf_allocMatrix(INTSXP, 0, 1);
                 }
             } else if (layout == 'l') {
                 if (n == 0) {
@@ -124,11 +124,11 @@ SEXP get_combinations(SEXP _x, SEXP _k, SEXP _n, SEXP _v, SEXP _freq, SEXP _repl
         }
     } else {
         if (replace) {
-            ans = some_replacement_combinations(n, k, _v, layout, _index, _nsample);
+            ans = obtain_replacement_combinations(n, k, _v, layout, _index, _nsample);
         } else if (multiset) {
-            ans = some_multiset_combinations(fp, flen, k, _v, layout, _index, _nsample);
+            ans = obtain_multiset_combinations(fp, flen, k, _v, layout, _index, _nsample);
         } else {
-            ans = some_ordinary_combinations(n, k, _v, layout, _index, _nsample);
+            ans = obtain_ordinary_combinations(n, k, _v, layout, _index, _nsample);
         }
     }
 
