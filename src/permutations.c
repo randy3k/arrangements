@@ -148,7 +148,7 @@ SEXP get_permutations(SEXP _x, SEXP _k, SEXP _n, SEXP _v, SEXP _freq, SEXP _repl
         } else if (n < k) {
             ans = obtain_k_permutations(n, k, _v, layout, _index, _nsample);
         } else {
-            ans = obtain_ordinary_permutations(n, k, _v, layout, _index, _nsample);
+            ans = obtain_ordinary_permutations(n, _v, layout, _index, _nsample);
         }
     }
 

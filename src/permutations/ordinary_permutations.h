@@ -136,22 +136,35 @@ SEXP next_ordinary_permutations(int n, int k, SEXP labels, SEXP freq, char layou
 }
 
 
-SEXP obtain_ordinary_permutations(int n, int k, SEXP labels, char layout, SEXP _index, SEXP _nsample) {
+SEXP obtain_ordinary_permutations(int n, SEXP labels, char layout, SEXP _index, SEXP _nsample) {
     int i, j;
     int nprotect = 0;
+    int bigz = 0;
+    int sampling = _index == R_NilValue;
     SEXP result = R_NilValue;
 
-    double dd = _index == R_NilValue ? as_uint(_nsample) : Rf_length(_index);
+    double dd;
+    if (sampling) {
+        dd = as_uint(_nsample);
+    } else if (TYPEOF(_index) == RAWSXP || Rf_inherits(_index, "bigz")) {
+        dd = *((int* ) RAW(_index));
+        bigz = 1;
+    } else {
+        dd = Rf_length(_index);
+    }
     int d = verify_dimension(dd, n, layout);
+
+    double max;
+    if (!bigz) {
+        max = fact(n);
+        bigz = max > INT_MAX;
+    }
 
     unsigned int* ap;
     ap = (unsigned int*) R_alloc(n, sizeof(int));
 
-    double max = fact(n);
-    int sampling = _index == R_NilValue;
-    int bigz = TYPEOF(_index) == STRSXP || max > INT_MAX;
-
     if (bigz) {
+        mpz_t* index;
         gmp_randstate_t randstate;
         mpz_t z;
         mpz_t maxz;
@@ -163,8 +176,14 @@ SEXP obtain_ordinary_permutations(int n, int k, SEXP labels, char layout, SEXP _
             mpz_init(maxz);
             mpz_fac_ui(maxz, n);
         } else {
-            if (TYPEOF(_index) != STRSXP) {
-                _index = Rf_coerceVector(_index, STRSXP);
+            index = (mpz_t*) R_alloc(d, sizeof(mpz_t));
+            for (i = 0; i < d; i++) mpz_init(index[i]);
+            int status = as_mpz_array(index, d, _index);
+            for(i = 0; i < d; i++) {
+                if (status < 0 || mpz_sgn(index[i]) <= 0) {
+                    for (i = 0; i < d; i++) mpz_clear(index[i]);
+                    Rf_error("expect positive index");
+                }
             }
         }
 
@@ -173,8 +192,7 @@ SEXP obtain_ordinary_permutations(int n, int k, SEXP labels, char layout, SEXP _
             if (sampling) { \
                 mpz_urandomm(z, randstate, maxz); \
             } else { \
-                mpz_set_str(z, CHAR(STRING_ELT(_index, j)), 10); \
-                mpz_sub_ui(z, z, 1); \
+                mpz_sub_ui(z, index[j], 1); \
             } \
             identify_ordinary_permutation_bigz(ap, n, z);
 
@@ -194,6 +212,8 @@ SEXP obtain_ordinary_permutations(int n, int k, SEXP labels, char layout, SEXP _
             mpz_clear(maxz);
             gmp_randclear(randstate);
             PutRNGstate();
+        } else {
+            for (i = 0; i < d; i++) mpz_clear(index[i]);
         }
 
     } else {
@@ -201,7 +221,12 @@ SEXP obtain_ordinary_permutations(int n, int k, SEXP labels, char layout, SEXP _
         if (sampling) {
             GetRNGstate();
         } else {
-            index = INTEGER(_index);
+            index = as_uint_array(_index);
+            for (i = 0; i < d; i++) {
+                if (index[0] <= 0) {
+                    Rf_error("expect positive index");
+                }
+            }
         }
 
         #undef NEXT

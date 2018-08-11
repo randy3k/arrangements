@@ -198,6 +198,18 @@ int* as_uint_array(SEXP x) {
             yp[i] = z;
         }
         return yp;
+    } else if (TYPEOF(x) == STRSXP) {
+        int* yp;
+        double w;
+        n = Rf_length(x);
+        yp = (int*) R_alloc(n, sizeof(int));
+        for (i=0; i<n; i++) {
+            w = atof(CHAR(STRING_ELT(x, i)));
+            z = (int) w;
+            if (w != z || w < 0) Rf_error("expect non-negative integer");
+            yp[i] = z;
+        }
+        return yp;
     }
     Rf_error("expect non-negative integer");
     return NULL;
