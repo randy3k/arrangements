@@ -1,10 +1,10 @@
 validate_n_value <- function(n, v, freq, replace) {
     if (!is.null(freq)) {
-        all(freq %% 1 == 0 & freq >= 0) || stop("expect non-negative integer")
+        all(freq %% 1 == 0 & freq >= 0) || stop("expect integer")
     }
     if (is.null(v)) {
         if (is.null(freq)) {
-            (n %% 1 == 0 && n >= 0) || stop("expect non-negative integer")
+            (n %% 1 == 0 && n >= 0) || stop("expect integer")
         } else if (replace) {
             n <- length(freq)
             (length(v) == n) || stop("length(v) != length(freq)")

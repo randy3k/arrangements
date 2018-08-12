@@ -145,7 +145,7 @@ SEXP get_permutations(SEXP _x, SEXP _k, SEXP _n, SEXP _v, SEXP _freq, SEXP _repl
             ans = obtain_replacement_permutations(n, k, _v, layout, _index, _nsample);
         } else if (multiset) {
             ans = obtain_multiset_permutations(fp, flen, k, _v, layout, _index, _nsample);
-        } else if (n < k) {
+        } else if (k < n) {
             ans = obtain_k_permutations(n, k, _v, layout, _index, _nsample);
         } else {
             ans = obtain_ordinary_permutations(n, _v, layout, _index, _nsample);

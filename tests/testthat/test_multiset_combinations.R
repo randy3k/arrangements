@@ -8,8 +8,8 @@ test_that("Multiset Combinations - ncombinations", {
     expect_equal(ncombinations(freq = rep(10, 11), k = 50, bigz = TRUE), gmp::as.bigz("9608991865"))
     expect_equal(ncombinations(freq = c(0, 0, 0), k = 4), 0)
     expect_equal(ncombinations(freq = c(0, 0, 0), k = 0), 1)
-    expect_error(ncombinations(freq = c(2, 3, 3, 4), k = -1), "expect non-negative integer")
-    expect_error(ncombinations(freq = c(2, 3, 3, 4), k = 1.5), "expect non-negative integer")
+    expect_error(ncombinations(freq = c(2, 3, 3, 4), k = -1), "expect integer")
+    expect_error(ncombinations(freq = c(2, 3, 3, 4), k = 1.5), "expect integer")
 })
 
 test_that("Multiset Combinations - combinations", {
@@ -43,8 +43,8 @@ test_that("Multiset Combinations - combinations", {
     expect_equal(comb[29, ], LETTERS[rep(4, 4)])
 
     expect_error(combinations(freq = rep(10, 11), k = 50), "too many results")
-    expect_error(combinations(freq = c(2, 3, 3, 4), k = -1), "expect non-negative integer")
-    expect_error(combinations(freq = c(2, 3, 3, 4), k = 1.5), "expect non-negative integer")
+    expect_error(combinations(freq = c(2, 3, 3, 4), k = -1), "expect integer")
+    expect_error(combinations(freq = c(2, 3, 3, 4), k = 1.5), "expect integer")
     expect_equal(dim(combinations(freq = c(2, 3, 3, 4), k = 0)), c(1, 0))
     expect_equal(dim(combinations(freq = c(0, 0, 0), k = 1 )), c(0, 1))
     expect_equal(dim(combinations(freq = c(0, 0, 0), k = 0 )), c(1, 0))
@@ -84,8 +84,8 @@ test_that("Multiset Combinations - icombinations", {
     expect_equal(length(icomb$getnext(10, layout = "list")), 7)
     expect_equal(icomb$getnext(layout = "list"), NULL)
 
-    expect_error(icombinations(freq = c(2, 3, 3, 4), k = -1), "expect non-negative integer")
-    expect_error(icombinations(freq = c(2, 3, 3, 4), k = 1.5), "expect non-negative integer")
+    expect_error(icombinations(freq = c(2, 3, 3, 4), k = -1), "expect integer")
+    expect_error(icombinations(freq = c(2, 3, 3, 4), k = 1.5), "expect integer")
     icomb <- icombinations(freq = c(2, 3, 3, 4), k = 0)
     expect_equal(dim(icomb$collect()), c(1, 0))
     expect_equal(length(icomb$getnext()), 0)
@@ -93,4 +93,16 @@ test_that("Multiset Combinations - icombinations", {
     icomb <- icombinations(freq = c(2, 3, 3, 4), k = 13)
     expect_equal(icomb$collect(), NULL)
     expect_equal(icomb$getnext(), NULL)
+})
+
+test_that("Multiset Combinations - index", {
+    comb <- combinations(freq = c(2, 3, 3, 4), k = 4)
+    expect_equal(combinations(freq = c(2, 3, 3, 4), k = 4, index = 1:29), comb)
+    expect_equal(combinations(freq = c(2, 3, 3, 4), k = 4, index = as.numeric(1:29)), comb)
+    expect_equal(combinations(freq = c(2, 3, 3, 4), k = 4, index = as.character(1:29)), comb)
+    expect_equal(combinations(freq = c(2, 3, 3, 4), k = 4, index = gmp::as.bigz(1:29)), comb)
+    expect_equal(combinations(freq = c(2, 3, 3, 4), k = 4, index = 2)[1, ], c(1, 1, 2, 3))
+    expect_equal(combinations(freq = c(2, 3, 3, 4), k = 4, index = 29)[1, ], c(4, 4, 4, 4))
+    expect_equal(combinations(freq = rep(10, 11), k = 50, index = 2)[1, ], c(rep(1:4, each = 10), rep(5, 9), 6))
+    expect_equal(combinations(freq = rep(10, 11), k = 50, index = "9608991865")[1, ], rep(7:11, each = 10))
 })

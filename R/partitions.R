@@ -184,9 +184,9 @@ Partitions <- R6::R6Class(
 #' }
 #' @export
 ipartitions <- function(n, k = NULL, descending = FALSE) {
-    (n %% 1 == 0  && n >= 0) || stop("expect non-negative integer")
+    (n %% 1 == 0  && n >= 0) || stop("expect integer")
     if (!is.null(k)) {
-        (k %% 1 == 0 && k >= 0) || stop("expect non-negative integer")
+        (k %% 1 == 0 && k >= 0) || stop("expect integer")
     }
     Partitions$new(n, k, descending)
 }

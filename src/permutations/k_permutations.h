@@ -164,7 +164,7 @@ SEXP obtain_k_permutations(int n, int k, SEXP labels, char layout, SEXP _index, 
             for(i = 0; i < d; i++) {
                 if (status < 0 || mpz_sgn(index[i]) <= 0) {
                     for (i = 0; i < d; i++) mpz_clear(index[i]);
-                    Rf_error("expect positive index");
+                    Rf_error("expect integer");
                 }
             }
         }
@@ -206,7 +206,7 @@ SEXP obtain_k_permutations(int n, int k, SEXP labels, char layout, SEXP _index, 
             index = as_uint_array(_index);
             for (i = 0; i < d; i++) {
                 if (index[0] <= 0) {
-                    Rf_error("expect positive index");
+                    Rf_error("expect integer");
                 }
             }
         }

@@ -7,8 +7,8 @@ test_that("Multiset Permutations - npermutations", {
     expect_error(npermutations(x = LETTERS[1:3], freq = c(10, 5, 10)), "integer overflow")
     expect_equal(npermutations(freq = c(10, 5, 10), bigz = TRUE), gmp::as.bigz("9816086280"))
     expect_equal(npermutations(freq = c(0, 0, 0)), 1)
-    expect_error(npermutations(freq = c(2, -1, 0)), "expect non-negative integer")
-    expect_error(npermutations(freq = c(2, 2, 1.5)), "expect non-negative integer")
+    expect_error(npermutations(freq = c(2, -1, 0)), "expect integer")
+    expect_error(npermutations(freq = c(2, 2, 1.5)), "expect integer")
 })
 
 test_that("Multiset Permutations - permutations", {
@@ -42,8 +42,8 @@ test_that("Multiset Permutations - permutations", {
     expect_equal(perm[140, ], LETTERS[c(3, 3, 3, 2, 1, 1, 1)])
 
     expect_error(permutations(freq = c(10, 5, 10)), "too many results")
-    expect_error(permutations(freq = c(2, -1, 0)), "expect non-negative integer")
-    expect_error(permutations(freq = c(2, 2, 1.5)), "expect non-negative integer")
+    expect_error(permutations(freq = c(2, -1, 0)), "expect integer")
+    expect_error(permutations(freq = c(2, 2, 1.5)), "expect integer")
     expect_equal(dim(permutations(freq = c(0, 0, 0))), c(1, 0))
 })
 
@@ -81,8 +81,8 @@ test_that("Multiset Permutations - ipermutations", {
     expect_equal(length(iperm$getnext(10, layout = "list")), 8)
     expect_equal(iperm$getnext(layout = "list"), NULL)
 
-    expect_error(ipermutations(freq = c(2, -1, 0)), "expect non-negative integer")
-    expect_error(ipermutations(freq = c(2, 2, 1.5)), "expect non-negative integer")
+    expect_error(ipermutations(freq = c(2, -1, 0)), "expect integer")
+    expect_error(ipermutations(freq = c(2, 2, 1.5)), "expect integer")
 })
 
 
@@ -97,8 +97,8 @@ test_that("Multiset K-Permutations - npermutations", {
     expect_equal(npermutations(freq = c(10, 50, 10), k = 20, bigz = TRUE), gmp::as.bigz("3224323183"))
     expect_equal(npermutations(freq = c(0, 0, 0), k = 4), 0)
     expect_equal(npermutations(freq = c(0, 0, 0), k = 0), 1)
-    expect_error(npermutations(freq = c(3, 2, 3), k = -1), "expect non-negative integer")
-    expect_error(npermutations(freq = c(3, 2, 3), k = 1.5), "expect non-negative integer")
+    expect_error(npermutations(freq = c(3, 2, 3), k = -1), "expect integer")
+    expect_error(npermutations(freq = c(3, 2, 3), k = 1.5), "expect integer")
 })
 
 test_that("Multiset K-Permutations - permutations", {
@@ -126,8 +126,8 @@ test_that("Multiset K-Permutations - permutations", {
     expect_equal(perm[70, ], LETTERS[c(3, 3, 3, 2)])
 
     expect_error(permutations(freq = c(10, 50, 10), k = 20), "too many results")
-    expect_error(permutations(freq = c(3, 2, 3), k = -1), "expect non-negative integer")
-    expect_error(permutations(freq = c(3, 2, 3), k = 1.5), "expect non-negative integer")
+    expect_error(permutations(freq = c(3, 2, 3), k = -1), "expect integer")
+    expect_error(permutations(freq = c(3, 2, 3), k = 1.5), "expect integer")
     expect_equal(dim(permutations(freq = c(3, 2, 3), k = 0)), c(1, 0))
     expect_equal(dim(permutations(freq = c(0, 0, 0), k = 1 )), c(0, 1))
     expect_equal(dim(permutations(freq = c(0, 0, 0), k = 0 )), c(1, 0))
@@ -167,8 +167,8 @@ test_that("Multiset K-Permutations - ipermutations", {
     expect_equal(length(iperm$getnext(10, layout = "list")), 8)
     expect_equal(iperm$getnext(layout = "list"), NULL)
 
-    expect_error(ipermutations(freq = c(3, 2, 3), k = -1), "expect non-negative integer")
-    expect_error(ipermutations(freq = c(3, 2, 3), k = 1.5), "expect non-negative integer")
+    expect_error(ipermutations(freq = c(3, 2, 3), k = -1), "expect integer")
+    expect_error(ipermutations(freq = c(3, 2, 3), k = 1.5), "expect integer")
     iperm <- ipermutations(freq = c(3, 2, 3), k = 0)
     expect_equal(dim(iperm$collect()), c(1, 0))
     expect_equal(length(iperm$getnext()), 0)
@@ -176,4 +176,16 @@ test_that("Multiset K-Permutations - ipermutations", {
     iperm <- ipermutations(freq = c(3, 2, 3), k = 9)
     expect_equal(iperm$collect(), NULL)
     expect_equal(iperm$getnext(), NULL)
+})
+
+test_that("Multiset Permutations - index", {
+    perm <- permutations(freq = c(3, 2, 3), k = 4)
+    expect_equal(permutations(freq = c(3, 2, 3), k = 4, index = 1:70), perm)
+    expect_equal(permutations(freq = c(3, 2, 3), k = 4, index = as.numeric(1:70)), perm)
+    expect_equal(permutations(freq = c(3, 2, 3), k = 4, index = as.character(1:70)), perm)
+    expect_equal(permutations(freq = c(3, 2, 3), k = 4, index = gmp::as.bigz(1:70)), perm)
+    expect_equal(permutations(freq = c(3, 2, 3), k = 4, index = 2)[1, ], c(1, 1, 1, 3))
+    expect_equal(permutations(freq = c(3, 2, 3), k = 4, index = 70)[1, ], c(3, 3, 3, 2))
+    expect_equal(permutations(freq = c(10, 50, 10), k = 20, index = 2)[1, ], c(rep(1, 10), rep(2, 9), 3))
+    expect_equal(permutations(freq = c(10, 50, 10), k = 20, index = "3224323183")[1, ], rep(3:2, each = 10))
 })

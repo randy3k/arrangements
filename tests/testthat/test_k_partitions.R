@@ -11,8 +11,8 @@ test_that("Integer partitions in k parts - npartitions", {
     expect_equal(npartitions(200, 50, bigz = TRUE), gmp::as.bigz("39403290219"))
     expect_equal(npartitions(20, 0), 0)
     expect_equal(npartitions(0, 0), 1)
-    expect_error(npartitions(20, -1), "expect non-negative integer")
-    expect_error(npartitions(20, 1.5), "expect non-negative integer")
+    expect_error(npartitions(20, -1), "expect integer")
+    expect_error(npartitions(20, 1.5), "expect integer")
 })
 
 test_that("Integer k-partitions - ascending partitions", {
@@ -51,8 +51,8 @@ test_that("Integer k-partitions - ascending partitions", {
     expect_equal(dim(partitions(20, 21)), c(0, 21))
     expect_equal(dim(partitions(20, 21, layout = "column")), c(21, 0))
     expect_equal(length(partitions(20, 21, layout = "list")), 0)
-    expect_error(partitions(20, -1), "expect non-negative integer")
-    expect_error(partitions(20, 1.5), "expect non-negative integer")
+    expect_error(partitions(20, -1), "expect integer")
+    expect_error(partitions(20, 1.5), "expect integer")
 })
 
 test_that("Integer k-partitions - descending partitions", {
@@ -91,8 +91,8 @@ test_that("Integer k-partitions - descending partitions", {
     expect_equal(dim(partitions(20, 21, descending = TRUE)), c(0, 21))
     expect_equal(dim(partitions(20, 21, descending = TRUE, layout = "column")), c(21, 0))
     expect_equal(length(partitions(20, 21, descending = TRUE, layout = "list")), 0)
-    expect_error(partitions(20, -1, descending = TRUE), "expect non-negative integer")
-    expect_error(partitions(20, 1.5, descending = TRUE), "expect non-negative integer")
+    expect_error(partitions(20, -1, descending = TRUE), "expect integer")
+    expect_error(partitions(20, 1.5, descending = TRUE), "expect integer")
 })
 
 test_that("Integer k-partitions - ascending ipartitions", {
@@ -140,8 +140,8 @@ test_that("Integer k-partitions - ascending ipartitions", {
     ipart <- ipartitions(20, 21)
     expect_equal(ipart$collect(), NULL)
     expect_equal(ipart$getnext(), NULL)
-    expect_error(ipartitions(20, -1), "expect non-negative integer")
-    expect_error(ipartitions(20, 1.5), "expect non-negative integer")
+    expect_error(ipartitions(20, -1), "expect integer")
+    expect_error(ipartitions(20, 1.5), "expect integer")
 })
 
 test_that("Integer partitions - descending ipartitions", {
@@ -189,6 +189,6 @@ test_that("Integer partitions - descending ipartitions", {
     ipart <- ipartitions(20, 21, descending = TRUE)
     expect_equal(ipart$collect(), NULL)
     expect_equal(ipart$getnext(), NULL)
-    expect_error(ipartitions(20, -1, descending = TRUE), "expect non-negative integer")
-    expect_error(ipartitions(20, 1.5, descending = TRUE), "expect non-negative integer")
+    expect_error(ipartitions(20, -1, descending = TRUE), "expect integer")
+    expect_error(ipartitions(20, 1.5, descending = TRUE), "expect integer")
 })

@@ -201,7 +201,7 @@ ipermutations <- function(x, k = n, n = NULL, v = NULL, freq = NULL, replace = F
             n <- validate_n_value(n, v, freq, replace)
         }
     }
-    (k %% 1 == 0 && k >= 0) || stop("expect non-negative integer")
+    (k %% 1 == 0 && k >= 0) || stop("expect integer")
 
     Permutations$new(n, k, v, freq, replace)
 }

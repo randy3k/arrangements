@@ -168,7 +168,7 @@ int variable_exist(SEXP state, char* name, int TYPE, int k, void** p) {
 int as_uint(SEXP x) {
     double y = Rf_asReal(x);
     int z = (int) y;
-    if (y != z || z < 0) Rf_error("expect non-negative integer");
+    if (y != z || z < 0) Rf_error("expect integer");
     return z;
 }
 
@@ -181,7 +181,7 @@ int* as_uint_array(SEXP x) {
         n = Rf_length(x);
         for (i=0; i<n; i++) {
             z = xp[i];
-            if (z < 0) Rf_error("expect non-negative integer");
+            if (z < 0) Rf_error("expect integer");
         }
         return xp;
     } else if (TYPEOF(x) == REALSXP) {
@@ -194,7 +194,7 @@ int* as_uint_array(SEXP x) {
         for (i=0; i<n; i++) {
             w = xp[i];
             z = (int) w;
-            if (w != z || w < 0) Rf_error("expect non-negative integer");
+            if (w != z || w < 0) Rf_error("expect integer");
             yp[i] = z;
         }
         return yp;
@@ -206,12 +206,12 @@ int* as_uint_array(SEXP x) {
         for (i=0; i<n; i++) {
             w = atof(CHAR(STRING_ELT(x, i)));
             z = (int) w;
-            if (w != z || w < 0) Rf_error("expect non-negative integer");
+            if (w != z || w < 0) Rf_error("expect integer");
             yp[i] = z;
         }
         return yp;
     }
-    Rf_error("expect non-negative integer");
+    Rf_error("expect integer");
     return NULL;
 }
 
