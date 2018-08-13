@@ -5,7 +5,8 @@
 \title{Combinations generator}
 \usage{
 combinations(x = NULL, k = n, n = NULL, v = NULL, freq = NULL,
-  replace = FALSE, layout = "row", index = NULL, nsample = NULL)
+  replace = FALSE, layout = "row", nitem = -1L, skip = NULL,
+  index = NULL, nsample = NULL)
 }
 \arguments{
 \item{x}{an integer or a vector, will be treated as \code{n} if integer; otherwise, will be treated as \code{v}}
@@ -22,6 +23,10 @@ combinations(x = NULL, k = n, n = NULL, v = NULL, freq = NULL,
 
 \item{layout}{if "row", "column" or "list" is specified, the returned value would be a
 "row-major" matrix, a "column-major" matrix or a list respectively}
+
+\item{nitem}{number of combinations required, usually used with \code{skip}}
+
+\item{skip}{the number of combinations skipped}
 
 \item{index}{a vector of indices of the desired combinations}
 
@@ -47,6 +52,15 @@ combinations(4, 2, layout = "column")
 
 # list output
 combinations(4, 2, layout = "list")
+
+# specifc range of combinations
+combinations(4, 2, nitem = 2, skip = 3)
+
+# specific combinations
+combinations(4, 2, index = c(3, 5))
+
+# random combinations
+combinations(4, 2, nsample = 3)
 
 # zero sized combinations
 dim(combinations(5, 0))

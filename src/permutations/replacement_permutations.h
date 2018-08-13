@@ -3,6 +3,7 @@
 #include <Rinternals.h>
 #include <gmp.h>
 #include "../combinatorics.h"
+#include "../gmp_utils.h"
 #include "../utils.h"
 #include "../macros.h"
 
@@ -36,23 +37,63 @@ void identify_replacement_permutation_bigz(unsigned int* ar, unsigned int n, uns
 }
 
 
-SEXP next_replacement_permutations(int n, int k, SEXP labels, char layout, int d, SEXP state) {
+SEXP next_replacement_permutations(int n, int k, SEXP labels, char layout, int d, SEXP _skip, SEXP state) {
     int i, j;
     int nprotect = 0;
     int status = 1;
     SEXP result;
 
-    double dd = d == -1 ? pow(n, k) : d;
-    d = verify_dimension(dd, k, layout);
-
     size_t *sizes;
     sizes = (size_t*) R_alloc(k, sizeof(*sizes));
     for(i=0; i<k; i++) sizes[i] = n;
 
+    double dd;
+    double maxd;
+    int bigz = TYPEOF(_skip) == RAWSXP && Rf_inherits(_skip, "bigz");
+    if (d == -1 || !Rf_isNull(_skip)) {
+        maxd = pow(n, k);
+        bigz = bigz || maxd >= INT_MAX;
+    }
+    dd = d == -1 ? maxd : d;
+    d = verify_dimension(dd, n, layout);
+
+    mpz_t maxz;
+    int skip;
+    mpz_t skipz;
+    if (!Rf_isNull(_skip)) {
+        if (bigz) {
+            mpz_init(maxz);
+            mpz_init(skipz);
+            mpz_ui_pow_ui(maxz, n, k);
+            if (as_mpz_array(&skipz, 1, _skip) < 0 || mpz_sgn(skipz) < 0) {
+                mpz_clear(skipz);
+                mpz_clear(maxz);
+                Rf_error("expect integer");
+            } else if (mpz_cmp(skipz, maxz) >= 0) {
+                mpz_set(skipz, 0);
+            }
+            mpz_clear(maxz);
+        } else {
+            skip = as_uint(_skip);
+            if (skip >= (int) maxd) {
+                skip = 0;
+            }
+        }
+    }
+
     unsigned int* ap;
 
     if (!variable_exist(state, "a", INTSXP, k, (void**) &ap)) {
-        for(i=0; i<k; i++) ap[i] = 0;
+        if (Rf_isNull(_skip)) {
+            for(i=0; i<k; i++) ap[i] = 0;
+        } else {
+            if (bigz) {
+                identify_replacement_permutation_bigz(ap, n, k, skipz);
+                mpz_clear(skipz);
+            } else {
+                identify_replacement_permutation(ap, n, k, skip);
+            }
+        }
         status = 0;
     }
 
@@ -96,7 +137,7 @@ SEXP obtain_replacement_permutations(int n, int k, SEXP labels, char layout, SEX
     double dd;
     if (sampling) {
         dd = as_uint(_nsample);
-    } else if (TYPEOF(_index) == RAWSXP || Rf_inherits(_index, "bigz")) {
+    } else if (TYPEOF(_index) == RAWSXP && Rf_inherits(_index, "bigz")) {
         dd = *((int* ) RAW(_index));
         bigz = 1;
     } else {
@@ -104,10 +145,10 @@ SEXP obtain_replacement_permutations(int n, int k, SEXP labels, char layout, SEX
     }
     int d = verify_dimension(dd, k, layout);
 
-    double max;
+    double maxd;
     if (!bigz) {
-        max = pow(n, k);
-        bigz = max > INT_MAX;
+        maxd = pow(n, k);
+        bigz = maxd > INT_MAX;
     }
 
     unsigned int* ap;
@@ -119,12 +160,12 @@ SEXP obtain_replacement_permutations(int n, int k, SEXP labels, char layout, SEX
         mpz_t z;
         mpz_t maxz;
         mpz_init(z);
+        mpz_init(maxz);
+        mpz_ui_pow_ui(maxz, n, k);
 
         if (sampling) {
             GetRNGstate();
             set_gmp_randstate(randstate);
-            mpz_init(maxz);
-            mpz_ui_pow_ui(maxz, n, k);
         } else {
             index = (mpz_t*) R_alloc(d, sizeof(mpz_t));
             for (i = 0; i < d; i++) mpz_init(index[i]);
@@ -132,7 +173,11 @@ SEXP obtain_replacement_permutations(int n, int k, SEXP labels, char layout, SEX
             for(i = 0; i < d; i++) {
                 if (status < 0 || mpz_sgn(index[i]) <= 0) {
                     for (i = 0; i < d; i++) mpz_clear(index[i]);
+                    mpz_clear(maxz);
+                    mpz_clear(z);
                     Rf_error("expect integer");
+                } else if (mpz_cmp(index[i], maxz) > 0) {
+                    mpz_set(index[i], maxz);
                 }
             }
         }
@@ -173,8 +218,10 @@ SEXP obtain_replacement_permutations(int n, int k, SEXP labels, char layout, SEX
         } else {
             index = as_uint_array(_index);
             for (i = 0; i < d; i++) {
-                if (index[0] <= 0) {
+                if (index[i] <= 0) {
                     Rf_error("expect integer");
+                } else if (index[i] > maxd) {
+                    index[i] = maxd;
                 }
             }
         }
@@ -182,7 +229,7 @@ SEXP obtain_replacement_permutations(int n, int k, SEXP labels, char layout, SEX
         #undef NEXT
         #define NEXT() \
             if (sampling) { \
-                identify_replacement_permutation(ap, n, k, floor(max * unif_rand())); \
+                identify_replacement_permutation(ap, n, k, floor(maxd * unif_rand())); \
             } else { \
                 identify_replacement_permutation(ap, n, k, index[j] - 1); \
             }

@@ -73,7 +73,7 @@ SEXP get_combinations(SEXP _x, SEXP _k, SEXP _n, SEXP _v, SEXP _freq, SEXP _repl
     VALIDATE_ARGUMENTS();
 
     char layout = layout_flag(_layout);
-    int d = Rf_asInteger(_d);
+    int d = Rf_asInteger(_d) == -1 ? -1 : as_uint(_d);
 
     if (Rf_isNull(_index) && Rf_isNull(_nsample)) {
         if (k == 0) {
@@ -116,11 +116,11 @@ SEXP get_combinations(SEXP _x, SEXP _k, SEXP _n, SEXP _v, SEXP _freq, SEXP _repl
                 ans = Rf_allocVector(VECSXP, 0);
             }
         } else if (replace) {
-            ans = next_replacement_combinations(n, k, _v, layout, d, state);
+            ans = next_replacement_combinations(n, k, _v, layout, d, _skip, state);
         } else if (multiset) {
-            ans = next_multiset_combinations(fp, flen, k, _v, layout, d, state);
+            ans = next_multiset_combinations(fp, flen, k, _v, layout, d, _skip, state);
         } else {
-            ans = next_ordinary_combinations(n, k, _v, layout, d, state);
+            ans = next_ordinary_combinations(n, k, _v, layout, d, _skip, state);
         }
     } else {
         if (replace) {

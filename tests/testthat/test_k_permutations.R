@@ -142,3 +142,10 @@ test_that("Permutations - index", {
     expect_equal(permutations(5, 3, index = 10, layout = "list"), list(c(1, 5, 2)))
     expect_equal(permutations(50, 30, index = 2, layout = "list"), list(c(1:29, 31)))
 })
+
+test_that("K-Permutations - skip", {
+    expect_equal(permutations(6, 3, skip = 120), permutations(6, 3))
+    expect_equal(permutations(6, 3, skip = 3), permutations(6, 3)[4:120, ])
+    expect_equal(permutations(6, 3, skip = 3, nitem = 4), permutations(6, 3)[4:7, ])
+    expect_equal(permutations(6, 3, skip = gmp::as.bigz(3), nitem = 4), permutations(6, 3)[4:7, ])
+})

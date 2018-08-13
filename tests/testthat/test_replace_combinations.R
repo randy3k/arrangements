@@ -110,3 +110,10 @@ test_that("Combinations with replacement - index", {
     expect_equal(combinations(40, 10, replace = TRUE, index = 2)[1, ], c(rep(1, 9), 2))
     expect_equal(combinations(40, 10, replace = TRUE, index = "8217822536")[1, ], rep(40, 10))
 })
+
+test_that("Combinations with replacement - skip", {
+    expect_equal(combinations(5, 3, replace = TRUE, skip = 35), combinations(5, 3, replace = TRUE))
+    expect_equal(combinations(5, 3, replace = TRUE, skip = 3), combinations(5, 3, replace = TRUE)[4:35, ])
+    expect_equal(combinations(5, 3, replace = TRUE, skip = 3, nitem = 4), combinations(5, 3, replace = TRUE)[4:7, ])
+    expect_equal(combinations(5, 3, replace = TRUE, skip = gmp::as.bigz(3), nitem = 4), combinations(5, 3, replace = TRUE)[4:7, ])
+})

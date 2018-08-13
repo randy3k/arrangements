@@ -3,8 +3,9 @@
 #include <Rinternals.h>
 #include <gmp.h>
 #include "../combinatorics.h"
-#include "../utils.h"
+#include "../gmp_utils.h"
 #include "../macros.h"
+#include "../utils.h"
 
 
 void identify_ordinary_permutation(unsigned int* ar, unsigned int n, unsigned int index) {
@@ -65,7 +66,14 @@ void identify_ordinary_permutation_bigz(unsigned int* ar, unsigned int n, mpz_t 
 }
 
 
-SEXP next_ordinary_permutations(int n, int k, SEXP labels, SEXP freq, char layout, int d, SEXP state) {
+void identify_multiset_permutation(unsigned int* ar, int* freq, size_t flen, size_t k, unsigned int index);
+
+void identify_multiset_permutation_bigz(unsigned int* ar, int* freq, size_t flen, size_t k, mpz_t index);
+
+void n_multiset_n_permutations_bigz(mpz_t z, int* freq, size_t flen);
+
+
+SEXP next_ordinary_permutations(int n, int k, SEXP labels, SEXP freq, char layout, int d, SEXP _skip, SEXP state) {
     int i, j, h;
     int nprotect = 0;
     int status = 1;
@@ -79,27 +87,76 @@ SEXP next_ordinary_permutations(int n, int k, SEXP labels, SEXP freq, char layou
     }
 
     double dd;
-    if (d == -1) {
+    double maxd;
+    int bigz = TYPEOF(_skip) == RAWSXP && Rf_inherits(_skip, "bigz");
+    if (d == -1 || !Rf_isNull(_skip)) {
         if (freq == R_NilValue) {
-            dd = fact(n);
+            maxd = fact(n);
         } else {
-            dd = multichoose(fp, flen);
+            maxd = multichoose(fp, flen);
         }
-    } else {
-        dd = d;
+        bigz = bigz || maxd >= INT_MAX;
     }
+    dd = d == -1 ? maxd : d;
     d = verify_dimension(dd, n, layout);
+
+    mpz_t maxz;
+    int skip;
+    mpz_t skipz;
+    if (!Rf_isNull(_skip)) {
+        if (bigz) {
+            mpz_init(maxz);
+            mpz_init(skipz);
+
+            if (freq == R_NilValue) {
+                mpz_fac_ui(maxz, n);
+            } else {
+                n_multiset_n_permutations_bigz(maxz, fp, flen);
+            }
+
+            if (as_mpz_array(&skipz, 1, _skip) < 0 || mpz_sgn(skipz) < 0) {
+                mpz_clear(skipz);
+                mpz_clear(maxz);
+                Rf_error("expect integer");
+            } else if (mpz_cmp(skipz, maxz) >= 0) {
+                mpz_set(skipz, 0);
+            }
+            mpz_clear(maxz);
+        } else {
+            skip = as_uint(_skip);
+            if (skip >= (int) maxd) {
+                skip = 0;
+            }
+        }
+    }
 
     unsigned int* ap;
 
     if (!variable_exist(state, "a", INTSXP, n, (void**) &ap)) {
-        if (freq == R_NilValue) {
-            for(i=0; i<n; i++) ap[i] = i;
+        if (Rf_isNull(_skip)) {
+            if (freq == R_NilValue) {
+                for(i=0; i<n; i++) ap[i] = i;
+            } else {
+                h = 0;
+                for (i = 0; i< Rf_length(freq); i++) {
+                    for (j = 0; j< fp[i]; j++) {
+                        ap[h++] = i;
+                    }
+                }
+            }
         } else {
-            h = 0;
-            for (i = 0; i< Rf_length(freq); i++) {
-                for (j = 0; j< fp[i]; j++) {
-                    ap[h++] = i;
+            if (bigz) {
+                if (freq == R_NilValue) {
+                    identify_ordinary_permutation_bigz(ap, n, skipz);
+                } else {
+                    identify_multiset_permutation_bigz(ap, fp, flen, n, skipz);
+                }
+                mpz_clear(skipz);
+            } else {
+                if (freq == R_NilValue) {
+                    identify_ordinary_permutation(ap, n, skip);
+                } else {
+                    identify_multiset_permutation(ap, fp, flen, n, skip);
                 }
             }
         }
@@ -146,7 +203,7 @@ SEXP obtain_ordinary_permutations(int n, SEXP labels, char layout, SEXP _index, 
     double dd;
     if (sampling) {
         dd = as_uint(_nsample);
-    } else if (TYPEOF(_index) == RAWSXP || Rf_inherits(_index, "bigz")) {
+    } else if (TYPEOF(_index) == RAWSXP && Rf_inherits(_index, "bigz")) {
         dd = *((int* ) RAW(_index));
         bigz = 1;
     } else {
@@ -154,10 +211,10 @@ SEXP obtain_ordinary_permutations(int n, SEXP labels, char layout, SEXP _index, 
     }
     int d = verify_dimension(dd, n, layout);
 
-    double max;
+    double maxd;
     if (!bigz) {
-        max = fact(n);
-        bigz = max > INT_MAX;
+        maxd = fact(n);
+        bigz = maxd > INT_MAX;
     }
 
     unsigned int* ap;
@@ -169,12 +226,12 @@ SEXP obtain_ordinary_permutations(int n, SEXP labels, char layout, SEXP _index, 
         mpz_t z;
         mpz_t maxz;
         mpz_init(z);
+        mpz_init(maxz);
+        mpz_fac_ui(maxz, n);
 
         if (sampling) {
             GetRNGstate();
             set_gmp_randstate(randstate);
-            mpz_init(maxz);
-            mpz_fac_ui(maxz, n);
         } else {
             index = (mpz_t*) R_alloc(d, sizeof(mpz_t));
             for (i = 0; i < d; i++) mpz_init(index[i]);
@@ -182,7 +239,11 @@ SEXP obtain_ordinary_permutations(int n, SEXP labels, char layout, SEXP _index, 
             for(i = 0; i < d; i++) {
                 if (status < 0 || mpz_sgn(index[i]) <= 0) {
                     for (i = 0; i < d; i++) mpz_clear(index[i]);
+                    mpz_clear(maxz);
+                    mpz_clear(z);
                     Rf_error("expect integer");
+                } else if (mpz_cmp(index[i], maxz) > 0) {
+                    mpz_set(index[i], maxz);
                 }
             }
         }
@@ -223,8 +284,10 @@ SEXP obtain_ordinary_permutations(int n, SEXP labels, char layout, SEXP _index, 
         } else {
             index = as_uint_array(_index);
             for (i = 0; i < d; i++) {
-                if (index[0] <= 0) {
+                if (index[i] <= 0) {
                     Rf_error("expect integer");
+                } else if (index[i] > maxd) {
+                    index[i] = maxd;
                 }
             }
         }
@@ -232,7 +295,7 @@ SEXP obtain_ordinary_permutations(int n, SEXP labels, char layout, SEXP _index, 
         #undef NEXT
         #define NEXT() \
             if (sampling) { \
-                identify_ordinary_permutation(ap, n, floor(max * unif_rand())); \
+                identify_ordinary_permutation(ap, n, floor(maxd * unif_rand())); \
             } else { \
                 identify_ordinary_permutation(ap, n, index[j] - 1); \
             }

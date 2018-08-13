@@ -1,5 +1,4 @@
 #' Number of partitions
-#'
 #' @param n an non-negative integer to be partitioned
 #' @param k number of parts
 #' @param bigz an logical to indicate using [gmp::bigz]

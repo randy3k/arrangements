@@ -36,6 +36,8 @@ npermutations <- function(x = NULL, k = n, n = NULL, v = NULL, freq = NULL, repl
 #'
 #' @template param_pc
 #' @template param_type
+#' @param nitem number of permutations required, usually used with \code{skip}
+#' @param skip the number of permutations skipped
 #' @param index a vector of indices of the desired permutations
 #' @param nsample sampling random permutations
 #' @seealso [ipermutations] for iterating permutations and [npermutations] to calculate number of permutations
@@ -61,6 +63,15 @@ npermutations <- function(x = NULL, k = n, n = NULL, v = NULL, freq = NULL, repl
 #' permutations(3, layout = "list")
 #' permutations(4, 2, layout = "list")
 #'
+#' # specifc range of permutations
+#' permutations(4, 2, nitem = 2, skip = 3)
+#'
+#' # specific permutations
+#' permutations(4, 2, index = c(3, 5))
+#'
+#' # random permutations
+#' permutations(4, 2, nsample = 3)
+#'
 #' # zero sized permutations
 #' dim(permutations(0))
 #' dim(permutations(5, 0))
@@ -70,9 +81,9 @@ npermutations <- function(x = NULL, k = n, n = NULL, v = NULL, freq = NULL, repl
 #'
 #' @export
 permutations <- function(x = NULL, k = n, n = NULL, v = NULL, freq = NULL, replace = FALSE,
-                         layout = "row", index = NULL, nsample = NULL) {
+                         layout = "row", nitem = -1L, skip = NULL, index = NULL, nsample = NULL) {
     .Call("get_permutations", PACKAGE = "arrangements",
-          x, k, n, v, freq, replace, layout, -1L, index, nsample, NULL, 0L, FALSE)
+          x, k, n, v, freq, replace, layout, nitem, index, nsample, NULL, skip, FALSE)
 }
 
 

@@ -35,6 +35,8 @@ ncombinations <- function(x = NULL, k = n, n = NULL, v = NULL, freq = NULL, repl
 #'
 #' @template param_pc
 #' @template param_type
+#' @param nitem number of combinations required, usually used with \code{skip}
+#' @param skip the number of combinations skipped
 #' @param index a vector of indices of the desired combinations
 #' @param nsample sampling random combinations
 #' @seealso [icombinations] for iterating combinations and [ncombinations] to calculate number of combinations
@@ -55,6 +57,15 @@ ncombinations <- function(x = NULL, k = n, n = NULL, v = NULL, freq = NULL, repl
 #' # list output
 #' combinations(4, 2, layout = "list")
 #'
+#' # specifc range of combinations
+#' combinations(4, 2, nitem = 2, skip = 3)
+#'
+#' # specific combinations
+#' combinations(4, 2, index = c(3, 5))
+#'
+#' # random combinations
+#' combinations(4, 2, nsample = 3)
+#'
 #' # zero sized combinations
 #' dim(combinations(5, 0))
 #' dim(combinations(5, 6))
@@ -63,9 +74,9 @@ ncombinations <- function(x = NULL, k = n, n = NULL, v = NULL, freq = NULL, repl
 #'
 #' @export
 combinations <- function(x = NULL, k = n, n = NULL, v = NULL, freq = NULL, replace = FALSE,
-                         layout = "row", index = NULL, nsample = NULL) {
+                         layout = "row", nitem = -1L, skip = NULL, index = NULL, nsample = NULL) {
     .Call("get_combinations", PACKAGE = "arrangements",
-          x, k, n, v, freq, replace, layout, -1L, index, nsample, NULL, 0L, FALSE)
+          x, k, n, v, freq, replace, layout, nitem, index, nsample, NULL, skip, FALSE)
 }
 
 

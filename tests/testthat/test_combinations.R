@@ -143,3 +143,10 @@ test_that("Combinations - index", {
     expect_equal(combinations(5, 3, index = 10, layout = "list"), list(c(3, 4, 5)))
     expect_equal(combinations(50, 30, index = 2, layout = "list"), list(c(1:29, 31)))
 })
+
+test_that("Combinations - skip", {
+    expect_equal(combinations(5, 3, skip = 10), combinations(5, 3))
+    expect_equal(combinations(5, 3, skip = 3), combinations(5, 3)[4:10, ])
+    expect_equal(combinations(5, 3, skip = 3, nitem = 4), combinations(5, 3)[4:7, ])
+    expect_equal(combinations(5, 3, skip = gmp::as.bigz(3), nitem = 4), combinations(5, 3)[4:7, ])
+})
