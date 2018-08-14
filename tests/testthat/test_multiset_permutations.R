@@ -184,10 +184,10 @@ test_that("Multiset Permutations - index", {
     expect_equal(permutations(freq = c(3, 2, 3), k = 4, index = as.numeric(1:70)), perm)
     expect_equal(permutations(freq = c(3, 2, 3), k = 4, index = as.character(1:70)), perm)
     expect_equal(permutations(freq = c(3, 2, 3), k = 4, index = gmp::as.bigz(1:70)), perm)
-    expect_equal(permutations(freq = c(3, 2, 3), k = 4, index = 2)[1, ], c(1, 1, 1, 3))
-    expect_equal(permutations(freq = c(3, 2, 3), k = 4, index = 70)[1, ], c(3, 3, 3, 2))
-    expect_equal(permutations(freq = c(10, 50, 10), k = 20, index = 2)[1, ], c(rep(1, 10), rep(2, 9), 3))
-    expect_equal(permutations(freq = c(10, 50, 10), k = 20, index = "3224323183")[1, ], rep(3:2, each = 10))
+    expect_equal(permutations(freq = c(3, 2, 3), k = 4, index = 2), c(1, 1, 1, 3))
+    expect_equal(permutations(freq = c(3, 2, 3), k = 4, index = 70), c(3, 3, 3, 2))
+    expect_equal(permutations(freq = c(10, 50, 10), k = 20, index = 2), c(rep(1, 10), rep(2, 9), 3))
+    expect_equal(permutations(freq = c(10, 50, 10), k = 20, index = "3224323183"), rep(3:2, each = 10))
 })
 
 test_that("Multiset Permutations - skip", {

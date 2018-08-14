@@ -82,7 +82,7 @@ npermutations <- function(x = NULL, k = n, n = NULL, v = NULL, freq = NULL, repl
 #'
 #' @export
 permutations <- function(x = NULL, k = n, n = NULL, v = NULL, freq = NULL, replace = FALSE,
-                         layout = "row", nitem = -1L, skip = NULL, index = NULL, nsample = NULL, drop = NULL) {
+                         layout = NULL, nitem = -1L, skip = NULL, index = NULL, nsample = NULL, drop = NULL) {
     .Call("get_permutations", PACKAGE = "arrangements",
           x, k, n, v, freq, replace, layout, nitem, index, nsample, NULL, skip, drop)
 }
