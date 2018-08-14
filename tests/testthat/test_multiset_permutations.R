@@ -174,7 +174,7 @@ test_that("Multiset K-Permutations - ipermutations", {
     expect_equal(length(iperm$getnext()), 0)
     expect_equal(iperm$getnext(), NULL)
     iperm <- ipermutations(freq = c(3, 2, 3), k = 9)
-    expect_equal(iperm$collect(), NULL)
+    expect_equal(dim(iperm$collect()), c(0, 9))
     expect_equal(iperm$getnext(), NULL)
 })
 

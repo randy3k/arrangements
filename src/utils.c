@@ -300,3 +300,11 @@ void set_gmp_randstate(gmp_randstate_t randstate) {
     gmp_randseed(randstate, z);
     mpz_clear(z);
 }
+
+int index_length(SEXP _index) {
+    if (TYPEOF(_index) == RAWSXP && Rf_inherits(_index, "bigz")) {
+        return *((int* ) RAW(_index));
+    } else {
+        return Rf_length(_index);
+    }
+}

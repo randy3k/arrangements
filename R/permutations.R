@@ -40,6 +40,7 @@ npermutations <- function(x = NULL, k = n, n = NULL, v = NULL, freq = NULL, repl
 #' @param skip the number of permutations skipped
 #' @param index a vector of indices of the desired permutations
 #' @param nsample sampling random permutations
+#' @param drop vectorize a matrix or unlist a list
 #' @seealso [ipermutations] for iterating permutations and [npermutations] to calculate number of permutations
 #' @examples
 #' permutations(3)
@@ -81,9 +82,9 @@ npermutations <- function(x = NULL, k = n, n = NULL, v = NULL, freq = NULL, repl
 #'
 #' @export
 permutations <- function(x = NULL, k = n, n = NULL, v = NULL, freq = NULL, replace = FALSE,
-                         layout = "row", nitem = -1L, skip = NULL, index = NULL, nsample = NULL) {
+                         layout = "row", nitem = -1L, skip = NULL, index = NULL, nsample = NULL, drop = NULL) {
     .Call("get_permutations", PACKAGE = "arrangements",
-          x, k, n, v, freq, replace, layout, nitem, index, nsample, NULL, skip, FALSE)
+          x, k, n, v, freq, replace, layout, nitem, index, nsample, NULL, skip, drop)
 }
 
 
@@ -118,53 +119,22 @@ Permutations <- R6::R6Class(
         },
         reset = function() {
             private$state <- new.env()
-            private$null_pending <- FALSE
+            private$state$null_pending <- FALSE
         },
         collect = function(layout = "row") {
             out <- self$getnext(-1L, layout, drop = FALSE)
             self$reset()
             out
         },
-        getnext = function(d = 1L, layout = NULL, drop = d == 1L && is.null(layout)) {
-            if (private$null_pending) {
+        getnext = function(d = 1L, layout = NULL, drop = NULL) {
+            if (private$state$null_pending) {
                 out <- NULL
                 self$reset()
             } else {
                 out <- .Call("get_permutations", PACKAGE = "arrangements",
                              NULL, self$k, self$n, self$v, self$freq, self$replace, layout,
-                             d, NULL, NULL, private$state, 0L, drop)
-
-                if (layout == "row" || is.null(layout)){
-                    if (nrow(out) == 0) {
-                        out <- NULL
-                        self$reset()
-                    } else if (nrow(out) < d || ncol(out) == 0) {
-                        private$null_pending <- TRUE
-                    }
-                    if (!is.null(out) && drop) {
-                        dim(out) <- NULL
-                    }
-                } else if (layout == "column"){
-                    if (ncol(out) == 0) {
-                        out <- NULL
-                        self$reset()
-                    } else if (ncol(out) < d || nrow(out) == 0) {
-                        private$null_pending <- TRUE
-                    }
-                    if (!is.null(out) && drop) {
-                        dim(out) <- NULL
-                    }
-                } else if (layout == "list"){
-                    if (length(out) == 0) {
-                        out <- NULL
-                        self$reset()
-                    } else if (length(out) < d) {
-                        private$null_pending <- TRUE
-                    }
-                    if (length(out) > 0 && drop) {
-                        out <- unlist(out)
-                    }
-                }
+                             d, NULL, NULL, private$state, NULL, drop)
+                is.null(out) && self$reset()
             }
             out
         },

@@ -93,7 +93,7 @@ test_that("K-Permutations - ipermutations", {
     expect_equal(length(iperm$getnext()), 0)
     expect_equal(iperm$getnext(), NULL)
     iperm <- ipermutations(6, 7)
-    expect_equal(iperm$collect(), NULL)
+    expect_equal(dim(iperm$collect()), c(0, 7))
     expect_equal(iperm$getnext(), NULL)
     expect_error(ipermutations(6, -1), "expect integer")
     expect_error(ipermutations(6, 1.5), "expect integer")

@@ -6,7 +6,7 @@
 \usage{
 permutations(x = NULL, k = n, n = NULL, v = NULL, freq = NULL,
   replace = FALSE, layout = "row", nitem = -1L, skip = NULL,
-  index = NULL, nsample = NULL)
+  index = NULL, nsample = NULL, drop = NULL)
 }
 \arguments{
 \item{x}{an integer or a vector, will be treated as \code{n} if integer; otherwise, will be treated as \code{v}}
@@ -31,6 +31,8 @@ permutations(x = NULL, k = n, n = NULL, v = NULL, freq = NULL,
 \item{index}{a vector of indices of the desired permutations}
 
 \item{nsample}{sampling random permutations}
+
+\item{drop}{vectorize a matrix or unlist a list}
 }
 \description{
 This function generates all the permutations of selecting \code{k} items from \code{n} items.

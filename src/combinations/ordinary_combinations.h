@@ -139,7 +139,6 @@ SEXP next_ordinary_combinations(int n, int k, SEXP labels, char layout, int d, S
         result = PROTECT(resize_layout(result, j, layout));
         nprotect++;
     }
-    attach_factor_levels(result, labels);
     UNPROTECT(nprotect);
     return result;
 }
@@ -268,7 +267,6 @@ SEXP obtain_ordinary_combinations(int n, int k, SEXP labels, char layout, SEXP _
         }
     }
 
-    attach_factor_levels(result, labels);
     UNPROTECT(nprotect);
     return result;
 }

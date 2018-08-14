@@ -37,7 +37,7 @@ Permutations$new(n, k, v = NULL, freq = NULL, replace = FALSE)
 }
 
 \preformatted{
-getnext(d = 1L, layout = NULL, drop = d == 1L && is.null(layout))
+getnext(d = 1L, layout = NULL, drop = NULL)
 collect(layout = "row")
 reset()
 }

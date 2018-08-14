@@ -134,7 +134,6 @@ SEXP next_replacement_combinations(int n, int k, SEXP labels, char layout, int d
         result = PROTECT(resize_layout(result, j, layout));
         nprotect++;
     }
-    attach_factor_levels(result, labels);
     UNPROTECT(nprotect);
     return result;
 }
@@ -263,7 +262,6 @@ SEXP obtain_replacement_combinations(int n, int k, SEXP labels, char layout, SEX
         }
     }
 
-    attach_factor_levels(result, labels);
     UNPROTECT(nprotect);
     return result;
 }

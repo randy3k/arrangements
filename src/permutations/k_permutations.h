@@ -173,7 +173,6 @@ SEXP next_k_permutations(int n, int k, SEXP labels, char layout, int d, SEXP _sk
         result = PROTECT(resize_layout(result, j, layout));
         nprotect++;
     }
-    attach_factor_levels(result, labels);
     UNPROTECT(nprotect);
     return result;
 }
@@ -302,7 +301,6 @@ SEXP obtain_k_permutations(int n, int k, SEXP labels, char layout, SEXP _index, 
         }
     }
 
-    attach_factor_levels(result, labels);
     UNPROTECT(nprotect);
     return result;
 }

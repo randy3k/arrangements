@@ -36,4 +36,6 @@ double multichoose(int* f, size_t flen);
 
 void set_gmp_randstate(gmp_randstate_t randstate);
 
+int index_length(SEXP _index);
+
 #endif
