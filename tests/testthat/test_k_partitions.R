@@ -138,7 +138,7 @@ test_that("Integer k-partitions - ascending ipartitions", {
     expect_equal(ipart$getnext(layout = "list"), NULL)
 
     ipart <- ipartitions(20, 21)
-    expect_equal(ipart$collect(), NULL)
+    expect_equal(dim(ipart$collect()), c(0, 21))
     expect_equal(ipart$getnext(), NULL)
     expect_error(ipartitions(20, -1), "expect integer")
     expect_error(ipartitions(20, 1.5), "expect integer")
@@ -187,7 +187,7 @@ test_that("Integer partitions - descending ipartitions", {
     expect_equal(ipart$getnext(layout = "list"), NULL)
 
     ipart <- ipartitions(20, 21, descending = TRUE)
-    expect_equal(ipart$collect(), NULL)
+    expect_equal(dim(ipart$collect()), c(0, 21))
     expect_equal(ipart$getnext(), NULL)
     expect_error(ipartitions(20, -1, descending = TRUE), "expect integer")
     expect_error(ipartitions(20, 1.5, descending = TRUE), "expect integer")

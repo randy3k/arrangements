@@ -5,7 +5,7 @@
 \title{Permutations generator}
 \usage{
 permutations(x = NULL, k = n, n = NULL, v = NULL, freq = NULL,
-  replace = FALSE, layout = "row", nitem = -1L, skip = NULL,
+  replace = FALSE, layout = NULL, nitem = -1L, skip = NULL,
   index = NULL, nsample = NULL, drop = NULL)
 }
 \arguments{

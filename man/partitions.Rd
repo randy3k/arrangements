@@ -4,7 +4,7 @@
 \alias{partitions}
 \title{Partitions generator}
 \usage{
-partitions(n, k = NULL, descending = FALSE, layout = "row")
+partitions(n, k = NULL, descending = FALSE, layout = NULL)
 }
 \arguments{
 \item{n}{an non-negative integer to be partitioned}
