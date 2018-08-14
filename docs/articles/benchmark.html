@@ -29,7 +29,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">arrangements</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">1.1.0</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">1.1.0.9999</span>
       </span>
     </div>
 
@@ -127,13 +127,13 @@
 <a class="sourceLine" id="cb2-10" data-line-number="10">)</a></code></pre></div>
 <pre><code>## Unit: relative
 ##          expr     min      lq    mean  median      uq    max neval
-##        gtools  431.94  288.16  233.81  234.79  227.38  44.86   100
-##     multicool  262.58  172.09  137.08  139.46  139.63  24.51   100
-##    partitions    2.19    2.41    1.95    2.01    1.99   0.66   100
-##      permuate  717.98  478.20  405.98  388.67  418.75 266.82   100
-##  permutations 1984.06 1296.96 1053.65 1089.90 1013.69 831.79   100
-##     RcppAlgos    1.13    1.25    1.24    1.32    1.31   1.16   100
-##  arrangements    1.00    1.00    1.00    1.00    1.00   1.00   100</code></pre>
+##        gtools  666.46  367.49  282.42  365.11  367.91 83.733   100
+##     multicool  329.22  179.13  131.02  183.29  172.90 10.138   100
+##    partitions    2.99    2.61    2.28    2.85    2.89  0.931   100
+##      permuate 1183.51  662.86  465.55  651.33  633.02 36.286   100
+##  permutations 3316.03 1910.88 1278.22 1820.65 1664.56 72.159   100
+##     RcppAlgos    1.66    1.78    2.17    1.82    1.86  3.832   100
+##  arrangements    1.00    1.00    1.00    1.00    1.00  1.000   100</code></pre>
 <p><strong>5-Permutations of 7 items</strong></p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw"><a href="http://www.rdocumentation.org/packages/microbenchmark/topics/microbenchmark">microbenchmark</a></span>(</a>
 <a class="sourceLine" id="cb4-2" data-line-number="2">    <span class="dt">gtools =</span> <span class="kw">gtools.permutations</span>(<span class="dv">7</span>, <span class="dv">5</span>),</a>
@@ -142,10 +142,10 @@
 <a class="sourceLine" id="cb4-5" data-line-number="5">    <span class="dt">unit =</span> <span class="st">"relative"</span></a>
 <a class="sourceLine" id="cb4-6" data-line-number="6">)</a></code></pre></div>
 <pre><code>## Unit: relative
-##          expr    min     lq   mean median     uq    max neval
-##        gtools 176.45 177.98 170.29  168.1 155.62 179.88   100
-##     RcppAlgos   1.02   1.03   1.15    1.1   1.25   1.66   100
-##  arrangements   1.00   1.00   1.00    1.0   1.00   1.00   100</code></pre>
+##          expr   min     lq    mean median     uq    max neval
+##        gtools 277.6 269.41 144.376 219.54 214.34 5.8294   100
+##     RcppAlgos   1.3   1.46   0.968   1.57   1.66 0.0444   100
+##  arrangements   1.0   1.00   1.000   1.00   1.00 1.0000   100</code></pre>
 <p><strong>Permutations of multiset</strong></p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">f &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/permutations/topics/c">c</a></span>(<span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">2</span>)</a>
 <a class="sourceLine" id="cb6-2" data-line-number="2">x &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>, f)</a>
@@ -156,10 +156,10 @@
 <a class="sourceLine" id="cb6-7" data-line-number="7">    <span class="dt">unit =</span> <span class="st">"relative"</span></a>
 <a class="sourceLine" id="cb6-8" data-line-number="8">)</a></code></pre></div>
 <pre><code>## Unit: relative
-##          expr      min       lq    mean  median      uq   max neval
-##     multicool 1660.063 1666.572 1300.35 1425.14 1418.85 767.0   100
-##     RcppAlgos    0.992    0.988    2.55    1.05    1.09  35.4   100
-##  arrangements    1.000    1.000    1.00    1.00    1.00   1.0   100</code></pre>
+##          expr     min     lq    mean  median      uq    max neval
+##     multicool 2464.10 2419.1 992.757 2128.32 1998.52 30.277   100
+##     RcppAlgos    1.38    1.4   0.876    1.49    1.42  0.279   100
+##  arrangements    1.00    1.0   1.000    1.00    1.00  1.000   100</code></pre>
 <p><strong>K-Permutations of multiset</strong></p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">f &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/permutations/topics/c">c</a></span>(<span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">2</span>)</a>
 <a class="sourceLine" id="cb8-2" data-line-number="2">x &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>, f)</a>
@@ -170,10 +170,10 @@
 <a class="sourceLine" id="cb8-7" data-line-number="7">    <span class="dt">unit =</span> <span class="st">"relative"</span></a>
 <a class="sourceLine" id="cb8-8" data-line-number="8">)</a></code></pre></div>
 <pre><code>## Unit: relative
-##          expr     min      lq    mean  median      uq      max neval
-##     multicool 3283.02 3066.77 2453.98 2849.31 2185.42 1075.220   100
-##     RcppAlgos    1.23    1.22    1.21    1.51    1.19    0.899   100
-##  arrangements    1.00    1.00    1.00    1.00    1.00    1.000   100</code></pre>
+##          expr     min      lq    mean  median      uq    max neval
+##     multicool 4291.83 3648.76 1959.88 3003.10 2662.62 99.434   100
+##     RcppAlgos    1.48    1.41    1.03    1.52    1.53  0.245   100
+##  arrangements    1.00    1.00    1.00    1.00    1.00  1.000   100</code></pre>
 </div>
 <div id="combinations" class="section level3">
 <h3 class="hasAnchor">
@@ -188,12 +188,12 @@
 <a class="sourceLine" id="cb10-7" data-line-number="7">    <span class="dt">unit =</span> <span class="st">"relative"</span></a>
 <a class="sourceLine" id="cb10-8" data-line-number="8">)</a></code></pre></div>
 <pre><code>## Unit: relative
-##          expr    min     lq   mean median     uq    max neval
-##        gtools 296.98 297.63 236.52 254.49 254.75 120.70   100
-##      combinat  83.08  77.48  64.12  65.53  68.77  39.00   100
-##         utils  93.22  87.73  74.24  74.71  76.97  70.54   100
-##     RcppAlgos   1.00   1.00   1.00   1.00   1.00   1.00   100
-##  arrangements   1.44   1.42   1.32   1.22   1.22   3.82   100</code></pre>
+##          expr    min     lq    mean median     uq    max neval
+##        gtools 402.64 367.97 265.113 367.58 305.16 23.477   100
+##      combinat  98.50  88.37  67.688  90.15  83.75  5.743   100
+##         utils 121.24 108.54  83.114 111.15 102.41  8.440   100
+##     RcppAlgos   1.05   1.14   0.949   1.16   1.14  0.143   100
+##  arrangements   1.00   1.00   1.000   1.00   1.00  1.000   100</code></pre>
 <p><strong>Combinations with replacement of 9 items</strong></p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="kw"><a href="http://www.rdocumentation.org/packages/microbenchmark/topics/microbenchmark">microbenchmark</a></span>(</a>
 <a class="sourceLine" id="cb12-2" data-line-number="2">    <span class="dt">gtools =</span> <span class="kw">gtools.combinations</span>(<span class="dv">9</span>, <span class="dv">6</span>, <span class="dt">repeats.allowed =</span> <span class="ot">TRUE</span>),</a>
@@ -202,10 +202,10 @@
 <a class="sourceLine" id="cb12-5" data-line-number="5">    <span class="dt">unit =</span> <span class="st">"relative"</span></a>
 <a class="sourceLine" id="cb12-6" data-line-number="6">)</a></code></pre></div>
 <pre><code>## Unit: relative
-##          expr    min    lq   mean median      uq    max neval
-##        gtools 243.73 236.1 205.67 213.63 183.892 312.04   100
-##     RcppAlgos   1.00   1.0   1.00   1.00   1.000   1.00   100
-##  arrangements   1.24   1.2   1.24   1.22   0.997   3.32   100</code></pre>
+##          expr    min     lq  mean median     uq     max neval
+##        gtools 318.51 332.28 245.8 282.08 227.71 160.228   100
+##     RcppAlgos   1.06   1.23   1.2   1.33   1.23   0.515   100
+##  arrangements   1.00   1.00   1.0   1.00   1.00   1.000   100</code></pre>
 <p><strong>Combinations of multiset</strong></p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1">f &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/permutations/topics/c">c</a></span>(<span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">2</span>)</a>
 <a class="sourceLine" id="cb14-2" data-line-number="2">x &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">8</span>, f)</a>
@@ -215,9 +215,9 @@
 <a class="sourceLine" id="cb14-6" data-line-number="6">    <span class="dt">unit =</span> <span class="st">"relative"</span></a>
 <a class="sourceLine" id="cb14-7" data-line-number="7">)</a></code></pre></div>
 <pre><code>## Unit: relative
-##          expr  min   lq  mean median   uq    max neval
-##     RcppAlgos 1.06 1.08 0.791   1.07 1.07 0.0752   100
-##  arrangements 1.00 1.00 1.000   1.00 1.00 1.0000   100</code></pre>
+##          expr  min   lq mean median   uq   max neval
+##     RcppAlgos 1.52 1.52 1.29   1.45 1.45 0.203   100
+##  arrangements 1.00 1.00 1.00   1.00 1.00 1.000   100</code></pre>
 </div>
 <div id="partitions" class="section level3">
 <h3 class="hasAnchor">
@@ -230,7 +230,7 @@
 <a class="sourceLine" id="cb16-5" data-line-number="5">)</a></code></pre></div>
 <pre><code>## Unit: relative
 ##          expr  min   lq mean median   uq  max neval
-##    partitions 2.99 2.98 2.84   2.94 3.01 1.44   100
+##    partitions 3.53 2.97 3.45   2.92 2.92 5.08   100
 ##  arrangements 1.00 1.00 1.00   1.00 1.00 1.00   100</code></pre>
 <p><strong>Partitions of 50 into 10 parts</strong></p>
 <div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1"><span class="kw"><a href="http://www.rdocumentation.org/packages/microbenchmark/topics/microbenchmark">microbenchmark</a></span>(</a>
@@ -239,9 +239,9 @@
 <a class="sourceLine" id="cb18-4" data-line-number="4">    <span class="dt">unit =</span> <span class="st">"relative"</span></a>
 <a class="sourceLine" id="cb18-5" data-line-number="5">)</a></code></pre></div>
 <pre><code>## Unit: relative
-##          expr min   lq mean median  uq  max neval
-##    partitions 3.9 3.71 3.74   3.79 3.9 1.11   100
-##  arrangements 1.0 1.00 1.00   1.00 1.0 1.00   100</code></pre>
+##          expr  min   lq mean median   uq  max neval
+##    partitions 4.16 3.98 4.67   4.02 4.09 12.4   100
+##  arrangements 1.00 1.00 1.00   1.00 1.00  1.0   100</code></pre>
 </div>
   </div>
 
