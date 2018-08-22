@@ -268,8 +268,8 @@ SEXP obtain_ordinary_permutations(int n, SEXP labels, char layout, SEXP _index, 
         }
 
         mpz_clear(z);
+        mpz_clear(maxz);
         if (sampling){
-            mpz_clear(maxz);
             gmp_randclear(randstate);
             PutRNGstate();
         } else {

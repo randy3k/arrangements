@@ -386,8 +386,8 @@ SEXP obtain_multiset_permutations(int* fp, size_t flen, int k, SEXP labels, char
         }
 
         mpz_clear(z);
+        mpz_clear(maxz);
         if (sampling){
-            mpz_clear(maxz);
             gmp_randclear(randstate);
             PutRNGstate();
         } else {

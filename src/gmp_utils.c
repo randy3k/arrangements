@@ -11,7 +11,7 @@ static int raw_size(mpz_t z) {
 SEXP mpz_to_bigz1(mpz_t z) {
 
     int size = raw_size(z);
-    SEXP ans = PROTECT(Rf_allocVector(RAWSXP, size + 1));
+    SEXP ans = PROTECT(Rf_allocVector(RAWSXP, size + sizeof(int)));
     unsigned char* raw = RAW(ans);
     int* r = (int*) raw;
     r[0] = 1; // scalar RAWSXP

@@ -202,8 +202,8 @@ SEXP obtain_replacement_permutations(int n, int k, SEXP labels, char layout, SEX
         }
 
         mpz_clear(z);
+        mpz_clear(maxz);
         if (sampling){
-            mpz_clear(maxz);
             gmp_randclear(randstate);
             PutRNGstate();
         } else {

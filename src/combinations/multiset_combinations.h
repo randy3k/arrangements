@@ -81,6 +81,8 @@ void n_multiset_combinations_bigz(mpz_t z, int* fp, size_t flen, size_t k) {
             }
         }
     }
+    for (j=0; j<=k; j++) mpz_clear(p[j]);
+    free(p);
 }
 
 
@@ -339,8 +341,8 @@ SEXP obtain_multiset_combinations(int* fp, size_t flen, int k, SEXP labels, char
         }
 
         mpz_clear(z);
+        mpz_clear(maxz);
         if (sampling){
-            mpz_clear(maxz);
             gmp_randclear(randstate);
             PutRNGstate();
         } else {

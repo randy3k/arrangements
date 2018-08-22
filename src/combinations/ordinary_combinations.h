@@ -220,8 +220,8 @@ SEXP obtain_ordinary_combinations(int n, int k, SEXP labels, char layout, SEXP _
         }
 
         mpz_clear(z);
+        mpz_clear(maxz);
         if (sampling){
-            mpz_clear(maxz);
             gmp_randclear(randstate);
             PutRNGstate();
         } else {
