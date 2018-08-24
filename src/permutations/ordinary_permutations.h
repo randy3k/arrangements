@@ -132,7 +132,7 @@ SEXP next_ordinary_permutations(int n, int k, SEXP labels, SEXP freq, char layou
 
     unsigned int* ap;
 
-    if (!variable_exist(state, "a", INTSXP, n, (void**) &ap)) {
+    if (!variable_exists(state, "a", INTSXP, n, (void**) &ap)) {
         if (Rf_isNull(_skip)) {
             if (freq == R_NilValue) {
                 for(i=0; i<n; i++) ap[i] = i;

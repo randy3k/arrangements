@@ -249,7 +249,7 @@ SEXP next_multiset_permutations(int* fp, size_t flen, int k, SEXP labels, char l
 
     unsigned int* ap;
 
-    if (!variable_exist(state, "a", INTSXP, n, (void**) &ap)) {
+    if (!variable_exists(state, "a", INTSXP, n, (void**) &ap)) {
         if (Rf_isNull(_skip)) {
             h = 0;
             for (i = 0; i< flen; i++) {

@@ -128,7 +128,7 @@ int verify_dimension(double dd, int k, char layout) {
     return round(dd);
 }
 
-int variable_exist(SEXP state, char* name, int TYPE, int k, void** p) {
+int variable_exists(SEXP state, char* name, int TYPE, int k, void** p) {
     SEXP v;
     int status = 0;
     if (state == R_NilValue) {

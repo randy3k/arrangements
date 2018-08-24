@@ -20,7 +20,7 @@ char layout_flag(SEXP _layout);
 
 int verify_dimension(double dd, int k, char layout);
 
-int variable_exist(SEXP state, char* name, int TYPE, int k, void** p);
+int variable_exists(SEXP state, char* name, int TYPE, int k, void** p);
 
 int as_uint(SEXP x);
 

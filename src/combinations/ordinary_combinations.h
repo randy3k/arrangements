@@ -99,7 +99,7 @@ SEXP next_ordinary_combinations(int n, int k, SEXP labels, char layout, int d, S
 
     unsigned int* ap;
 
-    if (!variable_exist(state, "a", INTSXP, k, (void**) &ap)) {
+    if (!variable_exists(state, "a", INTSXP, k, (void**) &ap)) {
         if (Rf_isNull(_skip)) {
             for (i = 0; i < k; i++) {
                 ap[i] = i;

@@ -88,7 +88,7 @@ SEXP next_asc_k_partitions(int n, int k, char layout, int d, SEXP state) {
 
     unsigned int* ap;
 
-    if (!variable_exist(state, "a", INTSXP, k, (void**) &ap)) {
+    if (!variable_exists(state, "a", INTSXP, k, (void**) &ap)) {
         for(i=0; i<k-1; i++) ap[i] = 1;
         ap[k-1] = n - k + 1;
         status = 0;
@@ -125,7 +125,7 @@ SEXP next_desc_k_partitions(int n, int k, char layout, int d, SEXP state) {
 
     unsigned int* ap;
 
-    if (!variable_exist(state, "a", INTSXP, k, (void**) &ap)) {
+    if (!variable_exists(state, "a", INTSXP, k, (void**) &ap)) {
         for(i=1; i<k; i++) ap[i] = 1;
         ap[0] = n - k + 1;
         status = 0;

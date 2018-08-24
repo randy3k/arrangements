@@ -111,7 +111,7 @@ SEXP next_k_permutations(int n, int k, SEXP labels, char layout, int d, SEXP _sk
     unsigned int* ap;
     unsigned int* cyclep;
 
-    if (!variable_exist(state, "a", INTSXP, n, (void**) &ap)) {
+    if (!variable_exists(state, "a", INTSXP, n, (void**) &ap)) {
         if (Rf_isNull(_skip)) {
             for(i=0; i<n; i++) ap[i] = i;
         } else {
@@ -133,7 +133,7 @@ SEXP next_k_permutations(int n, int k, SEXP labels, char layout, int d, SEXP _sk
         }
         status = 0;
     }
-    if (!variable_exist(state, "cycle", INTSXP, k, (void**) &cyclep)) {
+    if (!variable_exists(state, "cycle", INTSXP, k, (void**) &cyclep)) {
         if (Rf_isNull(_skip)) {
             for(i=0; i<k; i++) cyclep[i] = n - i;;
         } else {
