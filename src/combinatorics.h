@@ -17,9 +17,9 @@ unsigned int next_multiset_combination(
 
 unsigned int next_multiset_permutation(unsigned int *ar, size_t n, size_t k);
 
-unsigned int next_asc_partition(unsigned int *ar, size_t* k);
+unsigned int next_asc_partition(unsigned int *ar, int* k);
 
-unsigned int next_desc_partition(unsigned int *ar, size_t* hp, size_t* kp);
+unsigned int next_desc_partition(unsigned int *ar, int* hp, int* kp);
 
 unsigned int next_permutation(unsigned int *ar, size_t len);
 

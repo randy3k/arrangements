@@ -3,13 +3,13 @@
 
 #include <stddef.h>
 
-unsigned int next_asc_partition(unsigned int *ar, size_t* kp) {
+unsigned int next_asc_partition(unsigned int *ar, int* kp) {
     // by J Kellehers 2005 Encoding Partitions As Ascending Compositions
     // ar = [1, 1, 1,....], *k = n - 1
     // or ar = [m-1, n-m+1, 0,....], *k = 1 where m is the initial part
 
     unsigned int x, y;
-    unsigned k = *kp;
+    int k = *kp;
     if (k == 0) {
         x = ar[0];
         for (y = 0; y < x; y++) ar[y] = 1;
@@ -29,13 +29,13 @@ unsigned int next_asc_partition(unsigned int *ar, size_t* kp) {
     return 1;
 }
 
-unsigned int next_desc_partition(unsigned int *ar, size_t* hp, size_t* kp) {
+unsigned int next_desc_partition(unsigned int *ar, int* hp, int* kp) {
     // by A Zoghbi and I Stojmenovic 1994 Fast Algorithms for Generating Integer Partitions
     // ar = [n, 1, 1,....], *h = 0, *k = 1
 
     unsigned int x, r, t;
-    unsigned h = *hp;
-    unsigned k = *kp;
+    int h = *hp;
+    int k = *kp;
 
     if (ar[0] == 1) {
         for (x = 0; x < k; x++) ar[x] = 1;

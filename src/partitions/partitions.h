@@ -73,7 +73,7 @@ SEXP next_asc_partitions(int n, char layout, int d, SEXP state) {
     d = verify_dimension(dd, n, layout);
 
     unsigned int* ap;
-    size_t* kp;
+    int* kp;
 
     if (!variable_exist(state, "a", INTSXP, n, (void**) &ap)) {
         for(i=0; i<n; i++) ap[i] = 1;
@@ -116,8 +116,8 @@ SEXP next_desc_partitions(int n, char layout, int d, SEXP state) {
     d = verify_dimension(dd, n, layout);
 
     unsigned int* ap;
-    size_t* hp;
-    size_t* kp;
+    int* hp;
+    int* kp;
 
     if (!variable_exist(state, "a", INTSXP, n, (void**) &ap)) {
         ap[0] = n;
