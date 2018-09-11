@@ -34,6 +34,11 @@ npartitions <- function(n, k = NULL, bigz = FALSE) {
 #' @param k number of parts
 #' @param descending logical to use reversed lexicographical order
 #' @template param_type
+#' @param nitem number of combinations required, usually used with \code{skip}
+#' @param skip the number of combinations skipped
+#' @param index a vector of indices of the desired combinations
+#' @param nsample sampling random combinations
+#' @param drop vectorize a matrix or unlist a list
 #' @seealso [ipartitions] for iterating partitions and [npartitions] to calculate number of partitions
 #' @examples
 #' # all partitions of 6
@@ -62,9 +67,10 @@ npartitions <- function(n, k = NULL, bigz = FALSE) {
 #' dim(partitions(0, 1))
 #'
 #' @export
-partitions <- function(n, k = NULL, descending = FALSE, layout = NULL) {
+partitions <- function(n, k = NULL, descending = FALSE, layout = NULL,
+                       nitem = -1L, skip = NULL, index = NULL, nsample = NULL, drop = NULL) {
     .Call("get_partitions", PACKAGE = "arrangements",
-          n, k, descending, layout, -1, NULL, NULL, NULL, NULL, FALSE)
+          n, k, descending, layout, nitem, index, nsample, NULL, skip, drop)
 }
 
 
@@ -87,12 +93,14 @@ Partitions <- R6::R6Class(
         n = NULL,
         k = NULL,
         descending = NULL,
-        initialize = function(n, k = NULL, descending = FALSE) {
+        skip = NULL,
+        initialize = function(n, k = NULL, descending = FALSE, skip = NULL) {
             self$n <- as.integer(n)
             if (!is.null(k)) {
                 self$k <- as.integer(k)
             }
             self$descending <- descending
+            self$skip <- skip
             self$reset()
         },
         reset = function() {
@@ -111,7 +119,7 @@ Partitions <- R6::R6Class(
             } else {
                 out <- .Call("get_partitions", PACKAGE = "arrangements",
                              self$n, self$k, self$descending, layout, d, NULL, NULL,
-                             private$state, NULL, drop)
+                             private$state, self$skip, drop)
                 is.null(out) && self$reset()
             }
             out
@@ -137,6 +145,7 @@ Partitions <- R6::R6Class(
 #' @param n an non-negative integer to be partitioned
 #' @param k number of parts
 #' @param descending logical to use reversed lexicographical order
+#' @param skip the number of combinations skipped
 #' @seealso [partitions] for generating all partitions and [npartitions] to calculate number of partitions
 #' @examples
 #' ipart <- ipartitions(10)
@@ -151,10 +160,10 @@ Partitions <- R6::R6Class(
 #'   prod(x)
 #' }
 #' @export
-ipartitions <- function(n, k = NULL, descending = FALSE) {
+ipartitions <- function(n, k = NULL, descending = FALSE, skip = NULL) {
     (n %% 1 == 0  && n >= 0) || stop("expect integer")
     if (!is.null(k)) {
         (k %% 1 == 0 && k >= 0) || stop("expect integer")
     }
-    Partitions$new(n, k, descending)
+    Partitions$new(n, k, descending, skip)
 }
