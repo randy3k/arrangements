@@ -102,12 +102,14 @@ Combinations <- R6::R6Class(
         v = NULL,
         freq = NULL,
         replace = NULL,
-        initialize = function(n, k, v = NULL, freq = NULL, replace = FALSE) {
+        skip = NULL,
+        initialize = function(n, k, v = NULL, freq = NULL, replace = FALSE, skip = NULL) {
             self$n <- as.integer(n)
             self$k <- as.integer(k)
             self$v <- v
             self$freq <- freq
             self$replace <- replace
+            self$skip <- skip
             self$reset()
         },
         reset = function() {
@@ -126,7 +128,7 @@ Combinations <- R6::R6Class(
             } else {
                 out <- .Call("get_combinations", PACKAGE = "arrangements",
                              NULL, self$k, self$n, self$v, self$freq, self$replace, layout,
-                             d, NULL, NULL, private$state, NULL, drop)
+                             d, NULL, NULL, private$state, self$skip, drop)
                 is.null(out) && self$reset()
             }
             out
@@ -145,6 +147,7 @@ Combinations <- R6::R6Class(
 #' combinations of `k` items from `n` items. The iterator allows users to fetch the next
 #' combination(s) via the `getnext()` method.
 #' @template param_pc
+#' @param skip the number of combinations skipped
 #' @seealso [combinations] for generating all combinations and [ncombinations] to calculate number of combinations
 #' @examples
 #' icomb <- icombinations(5, 2)
@@ -159,7 +162,7 @@ Combinations <- R6::R6Class(
 #'   sum(x)
 #' }
 #' @export
-icombinations <- function(x, k = n, n = NULL, v = NULL, freq = NULL, replace = FALSE) {
+icombinations <- function(x, k = n, n = NULL, v = NULL, freq = NULL, replace = FALSE, skip = NULL) {
     if (missing(x)) {
         n <- validate_n_value(n, v, freq, replace)
     } else {
@@ -172,5 +175,5 @@ icombinations <- function(x, k = n, n = NULL, v = NULL, freq = NULL, replace = F
     }
     (k %% 1 == 0 && k >= 0) || stop("expect integer")
 
-    Combinations$new(n, k, v, freq, replace)
+    Combinations$new(n, k, v, freq, replace, skip)
 }

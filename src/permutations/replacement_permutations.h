@@ -57,40 +57,34 @@ SEXP next_replacement_permutations(int n, int k, SEXP labels, char layout, int d
     dd = d == -1 ? maxd : d;
     d = verify_dimension(dd, n, layout);
 
-    mpz_t maxz;
-    int skip;
-    mpz_t skipz;
-    if (!Rf_isNull(_skip)) {
-        if (bigz) {
-            mpz_init(maxz);
-            mpz_init(skipz);
-            mpz_ui_pow_ui(maxz, n, k);
-            if (as_mpz_array(&skipz, 1, _skip) < 0 || mpz_sgn(skipz) < 0) {
-                mpz_clear(skipz);
-                mpz_clear(maxz);
-                Rf_error("expect integer");
-            } else if (mpz_cmp(skipz, maxz) >= 0) {
-                mpz_set(skipz, 0);
-            }
-            mpz_clear(maxz);
-        } else {
-            skip = as_uint(_skip);
-            if (skip >= (int) maxd) {
-                skip = 0;
-            }
-        }
-    }
-
     unsigned int* ap;
 
     if (!variable_exists(state, "a", INTSXP, k, (void**) &ap)) {
+        mpz_t maxz;
+        int skip;
+        mpz_t skipz;
         if (Rf_isNull(_skip)) {
             for(i=0; i<k; i++) ap[i] = 0;
         } else {
             if (bigz) {
+                mpz_init(maxz);
+                mpz_init(skipz);
+                mpz_ui_pow_ui(maxz, n, k);
+                if (as_mpz_array(&skipz, 1, _skip) < 0 || mpz_sgn(skipz) < 0) {
+                    mpz_clear(skipz);
+                    mpz_clear(maxz);
+                    Rf_error("expect integer");
+                } else if (mpz_cmp(skipz, maxz) >= 0) {
+                    mpz_set(skipz, 0);
+                }
+                mpz_clear(maxz);
                 identify_replacement_permutation_bigz(ap, n, k, skipz);
                 mpz_clear(skipz);
             } else {
+                skip = as_uint(_skip);
+                if (skip >= (int) maxd) {
+                    skip = 0;
+                }
                 identify_replacement_permutation(ap, n, k, skip);
             }
         }
