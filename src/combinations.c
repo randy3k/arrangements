@@ -133,10 +133,11 @@ SEXP get_combinations(SEXP _x, SEXP _k, SEXP _n, SEXP _v, SEXP _freq, SEXP _repl
     }
 
     attach_factor_levels(ans, _v);
-    if ((!Rf_isNull(_drop) && Rf_asLogical(_drop)) ||
-                (d == 1 && Rf_isNull(_layout)) ||
-                (!Rf_isNull(_index) && index_length(_index) == 1 && Rf_isNull(_layout)) ||
-                (!Rf_isNull(_nsample) && as_uint(_nsample) == 1 && Rf_isNull(_layout))) {
+    if ((!Rf_isNull(_drop) && Rf_asLogical(_drop)) || ((Rf_isNull(_drop) || Rf_asLogical(_drop)) &&
+                ((d == 1 && Rf_isNull(_layout)) ||
+                    (!Rf_isNull(_index) && index_length(_index) == 1 && Rf_isNull(_layout)) ||
+                    (!Rf_isNull(_nsample) && as_uint(_nsample) == 1 && Rf_isNull(_layout)))
+                )) {
         if (layout == 'r' && Rf_nrows(ans) == 1) {
             Rf_setAttrib(ans, R_DimSymbol, R_NilValue);
         } else if (layout == 'c' && Rf_ncols(ans) == 1) {
