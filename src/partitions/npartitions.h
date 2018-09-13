@@ -199,6 +199,14 @@ void nkm_bigz(mpz_t z, int n, int k, int m) {
     free(p);
 }
 
+double n_k_min_partitions(int n, int k, int m) {
+    return n_k_partitions(n - (m-1)*k, k);
+}
+
+void n_k_min_partitions_bigz(mpz_t z, int n, int k, int m) {
+    n_k_partitions_bigz(z, n - (m-1)*k, k);
+}
+
 double n_k_max_partitions(int n, int k, int m) {
     return nkm(n-k, k, m-1);
 }
@@ -252,6 +260,14 @@ void n_min_partitions_bigz(mpz_t z, int n, int m) {
     mpz_set(z, p[n]);
     for (j = 0; j <= n; j++) mpz_clear(p[j]);
     free(p);
+}
+
+double n_max_partitions(int n, int m) {
+    return nkm(n, n,  m);
+}
+
+void n_max_partitions_bigz(mpz_t z, int n, int m) {
+    nkm_bigz(z, n, n, m);
 }
 
 #endif /* end of include guard: NPARTITIONS_H__ */
