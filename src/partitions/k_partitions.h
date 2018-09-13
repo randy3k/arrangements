@@ -5,156 +5,7 @@
 #include "../combinatorics.h"
 #include "../utils.h"
 #include "../macros.h"
-
-
-double n_k_partitions(int n, int k) {
-    if (n < k) {
-        return 0;
-    } else if (n == 0 && k == 0) {
-        return 1;
-    } else if (k == 0) {
-        return 0;
-    }
-    int n1 = n-k+1;
-    double* p = (double*) malloc(n1*k * sizeof(double));
-    int i, j, h;
-
-    for (j=0; j<k; j++) {
-        p[j] = 1;
-    }
-    for (i=1; i<n1; i++) {
-        p[i*k] = 1;
-        for (j=1; j<k; j++) {
-            h = i*k + j;
-            if (i > j) {
-                p[h] =  p[h - 1] + p[h - (j + 1)*k];
-            } else {
-                p[h] =  p[h - 1];
-            }
-        }
-    }
-    double out = p[n1*k - 1];
-    free(p);
-    return out;
-}
-
-
-void n_k_partitions_bigz(mpz_t z, int n, int k) {
-    if (n < k) {
-        mpz_set_ui(z, 0);
-        return;
-    } else if (n == 0 && k == 0) {
-        mpz_set_ui(z, 1);
-        return;
-    } else if (k == 0) {
-        mpz_set_ui(z, 0);
-        return;
-    }
-
-    int n1 = n-k+1;
-    int i, j, h;
-
-    mpz_t* p = (mpz_t*) malloc(n1*k * sizeof(mpz_t));
-    for (i=0; i<n1*k; i++) mpz_init(p[i]);
-
-    for (j=0; j<k; j++) {
-        mpz_set_ui(p[j], 1);
-    }
-    for (i=1; i<n1; i++) {
-        mpz_set_ui(p[i*k], 1);
-        for (j=1; j<k; j++) {
-            h = i*k + j;
-            if (i > j) {
-                mpz_add(p[h], p[h - 1], p[h - (j + 1)*k]);
-            } else {
-                mpz_set(p[h], p[h - 1]);
-            }
-        }
-    }
-    mpz_set(z, p[n1*k - 1]);
-    for (i=0; i<n1*k; i++) mpz_clear(p[i]);
-    free(p);
-}
-
-double nkm(int n, int k, int m) {
-    // number of partitions of n into at most k parts of sizes <= m
-    // note that number of partitions of n into exactly k parts
-    // is p(n, k, m) - p(n, k-1, m) = p(n-k, k, m-1)
-
-    if (n > m*k) {
-        return 0;
-    } else if (n == 0) {
-        return 1;
-    } else if (k == 0) {
-        return 0;
-    }
-
-    int i, j, h;
-    double* p = (double*) malloc((n + 1) * sizeof(double));
-    for (j = 1; j <= n; j++) {
-        p[j] = 0;
-    }
-    p[0] = 1;
-    for (i = 1; i <= m; i++) {
-        for (j = n; j >= k + i; j--) {
-            p[j] -= p[j - k - i];
-        }
-        for (j = n; j >= 0; j--) {
-            for (h = i; h <= j; h += i) {
-                p[j] += p[j - h];
-            }
-        }
-    }
-    double pn = p[n];
-    free(p);
-    return pn;
-}
-
-double n_k_m_partitions(int n, int k, int m) {
-    return nkm(n-k, k, m-1);
-}
-
-
-void nkm_bigz(mpz_t z, int n, int k, int m) {
-    // number of partitions of n into at most k parts of sizes <= m
-    // note that number of partitions of n into exactly k parts
-    // is p(n, k, m) - p(n, k-1, m) = p(n-k, k, m-1)
-    if (n > m*k) {
-        mpz_set_ui(z, 0);
-        return;
-    } else if (n == 0) {
-        mpz_set_ui(z, 1);
-        return;
-    } else if (k == 0) {
-        mpz_set_ui(z, 0);
-        return;
-    }
-
-    int i, j, h;
-    mpz_t* p = (mpz_t*) malloc((n+1) * sizeof(mpz_t));
-    for (j = 0; j <= n; j++) mpz_init(p[j]);
-    for (j = 1; j <= n; j++) {
-        mpz_set_ui(p[j], 0);
-    }
-    mpz_set_ui(p[0], 1);
-    for (i = 1; i <= m; i++) {
-        for (j = n; j >= k + i; j--) {
-            mpz_sub(p[j], p[j], p[j - k - i]);
-        }
-        for (j = n; j >= 0; j--) {
-            for (h = i; h <= j; h += i) {
-                mpz_add(p[j], p[j], p[j - h]);
-            }
-        }
-    }
-    mpz_set(z, p[n]);
-    for (j = 0; j <= n; j++) mpz_clear(p[j]);
-    free(p);
-}
-
-void n_k_m_partitions_bigz(mpz_t z, int n, int k, int m) {
-    nkm_bigz(z, n-k, k, m-1);
-}
+#include "npartitions.h"
 
 
 void identify_asc_k_partition(unsigned int* ar, unsigned int n, unsigned int k, unsigned int index) {
@@ -396,7 +247,7 @@ void identify_desc_k_partition(unsigned int* ar, unsigned int n, unsigned int k,
     for (i = 0; i < k; i++) {
         count = 0;
         for (j = start; j >= 1; j--) {
-            this_count = count + n_k_m_partitions(n - j, k - i - 1, j);
+            this_count = count + n_k_max_partitions(n - j, k - i - 1, j);
             if (this_count > index) {
                 ar[i] = j;
                 n -= j;
@@ -421,7 +272,7 @@ void identify_desc_k_partition_bigz(unsigned int* ar, unsigned int n, unsigned i
     for (i = 0; i < k; i++) {
         mpz_set_ui(count, 0);
         for (j = start; j >= 1; j--) {
-            n_k_m_partitions_bigz(this_count, n - j, k - i - 1, j);
+            n_k_max_partitions_bigz(this_count, n - j, k - i - 1, j);
             mpz_add(this_count, this_count, count);
             if (mpz_cmp(this_count, index) > 0) {
                 ar[i] = j;

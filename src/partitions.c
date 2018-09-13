@@ -1,6 +1,6 @@
 #include <gmp.h>
 #include "gmp_utils.h"
-#include "partitions/partitions.h"
+#include "partitions/ordinary_partitions.h"
 #include "partitions/k_partitions.h"
 
 
@@ -62,9 +62,9 @@ SEXP get_partitions(SEXP _n, SEXP _k, SEXP _descending, SEXP _layout, SEXP _d,
                     UNPROTECT(2);
                 }
             } else if (descending) {
-                ans = next_desc_partitions(n, layout, d, state);
+                ans = next_desc_partitions(n, layout, d, _skip, state);
             } else {
-                ans = next_asc_partitions(n, layout, d, state);
+                ans = next_asc_partitions(n, layout, d, _skip, state);
             }
         } else {
             if (n == 0 && k == 0) {
@@ -93,10 +93,18 @@ SEXP get_partitions(SEXP _n, SEXP _k, SEXP _descending, SEXP _layout, SEXP _d,
             }
         }
     } else {
-        if (descending) {
-            ans = obtain_desc_k_partitions(n, k, layout, _index, _nsample);
+        if (k == -1) {
+            if (descending) {
+                ans = obtain_desc_partitions(n, layout, _index, _nsample);
+            } else {
+                ans = obtain_asc_partitions(n, layout, _index, _nsample);
+            }
         } else {
-            ans = obtain_asc_k_partitions(n, k, layout, _index, _nsample);
+            if (descending) {
+                ans = obtain_desc_k_partitions(n, k, layout, _index, _nsample);
+            } else {
+                ans = obtain_asc_k_partitions(n, k, layout, _index, _nsample);
+            }
         }
     }
 
