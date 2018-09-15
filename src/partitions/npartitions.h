@@ -1,5 +1,7 @@
 #ifndef NPARTITIONS_H__
 #define NPARTITIONS_H__
+#include <gmp.h>
+#include <stdlib.h>
 
 
 double n_partitions(int n) {
