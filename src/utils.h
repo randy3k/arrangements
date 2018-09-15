@@ -26,6 +26,8 @@ int as_uint(SEXP x);
 
 int* as_uint_array(SEXP x);
 
+int* as_uint_index(SEXP x);
+
 double fact(int n);
 
 double fallfact(int n, int k);

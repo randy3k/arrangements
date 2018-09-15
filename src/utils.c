@@ -215,6 +215,50 @@ int* as_uint_array(SEXP x) {
     return NULL;
 }
 
+int* as_uint_index(SEXP x) {
+    // a clone of as_uint_array for positive integers
+    size_t i, n;
+    int z;
+
+    if (TYPEOF(x) == INTSXP) {
+        int* xp = INTEGER(x);
+        n = Rf_length(x);
+        for (i=0; i<n; i++) {
+            z = xp[i];
+            if (z <= 0) Rf_error("invalid index");
+        }
+        return xp;
+    } else if (TYPEOF(x) == REALSXP) {
+        int* yp;
+        double* xp;
+        double w;
+        n = Rf_length(x);
+        yp = (int*) R_alloc(n, sizeof(int));
+        xp = REAL(x);
+        for (i=0; i<n; i++) {
+            w = xp[i];
+            z = (int) w;
+            if (w != z || w <= 0) Rf_error("invalid index");
+            yp[i] = z;
+        }
+        return yp;
+    } else if (TYPEOF(x) == STRSXP) {
+        int* yp;
+        double w;
+        n = Rf_length(x);
+        yp = (int*) R_alloc(n, sizeof(int));
+        for (i=0; i<n; i++) {
+            w = atof(CHAR(STRING_ELT(x, i)));
+            z = (int) w;
+            if (w != z || w <= 0) Rf_error("invalid index");
+            yp[i] = z;
+        }
+        return yp;
+    }
+    Rf_error("invalid index");
+    return NULL;
+}
+
 double fact(int n) {
     double out;
     int i;

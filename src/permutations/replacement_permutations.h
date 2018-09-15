@@ -164,13 +164,11 @@ SEXP obtain_replacement_permutations(int n, int k, SEXP labels, char layout, SEX
             for (i = 0; i < d; i++) mpz_init(index[i]);
             int status = as_mpz_array(index, d, _index);
             for(i = 0; i < d; i++) {
-                if (status < 0 || mpz_sgn(index[i]) <= 0) {
+                if (status < 0 || mpz_sgn(index[i]) <= 0 || mpz_cmp(index[i], maxz) > 0) {
                     for (i = 0; i < d; i++) mpz_clear(index[i]);
                     mpz_clear(maxz);
                     mpz_clear(z);
-                    Rf_error("expect integer");
-                } else if (mpz_cmp(index[i], maxz) > 0) {
-                    mpz_set(index[i], maxz);
+                    Rf_error("invalid index");
                 }
             }
         }
@@ -209,12 +207,10 @@ SEXP obtain_replacement_permutations(int n, int k, SEXP labels, char layout, SEX
         if (sampling) {
             GetRNGstate();
         } else {
-            index = as_uint_array(_index);
+            index = as_uint_index(_index);
             for (i = 0; i < d; i++) {
-                if (index[i] <= 0) {
-                    Rf_error("expect integer");
-                } else if (index[i] > maxd) {
-                    index[i] = maxd;
+                if (index[i] <= 0 || index[i] > maxd) {
+                    Rf_error("invalid index");
                 }
             }
         }

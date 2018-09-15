@@ -5,7 +5,7 @@
 #include "../combinatorics.h"
 #include "../utils.h"
 #include "../macros.h"
-#include "npartitions.h"
+#include "partitions_utils.h"
 
 
 void identify_asc_partition(unsigned int* ar, unsigned int n, unsigned int index) {
@@ -202,13 +202,11 @@ SEXP obtain_asc_partitions(int n, char layout, SEXP _index, SEXP _nsample) {
             for (i = 0; i < d; i++) mpz_init(index[i]);
             int status = as_mpz_array(index, d, _index);
             for(i = 0; i < d; i++) {
-                if (status < 0 || mpz_sgn(index[i]) <= 0) {
+                if (status < 0 || mpz_sgn(index[i]) <= 0 || mpz_cmp(index[i], maxz) > 0) {
                     for (i = 0; i < d; i++) mpz_clear(index[i]);
                     mpz_clear(maxz);
                     mpz_clear(z);
-                    Rf_error("expect integer");
-                } else if (mpz_cmp(index[i], maxz) > 0) {
-                    mpz_set(index[i], maxz);
+                    Rf_error("invalid index");
                 }
             }
         }
@@ -246,12 +244,10 @@ SEXP obtain_asc_partitions(int n, char layout, SEXP _index, SEXP _nsample) {
         if (sampling) {
             GetRNGstate();
         } else {
-            index = as_uint_array(_index);
+            index = as_uint_index(_index);
             for (i = 0; i < d; i++) {
-                if (index[i] <= 0) {
-                    Rf_error("expect integer");
-                } else if (index[i] > maxd) {
-                    index[i] = maxd;
+                if (index[i] <= 0 || index[i] > maxd) {
+                    Rf_error("invalid index");
                 }
             }
         }
@@ -493,13 +489,11 @@ SEXP obtain_desc_partitions(int n, char layout, SEXP _index, SEXP _nsample) {
             for (i = 0; i < d; i++) mpz_init(index[i]);
             int status = as_mpz_array(index, d, _index);
             for(i = 0; i < d; i++) {
-                if (status < 0 || mpz_sgn(index[i]) <= 0) {
+                if (status < 0 || mpz_sgn(index[i]) <= 0 || mpz_cmp(index[i], maxz) > 0) {
                     for (i = 0; i < d; i++) mpz_clear(index[i]);
                     mpz_clear(maxz);
                     mpz_clear(z);
-                    Rf_error("expect integer");
-                } else if (mpz_cmp(index[i], maxz) > 0) {
-                    mpz_set(index[i], maxz);
+                    Rf_error("invalid index");
                 }
             }
         }
@@ -537,12 +531,10 @@ SEXP obtain_desc_partitions(int n, char layout, SEXP _index, SEXP _nsample) {
         if (sampling) {
             GetRNGstate();
         } else {
-            index = as_uint_array(_index);
+            index = as_uint_index(_index);
             for (i = 0; i < d; i++) {
-                if (index[i] <= 0) {
-                    Rf_error("expect integer");
-                } else if (index[i] > maxd) {
-                    index[i] = maxd;
+                if (index[i] <= 0 || index[i] > maxd) {
+                    Rf_error("invalid index");
                 }
             }
         }
