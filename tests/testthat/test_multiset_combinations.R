@@ -105,6 +105,13 @@ test_that("Multiset Combinations - index", {
     expect_equal(combinations(freq = c(2, 3, 3, 4), k = 4, index = 29), c(4, 4, 4, 4))
     expect_equal(combinations(freq = rep(10, 11), k = 50, index = 2), c(rep(1:4, each = 10), rep(5, 9), 6))
     expect_equal(combinations(freq = rep(10, 11), k = 50, index = "9608991865"), rep(7:11, each = 10))
+
+    expect_equal(combinations(freq = c(2, 3, 3, 4), k = 0, index = 1), integer(0))
+    expect_equal(combinations(freq = 0, k = 0, index = 1), integer(0))
+    expect_error(combinations(freq = 0, k = 1, index = 1), "invalid index")
+    expect_equal(combinations(freq = c(2, 3, 3, 4), k = 0, index = gmp::as.bigz(1)), integer(0))
+    expect_equal(combinations(freq = 0, k = 0, index = gmp::as.bigz(1)), integer(0))
+    expect_error(combinations(freq = 0, k = 1, index = gmp::as.bigz(1)), "invalid index")
 })
 
 test_that("Multiset Combinations - skip", {

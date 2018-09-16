@@ -142,6 +142,11 @@ test_that("Combinations - index", {
     expect_equal(combinations(5, 3, index = 2, layout = "list"), list(c(1, 2, 4)))
     expect_equal(combinations(5, 3, index = 10, layout = "list"), list(c(3, 4, 5)))
     expect_equal(combinations(50, 30, index = 2, layout = "list"), list(c(1:29, 31)))
+
+    expect_error(combinations(0, 1, index = 1), "invalid index")
+    expect_equal(combinations(0, 0, index = 1), integer(0))
+    expect_error(combinations(0, 1, index = gmp::as.bigz(1)), "invalid index")
+    expect_equal(combinations(0, 0, index = gmp::as.bigz(1)), integer(0))
 })
 
 test_that("Combinations - skip", {

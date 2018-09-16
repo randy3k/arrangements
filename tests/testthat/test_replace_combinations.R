@@ -109,6 +109,13 @@ test_that("Combinations with replacement - index", {
     expect_equal(combinations(5, 3, replace = TRUE, index = 35), rep(5, 3))
     expect_equal(combinations(40, 10, replace = TRUE, index = 2), c(rep(1, 9), 2))
     expect_equal(combinations(40, 10, replace = TRUE, index = "8217822536"), rep(40, 10))
+
+    expect_equal(combinations(5, 0, replace = TRUE, index = 1), integer(0))
+    expect_equal(combinations(0, 0, replace = TRUE, index = 1), integer(0))
+    expect_error(combinations(0, 1, replace = TRUE, index = 1), "invalid index")
+    expect_equal(combinations(5, 0, replace = TRUE, index = gmp::as.bigz(1)), integer(0))
+    expect_equal(combinations(0, 0, replace = TRUE, index = gmp::as.bigz(1)), integer(0))
+    expect_error(combinations(0, 1, replace = TRUE, index = gmp::as.bigz(1)), "invalid index")
 })
 
 test_that("Combinations with replacement - skip", {

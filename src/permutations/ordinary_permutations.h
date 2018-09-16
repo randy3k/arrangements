@@ -9,7 +9,9 @@
 
 
 void identify_ordinary_permutation(unsigned int* ar, unsigned int n, unsigned int index) {
-    unsigned int i, j;
+    int i, j;
+    if (n == 0) return;
+
     unsigned int* fact = (unsigned int*) malloc(n * sizeof(unsigned int));
 
     fact[0] = 1;
@@ -36,6 +38,7 @@ void identify_ordinary_permutation(unsigned int* ar, unsigned int n, unsigned in
 
 void identify_ordinary_permutation_bigz(unsigned int* ar, unsigned int n, mpz_t index) {
     unsigned int i, j;
+    if (n == 0) return;
 
     mpz_t q;
     mpz_init(q);

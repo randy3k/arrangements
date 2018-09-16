@@ -108,6 +108,13 @@ test_that("Permutations with replacement - index", {
     expect_equal(permutations(5, 3, replace = TRUE, index = 125), rep(5, 3))
     expect_equal(permutations(40, 10, replace = TRUE, index = 2), c(rep(1, 9), 2))
     expect_equal(permutations(40, 10, replace = TRUE, index = "10485760000000000"), rep(40, 10))
+
+    expect_equal(permutations(5, 0, replace = TRUE, index = 1), integer(0))
+    expect_equal(permutations(0, 0, replace = TRUE, index = 1), integer(0))
+    expect_error(permutations(0, 1, replace = TRUE, index = 1), "invalid index")
+    expect_equal(permutations(5, 0, replace = TRUE, index = gmp::as.bigz(1)), integer(0))
+    expect_equal(permutations(0, 0, replace = TRUE, index = gmp::as.bigz(1)), integer(0))
+    expect_error(permutations(0, 1, replace = TRUE, index = gmp::as.bigz(1)), "invalid index")
 })
 
 test_that("Permutations with replacement - skip", {

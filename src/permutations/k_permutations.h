@@ -30,11 +30,13 @@ void identify_k_permutation(unsigned int* ar, unsigned int n, unsigned int k, un
         index = index % j;
     }
 
-    for (i = k - 1; i > 0; i--) {
-        j = i;
-        while (j-- > 0) {
-            if (ar[j] <= ar[i]) {
-                ar[i]++;
+    if (k > 0) {
+        for (i = k - 1; i > 0; i--) {
+            j = i;
+            while (j-- > 0) {
+                if (ar[j] <= ar[i]) {
+                    ar[i]++;
+                }
             }
         }
     }
@@ -54,11 +56,13 @@ void identify_k_permutation_bigz(unsigned int* ar, unsigned int n, unsigned int 
         ar[i] = mpz_get_ui(q);
     }
 
-    for (i = k - 1; i > 0; i--) {
-        j = i;
-        while (j-- > 0) {
-            if (ar[j] <= ar[i]) {
-                ar[i]++;
+    if (k > 0) {
+        for (i = k - 1; i > 0; i--) {
+            j = i;
+            while (j-- > 0) {
+                if (ar[j] <= ar[i]) {
+                    ar[i]++;
+                }
             }
         }
     }

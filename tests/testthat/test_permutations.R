@@ -95,6 +95,8 @@ test_that("Permutations - index", {
     expect_equal(permutations(5, index = 120), 5:1)
     expect_equal(permutations(13, index = 2), c(1:11, 13, 12))
     expect_equal(permutations(13, index = "6227020800"), 13:1)
+
+    expect_equal(permutations(0, index = 1), integer(0))
 })
 
 test_that("Permutations - skip", {

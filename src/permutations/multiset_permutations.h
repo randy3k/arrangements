@@ -69,7 +69,7 @@ void n_multiset_permutations_bigz(mpz_t z, int* freq, size_t flen, size_t k) {
     int i, j, h;
     for (i=0; i<flen; i++) n += freq[i];
     if (k > n) {
-        mpz_set(z, 0);
+        mpz_set_ui(z, 0);
         return;
     }
 
