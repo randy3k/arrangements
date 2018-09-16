@@ -134,12 +134,18 @@ double nkm(int n, int k, int m) {
     // note that number of partitions of n into exactly k parts
     // is p(n, k, m) - p(n, k-1, m) = p(n-k, k, m-1)
 
+    if (m > k) {
+        // nkm(n, k, m) = nkm(n, m, k)
+        int temp;
+        temp = k;
+        k = m;
+        m = temp;
+    }
+
     if (n > m*k) {
         return 0;
     } else if (n == 0) {
         return 1;
-    } else if (k == 0) {
-        return 0;
     }
 
     int i, j, h;
