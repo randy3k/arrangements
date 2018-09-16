@@ -1,7 +1,7 @@
 #' Number of partitions
 #' @param n an non-negative integer to be partitioned
 #' @param k number of parts
-#' @param bigz an logical to indicate using [gmp::bigz]
+#' @param bigz an logical to use [gmp::bigz]
 #' @seealso [partitions] for generating all partitions and [ipartitions] for iterating partitions
 #' @examples
 #' # number of partitions of 10

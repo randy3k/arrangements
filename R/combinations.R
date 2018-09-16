@@ -1,6 +1,6 @@
 #' Number of combinations
 #' @template param_pc
-#' @param bigz an logical to indicate using [gmp::bigz]
+#' @param bigz an logical to use [gmp::bigz]
 #' @seealso [combinations] for generating all combinations and [icombinations] for iterating combinations
 #' @examples
 #' ncombinations(5, 2)

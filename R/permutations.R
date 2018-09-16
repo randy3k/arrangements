@@ -1,6 +1,6 @@
 #' Number of permutations
 #' @template param_pc
-#' @param bigz an logical to indicate using [gmp::bigz]
+#' @param bigz an logical to use [gmp::bigz]
 #' @seealso [permutations] for generating all permutations and [ipermutations] for iterating permutations
 #' @examples
 #' npermutations(7)

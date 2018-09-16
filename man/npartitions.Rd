@@ -11,7 +11,7 @@ npartitions(n, k = NULL, bigz = FALSE)
 
 \item{k}{number of parts}
 
-\item{bigz}{an logical to indicate using \link[gmp:bigz]{gmp::bigz}}
+\item{bigz}{an logical to use \link[gmp:bigz]{gmp::bigz}}
 }
 \description{
 Number of partitions

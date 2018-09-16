@@ -20,7 +20,7 @@ ncombinations(x = NULL, k = n, n = NULL, v = NULL, freq = NULL,
 
 \item{replace}{an logical to draw items with replacement}
 
-\item{bigz}{an logical to indicate using \link[gmp:bigz]{gmp::bigz}}
+\item{bigz}{an logical to use \link[gmp:bigz]{gmp::bigz}}
 }
 \description{
 Number of combinations
