@@ -18,7 +18,7 @@ ipartitions(n, k = NULL, descending = FALSE, skip = NULL)
 
 \item{descending}{logical to use reversed lexicographical order}
 
-\item{skip}{the number of combinations skipped}
+\item{skip}{the number of partitions skipped}
 }
 \description{
 This function returns a \href{Partitions-class.html}{Partitions} iterator for iterating

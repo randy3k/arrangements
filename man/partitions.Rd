@@ -18,13 +18,13 @@ partitions(n, k = NULL, descending = FALSE, layout = NULL,
 \item{layout}{if "row", "column" or "list" is specified, the returned value would be a
 "row-major" matrix, a "column-major" matrix or a list respectively}
 
-\item{nitem}{number of combinations required, usually used with \code{skip}}
+\item{nitem}{number of partitions required, usually used with \code{skip}}
 
-\item{skip}{the number of combinations skipped}
+\item{skip}{the number of partitions skipped}
 
-\item{index}{a vector of indices of the desired combinations}
+\item{index}{a vector of indices of the desired partitions}
 
-\item{nsample}{sampling random combinations}
+\item{nsample}{sampling random partitions}
 
 \item{drop}{vectorize a matrix or unlist a list}
 }

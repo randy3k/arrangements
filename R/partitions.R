@@ -34,10 +34,10 @@ npartitions <- function(n, k = NULL, bigz = FALSE) {
 #' @param k number of parts
 #' @param descending logical to use reversed lexicographical order
 #' @template param_type
-#' @param nitem number of combinations required, usually used with \code{skip}
-#' @param skip the number of combinations skipped
-#' @param index a vector of indices of the desired combinations
-#' @param nsample sampling random combinations
+#' @param nitem number of partitions required, usually used with \code{skip}
+#' @param skip the number of partitions skipped
+#' @param index a vector of indices of the desired partitions
+#' @param nsample sampling random partitions
 #' @param drop vectorize a matrix or unlist a list
 #' @seealso [ipartitions] for iterating partitions and [npartitions] to calculate number of partitions
 #' @examples
@@ -145,7 +145,7 @@ Partitions <- R6::R6Class(
 #' @param n an non-negative integer to be partitioned
 #' @param k number of parts
 #' @param descending logical to use reversed lexicographical order
-#' @param skip the number of combinations skipped
+#' @param skip the number of partitions skipped
 #' @seealso [partitions] for generating all partitions and [npartitions] to calculate number of partitions
 #' @examples
 #' ipart <- ipartitions(10)
