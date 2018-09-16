@@ -29,7 +29,7 @@ partitions(n, k = NULL, descending = FALSE, layout = NULL,
 \item{drop}{vectorize a matrix or unlist a list}
 }
 \description{
-This function partitions an non-negative interger \code{n} into \code{k} parts or any part size.
+This function partitions an non-negative interger \code{n} into \code{k} parts or parts of any sizes.
 The results are in lexicographical or reversed lexicographical order.
 }
 \examples{

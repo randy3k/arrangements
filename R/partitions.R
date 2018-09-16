@@ -27,7 +27,7 @@ npartitions <- function(n, k = NULL, bigz = FALSE) {
 
 #' Partitions generator
 #'
-#' This function partitions an non-negative interger `n` into `k` parts or any part size.
+#' This function partitions an non-negative interger `n` into `k` parts or parts of any sizes.
 #' The results are in lexicographical or reversed lexicographical order.
 #'
 #' @param n an non-negative integer to be partitioned
@@ -139,7 +139,7 @@ Partitions <- R6::R6Class(
 #' @title Partitions iterator
 #' @description
 #' This function returns a [Partitions](Partitions-class.html) iterator for iterating
-#' partitions of an non-negative integer `n` into `k` parts or any part size.
+#' partitions of an non-negative integer `n` into `k` parts or parts of any sizes.
 #' The iterator allows users to fetch the next partition(s) via the `getnext()` method.
 #'
 #' @param n an non-negative integer to be partitioned

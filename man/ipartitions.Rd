@@ -22,7 +22,7 @@ ipartitions(n, k = NULL, descending = FALSE, skip = NULL)
 }
 \description{
 This function returns a \href{Partitions-class.html}{Partitions} iterator for iterating
-partitions of an non-negative integer \code{n} into \code{k} parts or any part size.
+partitions of an non-negative integer \code{n} into \code{k} parts or parts of any sizes.
 The iterator allows users to fetch the next partition(s) via the \code{getnext()} method.
 }
 \details{
