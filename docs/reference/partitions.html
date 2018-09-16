@@ -62,7 +62,7 @@ The results are in lexicographical or reversed lexicographical order." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">arrangements</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">1.1.2</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">1.1.3</span>
       </span>
     </div>
 
@@ -117,7 +117,9 @@ The results are in lexicographical or reversed lexicographical order.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>partitions</span>(<span class='no'>n</span>, <span class='kw'>k</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>descending</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>layout</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+    <pre class="usage"><span class='fu'>partitions</span>(<span class='no'>n</span>, <span class='kw'>k</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>descending</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>layout</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>nitem</span> <span class='kw'>=</span> -<span class='fl'>1L</span>, <span class='kw'>skip</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>index</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>nsample</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>drop</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -138,6 +140,26 @@ The results are in lexicographical or reversed lexicographical order.</p>
       <th>layout</th>
       <td><p>if "row", "column" or "list" is specified, the returned value would be a
 "row-major" matrix, a "column-major" matrix or a list respectively</p></td>
+    </tr>
+    <tr>
+      <th>nitem</th>
+      <td><p>number of combinations required, usually used with <code>skip</code></p></td>
+    </tr>
+    <tr>
+      <th>skip</th>
+      <td><p>the number of combinations skipped</p></td>
+    </tr>
+    <tr>
+      <th>index</th>
+      <td><p>a vector of indices of the desired combinations</p></td>
+    </tr>
+    <tr>
+      <th>nsample</th>
+      <td><p>sampling random combinations</p></td>
+    </tr>
+    <tr>
+      <th>drop</th>
+      <td><p>vectorize a matrix or unlist a list</p></td>
     </tr>
     </table>
     

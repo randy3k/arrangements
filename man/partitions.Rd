@@ -4,7 +4,9 @@
 \alias{partitions}
 \title{Partitions generator}
 \usage{
-partitions(n, k = NULL, descending = FALSE, layout = NULL)
+partitions(n, k = NULL, descending = FALSE, layout = NULL,
+  nitem = -1L, skip = NULL, index = NULL, nsample = NULL,
+  drop = NULL)
 }
 \arguments{
 \item{n}{an non-negative integer to be partitioned}
@@ -15,6 +17,16 @@ partitions(n, k = NULL, descending = FALSE, layout = NULL)
 
 \item{layout}{if "row", "column" or "list" is specified, the returned value would be a
 "row-major" matrix, a "column-major" matrix or a list respectively}
+
+\item{nitem}{number of combinations required, usually used with \code{skip}}
+
+\item{skip}{the number of combinations skipped}
+
+\item{index}{a vector of indices of the desired combinations}
+
+\item{nsample}{sampling random combinations}
+
+\item{drop}{vectorize a matrix or unlist a list}
 }
 \description{
 This function partitions an non-negative interger \code{n} into \code{k} parts or any part size.

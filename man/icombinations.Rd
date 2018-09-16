@@ -10,7 +10,7 @@
 Combinations
 
 icombinations(x, k = n, n = NULL, v = NULL, freq = NULL,
-  replace = FALSE)
+  replace = FALSE, skip = NULL)
 }
 \arguments{
 \item{x}{an integer or a vector, will be treated as \code{n} if integer; otherwise, will be treated as \code{v}}
@@ -24,6 +24,8 @@ icombinations(x, k = n, n = NULL, v = NULL, freq = NULL,
 \item{freq}{an integer vector of item repeat frequencies}
 
 \item{replace}{an logical to draw items with replacement}
+
+\item{skip}{the number of combinations skipped}
 }
 \description{
 This function returns a \href{Combinations-class.html}{Combinations} iterator for iterating

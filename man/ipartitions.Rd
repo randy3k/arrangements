@@ -9,7 +9,7 @@
 \usage{
 Partitions
 
-ipartitions(n, k = NULL, descending = FALSE)
+ipartitions(n, k = NULL, descending = FALSE, skip = NULL)
 }
 \arguments{
 \item{n}{an non-negative integer to be partitioned}
@@ -17,6 +17,8 @@ ipartitions(n, k = NULL, descending = FALSE)
 \item{k}{number of parts}
 
 \item{descending}{logical to use reversed lexicographical order}
+
+\item{skip}{the number of combinations skipped}
 }
 \description{
 This function returns a \href{Partitions-class.html}{Partitions} iterator for iterating
