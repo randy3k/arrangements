@@ -383,14 +383,14 @@ SEXP next_desc_partitions(int n, char layout, int d, SEXP _skip, SEXP state) {
                     mpz_set(skipz, 0);
                 }
                 mpz_clear(maxz);
-                identify_asc_partition_bigz(ap, n, skipz);
+                identify_desc_partition_bigz(ap, n, skipz);
                 mpz_clear(skipz);
             } else {
                 skip = as_uint(_skip);
                 if (skip >= (int) maxd) {
                     skip = 0;
                 }
-                identify_asc_partition(ap, n, skip);
+                identify_desc_partition(ap, n, skip);
             }
         }
         status = 0;
@@ -420,6 +420,10 @@ SEXP next_desc_partitions(int n, char layout, int d, SEXP _skip, SEXP state) {
                 }
             }
             kp[0] = i;
+            // for the algorithm
+            for (j = i; j < n; j++) {
+                ap[j] = 1;
+            }
         }
         status = 0;
     }

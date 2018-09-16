@@ -178,3 +178,44 @@ test_that("Integer partitions - descending ipartitions", {
     expect_error(ipartitions(-1, descending = TRUE), "expect integer")
     expect_error(ipartitions(1.5, descending = TRUE), "expect integer")
 })
+
+
+test_that("Integer partitions - index", {
+    part <- partitions(10)
+    expect_equal(partitions(10, index = 1:42), part)
+    expect_equal(partitions(10, index = as.numeric(1:42)), part)
+    expect_equal(partitions(10, index = as.character(1:42)), part)
+    expect_equal(partitions(10, index = gmp::as.bigz(1:42)), part)
+    expect_equal(partitions(10, index = 2), c(rep(1, 8), 2, 0))
+    expect_equal(partitions(10, index = 42), c(10, rep(0, 9)))
+    expect_equal(partitions(200, index = 2), c(rep(1, 198), 2, 0))
+    expect_equal(partitions(200, index = "3972999029388"), c(200, rep(0, 199)))
+
+    expect_equal(partitions(0, index = 1), integer(0))
+
+    part <- partitions(10, descending = TRUE)
+    expect_equal(partitions(10, descending = TRUE, index = 1:42), part)
+    expect_equal(partitions(10, descending = TRUE, index = as.numeric(1:42)), part)
+    expect_equal(partitions(10, descending = TRUE, index = as.character(1:42)), part)
+    expect_equal(partitions(10, descending = TRUE, index = gmp::as.bigz(1:42)), part)
+    expect_equal(partitions(10, descending = TRUE, index = 2), c(9, 1, rep(0, 8)))
+    expect_equal(partitions(10, descending = TRUE, index = 42), rep(1, 10))
+    expect_equal(partitions(200, descending = TRUE, index = 2), c(199, 1, rep(0, 198)))
+    expect_equal(partitions(200, descending = TRUE, index = "3972999029388"), rep(1, 200))
+
+    expect_equal(partitions(0, descending = TRUE, index = 1), integer(0))
+})
+
+
+
+test_that("Integer partitions - skip", {
+    expect_equal(partitions(10, skip = 42), partitions(10))
+    expect_equal(partitions(10, skip = 3), partitions(10)[4:42, ])
+    expect_equal(partitions(10, skip = 3, nitem = 4), partitions(10)[4:7, ])
+    expect_equal(partitions(10, skip = gmp::as.bigz(3), nitem = 4), partitions(10)[4:7, ])
+
+    expect_equal(partitions(10, descending = TRUE, skip = 42), partitions(10, descending = TRUE))
+    expect_equal(partitions(10, descending = TRUE, skip = 3), partitions(10, descending = TRUE)[4:42, ])
+    expect_equal(partitions(10, descending = TRUE, skip = 3, nitem = 4), partitions(10, descending = TRUE)[4:7, ])
+    expect_equal(partitions(10, descending = TRUE, skip = gmp::as.bigz(3), nitem = 4), partitions(10, descending = TRUE)[4:7, ])
+})

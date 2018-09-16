@@ -192,3 +192,47 @@ test_that("Integer partitions - descending ipartitions", {
     expect_error(ipartitions(20, -1, descending = TRUE), "expect integer")
     expect_error(ipartitions(20, 1.5, descending = TRUE), "expect integer")
 })
+
+test_that("Integer k-partitions - index", {
+    part <- partitions(20, 5)
+    expect_equal(partitions(20, 5, index = 1:84), part)
+    expect_equal(partitions(20, 5, index = as.numeric(1:84)), part)
+    expect_equal(partitions(20, 5, index = as.character(1:84)), part)
+    expect_equal(partitions(20, 5, index = gmp::as.bigz(1:84)), part)
+    expect_equal(partitions(20, 5, index = 2), c(1, 1, 1, 2, 15))
+    expect_equal(partitions(20, 5, index = 84), c(4, 4, 4, 4, 4))
+    expect_equal(partitions(200, 50, index = 2), c(rep(1, 48), 2, 150))
+    expect_equal(partitions(200, 50, index = "39403290219"), rep(4, 50))
+
+    expect_error(partitions(5, 0, index = 1), "invalid index")
+    expect_equal(partitions(0, 0, index = 1), integer(0))
+    expect_error(partitions(0, 1, index = 1), "invalid index")
+
+    part <- partitions(20, 5, descending = TRUE)
+    expect_equal(partitions(20, 5, descending = TRUE, index = 1:84), part)
+    expect_equal(partitions(20, 5, descending = TRUE, index = as.numeric(1:84)), part)
+    expect_equal(partitions(20, 5, descending = TRUE, index = as.character(1:84)), part)
+    expect_equal(partitions(20, 5, descending = TRUE, index = gmp::as.bigz(1:84)), part)
+    expect_equal(partitions(20, 5, descending = TRUE, index = 2), c(15, 2, 1, 1, 1))
+    expect_equal(partitions(20, 5, descending = TRUE, index = 84), c(4, 4, 4, 4, 4))
+    expect_equal(partitions(200, 50, descending = TRUE, index = 2), c(150, 2, rep(1, 48)))
+    expect_equal(partitions(200, 50, descending = TRUE, index = "39403290219"), rep(4, 50))
+
+    expect_error(partitions(5, 0, descending = TRUE, index = 1), "invalid index")
+    expect_equal(partitions(0, 0, descending = TRUE, index = 1), integer(0))
+    expect_error(partitions(0, 1, descending = TRUE, index = 1), "invalid index")
+})
+
+
+
+test_that("Integer k-partitions - skip", {
+    expect_equal(partitions(20, 5, skip = 84), partitions(20, 5))
+    expect_equal(partitions(20, 5, skip = 3), partitions(20, 5)[4:84, ])
+    expect_equal(partitions(20, 5, skip = 3, nitem = 4), partitions(20, 5)[4:7, ])
+    expect_equal(partitions(20, 5, skip = gmp::as.bigz(3), nitem = 4), partitions(20, 5)[4:7, ])
+
+    expect_equal(partitions(20, 5, descending = TRUE, skip = 84), partitions(20, 5, descending = TRUE))
+    expect_equal(partitions(20, 5, descending = TRUE, skip = 3), partitions(20, 5, descending = TRUE)[4:84, ])
+    expect_equal(partitions(20, 5, descending = TRUE, skip = 3, nitem = 4), partitions(20, 5, descending = TRUE)[4:7, ])
+    expect_equal(partitions(20, 5, descending = TRUE, skip = gmp::as.bigz(3), nitem = 4), partitions(20, 5, descending = TRUE)[4:7, ])
+})
