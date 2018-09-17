@@ -3,6 +3,7 @@
 #include <Rinternals.h>
 #include <gmp.h>
 #include "../combinatorics.h"
+#include "../gmp_utils.h"
 #include "../utils.h"
 #include "../macros.h"
 #include "partitions_utils.h"
