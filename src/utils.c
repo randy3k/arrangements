@@ -334,6 +334,7 @@ void set_gmp_randstate(gmp_randstate_t randstate) {
         PutRNGstate();
         seeds = GetSeedsFromVar();
     }
+    PROTECT(seeds);
 
     unsigned int* seedsp = (unsigned int*) INTEGER(seeds);
     mpz_set_ui(z, round(INT_MAX * unif_rand()));
@@ -343,6 +344,7 @@ void set_gmp_randstate(gmp_randstate_t randstate) {
     gmp_randinit_mt(randstate);
     gmp_randseed(randstate, z);
     mpz_clear(z);
+    UNPROTECT(1);
 }
 
 int index_length(SEXP _index) {

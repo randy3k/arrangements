@@ -108,6 +108,7 @@ SEXP get_partitions(SEXP _n, SEXP _k, SEXP _descending, SEXP _layout, SEXP _d,
         }
     }
 
+    PROTECT(ans);
     if ((!Rf_isNull(_drop) && Rf_asLogical(_drop)) || ((Rf_isNull(_drop) || Rf_asLogical(_drop)) &&
                 ((d == 1 && Rf_isNull(_layout)) ||
                     (!Rf_isNull(_index) && index_length(_index) == 1 && Rf_isNull(_layout)) ||
@@ -133,6 +134,6 @@ SEXP get_partitions(SEXP _n, SEXP _k, SEXP _descending, SEXP _layout, SEXP _d,
             Rf_defineVar(Rf_install("null_pending"), Rf_ScalarLogical(1), state);
         }
     }
-
+    UNPROTECT(1);
     return ans;
 }

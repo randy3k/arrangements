@@ -152,6 +152,7 @@ SEXP get_permutations(SEXP _x, SEXP _k, SEXP _n, SEXP _v, SEXP _freq, SEXP _repl
         }
     }
 
+    PROTECT(ans);
     attach_factor_levels(ans, _v);
     if ((!Rf_isNull(_drop) && Rf_asLogical(_drop)) || ((Rf_isNull(_drop) || Rf_asLogical(_drop)) &&
                 ((d == 1 && Rf_isNull(_layout)) ||
@@ -178,6 +179,6 @@ SEXP get_permutations(SEXP _x, SEXP _k, SEXP _n, SEXP _v, SEXP _freq, SEXP _repl
             Rf_defineVar(Rf_install("null_pending"), Rf_ScalarLogical(1), state);
         }
     }
-
+    UNPROTECT(1);
     return ans;
 }
