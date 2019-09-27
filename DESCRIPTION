@@ -1,8 +1,8 @@
 Package: arrangements
 Type: Package
 Title: Fast Generators and Iterators for Permutations, Combinations and Partitions
-Version: 1.1.5
-Date: 2018-11-07
+Version: 1.1.6
+Date: 2019-09-27
 Authors@R: c(
     person("Randy", "Lai", , "randy.cs.lai@gmail.com", role = c("aut", "cre"))
     )
@@ -29,5 +29,5 @@ Suggests:
 NeedsCompilation: yes
 SystemRequirements: gmp (>= 4.2.3)
 ByteCompile: yes
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1
 Roxygen: list(markdown = TRUE)
