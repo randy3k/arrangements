@@ -28,7 +28,7 @@ ipermutations(x, k = n, n = NULL, v = NULL, freq = NULL,
 \item{skip}{the number of combinations skipped}
 }
 \description{
-This function returns a \href{Permutations-class.html}{Permutations} iterator for iterating
+This function returns a \link{Permutations} iterator for iterating
 permutations of \code{k} items from \code{n} items. The iterator allows users to fetch the next
 permutation(s) via the \code{getnext()} method.
 }

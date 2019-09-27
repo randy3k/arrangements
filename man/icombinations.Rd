@@ -28,7 +28,7 @@ icombinations(x, k = n, n = NULL, v = NULL, freq = NULL,
 \item{skip}{the number of combinations skipped}
 }
 \description{
-This function returns a \href{Combinations-class.html}{Combinations} iterator for iterating
+This function returns a \link{Combinations} iterator for iterating
 combinations of \code{k} items from \code{n} items. The iterator allows users to fetch the next
 combination(s) via the \code{getnext()} method.
 }
