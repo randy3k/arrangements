@@ -138,7 +138,7 @@ Partitions <- R6::R6Class(
 
 #' @title Partitions iterator
 #' @description
-#' This function returns a [Partitions](Partitions-class.html) iterator for iterating
+#' This function returns a [Partitions] iterator for iterating
 #' partitions of an non-negative integer `n` into `k` parts or parts of any sizes.
 #' The iterator allows users to fetch the next partition(s) via the `getnext()` method.
 #'

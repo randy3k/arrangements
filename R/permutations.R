@@ -154,7 +154,7 @@ Permutations <- R6::R6Class(
 
 #' @title Permutations iterator
 #' @description
-#' This function returns a [Permutations](Permutations-class.html) iterator for iterating
+#' This function returns a [Permutations] iterator for iterating
 #' permutations of `k` items from `n` items. The iterator allows users to fetch the next
 #' permutation(s) via the `getnext()` method.
 #'

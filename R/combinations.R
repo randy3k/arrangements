@@ -143,7 +143,7 @@ Combinations <- R6::R6Class(
 
 #' @title Combinations iterator
 #' @description
-#' This function returns a [Combinations](Combinations-class.html) iterator for iterating
+#' This function returns a [Combinations] iterator for iterating
 #' combinations of `k` items from `n` items. The iterator allows users to fetch the next
 #' combination(s) via the `getnext()` method.
 #' @template param_pc
