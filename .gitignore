@@ -4,3 +4,4 @@
 *.so
 *.a
 *.d
+^CRAN-RELEASE$
