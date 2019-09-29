@@ -3,7 +3,7 @@
 #' @importFrom methods new
 #' @importFrom R6 R6Class
 #' @import gmp
-#' @useDynLib arrangements
+#' @useDynLib arrangements, .registration = TRUE, .fixes = "C_"
 "_PACKAGE"
 
 Arrangements <- R6::R6Class(

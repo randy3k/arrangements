@@ -25,7 +25,7 @@
 #' @export
 npermutations <- function(x = NULL, k = n, n = NULL, v = NULL, freq = NULL, replace = FALSE,
                           bigz = FALSE) {
-    .Call("npermutations", PACKAGE = "arrangements", x, k, n, v, freq, replace, bigz)
+    .Call(C_npermutations, x, k, n, v, freq, replace, bigz)
 }
 
 
@@ -83,7 +83,7 @@ npermutations <- function(x = NULL, k = n, n = NULL, v = NULL, freq = NULL, repl
 #' @export
 permutations <- function(x = NULL, k = n, n = NULL, v = NULL, freq = NULL, replace = FALSE,
                          layout = NULL, nitem = -1L, skip = NULL, index = NULL, nsample = NULL, drop = NULL) {
-    .Call("get_permutations", PACKAGE = "arrangements",
+    .Call(C_get_permutations,
           x, k, n, v, freq, replace, layout, nitem, index, nsample, NULL, skip, drop)
 }
 
@@ -133,7 +133,7 @@ Permutations <- R6::R6Class(
                 out <- NULL
                 self$reset()
             } else {
-                out <- .Call("get_permutations", PACKAGE = "arrangements",
+                out <- .Call(C_get_permutations,
                              NULL, self$k, self$n, self$v, self$freq, self$replace, layout,
                              d, NULL, NULL, private$state, self$skip, drop)
                 is.null(out) && self$reset()
