@@ -23,7 +23,6 @@ The goal of this document is to compare the performances of some of the existing
     `r packageDescription("permutations")$Version`
 - [RcppAlgos](https://CRAN.R-project.org/package=RcppAlgos)
     `r packageDescription("RcppAlgos")$Version`
-- [iterpc](https://CRAN.R-project.org/package=iterpc): it is omitted as `arrangements` is thought of a replacement of `iterpc`.
 
 ```{r, warning = FALSE, message = FALSE}
 library(microbenchmark)
