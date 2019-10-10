@@ -1,11 +1,10 @@
 #include <gmp.h>
-#include "gmp_utils.h"
 #include "macros.h"
 #include "utils.h"
-#include "permutations/ordinary_permutations.h"
-#include "permutations/k_permutations.h"
-#include "permutations/multiset_permutations.h"
-#include "permutations/replacement_permutations.h"
+#include "permutations-ordinary.h"
+#include "permutations-k.h"
+#include "permutations-multiset.h"
+#include "permutations-replacement.h"
 
 
 SEXP npermutations(SEXP _x, SEXP _k, SEXP _n, SEXP _v, SEXP _freq, SEXP _replace, SEXP _bigz) {

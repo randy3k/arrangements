@@ -4,7 +4,7 @@
 #include "combinations.h"
 #include "permutations.h"
 #include "partitions.h"
-#include "utils.h"
+
 
 static const R_CallMethodDef CallEntries[] = {
     {"ncombinations", (DL_FUNC) &ncombinations, 7},

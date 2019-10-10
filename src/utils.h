@@ -6,6 +6,7 @@
 #include <Rinternals.h>
 #include <gmp.h>
 
+
 SEXP resize_row(SEXP x, size_t n, size_t k, size_t d);
 
 SEXP resize_col(SEXP x, size_t n, size_t k, size_t d);
@@ -35,6 +36,10 @@ double fallfact(int n, int k);
 double choose(int n, int k);
 
 double multichoose(int* f, size_t flen);
+
+SEXP mpz_to_bigz1(mpz_t z);
+
+int as_mpz_array(mpz_t* a, size_t n, SEXP x);
 
 void set_gmp_randstate(gmp_randstate_t randstate);
 

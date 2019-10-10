@@ -1,5 +1,5 @@
-#ifndef _COMBINATORICS_H_
-#define _COMBINATORICS_H_ 1
+#ifndef _NEXT_H_
+#define _NEXT_H_ 1
 
 unsigned int next_cartesian_product(unsigned int *ar, size_t len, const size_t *sizes);
 

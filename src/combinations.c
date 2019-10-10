@@ -1,10 +1,10 @@
 #include <gmp.h>
-#include "gmp_utils.h"
 #include "macros.h"
 #include "utils.h"
-#include "combinations/ordinary_combinations.h"
-#include "combinations/multiset_combinations.h"
-#include "combinations/replacement_combinations.h"
+#include "combinations.h"
+#include "combinations-ordinary.h"
+#include "combinations-multiset.h"
+#include "combinations-replacement.h"
 
 
 SEXP ncombinations(SEXP _x, SEXP _k, SEXP _n, SEXP _v, SEXP _freq, SEXP _replace, SEXP _bigz) {

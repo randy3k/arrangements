@@ -2,10 +2,9 @@
 #include <R.h>
 #include <Rinternals.h>
 #include <gmp.h>
-#include "../combinatorics.h"
-#include "../gmp_utils.h"
-#include "../macros.h"
-#include "../utils.h"
+#include "next.h"
+#include "macros.h"
+#include "utils.h"
 
 
 void identify_ordinary_permutation(unsigned int* ar, unsigned int n, unsigned int index) {

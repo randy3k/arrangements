@@ -2,69 +2,54 @@
 #include <R.h>
 #include <Rinternals.h>
 #include <gmp.h>
-#include "../combinatorics.h"
-#include "../gmp_utils.h"
-#include "../utils.h"
-#include "../macros.h"
+#include "next.h"
+#include "utils.h"
+#include "macros.h"
 #include "partitions_utils.h"
 
 
-void identify_asc_partition(unsigned int* ar, unsigned int n, unsigned int index) {
+void identify_asc_k_partition(unsigned int* ar, unsigned int n, unsigned int k, unsigned int index) {
     unsigned int i, j;
     unsigned int start = 1;
-    unsigned int sum = n;
     unsigned int count, this_count;
 
-    for (i = 0; i < n; i++) {
+    for (i = 0; i < k; i++) {
         count = 0;
-        if (sum > 0 && i < n - 1) {
-            for (j = start; j <= n; j++) {
-                this_count = count + n_min_partitions(sum - j, j);
-                if (this_count > index) {
-                    ar[i] = j;
-                    start = j;
-                    sum -= j;
-                    index -= count;
-                    break;
-                }
-                count = this_count;
+        for (j = start; j <= n; j++) {
+            this_count = count + n_k_min_partitions(n - j, k - i - 1, j);
+            if (this_count > index) {
+                ar[i] = j;
+                start = j;
+                n -= j;
+                index -= count;
+                break;
             }
-        } else if (i == n - 1) {
-            ar[i] = sum;
-        } else {
-            ar[i] = 0;
+            count = this_count;
         }
     }
 }
 
 
-void identify_asc_partition_bigz(unsigned int* ar, unsigned int n, mpz_t index) {
+void identify_asc_k_partition_bigz(unsigned int* ar, unsigned int n, unsigned int k, mpz_t index) {
     unsigned int i, j;
     unsigned int start = 1;
-    unsigned int sum = n;
     mpz_t count, this_count;
     mpz_init(count);
     mpz_init(this_count);
 
-    for (i = 0; i < n; i++) {
+    for (i = 0; i < k; i++) {
         mpz_set_ui(count, 0);
-        if (sum > 0 && i < n - 1) {
-            for (j = start; j <= n; j++) {
-                n_min_partitions_bigz(this_count, sum - j, j);
-                mpz_add(this_count, this_count, count);
-                if (mpz_cmp(this_count, index) > 0) {
-                    ar[i] = j;
-                    start = j;
-                    sum -= j;
-                    mpz_sub(index, index, count);
-                    break;
-                }
-                mpz_set(count, this_count);
+        for (j = start; j <= n; j++) {
+            n_k_min_partitions_bigz(this_count, n - j, k - i - 1, j);
+            mpz_add(this_count, this_count, count);
+            if (mpz_cmp(this_count, index) > 0) {
+                ar[i] = j;
+                start = j;
+                n -= j;
+                mpz_sub(index, index, count);
+                break;
             }
-        } else if (i == n - 1) {
-            ar[i] = sum;
-        } else {
-            ar[i] = 0;
+            mpz_set(count, this_count);
         }
     }
 
@@ -73,8 +58,8 @@ void identify_asc_partition_bigz(unsigned int* ar, unsigned int n, mpz_t index) 
 }
 
 
-SEXP next_asc_partitions(int n, char layout, int d, SEXP _skip, SEXP state) {
-    int i, j, k;
+SEXP next_asc_k_partitions(int n, int k, char layout, int d, SEXP _skip, SEXP state) {
+    int i, j;
     int nprotect = 0;
     int status = 1;
     SEXP result;
@@ -83,26 +68,26 @@ SEXP next_asc_partitions(int n, char layout, int d, SEXP _skip, SEXP state) {
     double maxd;
     int bigz = TYPEOF(_skip) == RAWSXP && Rf_inherits(_skip, "bigz");
     if (d == -1 || !Rf_isNull(_skip)) {
-        maxd = n_partitions(n);
+        maxd = n_k_partitions(n, k);
         bigz = bigz || maxd >= INT_MAX;
     }
     dd = d == -1 ? maxd : d;
     d = verify_dimension(dd, n, layout);
 
     unsigned int* ap;
-    int* kp;
 
-    if (!variable_exists(state, "a", INTSXP, n, (void**) &ap)) {
+    if (!variable_exists(state, "a", INTSXP, k, (void**) &ap)) {
         mpz_t maxz;
         int skip;
         mpz_t skipz;
         if (Rf_isNull(_skip)) {
-            for(i=0; i<n; i++) ap[i] = 1;
+            for(i=0; i<k-1; i++) ap[i] = 1;
+            ap[k-1] = n - k + 1;
         } else {
             if (bigz) {
                 mpz_init(maxz);
                 mpz_init(skipz);
-                n_partitions_bigz(maxz, n);
+                n_k_partitions_bigz(maxz, n, k);
                 if (as_mpz_array(&skipz, 1, _skip) < 0 || mpz_sgn(skipz) < 0) {
                     mpz_clear(skipz);
                     mpz_clear(maxz);
@@ -111,29 +96,15 @@ SEXP next_asc_partitions(int n, char layout, int d, SEXP _skip, SEXP state) {
                     mpz_set(skipz, 0);
                 }
                 mpz_clear(maxz);
-                identify_asc_partition_bigz(ap, n, skipz);
+                identify_asc_k_partition_bigz(ap, n, k, skipz);
                 mpz_clear(skipz);
             } else {
                 skip = as_uint(_skip);
                 if (skip >= (int) maxd) {
                     skip = 0;
                 }
-                identify_asc_partition(ap, n, skip);
+                identify_asc_k_partition(ap, n, k, skip);
             }
-        }
-        status = 0;
-    }
-
-    if (!variable_exists(state, "k", INTSXP, 1, (void**) &kp)) {
-        if (Rf_isNull(_skip)) {
-            kp[0] = n - 1;
-        } else  {
-            for (i = 0; i < n; i++) {
-                if (ap[i] == 0) {
-                    break;
-                }
-            }
-            kp[0] = i - 1;
         }
         status = 0;
     }
@@ -142,13 +113,12 @@ SEXP next_asc_partitions(int n, char layout, int d, SEXP _skip, SEXP state) {
     #define NEXT() \
         if (status == 0) { \
             status = 1; \
-        } else if (!next_asc_partition(ap, kp)) { \
+        } else if (!next_asc_k_partition(ap, n, k)) { \
             status = 0; \
             break; \
-        } \
-        k = kp[0] + 1;
+        }
 
-    RESULT_PART();
+    RESULT_K_PART();
 
     if (status == 0) {
         result = PROTECT(resize_layout(result, j, layout));
@@ -159,7 +129,7 @@ SEXP next_asc_partitions(int n, char layout, int d, SEXP _skip, SEXP state) {
 }
 
 
-SEXP obtain_asc_partitions(int n, char layout, SEXP _index, SEXP _nsample) {
+SEXP obtain_asc_k_partitions(int n, int k, char layout, SEXP _index, SEXP _nsample) {
     int i, j;
     int nprotect = 0;
     int bigz = 0;
@@ -175,16 +145,16 @@ SEXP obtain_asc_partitions(int n, char layout, SEXP _index, SEXP _nsample) {
     } else {
         dd = Rf_length(_index);
     }
-    int d = verify_dimension(dd, n, layout);
+    int d = verify_dimension(dd, k, layout);
 
     double maxd;
     if (!bigz) {
-        maxd = n_partitions(n);
+        maxd = n_k_partitions(n, k);
         bigz = maxd > INT_MAX;
     }
 
     unsigned int* ap;
-    ap = (unsigned int*) R_alloc(n, sizeof(int));
+    ap = (unsigned int*) R_alloc(k, sizeof(int));
 
     if (bigz) {
         mpz_t* index;
@@ -193,7 +163,7 @@ SEXP obtain_asc_partitions(int n, char layout, SEXP _index, SEXP _nsample) {
         mpz_t maxz;
         mpz_init(z);
         mpz_init(maxz);
-        n_partitions_bigz(maxz, n);
+        n_k_partitions_bigz(maxz, n, k);
 
         if (sampling) {
             GetRNGstate();
@@ -212,8 +182,6 @@ SEXP obtain_asc_partitions(int n, char layout, SEXP _index, SEXP _nsample) {
             }
         }
 
-        int k;
-
         #undef NEXT
         #define NEXT() \
             if (sampling) { \
@@ -221,15 +189,9 @@ SEXP obtain_asc_partitions(int n, char layout, SEXP _index, SEXP _nsample) {
             } else { \
                 mpz_sub_ui(z, index[j], 1); \
             } \
-            identify_asc_partition_bigz(ap, n, z); \
-            for (i = 0; i < n; i++) { \
-                if (ap[i] == 0) { \
-                    break; \
-                } \
-            } \
-            k = i;
+            identify_asc_k_partition_bigz(ap, n, k, z);
 
-        RESULT_PART();
+        RESULT_K_PART();
 
         mpz_clear(z);
         mpz_clear(maxz);
@@ -253,23 +215,15 @@ SEXP obtain_asc_partitions(int n, char layout, SEXP _index, SEXP _nsample) {
             }
         }
 
-        int k;
-
         #undef NEXT
         #define NEXT() \
             if (sampling) { \
-                identify_asc_partition(ap, n, floor(maxd * unif_rand())); \
+                identify_asc_k_partition(ap, n, k, floor(maxd * unif_rand())); \
             } else { \
-                identify_asc_partition(ap, n, index[j] - 1); \
-            } \
-            for (i = 0; i < n; i++) { \
-                if (ap[i] == 0) { \
-                    break; \
-                } \
-            } \
-            k = i;
+                identify_asc_k_partition(ap, n, k, index[j] - 1); \
+            }
 
-        RESULT_PART();
+        RESULT_K_PART();
 
         if (sampling){
             PutRNGstate();
@@ -281,62 +235,50 @@ SEXP obtain_asc_partitions(int n, char layout, SEXP _index, SEXP _nsample) {
 }
 
 
-void identify_desc_partition(unsigned int* ar, unsigned int n, unsigned int index) {
+void identify_desc_k_partition(unsigned int* ar, unsigned int n, unsigned int k, unsigned int index) {
     unsigned int i, j;
-    unsigned int start = n;
-    unsigned int sum = n;
+    unsigned int start = n - k + 1;
     unsigned int count, this_count;
 
-    for (i = 0; i < n; i++) {
+    for (i = 0; i < k; i++) {
         count = 0;
-        if (sum > 0 && i < n - 1) {
-            for (j = start; j >= 1; j--) {
-                this_count = count + n_max_partitions(sum - j, j);
-                if (this_count > index) {
-                    ar[i] = j;
-                    start = j;
-                    sum -= j;
-                    index -= count;
-                    break;
-                }
-                count = this_count;
+        for (j = start; j >= 1; j--) {
+            this_count = count + n_k_max_partitions(n - j, k - i - 1, j);
+            if (this_count > index) {
+                ar[i] = j;
+                n -= j;
+                start = n - (k - i - 2);
+                start = start > j? j : start;
+                index -= count;
+                break;
             }
-        } else if (i == n - 1) {
-            ar[i] = sum;
-        } else {
-            ar[i] = 0;
+            count = this_count;
         }
     }
 }
 
 
-void identify_desc_partition_bigz(unsigned int* ar, unsigned int n, mpz_t index) {
+void identify_desc_k_partition_bigz(unsigned int* ar, unsigned int n, unsigned int k, mpz_t index) {
     unsigned int i, j;
-    unsigned int start = n;
-    unsigned int sum = n;
+    unsigned int start = n - k + 1;
     mpz_t count, this_count;
     mpz_init(count);
     mpz_init(this_count);
 
-    for (i = 0; i < n; i++) {
+    for (i = 0; i < k; i++) {
         mpz_set_ui(count, 0);
-        if (sum > 0 && i < n - 1) {
-            for (j = start; j >= 1; j--) {
-                n_max_partitions_bigz(this_count, sum - j, j);
-                mpz_add(this_count, this_count, count);
-                if (mpz_cmp(this_count, index) > 0) {
-                    ar[i] = j;
-                    start = j;
-                    sum -= j;
-                    mpz_sub(index, index, count);
-                    break;
-                }
-                mpz_set(count, this_count);
+        for (j = start; j >= 1; j--) {
+            n_k_max_partitions_bigz(this_count, n - j, k - i - 1, j);
+            mpz_add(this_count, this_count, count);
+            if (mpz_cmp(this_count, index) > 0) {
+                ar[i] = j;
+                n -= j;
+                start = n - (k - i - 2);
+                start = start > j? j : start;
+                mpz_sub(index, index, count);
+                break;
             }
-        } else if (i == n - 1) {
-            ar[i] = sum;
-        } else {
-            ar[i] = 0;
+            mpz_set(count, this_count);
         }
     }
 
@@ -344,8 +286,9 @@ void identify_desc_partition_bigz(unsigned int* ar, unsigned int n, mpz_t index)
     mpz_clear(this_count);
 }
 
-SEXP next_desc_partitions(int n, char layout, int d, SEXP _skip, SEXP state) {
-    int i, j, k;
+
+SEXP next_desc_k_partitions(int n, int k, char layout, int d, SEXP _skip, SEXP state) {
+    int i, j;
     int nprotect = 0;
     int status = 1;
     SEXP result;
@@ -354,28 +297,26 @@ SEXP next_desc_partitions(int n, char layout, int d, SEXP _skip, SEXP state) {
     double maxd;
     int bigz = TYPEOF(_skip) == RAWSXP && Rf_inherits(_skip, "bigz");
     if (d == -1 || !Rf_isNull(_skip)) {
-        maxd = n_partitions(n);
+        maxd = n_k_partitions(n, k);
         bigz = bigz || maxd >= INT_MAX;
     }
     dd = d == -1 ? maxd : d;
     d = verify_dimension(dd, n, layout);
 
     unsigned int* ap;
-    int* hp;
-    int* kp;
 
-    if (!variable_exists(state, "a", INTSXP, n, (void**) &ap)) {
+    if (!variable_exists(state, "a", INTSXP, k, (void**) &ap)) {
         mpz_t maxz;
         int skip;
         mpz_t skipz;
         if (Rf_isNull(_skip)) {
-            ap[0] = n;
-            for(i=1; i<n; i++) ap[i] = 1;
+            for(i=1; i<k; i++) ap[i] = 1;
+            ap[0] = n - k + 1;
         } else {
             if (bigz) {
                 mpz_init(maxz);
                 mpz_init(skipz);
-                n_partitions_bigz(maxz, n);
+                n_k_partitions_bigz(maxz, n, k);
                 if (as_mpz_array(&skipz, 1, _skip) < 0 || mpz_sgn(skipz) < 0) {
                     mpz_clear(skipz);
                     mpz_clear(maxz);
@@ -384,46 +325,14 @@ SEXP next_desc_partitions(int n, char layout, int d, SEXP _skip, SEXP state) {
                     mpz_set(skipz, 0);
                 }
                 mpz_clear(maxz);
-                identify_desc_partition_bigz(ap, n, skipz);
+                identify_desc_k_partition_bigz(ap, n, k, skipz);
                 mpz_clear(skipz);
             } else {
                 skip = as_uint(_skip);
                 if (skip >= (int) maxd) {
                     skip = 0;
                 }
-                identify_desc_partition(ap, n, skip);
-            }
-        }
-        status = 0;
-    }
-
-    if (!variable_exists(state, "h", INTSXP, 1, (void**) &hp)) {
-        if (Rf_isNull(_skip)) {
-            hp[0] = 0;
-        } else  {
-            for (i = 0; i < n; i++) {
-                if (ap[i] <= 1) {
-                    break;
-                }
-            }
-            hp[0] = i - 1;
-        }
-        status = 0;
-    }
-
-    if (!variable_exists(state, "k", INTSXP, 1, (void**) &kp)) {
-        if (Rf_isNull(_skip)) {
-            kp[0] = 1;
-        } else  {
-            for (i = 0; i < n; i++) {
-                if (ap[i] == 0) {
-                    break;
-                }
-            }
-            kp[0] = i;
-            // for the algorithm
-            for (j = i; j < n; j++) {
-                ap[j] = 1;
+                identify_desc_k_partition(ap, n, k, skip);
             }
         }
         status = 0;
@@ -433,13 +342,12 @@ SEXP next_desc_partitions(int n, char layout, int d, SEXP _skip, SEXP state) {
     #define NEXT() \
         if (status == 0) { \
             status = 1; \
-        } else if (!next_desc_partition(ap, hp, kp)) { \
+        } else if (!next_desc_k_partition(ap, n, k)) { \
             status = 0; \
             break; \
-        } \
-        k = kp[0];
+        }
 
-    RESULT_PART();
+    RESULT_K_PART();
 
     if (status == 0) {
         result = PROTECT(resize_layout(result, j, layout));
@@ -450,7 +358,7 @@ SEXP next_desc_partitions(int n, char layout, int d, SEXP _skip, SEXP state) {
 }
 
 
-SEXP obtain_desc_partitions(int n, char layout, SEXP _index, SEXP _nsample) {
+SEXP obtain_desc_k_partitions(int n, int k, char layout, SEXP _index, SEXP _nsample) {
     int i, j;
     int nprotect = 0;
     int bigz = 0;
@@ -466,16 +374,16 @@ SEXP obtain_desc_partitions(int n, char layout, SEXP _index, SEXP _nsample) {
     } else {
         dd = Rf_length(_index);
     }
-    int d = verify_dimension(dd, n, layout);
+    int d = verify_dimension(dd, k, layout);
 
     double maxd;
     if (!bigz) {
-        maxd = n_partitions(n);
+        maxd = n_k_partitions(n, k);
         bigz = maxd > INT_MAX;
     }
 
     unsigned int* ap;
-    ap = (unsigned int*) R_alloc(n, sizeof(int));
+    ap = (unsigned int*) R_alloc(k, sizeof(int));
 
     if (bigz) {
         mpz_t* index;
@@ -484,7 +392,7 @@ SEXP obtain_desc_partitions(int n, char layout, SEXP _index, SEXP _nsample) {
         mpz_t maxz;
         mpz_init(z);
         mpz_init(maxz);
-        n_partitions_bigz(maxz, n);
+        n_k_partitions_bigz(maxz, n, k);
 
         if (sampling) {
             GetRNGstate();
@@ -503,8 +411,6 @@ SEXP obtain_desc_partitions(int n, char layout, SEXP _index, SEXP _nsample) {
             }
         }
 
-        int k;
-
         #undef NEXT
         #define NEXT() \
             if (sampling) { \
@@ -512,15 +418,9 @@ SEXP obtain_desc_partitions(int n, char layout, SEXP _index, SEXP _nsample) {
             } else { \
                 mpz_sub_ui(z, index[j], 1); \
             } \
-            identify_desc_partition_bigz(ap, n, z); \
-            for (i = 0; i < n; i++) { \
-                if (ap[i] == 0) { \
-                    break; \
-                } \
-            } \
-            k = i;
+            identify_desc_k_partition_bigz(ap, n, k, z);
 
-        RESULT_PART();
+        RESULT_K_PART();
 
         mpz_clear(z);
         mpz_clear(maxz);
@@ -544,23 +444,15 @@ SEXP obtain_desc_partitions(int n, char layout, SEXP _index, SEXP _nsample) {
             }
         }
 
-        int k;
-
         #undef NEXT
         #define NEXT() \
             if (sampling) { \
-                identify_desc_partition(ap, n, floor(maxd * unif_rand())); \
+                identify_desc_k_partition(ap, n, k, floor(maxd * unif_rand())); \
             } else { \
-                identify_desc_partition(ap, n, index[j] - 1); \
-            } \
-            for (i = 0; i < n; i++) { \
-                if (ap[i] == 0) { \
-                    break; \
-                } \
-            } \
-            k = i;
+                identify_desc_k_partition(ap, n, k, index[j] - 1); \
+            }
 
-        RESULT_PART();
+        RESULT_K_PART();
 
         if (sampling){
             PutRNGstate();

@@ -2,19 +2,33 @@
 #include <R.h>
 #include <Rinternals.h>
 #include <gmp.h>
-#include "../combinatorics.h"
-#include "../gmp_utils.h"
-#include "../macros.h"
-#include "../utils.h"
+#include "next.h"
+#include "macros.h"
+#include "utils.h"
 
 
-double n_multiset_combinations(int* fp, size_t flen, size_t k) {
+double n_multiset_permutations(int* freq, size_t flen, size_t k) {
     int n = 0;
     int i, j, h;
-    for (i=0; i<flen; i++) n += fp[i];
+    for (i=0; i<flen; i++) n += freq[i];
     if (k > n) {
         return 0;
     }
+
+    int maxf;
+    maxf = 0;
+    for (i=0; i<flen; i++) {
+        if (freq[i] > maxf) maxf = freq[i];
+    }
+
+    double rfact = 1;
+    for (j=2; j<=k; j++) {
+        rfact = rfact*j;
+    }
+    size_t factlen = (k < maxf ? k : maxf) + 1;
+    double* fact = (double*) malloc(factlen * sizeof(double));
+    fact[0] = 1;
+    for (j=1; j< factlen; j++) fact[j] = j * fact[j-1];
 
     double* p = (double*) malloc((k+1) * sizeof(double));
     for (j=0; j<=k; j++) p[j] = 0;
@@ -23,91 +37,131 @@ double n_multiset_combinations(int* fp, size_t flen, size_t k) {
 
     for (i=0; i<flen; i++) {
         if (i == 0) {
-            for (j=0; j<=k && j<=fp[i]; j++) {
-                p[j] = 1;
+            for (j=0; j<=k && j<=freq[i]; j++) {
+                p[j] = rfact / fact[j];
             }
             ptemp = p[k];
         } else if (i < flen - 1){
             for (j=k; j>0; j--) {
                 ptemp = 0;
-                for(h=0; h<=fp[i] && h<=j; h++) {
-                    ptemp += p[j-h];
+                for(h=0; h<=freq[i] && h<=j; h++) {
+                    ptemp += p[j-h] / fact[h];
                 }
                 p[j] = ptemp;
             }
         } else {
             ptemp = 0;
-            for(h=0; h<=fp[i] && h<=k; h++) {
-                ptemp += p[k-h];
+            for(h=0; h<=freq[i] && h<=k; h++) {
+                ptemp += p[k-h] / fact[h];
             }
         }
     }
 
+    free(fact);
     free(p);
     return ptemp;
 }
 
 
-void n_multiset_combinations_bigz(mpz_t z, int* fp, size_t flen, size_t k) {
+void n_multiset_permutations_bigz(mpz_t z, int* freq, size_t flen, size_t k) {
     int n = 0;
     int i, j, h;
-    for (i=0; i<flen; i++) n += fp[i];
+    for (i=0; i<flen; i++) n += freq[i];
     if (k > n) {
         mpz_set_ui(z, 0);
         return;
     }
 
+    int maxf;
+    maxf = 0;
+    for (i=0; i<flen; i++) {
+        if (freq[i] > maxf) maxf = freq[i];
+    }
+
+    mpz_t rfact;
+    mpz_init(rfact);
+    mpz_fac_ui(rfact, k);
+
+    size_t factlen = (k < maxf ? k : maxf) + 1;
+    mpz_t* fact = (mpz_t*) malloc(factlen * sizeof(mpz_t));
+    for (j=0; j< factlen; j++) mpz_init(fact[j]);
+
+    mpz_set_ui(fact[0], 1);
+    for (j=1; j< factlen; j++) mpz_mul_ui(fact[j], fact[j-1], j);
+
     mpz_t* p = (mpz_t*) malloc((k+1) * sizeof(mpz_t));
     for (j=0; j<=k; j++) mpz_init(p[j]);
 
+    mpz_t ptemp;
+    mpz_init(ptemp);
+
     for (i=0; i<flen; i++) {
         if (i == 0) {
-            for (j=0; j<=k && j<=fp[i]; j++) {
-                mpz_set_ui(p[j], 1);
+            for (j=0; j<=k && j<=freq[i]; j++) {
+                mpz_cdiv_q(p[j], rfact, fact[j]);
             }
             mpz_set(z, p[k]);
         } else if (i < flen - 1){
             for (j=k; j>0; j--) {
                 mpz_set_ui(z, 0);
-                for(h=0; h<=fp[i] && h<=j; h++) {
-                    mpz_add(z, z, p[j-h]);
+                for(h=0; h<=freq[i] && h<=j; h++) {
+                    mpz_cdiv_q(ptemp, p[j-h], fact[h]);
+                    mpz_add(z, z, ptemp);
                 }
                 mpz_set(p[j], z);
             }
         } else {
             mpz_set_ui(z, 0);
-            for(h=0; h<=fp[i] && h<=k; h++) {
-                mpz_add(z, z, p[k-h]);
+            for(h=0; h<=freq[i] && h<=k; h++) {
+                mpz_cdiv_q(ptemp, p[k-h], fact[h]);
+                mpz_add(z, z, ptemp);
             }
         }
     }
+
+    for (j=0; j< factlen; j++) mpz_clear(fact[j]);
     for (j=0; j<=k; j++) mpz_clear(p[j]);
+    free(fact);
     free(p);
+    mpz_clear(rfact);
+    mpz_clear(ptemp);
 }
 
 
-void identify_multiset_combination(unsigned int* ar, int* fp, size_t flen, size_t k, unsigned int index) {
+void n_multiset_n_permutations_bigz(mpz_t z, int* freq, size_t flen) {
+    mpz_set_ui(z, 1);
+    size_t i, j, h;
+    h = 0;
+    for (i=0; i<flen; i++) {
+        for (j=1; j<=freq[i]; j++) {
+            h++;
+            mpz_mul_ui(z, z, h);
+            mpz_cdiv_q_ui(z, z, j);
+        }
+    }
+}
+
+
+void identify_multiset_permutation(unsigned int* ar, int* freq, size_t flen, size_t k, unsigned int index) {
     unsigned int i, j;
-    unsigned int start = 0;
     unsigned int count, this_count;
     int* subfreq = (int*) malloc(flen * sizeof(int));
 
-    for (i = 0; i < flen; i++) subfreq[i] = fp[i];
+    for (i = 0; i < flen; i++) subfreq[i] = freq[i];
 
     for (i = 0; i < k; i++) {
         count = 0;
-        for (j = start; j < flen; j++) {
+        for (j = 0; j < flen; j++) {
             if (subfreq[j] == 0) continue;
             subfreq[j]--;
-            this_count = count + n_multiset_combinations(subfreq, flen, k - i - 1);
+            this_count = count + n_multiset_permutations(subfreq, flen, k - i - 1);
             if (this_count > index) {
                 ar[i] = j;
-                start = j;
                 index -= count;
                 break;
             }
             count = this_count;
-            subfreq[j] = 0;
+            subfreq[j]++;
         }
     }
 
@@ -115,9 +169,8 @@ void identify_multiset_combination(unsigned int* ar, int* fp, size_t flen, size_
 }
 
 
-void identify_multiset_combination_bigz(unsigned int* ar, int* fp, size_t flen, size_t k, mpz_t index) {
+void identify_multiset_permutation_bigz(unsigned int* ar, int* freq, size_t flen, size_t k, mpz_t index) {
     unsigned int i, j;
-    unsigned int start = 0;
     mpz_t count;
     mpz_init(count);
     mpz_t this_count;
@@ -125,23 +178,22 @@ void identify_multiset_combination_bigz(unsigned int* ar, int* fp, size_t flen, 
 
     int* subfreq = (int*) malloc(flen * sizeof(int));
 
-    for (i = 0; i < flen; i++) subfreq[i] = fp[i];
+    for (i = 0; i < flen; i++) subfreq[i] = freq[i];
 
     for (i = 0; i < k; i++) {
         mpz_set_ui(count, 0);
-        for (j = start; j < flen; j++) {
+        for (j = 0; j < flen; j++) {
             if (subfreq[j] == 0) continue;
             subfreq[j]--;
-            n_multiset_combinations_bigz(this_count, subfreq, flen, k - i - 1);
+            n_multiset_permutations_bigz(this_count, subfreq, flen, k - i - 1);
             mpz_add(this_count, this_count, count);
             if (mpz_cmp(this_count, index) > 0) {
                 ar[i] = j;
-                start = j;
                 mpz_sub(index, index, count);
                 break;
             }
             mpz_set(count, this_count);
-            subfreq[j] = 0;
+            subfreq[j]++;
         }
     }
 
@@ -151,7 +203,7 @@ void identify_multiset_combination_bigz(unsigned int* ar, int* fp, size_t flen, 
 }
 
 
-SEXP next_multiset_combinations(int* fp, size_t flen, int k, SEXP labels, char layout, int d, SEXP _skip, SEXP state) {
+SEXP next_multiset_permutations(int* fp, size_t flen, int k, SEXP labels, char layout, int d, SEXP _skip, SEXP state) {
     int i, j, h;
     int nprotect = 0;
     int status = 1;
@@ -164,38 +216,30 @@ SEXP next_multiset_combinations(int* fp, size_t flen, int k, SEXP labels, char l
     double maxd;
     int bigz = TYPEOF(_skip) == RAWSXP && Rf_inherits(_skip, "bigz");
     if (d == -1 || !Rf_isNull(_skip)) {
-        maxd = n_multiset_combinations(fp, flen, k);
+        maxd = n_multiset_permutations(fp, flen, k);
         bigz = bigz || maxd >= INT_MAX;
     }
     dd = d == -1 ? maxd : d;
     d = verify_dimension(dd, n, layout);
 
-    unsigned int* mp;
     unsigned int* ap;
-
-    if (!variable_exists(state, "m", INTSXP, n, (void**) &mp)) {
-        h = 0;
-        for (i = 0; i < flen; i++) {
-            for (j = 0; j < fp[i]; j++) {
-                mp[h++] = i;
-            }
-        }
-        status = 0;
-    }
 
     if (!variable_exists(state, "a", INTSXP, n, (void**) &ap)) {
         mpz_t maxz;
         int skip;
         mpz_t skipz;
         if (Rf_isNull(_skip)) {
-            for (i = 0; i < n; i++) {
-                ap[i] = mp[i];
+            h = 0;
+            for (i = 0; i< flen; i++) {
+                for (j = 0; j< fp[i]; j++) {
+                    ap[h++] = i;
+                }
             }
         } else {
             if (bigz) {
                 mpz_init(maxz);
                 mpz_init(skipz);
-                n_multiset_combinations_bigz(maxz, fp, flen, k);
+                n_multiset_permutations_bigz(maxz, fp, flen, k);
                 if (as_mpz_array(&skipz, 1, _skip) < 0 || mpz_sgn(skipz) < 0) {
                     mpz_clear(skipz);
                     mpz_clear(maxz);
@@ -204,14 +248,14 @@ SEXP next_multiset_combinations(int* fp, size_t flen, int k, SEXP labels, char l
                     mpz_set(skipz, 0);
                 }
                 mpz_clear(maxz);
-                identify_multiset_combination_bigz(ap, fp, flen, k, skipz);
+                identify_multiset_permutation_bigz(ap, fp, flen, k, skipz);
                 mpz_clear(skipz);
             } else {
                 skip = as_uint(_skip);
                 if (skip >= (int) maxd) {
                     skip = 0;
                 }
-                identify_multiset_combination(ap, fp, flen, k, skip);
+                identify_multiset_permutation(ap, fp, flen, k, skip);
             }
 
             int* subfreq = (int*) malloc(flen * sizeof(int));
@@ -234,7 +278,7 @@ SEXP next_multiset_combinations(int* fp, size_t flen, int k, SEXP labels, char l
     #define NEXT() \
         if (status == 0) { \
             status = 1; \
-        } else if (!next_multiset_combination(mp, ap, n, k)) { \
+        } else if (!next_multiset_permutation(ap, n, k)) { \
             status = 0; \
             break; \
         }
@@ -259,7 +303,7 @@ SEXP next_multiset_combinations(int* fp, size_t flen, int k, SEXP labels, char l
 }
 
 
-SEXP obtain_multiset_combinations(int* fp, size_t flen, int k, SEXP labels, char layout, SEXP _index, SEXP _nsample) {
+SEXP obtain_multiset_permutations(int* fp, size_t flen, int k, SEXP labels, char layout, SEXP _index, SEXP _nsample) {
     int i, j;
     int nprotect = 0;
     int bigz = 0;
@@ -279,7 +323,7 @@ SEXP obtain_multiset_combinations(int* fp, size_t flen, int k, SEXP labels, char
 
     double maxd;
     if (!bigz) {
-        maxd = n_multiset_combinations(fp, flen, k);
+        maxd = n_multiset_permutations(fp, flen, k);
         bigz = maxd > INT_MAX;
     }
 
@@ -293,7 +337,7 @@ SEXP obtain_multiset_combinations(int* fp, size_t flen, int k, SEXP labels, char
         mpz_t maxz;
         mpz_init(z);
         mpz_init(maxz);
-        n_multiset_combinations_bigz(maxz, fp, flen , k);
+        n_multiset_permutations_bigz(maxz, fp, flen , k);
 
         if (sampling) {
             GetRNGstate();
@@ -319,7 +363,7 @@ SEXP obtain_multiset_combinations(int* fp, size_t flen, int k, SEXP labels, char
             } else { \
                 mpz_sub_ui(z, index[j], 1); \
             } \
-            identify_multiset_combination_bigz(ap, fp, flen, k, z);
+            identify_multiset_permutation_bigz(ap, fp, flen, k, z);
 
         int labels_type = TYPEOF(labels);
         if (labels_type == NILSXP) {
@@ -357,9 +401,9 @@ SEXP obtain_multiset_combinations(int* fp, size_t flen, int k, SEXP labels, char
         #undef NEXT
         #define NEXT() \
             if (sampling) { \
-                identify_multiset_combination(ap, fp, flen, k, floor(maxd * unif_rand())); \
+                identify_multiset_permutation(ap, fp, flen, k, floor(maxd * unif_rand())); \
             } else { \
-                identify_multiset_combination(ap, fp, flen, k, index[j] - 1); \
+                identify_multiset_permutation(ap, fp, flen, k, index[j] - 1); \
             }
 
         int labels_type = TYPEOF(labels);

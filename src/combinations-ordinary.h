@@ -4,10 +4,9 @@
 #include <Rinternals.h>
 #include <R_ext/Random.h>
 #include <gmp.h>
-#include "../combinatorics.h"
-#include "../gmp_utils.h"
-#include "../macros.h"
-#include "../utils.h"
+#include "next.h"
+#include "macros.h"
+#include "utils.h"
 
 
 void identify_ordinary_combination(unsigned int* ar, unsigned int n, unsigned int k, unsigned int index) {
