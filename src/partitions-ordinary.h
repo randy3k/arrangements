@@ -8,7 +8,7 @@
 #include "partitions_utils.h"
 
 
-void identify_asc_partition(unsigned int* ar, unsigned int n, unsigned int index) {
+void nth_asc_partition(unsigned int* ar, unsigned int n, unsigned int index) {
     unsigned int i, j;
     unsigned int start = 1;
     unsigned int sum = n;
@@ -37,7 +37,7 @@ void identify_asc_partition(unsigned int* ar, unsigned int n, unsigned int index
 }
 
 
-void identify_asc_partition_bigz(unsigned int* ar, unsigned int n, mpz_t index) {
+void nth_asc_partition_bigz(unsigned int* ar, unsigned int n, mpz_t index) {
     unsigned int i, j;
     unsigned int start = 1;
     unsigned int sum = n;
@@ -110,14 +110,14 @@ SEXP next_asc_partitions(int n, char layout, int d, SEXP _skip, SEXP state) {
                     mpz_set(skipz, 0);
                 }
                 mpz_clear(maxz);
-                identify_asc_partition_bigz(ap, n, skipz);
+                nth_asc_partition_bigz(ap, n, skipz);
                 mpz_clear(skipz);
             } else {
                 skip = as_uint(_skip);
                 if (skip >= (int) maxd) {
                     skip = 0;
                 }
-                identify_asc_partition(ap, n, skip);
+                nth_asc_partition(ap, n, skip);
             }
         }
         status = 0;
@@ -158,7 +158,7 @@ SEXP next_asc_partitions(int n, char layout, int d, SEXP _skip, SEXP state) {
 }
 
 
-SEXP obtain_asc_partitions(int n, char layout, SEXP _index, SEXP _nsample) {
+SEXP catch_asc_partitions(int n, char layout, SEXP _index, SEXP _nsample) {
     int i, j;
     int nprotect = 0;
     int bigz = 0;
@@ -220,7 +220,7 @@ SEXP obtain_asc_partitions(int n, char layout, SEXP _index, SEXP _nsample) {
             } else { \
                 mpz_sub_ui(z, index[j], 1); \
             } \
-            identify_asc_partition_bigz(ap, n, z); \
+            nth_asc_partition_bigz(ap, n, z); \
             for (i = 0; i < n; i++) { \
                 if (ap[i] == 0) { \
                     break; \
@@ -257,9 +257,9 @@ SEXP obtain_asc_partitions(int n, char layout, SEXP _index, SEXP _nsample) {
         #undef NEXT
         #define NEXT() \
             if (sampling) { \
-                identify_asc_partition(ap, n, floor(maxd * unif_rand())); \
+                nth_asc_partition(ap, n, floor(maxd * unif_rand())); \
             } else { \
-                identify_asc_partition(ap, n, index[j] - 1); \
+                nth_asc_partition(ap, n, index[j] - 1); \
             } \
             for (i = 0; i < n; i++) { \
                 if (ap[i] == 0) { \
@@ -280,7 +280,7 @@ SEXP obtain_asc_partitions(int n, char layout, SEXP _index, SEXP _nsample) {
 }
 
 
-void identify_desc_partition(unsigned int* ar, unsigned int n, unsigned int index) {
+void nth_desc_partition(unsigned int* ar, unsigned int n, unsigned int index) {
     unsigned int i, j;
     unsigned int start = n;
     unsigned int sum = n;
@@ -309,7 +309,7 @@ void identify_desc_partition(unsigned int* ar, unsigned int n, unsigned int inde
 }
 
 
-void identify_desc_partition_bigz(unsigned int* ar, unsigned int n, mpz_t index) {
+void nth_desc_partition_bigz(unsigned int* ar, unsigned int n, mpz_t index) {
     unsigned int i, j;
     unsigned int start = n;
     unsigned int sum = n;
@@ -383,14 +383,14 @@ SEXP next_desc_partitions(int n, char layout, int d, SEXP _skip, SEXP state) {
                     mpz_set(skipz, 0);
                 }
                 mpz_clear(maxz);
-                identify_desc_partition_bigz(ap, n, skipz);
+                nth_desc_partition_bigz(ap, n, skipz);
                 mpz_clear(skipz);
             } else {
                 skip = as_uint(_skip);
                 if (skip >= (int) maxd) {
                     skip = 0;
                 }
-                identify_desc_partition(ap, n, skip);
+                nth_desc_partition(ap, n, skip);
             }
         }
         status = 0;
@@ -449,7 +449,7 @@ SEXP next_desc_partitions(int n, char layout, int d, SEXP _skip, SEXP state) {
 }
 
 
-SEXP obtain_desc_partitions(int n, char layout, SEXP _index, SEXP _nsample) {
+SEXP catch_desc_partitions(int n, char layout, SEXP _index, SEXP _nsample) {
     int i, j;
     int nprotect = 0;
     int bigz = 0;
@@ -511,7 +511,7 @@ SEXP obtain_desc_partitions(int n, char layout, SEXP _index, SEXP _nsample) {
             } else { \
                 mpz_sub_ui(z, index[j], 1); \
             } \
-            identify_desc_partition_bigz(ap, n, z); \
+            nth_desc_partition_bigz(ap, n, z); \
             for (i = 0; i < n; i++) { \
                 if (ap[i] == 0) { \
                     break; \
@@ -548,9 +548,9 @@ SEXP obtain_desc_partitions(int n, char layout, SEXP _index, SEXP _nsample) {
         #undef NEXT
         #define NEXT() \
             if (sampling) { \
-                identify_desc_partition(ap, n, floor(maxd * unif_rand())); \
+                nth_desc_partition(ap, n, floor(maxd * unif_rand())); \
             } else { \
-                identify_desc_partition(ap, n, index[j] - 1); \
+                nth_desc_partition(ap, n, index[j] - 1); \
             } \
             for (i = 0; i < n; i++) { \
                 if (ap[i] == 0) { \

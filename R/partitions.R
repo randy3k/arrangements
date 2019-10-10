@@ -69,7 +69,7 @@ npartitions <- function(n, k = NULL, bigz = FALSE) {
 #' @export
 partitions <- function(n, k = NULL, descending = FALSE, layout = NULL,
                        nitem = -1L, skip = NULL, index = NULL, nsample = NULL, drop = NULL) {
-    .Call(C_get_partitions,
+    .Call(C_collect_partitions,
           n, k, descending, layout, nitem, index, nsample, NULL, skip, drop)
 }
 
@@ -117,7 +117,7 @@ Partitions <- R6::R6Class(
                 out <- NULL
                 self$reset()
             } else {
-                out <- .Call(C_get_partitions,
+                out <- .Call(C_collect_partitions,
                              self$n, self$k, self$descending, layout, d, NULL, NULL,
                              private$state, self$skip, drop)
                 is.null(out) && self$reset()

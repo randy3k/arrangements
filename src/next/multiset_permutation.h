@@ -17,7 +17,7 @@ unsigned int next_multiset_permutation(unsigned int *ar, size_t n, size_t k)
 
     if(k<n){
         j = k;
-        // search for largest j such that identify_j > identify_edge (a is increasing for j>=k)
+        // search for largest j such that nth_j > nth_edge (a is increasing for j>=k)
         while(j<n && ar[edge]>=ar[j]) j++;
     }
     if(k<n && j<n){
@@ -36,7 +36,7 @@ unsigned int next_multiset_permutation(unsigned int *ar, size_t n, size_t k)
             }
         }
 
-        // find smallest j>=i+1 where identify_j>identify_i (a is decreasing for j>=i+1)
+        // find smallest j>=i+1 where nth_j>nth_i (a is decreasing for j>=i+1)
         j = n-1;
         while(j>i && ar[i] >= ar[j]) j--;
 

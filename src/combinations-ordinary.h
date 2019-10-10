@@ -9,7 +9,7 @@
 #include "utils.h"
 
 
-void identify_ordinary_combination(unsigned int* ar, unsigned int n, unsigned int k, unsigned int index) {
+void nth_ordinary_combination(unsigned int* ar, unsigned int n, unsigned int k, unsigned int index) {
     unsigned int i, j;
     unsigned int start = 0;
     unsigned int count, this_count;
@@ -29,7 +29,7 @@ void identify_ordinary_combination(unsigned int* ar, unsigned int n, unsigned in
     }
 }
 
-void identify_ordinary_combination_bigz(unsigned int* ar, unsigned int n, unsigned int k, mpz_t index) {
+void nth_ordinary_combination_bigz(unsigned int* ar, unsigned int n, unsigned int k, mpz_t index) {
     unsigned int i, j;
     unsigned int start = 0;
     mpz_t count, this_count;
@@ -95,14 +95,14 @@ SEXP next_ordinary_combinations(int n, int k, SEXP labels, char layout, int d, S
                     mpz_set(skipz, 0);
                 }
                 mpz_clear(maxz);
-                identify_ordinary_combination_bigz(ap, n, k, skipz);
+                nth_ordinary_combination_bigz(ap, n, k, skipz);
                 mpz_clear(skipz);
             } else {
                 skip = as_uint(_skip);
                 if (skip >= (int) maxd) {
                     skip = 0;
                 }
-                identify_ordinary_combination(ap, n, k, skip);
+                nth_ordinary_combination(ap, n, k, skip);
             }
         }
         status = 0;
@@ -137,7 +137,7 @@ SEXP next_ordinary_combinations(int n, int k, SEXP labels, char layout, int d, S
 }
 
 
-SEXP obtain_ordinary_combinations(int n, int k, SEXP labels, char layout, SEXP _index, SEXP _nsample) {
+SEXP catch_ordinary_combinations(int n, int k, SEXP labels, char layout, SEXP _index, SEXP _nsample) {
     int i, j;
     int nprotect = 0;
     int bigz = 0;
@@ -197,7 +197,7 @@ SEXP obtain_ordinary_combinations(int n, int k, SEXP labels, char layout, SEXP _
             } else { \
                 mpz_sub_ui(z, index[j], 1); \
             } \
-            identify_ordinary_combination_bigz(ap, n, k, z);
+            nth_ordinary_combination_bigz(ap, n, k, z);
 
         int labels_type = TYPEOF(labels);
         if (labels_type == NILSXP) {
@@ -235,9 +235,9 @@ SEXP obtain_ordinary_combinations(int n, int k, SEXP labels, char layout, SEXP _
         #undef NEXT
         #define NEXT() \
             if (sampling) { \
-                identify_ordinary_combination(ap, n, k, floor(maxd * unif_rand())); \
+                nth_ordinary_combination(ap, n, k, floor(maxd * unif_rand())); \
             } else { \
-                identify_ordinary_combination(ap, n, k, index[j] - 1); \
+                nth_ordinary_combination(ap, n, k, index[j] - 1); \
             }
 
         int labels_type = TYPEOF(labels);

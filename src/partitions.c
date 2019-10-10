@@ -38,7 +38,7 @@ SEXP npartitions(SEXP _n, SEXP _k, SEXP _bigz) {
 }
 
 
-SEXP get_partitions(SEXP _n, SEXP _k, SEXP _descending, SEXP _layout, SEXP _d,
+SEXP collect_partitions(SEXP _n, SEXP _k, SEXP _descending, SEXP _layout, SEXP _d,
                     SEXP _index, SEXP _nsample, SEXP state, SEXP _skip, SEXP _drop) {
 
     SEXP ans = R_NilValue;
@@ -96,15 +96,15 @@ SEXP get_partitions(SEXP _n, SEXP _k, SEXP _descending, SEXP _layout, SEXP _d,
     } else {
         if (k == -1) {
             if (descending) {
-                ans = obtain_desc_partitions(n, layout, _index, _nsample);
+                ans = catch_desc_partitions(n, layout, _index, _nsample);
             } else {
-                ans = obtain_asc_partitions(n, layout, _index, _nsample);
+                ans = catch_asc_partitions(n, layout, _index, _nsample);
             }
         } else {
             if (descending) {
-                ans = obtain_desc_k_partitions(n, k, layout, _index, _nsample);
+                ans = catch_desc_k_partitions(n, k, layout, _index, _nsample);
             } else {
-                ans = obtain_asc_k_partitions(n, k, layout, _index, _nsample);
+                ans = catch_asc_k_partitions(n, k, layout, _index, _nsample);
             }
         }
     }

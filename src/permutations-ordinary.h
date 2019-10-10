@@ -7,7 +7,7 @@
 #include "utils.h"
 
 
-void identify_ordinary_permutation(unsigned int* ar, unsigned int n, unsigned int index) {
+void nth_ordinary_permutation(unsigned int* ar, unsigned int n, unsigned int index) {
     int i, j;
     if (n == 0) return;
 
@@ -35,7 +35,7 @@ void identify_ordinary_permutation(unsigned int* ar, unsigned int n, unsigned in
 }
 
 
-void identify_ordinary_permutation_bigz(unsigned int* ar, unsigned int n, mpz_t index) {
+void nth_ordinary_permutation_bigz(unsigned int* ar, unsigned int n, mpz_t index) {
     unsigned int i, j;
     if (n == 0) return;
 
@@ -68,9 +68,9 @@ void identify_ordinary_permutation_bigz(unsigned int* ar, unsigned int n, mpz_t 
 }
 
 
-void identify_multiset_permutation(unsigned int* ar, int* freq, size_t flen, size_t k, unsigned int index);
+void nth_multiset_permutation(unsigned int* ar, int* freq, size_t flen, size_t k, unsigned int index);
 
-void identify_multiset_permutation_bigz(unsigned int* ar, int* freq, size_t flen, size_t k, mpz_t index);
+void nth_multiset_permutation_bigz(unsigned int* ar, int* freq, size_t flen, size_t k, mpz_t index);
 
 void n_multiset_n_permutations_bigz(mpz_t z, int* freq, size_t flen);
 
@@ -139,9 +139,9 @@ SEXP next_ordinary_permutations(int n, int k, SEXP labels, SEXP freq, char layou
                 }
                 mpz_clear(maxz);
                 if (freq == R_NilValue) {
-                    identify_ordinary_permutation_bigz(ap, n, skipz);
+                    nth_ordinary_permutation_bigz(ap, n, skipz);
                 } else {
-                    identify_multiset_permutation_bigz(ap, fp, flen, n, skipz);
+                    nth_multiset_permutation_bigz(ap, fp, flen, n, skipz);
                 }
                 mpz_clear(skipz);
             } else {
@@ -150,9 +150,9 @@ SEXP next_ordinary_permutations(int n, int k, SEXP labels, SEXP freq, char layou
                     skip = 0;
                 }
                 if (freq == R_NilValue) {
-                    identify_ordinary_permutation(ap, n, skip);
+                    nth_ordinary_permutation(ap, n, skip);
                 } else {
-                    identify_multiset_permutation(ap, fp, flen, n, skip);
+                    nth_multiset_permutation(ap, fp, flen, n, skip);
                 }
             }
         }
@@ -188,7 +188,7 @@ SEXP next_ordinary_permutations(int n, int k, SEXP labels, SEXP freq, char layou
 }
 
 
-SEXP obtain_ordinary_permutations(int n, SEXP labels, char layout, SEXP _index, SEXP _nsample) {
+SEXP catch_ordinary_permutations(int n, SEXP labels, char layout, SEXP _index, SEXP _nsample) {
     int i, j;
     int nprotect = 0;
     int bigz = 0;
@@ -248,7 +248,7 @@ SEXP obtain_ordinary_permutations(int n, SEXP labels, char layout, SEXP _index, 
             } else { \
                 mpz_sub_ui(z, index[j], 1); \
             } \
-            identify_ordinary_permutation_bigz(ap, n, z);
+            nth_ordinary_permutation_bigz(ap, n, z);
 
         int labels_type = TYPEOF(labels);
         if (labels_type == NILSXP) {
@@ -286,9 +286,9 @@ SEXP obtain_ordinary_permutations(int n, SEXP labels, char layout, SEXP _index, 
         #undef NEXT
         #define NEXT() \
             if (sampling) { \
-                identify_ordinary_permutation(ap, n, floor(maxd * unif_rand())); \
+                nth_ordinary_permutation(ap, n, floor(maxd * unif_rand())); \
             } else { \
-                identify_ordinary_permutation(ap, n, index[j] - 1); \
+                nth_ordinary_permutation(ap, n, index[j] - 1); \
             }
 
         int labels_type = TYPEOF(labels);

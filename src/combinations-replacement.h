@@ -7,7 +7,7 @@
 #include "utils.h"
 
 
-void identify_replacement_combination(unsigned int* ar, unsigned int n, unsigned int k, unsigned int index) {
+void nth_replacement_combination(unsigned int* ar, unsigned int n, unsigned int k, unsigned int index) {
     unsigned int i, j;
     unsigned int start = 0;
     unsigned int count, this_count;
@@ -27,7 +27,7 @@ void identify_replacement_combination(unsigned int* ar, unsigned int n, unsigned
     }
 }
 
-void identify_replacement_combination_bigz(unsigned int* ar, unsigned int n, unsigned int k, mpz_t index) {
+void nth_replacement_combination_bigz(unsigned int* ar, unsigned int n, unsigned int k, mpz_t index) {
     unsigned int i, j;
     unsigned int start = 0;
     mpz_t count, this_count;
@@ -91,14 +91,14 @@ SEXP next_replacement_combinations(int n, int k, SEXP labels, char layout, int d
                     mpz_set(skipz, 0);
                 }
                 mpz_clear(maxz);
-                identify_replacement_combination_bigz(ap, n, k, skipz);
+                nth_replacement_combination_bigz(ap, n, k, skipz);
                 mpz_clear(skipz);
             } else {
                 skip = as_uint(_skip);
                 if (skip >= (int) maxd) {
                     skip = 0;
                 }
-                identify_replacement_combination(ap, n, k, skip);
+                nth_replacement_combination(ap, n, k, skip);
             }
         }
         status = 0;
@@ -133,7 +133,7 @@ SEXP next_replacement_combinations(int n, int k, SEXP labels, char layout, int d
 }
 
 
-SEXP obtain_replacement_combinations(int n, int k, SEXP labels, char layout, SEXP _index, SEXP _nsample) {
+SEXP catch_replacement_combinations(int n, int k, SEXP labels, char layout, SEXP _index, SEXP _nsample) {
     int i, j;
     int nprotect = 0;
     int bigz = 0;
@@ -193,7 +193,7 @@ SEXP obtain_replacement_combinations(int n, int k, SEXP labels, char layout, SEX
             } else { \
                 mpz_sub_ui(z, index[j], 1); \
             } \
-            identify_replacement_combination_bigz(ap, n, k, z);
+            nth_replacement_combination_bigz(ap, n, k, z);
 
         int labels_type = TYPEOF(labels);
         if (labels_type == NILSXP) {
@@ -231,9 +231,9 @@ SEXP obtain_replacement_combinations(int n, int k, SEXP labels, char layout, SEX
         #undef NEXT
         #define NEXT() \
             if (sampling) { \
-                identify_replacement_combination(ap, n, k, floor(maxd * unif_rand())); \
+                nth_replacement_combination(ap, n, k, floor(maxd * unif_rand())); \
             } else { \
-                identify_replacement_combination(ap, n, k, index[j] - 1); \
+                nth_replacement_combination(ap, n, k, index[j] - 1); \
             }
 
         int labels_type = TYPEOF(labels);
