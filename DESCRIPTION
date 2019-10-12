@@ -1,33 +1,38 @@
-Package: arrangements
 Type: Package
-Title: Fast Generators and Iterators for Permutations, Combinations and Partitions
+Package: arrangements
+Title: Fast Generators and Iterators for Permutations, Combinations and
+    Partitions
 Version: 1.1.6.9999
 Date: 2019-09-27
-Authors@R: c(
-    person("Randy", "Lai", , "randy.cs.lai@gmail.com", role = c("aut", "cre"))
-    )
+Authors@R: 
+    person(given = "Randy",
+           family = "Lai",
+           role = c("aut", "cre"),
+           email = "randy.cs.lai@gmail.com")
 Description: Fast generators and iterators for permutations, combinations
-    and partitions. The iterators allow users to generate arrangements in 
-    a memory efficient manner and the generated arrangements are in 
-    lexicographical (dictionary) order. Permutations and combinations can 
-    be drawn with/without replacement and support multisets. It has been 
-    demonstrated that 'arrangements' outperforms most of the existing 
-    packages of similar kind. Some benchmarks could be found at 
+    and partitions. The iterators allow users to generate arrangements in
+    a memory efficient manner and the generated arrangements are in
+    lexicographical (dictionary) order. Permutations and combinations can
+    be drawn with/without replacement and support multisets. It has been
+    demonstrated that 'arrangements' outperforms most of the existing
+    packages of similar kind. Some benchmarks could be found at
     <https://randy3k.github.io/arrangements/articles/benchmark.html>.
-URL: https://randy3k.github.io/arrangements
 License: MIT + file LICENSE
+URL: https://randy3k.github.io/arrangements
 Depends:
     R (>= 3.4.0)
-Imports: methods,
-    R6,
-    gmp
+Imports: 
+    gmp,
+    methods,
+    R6
 Suggests:
     foreach,
-    testthat,
     knitr,
-    rmarkdown
-NeedsCompilation: yes
-SystemRequirements: gmp (>= 4.2.3)
+    rmarkdown,
+    testthat
 ByteCompile: yes
-RoxygenNote: 6.1.1
+Encoding: UTF-8
+NeedsCompilation: yes
 Roxygen: list(markdown = TRUE)
+RoxygenNote: 6.1.1
+SystemRequirements: gmp (>= 4.2.3)
