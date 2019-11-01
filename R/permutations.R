@@ -179,7 +179,7 @@ ipermutations <- function(x, k = n, n = NULL, v = NULL, freq = NULL, replace = F
         n <- validate_n_value(n, v, freq, replace)
     } else {
         if (length(x) == 1 && is.numeric(x)) {
-            n <- validate_n_value(x, v, freq)
+            n <- validate_n_value(x, v, freq, replace)
         } else {
             v <- x
             n <- validate_n_value(n, v, freq, replace)
