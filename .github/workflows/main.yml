@@ -4,6 +4,7 @@ on: [push]
 
 jobs:
   rchk:
+    if: contains(github.event.head_commit.message, '[ci skip]') == false
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
@@ -14,6 +15,7 @@ jobs:
         NOT_CRAN: true
 
   ubsan:
+    if: contains(github.event.head_commit.message, '[ci skip]') == false
     runs-on: ubuntu-latest
     container: rocker/r-devel-ubsan-clang
     steps:
@@ -37,6 +39,7 @@ jobs:
         bash
 
   linux:
+    if: contains(github.event.head_commit.message, '[ci skip]') == false
     strategy:
       matrix:
         r: [latest]
@@ -64,6 +67,7 @@ jobs:
         bash
 
   macos:
+    if: contains(github.event.head_commit.message, '[ci skip]') == false
     strategy:
       matrix:
         r: [latest]
