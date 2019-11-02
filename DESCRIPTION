@@ -2,7 +2,7 @@ Type: Package
 Package: arrangements
 Title: Fast Generators and Iterators for Permutations, Combinations and
     Partitions
-Version: 1.1.7
+Version: 1.1.7.9999
 Date: 2019-11-02
 Authors@R: 
     person(given = "Randy",
