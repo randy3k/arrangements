@@ -10,3 +10,4 @@ vignettes
 ^CRAN-RELEASE$
 ^cran-comments\.md$
 ^.github$
+.ccls
