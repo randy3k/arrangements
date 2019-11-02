@@ -45,10 +45,10 @@ jobs:
     container: rocker/tidyverse:${{ matrix.r }}
     steps:
     - uses: actions/checkout@v1
-    - name: Install apt-get dependencies
+    - name: Install gmp
       run: |
         apt-get update
-        apt-get install git ssh curl bzip2 libffi6 libffi-dev libgmp3-dev -y
+        apt-get install libgmp3-dev -y
     - name: Install dependencies
       run: |
         Rscript -e "install.packages(c('remotes', 'rcmdcheck'), repos = 'https://cloud.r-project.org')"
@@ -71,21 +71,11 @@ jobs:
     runs-on: macOS-latest
     steps:
     - uses: actions/checkout@v1
-    - name: Install R
-      run: |
-        if [ "${{ matrix.r }}" == "devel" ]; then
-          R_FILE=$(curl -sL http://mac.r-project.org/ | sed -nE 's|.*href="?(.*/R-[^/]*\.pkg)"?>.*|\1|p' | tail -n1)
-          URL="http://mac.r-project.org/$R_FILE"
-        else
-          R_FILE=$(curl -sL https://cran.r-project.org/bin/macosx/el-capitan/base/ | grep -o 'R-${{ matrix.r }}[0-9\.]*.pkg' | tail -n1)
-          URL="https://cran.r-project.org/bin/macosx/el-capitan/base/$R_FILE"
-        fi
-        echo downloading "$URL"
-        curl -L "$URL" -o ~/R.pkg
-        sudo installer -pkg ~/R.pkg -target /
+    - uses: r-lib/actions/setup-r@v1
+    - name: Install gmp
+      run: brew install gmp
     - name: Install dependencies
       run: |
-        brew install gmp
         Rscript -e "install.packages(c('remotes', 'rcmdcheck'), repos = 'https://cloud.r-project.org', type = 'mac.binary.el-capitan')"
         Rscript -e "remotes::install_deps(dependencies = TRUE, type = 'mac.binary.el-capitan')"
       shell:
