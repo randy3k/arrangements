@@ -6,18 +6,20 @@ jobs:
   rchk:
     if: contains(github.event.head_commit.message, '[ci skip]') == false
     runs-on: ubuntu-latest
+    env:
+      NOT_CRAN: true
     steps:
     - uses: actions/checkout@v1
     - uses: randy3k/github-action-rchk@master
       with:
         apt: libgmp3-dev
-      env:
-        NOT_CRAN: true
 
   ubsan:
     if: contains(github.event.head_commit.message, '[ci skip]') == false
     runs-on: ubuntu-latest
     container: rocker/r-devel-ubsan-clang
+    env:
+      NOT_CRAN: true
     steps:
     - uses: actions/checkout@v1
     - name: Install gmp
@@ -33,8 +35,6 @@ jobs:
     - name: Running Tests
       run: |
         Rscript -e "rcmdcheck::rcmdcheck(args = c('--as-cran', '--no-manual', '--timings'), error_on = 'warning')"
-      env:
-        NOT_CRAN: true
       shell:
         bash
 
@@ -46,6 +46,8 @@ jobs:
         # r: [3.5, latest, devel]
     runs-on: ubuntu-latest
     container: rocker/tidyverse:${{ matrix.r }}
+    env:
+      NOT_CRAN: true
     steps:
     - uses: actions/checkout@v1
     - name: Install gmp
@@ -61,8 +63,6 @@ jobs:
     - name: Running Tests
       run: |
         Rscript -e "rcmdcheck::rcmdcheck(args = c('--as-cran', '--no-manual', '--timings'), error_on = 'warning')"
-      env:
-        NOT_CRAN: true
       shell:
         bash
 
@@ -73,6 +73,8 @@ jobs:
         r: [latest]
         # r: [3.5, latest, devel]
     runs-on: macOS-latest
+    env:
+      NOT_CRAN: true
     steps:
     - uses: actions/checkout@v1
     - uses: r-lib/actions/setup-r@v1
@@ -87,7 +89,5 @@ jobs:
     - name: Running Tests
       run: |
         Rscript -e "rcmdcheck::rcmdcheck(args = c('--as-cran', '--no-manual', '--timings'), error_on = 'warning')"
-      env:
-        NOT_CRAN: true
       shell:
         bash
