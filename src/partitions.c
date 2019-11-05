@@ -110,6 +110,7 @@ SEXP collect_partitions(SEXP _n, SEXP _k, SEXP _descending, SEXP _layout, SEXP _
     }
 
     PROTECT(ans);
+    int dropped = 0;
     if ((!Rf_isNull(_drop) && Rf_asLogical(_drop)) || ((Rf_isNull(_drop) || Rf_asLogical(_drop)) &&
                 ((d == 1 && Rf_isNull(_layout)) ||
                     (!Rf_isNull(_index) && index_length(_index) == 1 && Rf_isNull(_layout)) ||
@@ -117,14 +118,17 @@ SEXP collect_partitions(SEXP _n, SEXP _k, SEXP _descending, SEXP _layout, SEXP _
                 )) {
         if (layout == 'r' && Rf_nrows(ans) == 1) {
             Rf_setAttrib(ans, R_DimSymbol, R_NilValue);
+            dropped = 1;
         } else if (layout == 'c' && Rf_ncols(ans) == 1) {
             Rf_setAttrib(ans, R_DimSymbol, R_NilValue);
+            dropped = 1;
         } else if (layout == 'l' && Rf_length(ans) == 1) {
             ans = VECTOR_ELT(ans, 0);
+            dropped = 1;
         }
     }
 
-    if (d > 0 && !Rf_isNull(state)) {
+    if (d > 0 && !Rf_isNull(state) && !dropped) {
         if ((layout == 'r' && (Rf_nrows(ans) == 0)) ||
                         (layout == 'c' && Rf_ncols(ans) == 0) ||
                         (layout == 'l' && Rf_length(ans) == 0)) {

@@ -152,6 +152,7 @@ SEXP collect_permutations(SEXP _x, SEXP _k, SEXP _n, SEXP _v, SEXP _freq, SEXP _
     }
 
     PROTECT(ans);
+    int dropped = 0;
     attach_factor_levels(ans, _v);
     if ((!Rf_isNull(_drop) && Rf_asLogical(_drop)) || ((Rf_isNull(_drop) || Rf_asLogical(_drop)) &&
                 ((d == 1 && Rf_isNull(_layout)) ||
@@ -160,14 +161,17 @@ SEXP collect_permutations(SEXP _x, SEXP _k, SEXP _n, SEXP _v, SEXP _freq, SEXP _
                 )) {
         if (layout == 'r' && Rf_nrows(ans) == 1) {
             Rf_setAttrib(ans, R_DimSymbol, R_NilValue);
+            dropped = 1;
         } else if (layout == 'c' && Rf_ncols(ans) == 1) {
             Rf_setAttrib(ans, R_DimSymbol, R_NilValue);
+            dropped = 1;
         } else if (layout == 'l' && Rf_length(ans) == 1) {
             ans = VECTOR_ELT(ans, 0);
+            dropped = 1;
         }
     }
 
-    if (d > 0 && !Rf_isNull(state)) {
+    if (d > 0 && !Rf_isNull(state) && !dropped) {
         if ((layout == 'r' && (Rf_nrows(ans) == 0)) ||
                         (layout == 'c' && Rf_ncols(ans) == 0) ||
                         (layout == 'l' && Rf_length(ans) == 0)) {
