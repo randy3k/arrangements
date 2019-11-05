@@ -91,8 +91,7 @@ test_that("Combinations - icombinations", {
 
     icomb <- icombinations(10, 0)
     expect_equal(dim(icomb$collect()), c(1, 0))
-    expect_equal(length(icomb$getnext()), 0)
-    expect_equal(icomb$getnext(), NULL)
+    expect_equal(icomb$getnext(), integer(0))
     icomb <- icombinations(10, 11)
     expect_equal(dim(icomb$collect()), c(0, 11))
     expect_equal(icomb$getnext(), NULL)

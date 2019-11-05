@@ -90,8 +90,7 @@ test_that("Permutations with replacement - ipermutations", {
 
     iperm <- ipermutations(5, 0, replace= TRUE)
     expect_equal(dim(iperm$collect()), c(1, 0))
-    expect_equal(length(iperm$getnext()), 0)
-    expect_equal(iperm$getnext(), NULL)
+    expect_equal(iperm$getnext(), integer(0))
     iperm <- ipermutations(2, 3, replace= TRUE)
     expect_equal(nrow(iperm$collect()), 8)
     expect_error(ipermutations(5, -1, replace= TRUE), "expect integer")

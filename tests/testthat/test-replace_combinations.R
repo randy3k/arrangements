@@ -91,8 +91,7 @@ test_that("Combinations with replacement - icombinations", {
 
     icomb <- icombinations(8, 0, replace= TRUE)
     expect_equal(dim(icomb$collect()), c(1, 0))
-    expect_equal(length(icomb$getnext()), 0)
-    expect_equal(icomb$getnext(), NULL)
+    expect_equal(icomb$getnext(), integer(0))
     icomb <- icombinations(4, 5, replace= TRUE)
     expect_equal(nrow(icomb$collect()), 56)
     expect_error(icombinations(5, -1, replace= TRUE), "expect integer")
