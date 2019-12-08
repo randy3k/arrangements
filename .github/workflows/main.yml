@@ -9,10 +9,10 @@ jobs:
     env:
       NOT_CRAN: true
     steps:
-    - uses: actions/checkout@v1
-    - uses: randy3k/github-action-rchk@master
-      with:
-        apt: libgmp3-dev
+      - uses: actions/checkout@v1
+      - uses: r-lib/actions/run-rchk@master
+        with:
+          apt: libgmp3-dev
 
   ubsan:
     if: contains(github.event.head_commit.message, '[ci skip]') == false
@@ -21,22 +21,18 @@ jobs:
     env:
       NOT_CRAN: true
     steps:
-    - uses: actions/checkout@v1
-    - name: Install gmp
-      run: |
-        apt-get update
-        apt-get install libgmp3-dev -y
-    - name: Install dependencies
-      run: |
-        Rscript -e "install.packages(c('remotes', 'rcmdcheck'), repos = 'https://cloud.r-project.org')"
-        Rscript -e "remotes::install_deps(dependencies = TRUE)"
-      shell:
-        bash
-    - name: Running Tests
-      run: |
-        Rscript -e "rcmdcheck::rcmdcheck(args = c('--as-cran', '--no-manual', '--timings'), error_on = 'warning')"
-      shell:
-        bash
+      - uses: actions/checkout@v1
+      - name: Install gmp
+        run: |
+          apt-get update
+          apt-get install libgmp3-dev -y
+      - name: Install dependencies
+        run: |
+          Rscript -e "install.packages(c('remotes', 'rcmdcheck'), repos = 'https://cloud.r-project.org')"
+          Rscript -e "remotes::install_deps(dependencies = TRUE)"
+      - name: Running Tests
+        run: |
+          Rscript -e "rcmdcheck::rcmdcheck(args = c('--as-cran', '--no-manual', '--timings'), error_on = 'warning')"
 
   linux:
     if: contains(github.event.head_commit.message, '[ci skip]') == false
@@ -58,13 +54,9 @@ jobs:
       run: |
         Rscript -e "install.packages(c('remotes', 'rcmdcheck'), repos = 'https://cloud.r-project.org')"
         Rscript -e "remotes::install_deps(dependencies = TRUE)"
-      shell:
-        bash
     - name: Running Tests
       run: |
         Rscript -e "rcmdcheck::rcmdcheck(args = c('--as-cran', '--no-manual', '--timings'), error_on = 'warning')"
-      shell:
-        bash
 
   macos:
     if: contains(github.event.head_commit.message, '[ci skip]') == false
@@ -76,18 +68,14 @@ jobs:
     env:
       NOT_CRAN: true
     steps:
-    - uses: actions/checkout@v1
-    - uses: r-lib/actions/setup-r@v1
-    - name: Install gmp
-      run: brew install gmp
-    - name: Install dependencies
-      run: |
-        Rscript -e "install.packages(c('remotes', 'rcmdcheck'), repos = 'https://cloud.r-project.org', type = 'mac.binary.el-capitan')"
-        Rscript -e "remotes::install_deps(dependencies = TRUE, type = 'mac.binary.el-capitan')"
-      shell:
-        bash
-    - name: Running Tests
-      run: |
-        Rscript -e "rcmdcheck::rcmdcheck(args = c('--as-cran', '--no-manual', '--timings'), error_on = 'warning')"
-      shell:
-        bash
+      - uses: actions/checkout@v1
+      - uses: r-lib/actions/setup-r@v1
+      - name: Install gmp
+        run: brew install gmp
+      - name: Install dependencies
+        run: |
+          Rscript -e "install.packages(c('remotes', 'rcmdcheck'), repos = 'https://cloud.r-project.org', type = 'mac.binary.el-capitan')"
+          Rscript -e "remotes::install_deps(dependencies = TRUE, type = 'mac.binary.el-capitan')"
+      - name: Running Tests
+        run: |
+          Rscript -e "rcmdcheck::rcmdcheck(args = c('--as-cran', '--no-manual', '--timings'), error_on = 'warning')"
