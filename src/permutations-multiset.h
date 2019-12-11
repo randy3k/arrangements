@@ -1,6 +1,7 @@
 #define R_NO_REMAP
 #include <R.h>
 #include <Rinternals.h>
+#include <stdlib.h>
 #include <gmp.h>
 #include "next.h"
 #include "macros.h"
@@ -224,7 +225,7 @@ SEXP next_multiset_permutations(int* fp, size_t flen, int k, SEXP labels, char l
 
     unsigned int* ap;
 
-    if (!variable_exists(state, "a", INTSXP, n, (void**) &ap)) {
+    if (!variable_exists(state, (char*)"a", INTSXP, n, (void**) &ap)) {
         mpz_t maxz;
         int skip;
         mpz_t skipz;

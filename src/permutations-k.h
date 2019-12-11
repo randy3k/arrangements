@@ -2,6 +2,7 @@
 #include <R.h>
 #include <Rinternals.h>
 #include <gmp.h>
+#include <stdlib.h>
 #include "next.h"
 #include "utils.h"
 #include "macros.h"
@@ -90,7 +91,7 @@ SEXP next_k_permutations(int n, int k, SEXP labels, char layout, int d, SEXP _sk
     unsigned int* ap;
     unsigned int* cyclep;
 
-    if (!variable_exists(state, "a", INTSXP, n, (void**) &ap)) {
+    if (!variable_exists(state, (char*)"a", INTSXP, n, (void**) &ap)) {
         mpz_t maxz;
         int skip;
         mpz_t skipz;
@@ -130,7 +131,7 @@ SEXP next_k_permutations(int n, int k, SEXP labels, char layout, int d, SEXP _sk
         }
         status = 0;
     }
-    if (!variable_exists(state, "cycle", INTSXP, k, (void**) &cyclep)) {
+    if (!variable_exists(state, (char*)"cycle", INTSXP, k, (void**) &cyclep)) {
         if (Rf_isNull(_skip)) {
             for(i=0; i<k; i++) cyclep[i] = n - i;;
         } else {

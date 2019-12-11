@@ -76,7 +76,7 @@ SEXP next_asc_k_partitions(int n, int k, char layout, int d, SEXP _skip, SEXP st
 
     unsigned int* ap;
 
-    if (!variable_exists(state, "a", INTSXP, k, (void**) &ap)) {
+    if (!variable_exists(state, (char*)"a", INTSXP, k, (void**) &ap)) {
         mpz_t maxz;
         int skip;
         mpz_t skipz;
@@ -305,7 +305,7 @@ SEXP next_desc_k_partitions(int n, int k, char layout, int d, SEXP _skip, SEXP s
 
     unsigned int* ap;
 
-    if (!variable_exists(state, "a", INTSXP, k, (void**) &ap)) {
+    if (!variable_exists(state, (char*)"a", INTSXP, k, (void**) &ap)) {
         mpz_t maxz;
         int skip;
         mpz_t skipz;

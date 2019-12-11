@@ -1,6 +1,7 @@
 #define R_NO_REMAP
 #include <R.h>
 #include <Rinternals.h>
+#include <stdlib.h>
 #include <gmp.h>
 #include "next.h"
 #include "macros.h"
@@ -104,7 +105,7 @@ SEXP next_ordinary_permutations(int n, int k, SEXP labels, SEXP freq, char layou
 
     unsigned int* ap;
 
-    if (!variable_exists(state, "a", INTSXP, n, (void**) &ap)) {
+    if (!variable_exists(state, (char*)"a", INTSXP, n, (void**) &ap)) {
         mpz_t maxz;
         int skip;
         mpz_t skipz;

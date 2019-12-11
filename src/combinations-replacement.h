@@ -72,7 +72,7 @@ SEXP next_replacement_combinations(int n, int k, SEXP labels, char layout, int d
 
     unsigned int* ap;
 
-    if (!variable_exists(state, "a", INTSXP, k, (void**) &ap)) {
+    if (!variable_exists(state, (char*)"a", INTSXP, k, (void**) &ap)) {
         mpz_t maxz;
         int skip;
         mpz_t skipz;

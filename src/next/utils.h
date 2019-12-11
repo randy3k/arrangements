@@ -1,6 +1,8 @@
 #ifndef _UTILS_H_
 #define _UTILS_H_ 1
 
+#include <stddef.h>
+
 static void swap(unsigned int *ar, unsigned int first, unsigned int second)
 {
     unsigned int temp = ar[first];

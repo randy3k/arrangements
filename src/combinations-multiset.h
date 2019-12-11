@@ -2,6 +2,7 @@
 #include <R.h>
 #include <Rinternals.h>
 #include <gmp.h>
+#include <stdlib.h>
 #include "next.h"
 #include "macros.h"
 #include "utils.h"
@@ -172,7 +173,7 @@ SEXP next_multiset_combinations(int* fp, size_t flen, int k, SEXP labels, char l
     unsigned int* mp;
     unsigned int* ap;
 
-    if (!variable_exists(state, "m", INTSXP, n, (void**) &mp)) {
+    if (!variable_exists(state, (char*)"m", INTSXP, n, (void**) &mp)) {
         h = 0;
         for (i = 0; i < flen; i++) {
             for (j = 0; j < fp[i]; j++) {
@@ -182,7 +183,7 @@ SEXP next_multiset_combinations(int* fp, size_t flen, int k, SEXP labels, char l
         status = 0;
     }
 
-    if (!variable_exists(state, "a", INTSXP, n, (void**) &ap)) {
+    if (!variable_exists(state, (char*)"a", INTSXP, n, (void**) &ap)) {
         mpz_t maxz;
         int skip;
         mpz_t skipz;

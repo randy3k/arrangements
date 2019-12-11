@@ -91,7 +91,7 @@ SEXP next_asc_partitions(int n, char layout, int d, SEXP _skip, SEXP state) {
     unsigned int* ap;
     int* kp;
 
-    if (!variable_exists(state, "a", INTSXP, n, (void**) &ap)) {
+    if (!variable_exists(state, (char*)"a", INTSXP, n, (void**) &ap)) {
         mpz_t maxz;
         int skip;
         mpz_t skipz;
@@ -123,7 +123,7 @@ SEXP next_asc_partitions(int n, char layout, int d, SEXP _skip, SEXP state) {
         status = 0;
     }
 
-    if (!variable_exists(state, "k", INTSXP, 1, (void**) &kp)) {
+    if (!variable_exists(state, (char*)"k", INTSXP, 1, (void**) &kp)) {
         if (Rf_isNull(_skip)) {
             kp[0] = n - 1;
         } else  {
@@ -363,7 +363,7 @@ SEXP next_desc_partitions(int n, char layout, int d, SEXP _skip, SEXP state) {
     int* hp;
     int* kp;
 
-    if (!variable_exists(state, "a", INTSXP, n, (void**) &ap)) {
+    if (!variable_exists(state, (char*)"a", INTSXP, n, (void**) &ap)) {
         mpz_t maxz;
         int skip;
         mpz_t skipz;
@@ -396,7 +396,7 @@ SEXP next_desc_partitions(int n, char layout, int d, SEXP _skip, SEXP state) {
         status = 0;
     }
 
-    if (!variable_exists(state, "h", INTSXP, 1, (void**) &hp)) {
+    if (!variable_exists(state, (char*)"h", INTSXP, 1, (void**) &hp)) {
         if (Rf_isNull(_skip)) {
             hp[0] = 0;
         } else  {
@@ -410,7 +410,7 @@ SEXP next_desc_partitions(int n, char layout, int d, SEXP _skip, SEXP state) {
         status = 0;
     }
 
-    if (!variable_exists(state, "k", INTSXP, 1, (void**) &kp)) {
+    if (!variable_exists(state, (char*)"k", INTSXP, 1, (void**) &kp)) {
         if (Rf_isNull(_skip)) {
             kp[0] = 1;
         } else  {
