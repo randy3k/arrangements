@@ -25,7 +25,6 @@ The goal of this document is to compare the performances of some of the existing
     `r packageDescription("RcppAlgos")$Version`
 
 ```{r, warning = FALSE, message = FALSE}
-library(microbenchmark)
 library(gtools)
 library(combinat)
 library(multicool)
@@ -40,7 +39,10 @@ utils.combn <- utils::combn
 ```
 
 ```{r, echo = FALSE}
+library(microbenchmark)
+library(ggplot2)
 options(digits = 3)
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 ```
 
 `gtools::permutations`, `gtools::combinations` and `utils::combn` are renamed because they are
@@ -55,16 +57,15 @@ gc()
 ```
 
 ```{r}
-microbenchmark(
+autoplot(microbenchmark(
     gtools = gtools.permutations(6, 6),
     multicool = allPerm(initMC(1:6)),
     partitions = partitions::perms(6),
     permuate = allPerms(6),
     permutations = allperms(6),
     RcppAlgos = permuteGeneral(6, 6),
-    arrangements = permutations(6),
-    unit = "relative"
-)
+    arrangements = permutations(6)
+))
 ```
 
 **5-Permutations of 7 items**
@@ -74,12 +75,11 @@ gc()
 ```
 
 ```{r}
-microbenchmark(
+autoplot(microbenchmark(
     gtools = gtools.permutations(7, 5),
     RcppAlgos = permuteGeneral(7, 5),
-    arrangements = permutations(7, 5),
-    unit = "relative"
-)
+    arrangements = permutations(7, 5)
+))
 ```
 
 **Permutations of multiset**
@@ -88,15 +88,14 @@ microbenchmark(
 gc()
 ```
 
-```{r}
+```{r, echo = FALSE}
 f <- c(2, 1, 2, 1, 2)
 x <- rep(1:5, f)
-microbenchmark(
+autoplot(microbenchmark(
     multicool = allPerm(initMC(x)),
     RcppAlgos = permuteGeneral(5, freqs = f),
-    arrangements = permutations(freq = f),
-    unit = "relative"
-)
+    arrangements = permutations(freq = f)
+))
 ```
 
 **K-Permutations of multiset**
@@ -108,12 +107,11 @@ gc()
 ```{r}
 f <- c(2, 1, 2, 1, 2)
 x <- rep(1:5, f)
-microbenchmark(
+autoplot(microbenchmark(
     multicool = allPerm(initMC(x)),
     RcppAlgos = permuteGeneral(5, 6, freqs = f),
-    arrangements = permutations(k = 6, freq = f),
-    unit = "relative"
-)
+    arrangements = permutations(k = 6, freq = f)
+))
 ```
 
 ### Combinations
@@ -125,14 +123,13 @@ gc()
 ```
 
 ```{r}
-microbenchmark(
+autoplot(microbenchmark(
     gtools = gtools.combinations(15, 7),
     combinat = combn(15, 7),
     utils = utils.combn(15, 7),
     RcppAlgos = comboGeneral(15, 7),
-    arrangements = combinations(15, 7),
-    unit = "relative"
-)
+    arrangements = combinations(15, 7)
+))
 ```
 
 **Combinations with replacement of 9 items**
@@ -142,12 +139,11 @@ gc()
 ```
 
 ```{r}
-microbenchmark(
+autoplot(microbenchmark(
     gtools = gtools.combinations(9, 6, repeats.allowed = TRUE),
     RcppAlgos = comboGeneral(9, 6, repetition = TRUE),
-    arrangements = combinations(9, 6, replace = TRUE),
-    unit = "relative"
-)
+    arrangements = combinations(9, 6, replace = TRUE)
+))
 ```
 
 **Combinations of multiset**
@@ -159,11 +155,10 @@ gc()
 ```{r}
 f <- c(2, 1, 2, 1, 2, 2, 1, 2)
 x <- rep(1:8, f)
-microbenchmark(
+autoplot(microbenchmark(
     RcppAlgos = comboGeneral(8, 6, freqs = f),
-    arrangements = combinations(k = 6, freq = f),
-    unit = "relative"
-)
+    arrangements = combinations(k = 6, freq = f)
+))
 ```
 
 ### Partitions
@@ -176,11 +171,10 @@ gc()
 ```
 
 ```{r}
-microbenchmark(
+autoplot(microbenchmark(
     partitions = parts(30),
-    arrangements = partitions(30),
-    unit = "relative"
-)
+    arrangements = partitions(30)
+))
 ```
 
 **Partitions of 50 into 10 parts**
@@ -190,9 +184,8 @@ gc()
 ```
 
 ```{r}
-microbenchmark(
+autoplot(microbenchmark(
     partitions = restrictedparts(50, 10, include.zero = FALSE),
-    arrangements = partitions(50, 10),
-    unit = "relative"
-)
+    arrangements = partitions(50, 10)
+))
 ```

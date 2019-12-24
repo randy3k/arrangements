@@ -68,7 +68,7 @@ The iterator allows users to fetch the next partition(s) via the getnext() metho
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">arrangements</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.8</span>
       </span>
     </div>
 
@@ -152,7 +152,7 @@ The iterator allows users to fetch the next partition(s) via the <code>getnext()
     
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p>An object of class <code>R6ClassGenerator</code> of length 24.</p>
+    <p>An object of class <code>R6ClassGenerator</code> of length 25.</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
@@ -235,10 +235,9 @@ reset()
 #&gt; [36,]    4    6    0    0    0    0    0    0    0     0
 #&gt; [37,]    5    5    0    0    0    0    0    0    0     0
 #&gt; [38,]   10    0    0    0    0    0    0    0    0     0</div><div class='input'>
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>foreach</span>)
-<span class='fu'><a href='https://rdrr.io/pkg/foreach/man/foreach.html'>foreach</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'>ipartitions</span>(<span class='fl'>6</span>, <span class='fl'>2</span>), <span class='kw'>.combine</span><span class='kw'>=</span><span class='no'>c</span>) <span class='kw'>%do%</span> {
+<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>foreach</span>)</div><div class='output co'>#&gt; <span class='error'>Error in library(foreach): there is no package called ‘foreach’</span></div><div class='input'><span class='fu'>foreach</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'>ipartitions</span>(<span class='fl'>6</span>, <span class='fl'>2</span>), <span class='kw'>.combine</span><span class='kw'>=</span><span class='no'>c</span>) <span class='kw'>%do%</span> {
   <span class='fu'><a href='https://rdrr.io/r/base/prod.html'>prod</a></span>(<span class='no'>x</span>)
-}</div><div class='output co'>#&gt; [1] 5 8 9</div></pre>
+}</div><div class='output co'>#&gt; <span class='error'>Error in foreach(x = ipartitions(6, 2), .combine = c) %do% {    prod(x)}: could not find function "%do%"</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

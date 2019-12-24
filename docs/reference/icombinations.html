@@ -68,7 +68,7 @@ combination(s) via the getnext() method." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">arrangements</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.8</span>
       </span>
     </div>
 
@@ -127,27 +127,28 @@ combination(s) via the <code>getnext()</code> method.</p>
 
     <pre class="usage"><span class='no'>Combinations</span>
 
-<span class='fu'>icombinations</span>(<span class='no'>x</span>, <span class='kw'>k</span> <span class='kw'>=</span> <span class='no'>n</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>v</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>freq</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>replace</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>skip</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+<span class='fu'>icombinations</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>k</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>v</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>freq</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>replace</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>skip</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>an integer or a vector, will be treated as <code>n</code> if integer; otherwise, will be treated as <code>v</code></p></td>
+      <td><p>an integer or a vector, will be treated as <code>n</code> if integer; otherwise, will be treated as <code>v</code>.
+Should not be specified together with <code>n</code> and <code>v</code>.</p></td>
     </tr>
     <tr>
       <th>k</th>
-      <td><p>an integer, the number of items drawn</p></td>
+      <td><p>an integer, the number of items drawn, defaults to <code>n</code> if <code>freq</code> is <code>NULL</code> else <code><a href='https://rdrr.io/r/base/sum.html'>sum(freq)</a></code></p></td>
     </tr>
     <tr>
       <th>n</th>
-      <td><p>an integer, the total number of items, its actual value may be determined by other variables</p></td>
+      <td><p>an integer, the total number of items, its value may be implicitly deduced from <code><a href='https://rdrr.io/r/base/length.html'>length(v)</a></code> or <code><a href='https://rdrr.io/r/base/length.html'>length(freq)</a></code></p></td>
     </tr>
     <tr>
       <th>v</th>
-      <td><p>a vector to be drawn</p></td>
+      <td><p>a vector to be drawn, defaults to <code>1:n</code>.</p></td>
     </tr>
     <tr>
       <th>freq</th>
@@ -165,7 +166,7 @@ combination(s) via the <code>getnext()</code> method.</p>
     
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p>An object of class <code>R6ClassGenerator</code> of length 24.</p>
+    <p>An object of class <code>R6ClassGenerator</code> of length 25.</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
@@ -208,10 +209,9 @@ reset()
 #&gt; [4,]    3    4
 #&gt; [5,]    3    5
 #&gt; [6,]    4    5</div><div class='input'>
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>foreach</span>)
-<span class='fu'><a href='https://rdrr.io/pkg/foreach/man/foreach.html'>foreach</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'>icombinations</span>(<span class='fl'>5</span>, <span class='fl'>2</span>), <span class='kw'>.combine</span><span class='kw'>=</span><span class='no'>c</span>) <span class='kw'>%do%</span> {
+<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>foreach</span>)</div><div class='output co'>#&gt; <span class='error'>Error in library(foreach): there is no package called ‘foreach’</span></div><div class='input'><span class='fu'>foreach</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'>icombinations</span>(<span class='fl'>5</span>, <span class='fl'>2</span>), <span class='kw'>.combine</span><span class='kw'>=</span><span class='no'>c</span>) <span class='kw'>%do%</span> {
   <span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span>(<span class='no'>x</span>)
-}</div><div class='output co'>#&gt;  [1] 3 4 5 6 5 6 7 7 8 9</div></pre>
+}</div><div class='output co'>#&gt; <span class='error'>Error in foreach(x = icombinations(5, 2), .combine = c) %do% {    sum(x)}: could not find function "%do%"</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
