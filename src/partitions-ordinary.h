@@ -5,7 +5,7 @@
 #include "next.h"
 #include "utils.h"
 #include "macros.h"
-#include "partitions_utils.h"
+#include "partitions-utils.h"
 
 
 void nth_asc_partition(unsigned int* ar, unsigned int n, unsigned int index) {
