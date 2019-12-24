@@ -33,7 +33,7 @@ jobs:
           Rscript -e "remotes::install_deps(dependencies = TRUE)"
       - name: Running Tests
         run: |
-          Rscript -e "rcmdcheck::rcmdcheck(args = c('--as-cran', '--no-manual', '--timings'), error_on = 'warning')"
+          Rscript -e "rcmdcheck::rcmdcheck(args = c('--as-cran', '--no-manual', '--timings'))"
 
   linux:
     if: contains(github.event.head_commit.message, '[ci skip]') == false
@@ -57,7 +57,7 @@ jobs:
         Rscript -e "remotes::install_deps(dependencies = TRUE)"
     - name: Running Tests
       run: |
-        Rscript -e "rcmdcheck::rcmdcheck(args = c('--as-cran', '--no-manual', '--timings'), error_on = 'warning')"
+        Rscript -e "rcmdcheck::rcmdcheck(args = c('--as-cran', '--no-manual', '--timings'))"
 
   macos:
     if: contains(github.event.head_commit.message, '[ci skip]') == false
@@ -79,4 +79,4 @@ jobs:
           Rscript -e "remotes::install_deps(dependencies = TRUE, type = 'mac.binary.el-capitan')"
       - name: Running Tests
         run: |
-          Rscript -e "rcmdcheck::rcmdcheck(args = c('--as-cran', '--no-manual', '--timings'), error_on = 'warning')"
+          Rscript -e "rcmdcheck::rcmdcheck(args = c('--as-cran', '--no-manual', '--timings'))"
