@@ -19,3 +19,8 @@ Arrangements <- R6::R6Class(
         }
     )
 )
+
+
+validate_n_value <- function(x = NULL, k = n, n = NULL, v = NULL, freq = NULL, replace = FALSE) {
+    .Call(C_validate_n_value, x, k, n, v, freq, replace)
+}

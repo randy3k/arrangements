@@ -5,21 +5,20 @@
 \alias{Permutations}
 \alias{ipermutations}
 \title{Permutations iterator}
-\format{An object of class \code{R6ClassGenerator} of length 24.}
+\format{An object of class \code{R6ClassGenerator} of length 25.}
 \usage{
 Permutations
 
-ipermutations(x, k = n, n = NULL, v = NULL, freq = NULL,
-  replace = FALSE, skip = NULL)
+ipermutations(x = NULL, k = NULL, n = NULL, v = NULL,
+  freq = NULL, replace = FALSE, skip = NULL)
 }
 \arguments{
-\item{x}{an integer or a vector, will be treated as \code{n} if integer; otherwise, will be treated as \code{v}}
+\item{x}{an integer or a vector, will be treated as \code{n} if integer; otherwise, will be treated as \code{v}.
+Should not be specified together with \code{n} and \code{v}.}
 
-\item{k}{an integer, the number of items drawn}
+\item{n}{an integer, the total number of items, its value may be implicitly deduced from \code{length(v)} or \code{length(freq)}}
 
-\item{n}{an integer, the total number of items, its actual value may be determined by other variables}
-
-\item{v}{a vector to be drawn}
+\item{v}{a vector to be drawn, defaults to \code{1:n}.}
 
 \item{freq}{an integer vector of item repeat frequencies}
 

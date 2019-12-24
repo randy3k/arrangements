@@ -4,15 +4,16 @@
 \name{arrangements-package}
 \alias{arrangements}
 \alias{arrangements-package}
-\title{arrangements: Fast Generators and Iterators for Permutations, Combinations and Partitions}
+\title{arrangements: Fast Generators and Iterators for Permutations, Combinations and
+    Partitions}
 \description{
 Fast generators and iterators for permutations, combinations
-    and partitions. The iterators allow users to generate arrangements in 
-    a memory efficient manner and the generated arrangements are in 
-    lexicographical (dictionary) order. Permutations and combinations can 
-    be drawn with/without replacement and support multisets. It has been 
-    demonstrated that 'arrangements' outperforms most of the existing 
-    packages of similar kind. Some benchmarks could be found at 
+    and partitions. The iterators allow users to generate arrangements in
+    a memory efficient manner and the generated arrangements are in
+    lexicographical (dictionary) order. Permutations and combinations can
+    be drawn with/without replacement and support multisets. It has been
+    demonstrated that 'arrangements' outperforms most of the existing
+    packages of similar kind. Some benchmarks could be found at
     <https://randy3k.github.io/arrangements/articles/benchmark.html>.
 }
 \seealso{

@@ -11,7 +11,7 @@ SEXP npermutations(SEXP _x, SEXP _k, SEXP _n, SEXP _v, SEXP _freq, SEXP _replace
     int i;
     SEXP ans;
 
-    int has_labels = !Rf_isNull(_v);
+    int has_vector = !Rf_isNull(_v);
     int multiset = !Rf_isNull(_freq);
 
     int n, k;
@@ -20,6 +20,10 @@ SEXP npermutations(SEXP _x, SEXP _k, SEXP _n, SEXP _v, SEXP _freq, SEXP _replace
     int replace = Rf_asLogical(_replace);
 
     VALIDATE_ARGUMENTS();
+
+    if (multiset && replace) {
+        n = flen;
+    }
 
     if (Rf_asLogical(_bigz)) {
         mpz_t z;
@@ -77,7 +81,7 @@ SEXP collect_permutations(SEXP _x, SEXP _k, SEXP _n, SEXP _v, SEXP _freq, SEXP _
     int i;
     SEXP ans = R_NilValue;
 
-    int has_labels = !Rf_isNull(_v);
+    int has_vector = !Rf_isNull(_v);
     int multiset = !Rf_isNull(_freq);
 
     int n, k;
@@ -93,13 +97,13 @@ SEXP collect_permutations(SEXP _x, SEXP _k, SEXP _n, SEXP _v, SEXP _freq, SEXP _
     if (Rf_isNull(_index) && Rf_isNull(_nsample)) {
         if (k == 0) {
             if (layout == 'r') {
-                if (has_labels) {
+                if (has_vector) {
                     ans = Rf_allocMatrix(TYPEOF(_v), 1, 0);
                 } else {
                     ans = Rf_allocMatrix(INTSXP, 1, 0);
                 }
             } else if (layout == 'c') {
-                if (has_labels) {
+                if (has_vector) {
                     ans = Rf_allocMatrix(TYPEOF(_v), 0, 1);
                 } else {
                     ans = Rf_allocMatrix(INTSXP, 0, 1);
@@ -107,7 +111,7 @@ SEXP collect_permutations(SEXP _x, SEXP _k, SEXP _n, SEXP _v, SEXP _freq, SEXP _
             } else if (layout == 'l') {
                 if (n == 0) {
                     ans = PROTECT(Rf_allocVector(VECSXP, 1));
-                    SEXP ansi = PROTECT(Rf_allocVector(has_labels ? TYPEOF(_v) : INTSXP, 0));
+                    SEXP ansi = PROTECT(Rf_allocVector(has_vector ? TYPEOF(_v) : INTSXP, 0));
                     SET_VECTOR_ELT(ans, 0, ansi);
                     UNPROTECT(2);
                 } else {
@@ -116,13 +120,13 @@ SEXP collect_permutations(SEXP _x, SEXP _k, SEXP _n, SEXP _v, SEXP _freq, SEXP _
             }
         } else if (k > n && (!replace || n == 0)) {
             if (layout == 'r') {
-                if (has_labels) {
+                if (has_vector) {
                     ans = Rf_allocMatrix(TYPEOF(_v), 0, k);
                 } else {
                     ans = Rf_allocMatrix(INTSXP, 0, k);
                 }
             } else if (layout == 'c') {
-                if (has_labels) {
+                if (has_vector) {
                     ans = Rf_allocMatrix(TYPEOF(_v), k, 0);
                 } else {
                     ans = Rf_allocMatrix(INTSXP, k, 0);

@@ -23,7 +23,7 @@
 #' npermutations(0, 1)
 #' npermutations(0, 0)
 #' @export
-npermutations <- function(x = NULL, k = n, n = NULL, v = NULL, freq = NULL, replace = FALSE,
+npermutations <- function(x = NULL, k = NULL, n = NULL, v = NULL, freq = NULL, replace = FALSE,
                           bigz = FALSE) {
     .Call(C_npermutations, x, k, n, v, freq, replace, bigz)
 }
@@ -81,7 +81,7 @@ npermutations <- function(x = NULL, k = n, n = NULL, v = NULL, freq = NULL, repl
 #' dim(permutations(0, 1))
 #'
 #' @export
-permutations <- function(x = NULL, k = n, n = NULL, v = NULL, freq = NULL, replace = FALSE,
+permutations <- function(x = NULL, k = NULL, n = NULL, v = NULL, freq = NULL, replace = FALSE,
                          layout = NULL, nitem = -1L, skip = NULL, index = NULL, nsample = NULL, drop = NULL) {
     .Call(C_collect_permutations,
           x, k, n, v, freq, replace, layout, nitem, index, nsample, NULL, skip, drop)
@@ -110,8 +110,11 @@ Permutations <- R6::R6Class(
         freq = NULL,
         replace = NULL,
         skip = NULL,
-        initialize = function(n, k, v = NULL, freq = NULL, replace = FALSE, skip = NULL) {
+        initialize = function(n, k = NULL, v = NULL, freq = NULL, replace = FALSE, skip = NULL) {
             self$n <- as.integer(n)
+            if (is.null(k)) {
+                k <- if(is.null(freq)) n else sum(freq)
+            }
             self$k <- as.integer(k)
             self$v <- v
             self$freq <- freq
@@ -174,18 +177,7 @@ Permutations <- R6::R6Class(
 #'   sum(x)
 #' }
 #' @export
-ipermutations <- function(x, k = n, n = NULL, v = NULL, freq = NULL, replace = FALSE, skip = NULL) {
-    if (missing(x)) {
-        n <- validate_n_value(n, v, freq, replace)
-    } else {
-        if (length(x) == 1 && is.numeric(x)) {
-            n <- validate_n_value(x, v, freq, replace)
-        } else {
-            v <- x
-            n <- validate_n_value(n, v, freq, replace)
-        }
-    }
-    (k %% 1 == 0 && k >= 0) || stop("expect integer")
-
+ipermutations <- function(x = NULL, k = NULL, n = NULL, v = NULL, freq = NULL, replace = FALSE, skip = NULL) {
+    n <- validate_n_value(x, k, n, v, freq, replace)
     Permutations$new(n, k, v, freq, replace, skip)
 }

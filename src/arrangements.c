@@ -4,9 +4,32 @@
 #include "combinations.h"
 #include "permutations.h"
 #include "partitions.h"
+#include "macros.h"
+
+
+SEXP validate_n_value(SEXP _x, SEXP _k, SEXP _n, SEXP _v, SEXP _freq, SEXP _replace) {
+    int i;
+
+    int has_vector = !Rf_isNull(_v);
+    int multiset = !Rf_isNull(_freq);
+
+    int n, k;
+    int* fp;
+    int flen;
+
+    VALIDATE_ARGUMENTS();
+
+    if (multiset) {
+        n = flen;
+    }
+
+    return Rf_ScalarInteger(n);
+}
 
 
 static const R_CallMethodDef CallEntries[] = {
+    {"validate_n_value", (DL_FUNC) &validate_n_value, 6},
+
     {"ncombinations", (DL_FUNC) &ncombinations, 7},
     {"collect_combinations", (DL_FUNC) &collect_combinations, 13},
 

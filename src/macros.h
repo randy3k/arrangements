@@ -1,51 +1,39 @@
 #ifndef _MACROS_H_
 #define _MACROS_H_ 1
 
+#include "utils.h"
+
 #define VALIDATE_ARGUMENTS() \
-    if (Rf_isNull(_x)) { \
-        n = Rf_isNull(_n) ? 0 : as_uint(_n); \
-    } else { \
-        if (Rf_length(_x) == 1 && Rf_isNumeric(_x)) { \
-            n = as_uint(_x); \
-        } else { \
-            if (has_labels) { \
-                Rf_error("confusing argument v"); \
-            } else { \
-                _v = _x; \
-                has_labels = 1; \
-            } \
-            n = Rf_length(_v); \
+    if (!Rf_isNull(_x)) { \
+        if (!Rf_isNull(_n)) { \
+            Rf_error("ambiguous argument n"); \
         } \
+        if (has_vector) { \
+            Rf_error("ambiguous argument v"); \
+        } \
+        if (Rf_length(_x) == 1 && Rf_isNumeric(_x)) { \
+            _n = _x; \
+        } else { \
+            _v = _x; \
+            has_vector = 1; \
+        } \
+    } \
+    if (!has_vector && !multiset) { \
+        if (Rf_isNull(_n)) Rf_error("n is missing"); \
+        n = as_uint(_n); \
+    } \
+    if (has_vector) { \
+        if (!Rf_isNull(_n) && as_uint(_n) != Rf_length(_v)) Rf_error("n != length(v)"); \
+        n = Rf_length(_v); \
     } \
     if (multiset) { \
         fp = as_uint_array(_freq); \
         flen = Rf_length(_freq); \
-    } \
-    if (has_labels) { \
-        if (Rf_isNull(_freq)) { \
-            n = Rf_length(_v); \
-        } else if (replace) { \
-            n = flen; \
-            if (Rf_length(_v) != flen) Rf_error("length(v) != length(freq)"); \
-        } else { \
-            n = 0; \
-            for (i = 0; i < Rf_length(_freq); i++) { \
-                n += fp[i]; \
-            } \
-            if (Rf_length(_v) != flen) Rf_error("length(v) != s(freq)"); \
-        } \
-    } else { \
-        if (Rf_isNull(_freq)) { \
-            if (Rf_isNull(_x) && Rf_isNull(_n)) { \
-                Rf_error("n is missing"); \
-            } \
-        } else if (replace) { \
-            n = flen; \
-        } else { \
-            n = 0; \
-            for (i = 0; i < flen; i++) { \
-                n += fp[i]; \
-            } \
+        if (has_vector && Rf_length(_v) != flen) Rf_error("length(v) != length(freq)"); \
+        if (!Rf_isNull(_n) && as_uint(_n) != flen) Rf_error("n != length(freq)"); \
+        n = 0; \
+        for (i = 0; i < flen; i++) { \
+            n += fp[i]; \
         } \
     } \
     k = Rf_isNull(_k) ? n : as_uint(_k);
