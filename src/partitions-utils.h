@@ -1,5 +1,5 @@
-#ifndef NPARTITIONS_H__
-#define NPARTITIONS_H__
+#ifndef PARTITIONS_UTILS_H__
+#define PARTITIONS_UTILS_H__
 #include <gmp.h>
 #include <stdlib.h>
 
@@ -278,4 +278,4 @@ void n_max_partitions_bigz(mpz_t z, int n, int m) {
     nkm_bigz(z, n, n, m);
 }
 
-#endif /* end of include guard: NPARTITIONS_H__ */
+#endif /* end of include guard: PARTITIONS_UTILS_H__ */

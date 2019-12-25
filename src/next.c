@@ -1,5 +1,7 @@
 #include "next/cartesian_product.h"
 #include "next/combination.h"
+#include "next/composition.h"
+#include "next/k_composition.h"
 #include "next/k_partition.h"
 #include "next/k_permutation.h"
 #include "next/multicombination.h"
