@@ -113,7 +113,7 @@ Partitions <- R6::R6Class(
             out
         },
         getnext = function(d = 1L, layout = NULL, drop = NULL) {
-            if (private$state$null_pending) {
+            if (d > 0 && private$state$null_pending) {
                 out <- NULL
                 self$reset()
             } else {

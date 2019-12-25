@@ -219,3 +219,32 @@ test_that("Integer partitions - skip", {
     expect_equal(partitions(10, descending = TRUE, skip = 3, nitem = 4), partitions(10, descending = TRUE)[4:7, ])
     expect_equal(partitions(10, descending = TRUE, skip = gmp::as.bigz(3), nitem = 4), partitions(10, descending = TRUE)[4:7, ])
 })
+
+
+test_that("Integer partitions - small cases", {
+    expect_equal(partitions(0), matrix(0, nr = 1, nc = 0))
+    expect_equal(partitions(0, 0), matrix(0, nr = 1, nc = 0))
+    expect_equal(partitions(0, 1), matrix(0, nr = 0, nc = 1))
+    expect_equal(partitions(1), matrix(1, nr = 1, nc = 1))
+    expect_equal(partitions(1, 0), matrix(1, nr = 0, nc = 0))
+
+    ipart <- ipartitions(0)
+    expect_equal(ipart$getnext(), integer(0))
+    expect_equal(ipart$getnext(), NULL)
+
+    ipart <- ipartitions(0, 0)
+    expect_equal(ipart$getnext(), integer(0))
+    expect_equal(ipart$getnext(), NULL)
+
+    ipart <- ipartitions(0, 1)
+    expect_equal(ipart$getnext(), NULL)
+    expect_equal(ipart$getnext(), NULL)
+
+    ipart <- ipartitions(1)
+    expect_equal(ipart$getnext(), 1)
+    expect_equal(ipart$getnext(), NULL)
+
+    ipart <- ipartitions(1, 0)
+    expect_equal(ipart$getnext(), NULL)
+    expect_equal(ipart$getnext(), NULL)
+})

@@ -105,3 +105,27 @@ test_that("Permutations - skip", {
     expect_equal(permutations(5, skip = 3, nitem = 4), permutations(5)[4:7, ])
     expect_equal(permutations(5, skip = gmp::as.bigz(3), nitem = 4), permutations(5)[4:7, ])
 })
+
+
+test_that("Permutations - small cases", {
+    expect_equal(permutations(0), matrix(0, nr = 1, nc = 0))
+    expect_equal(permutations(0, 1), matrix(0, nr = 0, nc = 1))
+    expect_equal(permutations(1), matrix(1, nr = 1, nc = 1))
+    expect_equal(permutations(1, 0), matrix(1, nr = 1, nc = 0))
+
+    iperm <- ipermutations(0, 0)
+    expect_equal(iperm$getnext(), integer(0))
+    expect_equal(iperm$getnext(), NULL)
+
+    iperm <- ipermutations(0, 1)
+    expect_equal(iperm$getnext(), NULL)
+    expect_equal(iperm$getnext(), NULL)
+
+    iperm <- ipermutations(1, 1)
+    expect_equal(iperm$getnext(), 1)
+    expect_equal(iperm$getnext(), NULL)
+
+    iperm <- ipermutations(1, 0)
+    expect_equal(iperm$getnext(), integer(0))
+    expect_equal(iperm$getnext(), NULL)
+})

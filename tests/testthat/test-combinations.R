@@ -154,3 +154,27 @@ test_that("Combinations - skip", {
     expect_equal(combinations(5, 3, skip = 3, nitem = 4), combinations(5, 3)[4:7, ])
     expect_equal(combinations(5, 3, skip = gmp::as.bigz(3), nitem = 4), combinations(5, 3)[4:7, ])
 })
+
+
+test_that("Combinations - small cases", {
+    expect_equal(combinations(0), matrix(0, nr = 1, nc = 0))
+    expect_equal(combinations(0, 1), matrix(0, nr = 0, nc = 1))
+    expect_equal(combinations(1), matrix(1, nr = 1, nc = 1))
+    expect_equal(combinations(1, 0), matrix(1, nr = 1, nc = 0))
+
+    icomb <- icombinations(0, 0)
+    expect_equal(icomb$getnext(), integer(0))
+    expect_equal(icomb$getnext(), NULL)
+
+    icomb <- icombinations(0, 1)
+    expect_equal(icomb$getnext(), NULL)
+    expect_equal(icomb$getnext(), NULL)
+
+    icomb <- icombinations(1, 1)
+    expect_equal(icomb$getnext(), 1)
+    expect_equal(icomb$getnext(), NULL)
+
+    icomb <- icombinations(1, 0)
+    expect_equal(icomb$getnext(), integer(0))
+    expect_equal(icomb$getnext(), NULL)
+})

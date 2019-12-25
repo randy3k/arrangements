@@ -113,7 +113,7 @@ Permutations <- R6::R6Class(
         initialize = function(n, k = NULL, v = NULL, freq = NULL, replace = FALSE, skip = NULL) {
             self$n <- as.integer(n)
             if (is.null(k)) {
-                k <- if(is.null(freq)) n else sum(freq)
+                k <- if (is.null(freq)) n else sum(freq)
             }
             self$k <- as.integer(k)
             self$v <- v
@@ -132,7 +132,7 @@ Permutations <- R6::R6Class(
             out
         },
         getnext = function(d = 1L, layout = NULL, drop = NULL) {
-            if (private$state$null_pending) {
+            if (d > 0 && private$state$null_pending) {
                 out <- NULL
                 self$reset()
             } else {
