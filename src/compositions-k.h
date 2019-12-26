@@ -8,26 +8,70 @@
 
 
 double n_k_compositions(int n, int k) {
-    return n ? choose(n - 1, k - 1) : k == 0;
+    if (n < k) {
+        return 0;
+    } else if (k == 0) {
+        return n == 0;
+    } else {
+        return choose(n - 1, k - 1);
+    }
 }
 
 
 void n_k_compositions_bigz(mpz_t z, int n, int k) {
-    if (n > 0) {
-        mpz_bin_uiui(z, n - 1, k - 1);
+    if (n < k) {
+        mpz_set_ui(z, 0);
+    } else if (k == 0) {
+        mpz_set_ui(z, n == 0);
     } else {
-        mpz_set_ui(z, k == 0);
+        mpz_bin_uiui(z, n - 1, k - 1);
     }
 }
 
 
 void nth_asc_k_composition(unsigned int* ar, unsigned int n, unsigned int k, unsigned int index) {
+    unsigned int i, j;
+    unsigned int count, this_count;
 
+    for (i = 0; i < k; i++) {
+        count = 0;
+        for (j = 1; j <= n; j++) {
+            this_count = count + n_k_compositions(n - j, k - i - 1);
+            if (this_count > index) {
+                ar[i] = j;
+                n -= j;
+                index -= count;
+                break;
+            }
+            count = this_count;
+        }
+    }
 }
 
 
 void nth_asc_k_composition_bigz(unsigned int* ar, unsigned int n, unsigned int k, mpz_t index) {
+    unsigned int i, j;
+    mpz_t count, this_count;
+    mpz_init(count);
+    mpz_init(this_count);
 
+    for (i = 0; i < k; i++) {
+        mpz_set_ui(count, 0);
+        for (j = 1; j <= n; j++) {
+            n_k_compositions_bigz(this_count, n - j, k - i - 1);
+            mpz_add(this_count, this_count, count);
+            if (mpz_cmp(this_count, index) > 0) {
+                ar[i] = j;
+                n -= j;
+                mpz_sub(index, index, count);
+                break;
+            }
+            mpz_set(count, this_count);
+        }
+    }
+
+    mpz_clear(count);
+    mpz_clear(this_count);
 }
 
 
@@ -209,12 +253,48 @@ SEXP catch_asc_k_compositions(int n, int k, char layout, SEXP _index, SEXP _nsam
 
 
 void nth_desc_k_composition(unsigned int* ar, unsigned int n, unsigned int k, unsigned int index) {
+    unsigned int i, j;
+    unsigned int count, this_count;
 
+    for (i = 0; i < k; i++) {
+        count = 0;
+        for (j = n; j >= 1; j--) {
+            this_count = count + n_k_compositions(n - j, k - i - 1);
+            if (this_count > index) {
+                ar[i] = j;
+                n -= j;
+                index -= count;
+                break;
+            }
+            count = this_count;
+        }
+    }
 }
 
 
 void nth_desc_k_composition_bigz(unsigned int* ar, unsigned int n, unsigned int k, mpz_t index) {
+    unsigned int i, j;
+    mpz_t count, this_count;
+    mpz_init(count);
+    mpz_init(this_count);
 
+    for (i = 0; i < k; i++) {
+        mpz_set_ui(count, 0);
+        for (j = n; j >= 1; j--) {
+            n_k_compositions_bigz(this_count, n - j, k - i - 1);
+            mpz_add(this_count, this_count, count);
+            if (mpz_cmp(this_count, index) > 0) {
+                ar[i] = j;
+                n -= j;
+                mpz_sub(index, index, count);
+                break;
+            }
+            mpz_set(count, this_count);
+        }
+    }
+
+    mpz_clear(count);
+    mpz_clear(this_count);
 }
 
 
@@ -235,6 +315,8 @@ SEXP next_desc_k_compositions(int n, int k, char layout, int d, SEXP _skip, SEXP
     d = verify_dimension(dd, n, layout);
 
     unsigned int* ap;
+    int* tp;
+    int t;
 
     if (!variable_exists(state, (char*)"a", INTSXP, k, (void**) &ap)) {
         mpz_t maxz;
@@ -268,12 +350,27 @@ SEXP next_desc_k_compositions(int n, int k, char layout, int d, SEXP _skip, SEXP
         }
         status = 0;
     }
+    if (!variable_exists(state, (char*)"t", INTSXP, 1, (void**) &tp)) {
+        if (Rf_isNull(_skip)) {
+            tp[0] = k - 1;
+        } else  {
+            t = 0;
+            for (i = k-1; i>= 1; i--) {
+                if (ap[i - 1] > 1) {
+                    break;
+                }
+                t += ap[i - 1];
+            }
+            tp[0] = t + 1;
+        }
+        status = 0;
+    }
 
     #undef NEXT
     #define NEXT() \
         if (status == 0) { \
             status = 1; \
-        } else if (!next_desc_k_composition(ap, n, k)) { \
+        } else if (!next_desc_k_composition(ap, n, k, tp)) { \
             status = 0; \
             break; \
         }

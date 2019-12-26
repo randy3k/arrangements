@@ -63,10 +63,8 @@ void n_partitions_bigz(mpz_t z, int n) {
 double n_k_partitions(int n, int k) {
     if (n < k) {
         return 0;
-    } else if (n == 0 && k == 0) {
-        return 1;
     } else if (k == 0) {
-        return 0;
+        return n == 0;
     }
     int n1 = n-k+1;
     double* p = (double*) malloc(n1*k * sizeof(double));
@@ -96,11 +94,8 @@ void n_k_partitions_bigz(mpz_t z, int n, int k) {
     if (n < k) {
         mpz_set_ui(z, 0);
         return;
-    } else if (n == 0 && k == 0) {
-        mpz_set_ui(z, 1);
-        return;
     } else if (k == 0) {
-        mpz_set_ui(z, 0);
+        mpz_set_ui(z, n == 0);
         return;
     }
 

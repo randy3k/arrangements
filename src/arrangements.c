@@ -2,6 +2,7 @@
 #include <R.h>
 #include <Rinternals.h>
 #include "combinations.h"
+#include "compositions.h"
 #include "permutations.h"
 #include "partitions.h"
 #include "macros.h"
@@ -32,6 +33,9 @@ static const R_CallMethodDef CallEntries[] = {
 
     {"ncombinations", (DL_FUNC) &ncombinations, 7},
     {"collect_combinations", (DL_FUNC) &collect_combinations, 13},
+
+    {"ncompositions", (DL_FUNC) &ncompositions, 3},
+    {"collect_compositions", (DL_FUNC) &collect_compositions, 10},
 
     {"npermutations", (DL_FUNC) &npermutations, 7},
     {"collect_permutations", (DL_FUNC) &collect_permutations, 13},
