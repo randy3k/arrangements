@@ -164,7 +164,7 @@ SEXP next_asc_compositions(int n, char layout, int d, SEXP _skip, SEXP state) {
 }
 
 
-SEXP catch_asc_compositions(int n, char layout, SEXP _index, SEXP _nsample) {
+SEXP draw_asc_compositions(int n, char layout, SEXP _index, SEXP _nsample) {
     int i, j;
     int nprotect = 0;
     int bigz = 0;
@@ -428,7 +428,7 @@ SEXP next_desc_compositions(int n, char layout, int d, SEXP _skip, SEXP state) {
 }
 
 
-SEXP catch_desc_compositions(int n, char layout, SEXP _index, SEXP _nsample) {
+SEXP draw_desc_compositions(int n, char layout, SEXP _index, SEXP _nsample) {
     int i, j;
     int nprotect = 0;
     int bigz = 0;

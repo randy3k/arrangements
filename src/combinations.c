@@ -61,7 +61,7 @@ SEXP ncombinations(SEXP _x, SEXP _k, SEXP _n, SEXP _v, SEXP _freq, SEXP _replace
 }
 
 
-SEXP collect_combinations(SEXP _x, SEXP _k, SEXP _n, SEXP _v, SEXP _freq, SEXP _replace,
+SEXP get_combinations(SEXP _x, SEXP _k, SEXP _n, SEXP _v, SEXP _freq, SEXP _replace,
                       SEXP _layout, SEXP _d, SEXP _index, SEXP _nsample, SEXP state, SEXP _skip, SEXP _drop) {
     int i;
     SEXP ans = R_NilValue;
@@ -112,11 +112,11 @@ SEXP collect_combinations(SEXP _x, SEXP _k, SEXP _n, SEXP _v, SEXP _freq, SEXP _
         }
     } else {
         if (replace) {
-            ans = catch_replacement_combinations(n, k, _v, layout, _index, _nsample);
+            ans = draw_replacement_combinations(n, k, _v, layout, _index, _nsample);
         } else if (multiset) {
-            ans = catch_multiset_combinations(fp, flen, k, _v, layout, _index, _nsample);
+            ans = draw_multiset_combinations(fp, flen, k, _v, layout, _index, _nsample);
         } else {
-            ans = catch_ordinary_combinations(n, k, _v, layout, _index, _nsample);
+            ans = draw_ordinary_combinations(n, k, _v, layout, _index, _nsample);
         }
     }
 

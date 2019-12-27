@@ -6,6 +6,6 @@
 #include <Rinternals.h>
 
 SEXP ncompositions(SEXP _n, SEXP _k, SEXP _bigz);
-SEXP collect_compositions(SEXP _n, SEXP _k, SEXP _descending, SEXP _layout, SEXP _d, SEXP _index, SEXP _nsample, SEXP state, SEXP _skip, SEXP _drop);
+SEXP get_compositions(SEXP _n, SEXP _k, SEXP _descending, SEXP _layout, SEXP _d, SEXP _index, SEXP _nsample, SEXP state, SEXP _skip, SEXP _drop);
 
 #endif /* end of include guard: COMPOSITIONS_H__ */

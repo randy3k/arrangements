@@ -76,7 +76,7 @@ ncombinations <- function(x = NULL, k = NULL, n = NULL, v = NULL, freq = NULL, r
 #' @export
 combinations <- function(x = NULL, k = NULL, n = NULL, v = NULL, freq = NULL, replace = FALSE,
                          layout = NULL, nitem = -1L, skip = NULL, index = NULL, nsample = NULL, drop = NULL) {
-    .Call(C_collect_combinations,
+    .Call(C_get_combinations,
           x, k, n, v, freq, replace, layout, nitem, index, nsample, NULL, skip, drop)
 }
 
@@ -129,7 +129,7 @@ Combinations <- R6::R6Class(
                 out <- NULL
                 self$reset()
             } else {
-                out <- .Call(C_collect_combinations,
+                out <- .Call(C_get_combinations,
                              NULL, self$k, self$n, self$v, self$freq, self$replace, layout,
                              d, NULL, NULL, private$state, self$skip, drop)
                 is.null(out) && self$reset()

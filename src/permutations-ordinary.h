@@ -189,7 +189,7 @@ SEXP next_ordinary_permutations(int n, int k, SEXP labels, SEXP freq, char layou
 }
 
 
-SEXP catch_ordinary_permutations(int n, SEXP labels, char layout, SEXP _index, SEXP _nsample) {
+SEXP draw_ordinary_permutations(int n, SEXP labels, char layout, SEXP _index, SEXP _nsample) {
     int i, j;
     int nprotect = 0;
     int bigz = 0;

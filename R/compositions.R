@@ -69,7 +69,7 @@ ncompositions <- function(n, k = NULL, bigz = FALSE) {
 #' @export
 compositions <- function(n, k = NULL, descending = FALSE, layout = NULL,
                        nitem = -1L, skip = NULL, index = NULL, nsample = NULL, drop = NULL) {
-    .Call(C_collect_compositions,
+    .Call(C_get_compositions,
           n, k, descending, layout, nitem, index, nsample, NULL, skip, drop)
 }
 
@@ -117,7 +117,7 @@ Compositions <- R6::R6Class(
                 out <- NULL
                 self$reset()
             } else {
-                out <- .Call(C_collect_compositions,
+                out <- .Call(C_get_compositions,
                              self$n, self$k, self$descending, layout, d, NULL, NULL,
                              private$state, self$skip, drop)
                 is.null(out) && self$reset()

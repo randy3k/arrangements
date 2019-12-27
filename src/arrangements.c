@@ -32,16 +32,16 @@ static const R_CallMethodDef CallEntries[] = {
     {"validate_n_value", (DL_FUNC) &validate_n_value, 6},
 
     {"ncombinations", (DL_FUNC) &ncombinations, 7},
-    {"collect_combinations", (DL_FUNC) &collect_combinations, 13},
+    {"get_combinations", (DL_FUNC) &get_combinations, 13},
 
     {"ncompositions", (DL_FUNC) &ncompositions, 3},
-    {"collect_compositions", (DL_FUNC) &collect_compositions, 10},
+    {"get_compositions", (DL_FUNC) &get_compositions, 10},
 
     {"npermutations", (DL_FUNC) &npermutations, 7},
-    {"collect_permutations", (DL_FUNC) &collect_permutations, 13},
+    {"get_permutations", (DL_FUNC) &get_permutations, 13},
 
     {"npartitions", (DL_FUNC) &npartitions, 3},
-    {"collect_partitions", (DL_FUNC) &collect_partitions, 10},
+    {"get_partitions", (DL_FUNC) &get_partitions, 10},
 
     {NULL, NULL, 0}
 };

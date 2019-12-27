@@ -76,7 +76,7 @@ SEXP npermutations(SEXP _x, SEXP _k, SEXP _n, SEXP _v, SEXP _freq, SEXP _replace
 }
 
 
-SEXP collect_permutations(SEXP _x, SEXP _k, SEXP _n, SEXP _v, SEXP _freq, SEXP _replace,
+SEXP get_permutations(SEXP _x, SEXP _k, SEXP _n, SEXP _v, SEXP _freq, SEXP _replace,
                       SEXP _layout, SEXP _d, SEXP _index, SEXP _nsample, SEXP state, SEXP _skip, SEXP _drop) {
     int i;
     SEXP ans = R_NilValue;
@@ -129,13 +129,13 @@ SEXP collect_permutations(SEXP _x, SEXP _k, SEXP _n, SEXP _v, SEXP _freq, SEXP _
         }
     } else {
         if (replace) {
-            ans = catch_replacement_permutations(n, k, _v, layout, _index, _nsample);
+            ans = draw_replacement_permutations(n, k, _v, layout, _index, _nsample);
         } else if (multiset) {
-            ans = catch_multiset_permutations(fp, flen, k, _v, layout, _index, _nsample);
+            ans = draw_multiset_permutations(fp, flen, k, _v, layout, _index, _nsample);
         } else if (n == k) {
-            ans = catch_ordinary_permutations(n, _v, layout, _index, _nsample);
+            ans = draw_ordinary_permutations(n, _v, layout, _index, _nsample);
         } else {
-            ans = catch_k_permutations(n, k, _v, layout, _index, _nsample);
+            ans = draw_k_permutations(n, k, _v, layout, _index, _nsample);
         }
     }
 

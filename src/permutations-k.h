@@ -176,7 +176,7 @@ SEXP next_k_permutations(int n, int k, SEXP labels, char layout, int d, SEXP _sk
 }
 
 
-SEXP catch_k_permutations(int n, int k, SEXP labels, char layout, SEXP _index, SEXP _nsample) {
+SEXP draw_k_permutations(int n, int k, SEXP labels, char layout, SEXP _index, SEXP _nsample) {
     int i, j;
     int nprotect = 0;
     int bigz = 0;

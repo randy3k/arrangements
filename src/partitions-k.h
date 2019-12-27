@@ -129,7 +129,7 @@ SEXP next_asc_k_partitions(int n, int k, char layout, int d, SEXP _skip, SEXP st
 }
 
 
-SEXP catch_asc_k_partitions(int n, int k, char layout, SEXP _index, SEXP _nsample) {
+SEXP draw_asc_k_partitions(int n, int k, char layout, SEXP _index, SEXP _nsample) {
     int i, j;
     int nprotect = 0;
     int bigz = 0;
@@ -358,7 +358,7 @@ SEXP next_desc_k_partitions(int n, int k, char layout, int d, SEXP _skip, SEXP s
 }
 
 
-SEXP catch_desc_k_partitions(int n, int k, char layout, SEXP _index, SEXP _nsample) {
+SEXP draw_desc_k_partitions(int n, int k, char layout, SEXP _index, SEXP _nsample) {
     int i, j;
     int nprotect = 0;
     int bigz = 0;

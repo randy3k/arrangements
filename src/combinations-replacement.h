@@ -133,7 +133,7 @@ SEXP next_replacement_combinations(int n, int k, SEXP labels, char layout, int d
 }
 
 
-SEXP catch_replacement_combinations(int n, int k, SEXP labels, char layout, SEXP _index, SEXP _nsample) {
+SEXP draw_replacement_combinations(int n, int k, SEXP labels, char layout, SEXP _index, SEXP _nsample) {
     int i, j;
     int nprotect = 0;
     int bigz = 0;

@@ -137,7 +137,7 @@ SEXP next_ordinary_combinations(int n, int k, SEXP labels, char layout, int d, S
 }
 
 
-SEXP catch_ordinary_combinations(int n, int k, SEXP labels, char layout, SEXP _index, SEXP _nsample) {
+SEXP draw_ordinary_combinations(int n, int k, SEXP labels, char layout, SEXP _index, SEXP _nsample) {
     int i, j;
     int nprotect = 0;
     int bigz = 0;

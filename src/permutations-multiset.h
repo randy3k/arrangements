@@ -304,7 +304,7 @@ SEXP next_multiset_permutations(int* fp, size_t flen, int k, SEXP labels, char l
 }
 
 
-SEXP catch_multiset_permutations(int* fp, size_t flen, int k, SEXP labels, char layout, SEXP _index, SEXP _nsample) {
+SEXP draw_multiset_permutations(int* fp, size_t flen, int k, SEXP labels, char layout, SEXP _index, SEXP _nsample) {
     int i, j;
     int nprotect = 0;
     int bigz = 0;

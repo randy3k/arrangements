@@ -38,7 +38,7 @@ SEXP ncompositions(SEXP _n, SEXP _k, SEXP _bigz) {
 }
 
 
-SEXP collect_compositions(SEXP _n, SEXP _k, SEXP _descending, SEXP _layout, SEXP _d,
+SEXP get_compositions(SEXP _n, SEXP _k, SEXP _descending, SEXP _layout, SEXP _d,
                     SEXP _index, SEXP _nsample, SEXP state, SEXP _skip, SEXP _drop) {
 
     SEXP ans = R_NilValue;
@@ -96,15 +96,15 @@ SEXP collect_compositions(SEXP _n, SEXP _k, SEXP _descending, SEXP _layout, SEXP
     } else {
         if (k == -1) {
             if (descending) {
-                ans = catch_desc_compositions(n, layout, _index, _nsample);
+                ans = draw_desc_compositions(n, layout, _index, _nsample);
             } else {
-                ans = catch_asc_compositions(n, layout, _index, _nsample);
+                ans = draw_asc_compositions(n, layout, _index, _nsample);
             }
         } else {
             if (descending) {
-                ans = catch_desc_k_compositions(n, k, layout, _index, _nsample);
+                ans = draw_desc_k_compositions(n, k, layout, _index, _nsample);
             } else {
-                ans = catch_asc_k_compositions(n, k, layout, _index, _nsample);
+                ans = draw_asc_k_compositions(n, k, layout, _index, _nsample);
             }
         }
     }
