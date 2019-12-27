@@ -136,6 +136,8 @@ double nkm(int n, int k, int m) {
         return 0;
     } else if (n == 0) {
         return 1;
+    } else if (k == 0 || m == 0) {
+        return 0;
     }
     if (n < m*k - n) {
         n = m*k - n;
@@ -171,18 +173,25 @@ double nkm(int n, int k, int m) {
 
 
 void nkm_bigz(mpz_t z, int n, int k, int m) {
-    // number of partitions of n into at most k parts of sizes <= m
-    // note that number of partitions of n into exactly k parts
-    // is p(n, k, m) - p(n, k-1, m) = p(n-k, k, m-1)
     if (n > m*k) {
         mpz_set_ui(z, 0);
         return;
     } else if (n == 0) {
         mpz_set_ui(z, 1);
         return;
-    } else if (k == 0) {
+    } else if (k == 0 || m == 0) {
         mpz_set_ui(z, 0);
         return;
+    }
+    if (n < m*k - n) {
+        n = m*k - n;
+    }
+    if (m > k) {
+        // p(n, k, m) = p(n, m, k)
+        int temp;
+        temp = k;
+        k = m;
+        m = temp;
     }
 
     int i, j, h;
@@ -271,7 +280,7 @@ void n_min_partitions_bigz(mpz_t z, int n, int m) {
 }
 
 double n_max_partitions(int n, int m) {
-    return nkm(n, n,  m);
+    return nkm(n, n, m);
 }
 
 void n_max_partitions_bigz(mpz_t z, int n, int m) {
