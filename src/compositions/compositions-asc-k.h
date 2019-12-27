@@ -2,46 +2,43 @@
 #include <R.h>
 #include <Rinternals.h>
 #include <gmp.h>
-#include "../macros.h"
+#include "stdlib.h"
 #include "../utils.h"
-#include "combinations-utils.h"
+#include "../macros.h"
+#include "compositions-utils.h"
 
-unsigned int next_multicombination(unsigned int *ar, size_t n, unsigned int k)
-{
-    unsigned int i;
-    unsigned int j;
-    unsigned int temp;
 
-    for (i = k - 1; ; i--) {
-        if (ar[i] < n - 1) {
-            // increment this element
-            ar[i]++;
-            if (i < k - 1) {
-                // make the elements after it the same
-                temp = ar[i];
-                for (j = i + 1; j < k; j++) {
-                    ar[j] = temp;
-                }
-            }
-            return 1;
-        } else if (i == 0) {
-            return 0;
+unsigned int next_asc_k_composition(unsigned int *ar, size_t n, unsigned int k) {
+    int i, j;
+    unsigned int a;
+    for (i = k-1; i>= 0; i--) {
+        if (ar[i] > 1) {
+            a = ar[i];
+            break;
         }
     }
+    if (i == 0) return 0;
+    ar[i - 1] = ar[i - 1] + 1;
+
+    for (j = i; j < k -1; j++) {
+        ar[j] = 1;
+    }
+    ar[k - 1] = a - 1;
+    return 1;
 }
 
-void nth_replacement_combination(unsigned int* ar, unsigned int n, unsigned int k, unsigned int index) {
+
+void nth_asc_k_composition(unsigned int* ar, unsigned int n, unsigned int k, unsigned int index) {
     unsigned int i, j;
-    unsigned int start = 0;
     unsigned int count, this_count;
 
     for (i = 0; i < k; i++) {
         count = 0;
-        for (j = start; j < n; j++) {
-            this_count = count + choose(n - j + k - i - 1 - 1, k - i - 1);
+        for (j = 1; j <= n; j++) {
+            this_count = count + n_k_compositions(n - j, k - i - 1);
             if (this_count > index) {
                 ar[i] = j;
-                start = j;
+                n -= j;
                 index -= count;
                 break;
             }
@@ -50,21 +47,21 @@ void nth_replacement_combination(unsigned int* ar, unsigned int n, unsigned int 
     }
 }
 
-void nth_replacement_combination_bigz(unsigned int* ar, unsigned int n, unsigned int k, mpz_t index) {
+
+void nth_asc_k_composition_bigz(unsigned int* ar, unsigned int n, unsigned int k, mpz_t index) {
     unsigned int i, j;
-    unsigned int start = 0;
     mpz_t count, this_count;
     mpz_init(count);
     mpz_init(this_count);
 
     for (i = 0; i < k; i++) {
         mpz_set_ui(count, 0);
-        for (j = start; j < n; j++) {
-            mpz_bin_uiui(this_count, n - j + k - i - 1 - 1, k - i - 1);
+        for (j = 1; j <= n; j++) {
+            n_k_compositions_bigz(this_count, n - j, k - i - 1);
             mpz_add(this_count, this_count, count);
             if (mpz_cmp(this_count, index) > 0) {
                 ar[i] = j;
-                start = j;
+                n -= j;
                 mpz_sub(index, index, count);
                 break;
             }
@@ -77,7 +74,7 @@ void nth_replacement_combination_bigz(unsigned int* ar, unsigned int n, unsigned
 }
 
 
-SEXP next_replacement_combinations(int n, int k, SEXP labels, char layout, int d, SEXP _skip, SEXP state) {
+SEXP next_asc_k_compositions(int n, int k, char layout, int d, SEXP _skip, SEXP state) {
     int i, j;
     int nprotect = 0;
     int status = 1;
@@ -87,7 +84,7 @@ SEXP next_replacement_combinations(int n, int k, SEXP labels, char layout, int d
     double maxd;
     int bigz = TYPEOF(_skip) == RAWSXP && Rf_inherits(_skip, "bigz");
     if (d == -1 || !Rf_isNull(_skip)) {
-        maxd = choose(n + k - 1, k);
+        maxd = n_k_compositions(n, k);
         bigz = bigz || maxd >= INT_MAX;
     }
     dd = d == -1 ? maxd : d;
@@ -100,12 +97,13 @@ SEXP next_replacement_combinations(int n, int k, SEXP labels, char layout, int d
         int skip;
         mpz_t skipz;
         if (Rf_isNull(_skip)) {
-            for(i=0; i<k; i++) ap[i] = 0;
+            for(i=0; i<k-1; i++) ap[i] = 1;
+            ap[k-1] = n - k + 1;
         } else {
             if (bigz) {
                 mpz_init(maxz);
                 mpz_init(skipz);
-                mpz_bin_uiui(maxz, n + k - 1, k);
+                n_k_compositions_bigz(maxz, n, k);
                 if (as_mpz_array(&skipz, 1, _skip) < 0 || mpz_sgn(skipz) < 0) {
                     mpz_clear(skipz);
                     mpz_clear(maxz);
@@ -114,14 +112,14 @@ SEXP next_replacement_combinations(int n, int k, SEXP labels, char layout, int d
                     mpz_set(skipz, 0);
                 }
                 mpz_clear(maxz);
-                nth_replacement_combination_bigz(ap, n, k, skipz);
+                nth_asc_k_composition_bigz(ap, n, k, skipz);
                 mpz_clear(skipz);
             } else {
                 skip = as_uint(_skip);
                 if (skip >= (int) maxd) {
                     skip = 0;
                 }
-                nth_replacement_combination(ap, n, k, skip);
+                nth_asc_k_composition(ap, n, k, skip);
             }
         }
         status = 0;
@@ -131,21 +129,12 @@ SEXP next_replacement_combinations(int n, int k, SEXP labels, char layout, int d
     #define NEXT() \
         if (status == 0) { \
             status = 1; \
-        } else if (!next_multicombination(ap, n, k)) { \
+        } else if (!next_asc_k_composition(ap, n, k)) { \
             status = 0; \
             break; \
         }
 
-    int labels_type = TYPEOF(labels);
-    if (labels_type == NILSXP) {
-        RESULT_NILSXP(k);
-    } else if (labels_type == INTSXP) {
-        RESULT_INTSXP(k);
-    } else if (labels_type == REALSXP) {
-        RESULT_REALSXP(k);
-    } else if (labels_type == STRSXP) {
-        RESULT_STRSXP(k);
-    }
+    RESULT_K_PART();
 
     if (status == 0) {
         result = PROTECT(resize_layout(result, j, layout));
@@ -156,7 +145,7 @@ SEXP next_replacement_combinations(int n, int k, SEXP labels, char layout, int d
 }
 
 
-SEXP draw_replacement_combinations(int n, int k, SEXP labels, char layout, SEXP _index, SEXP _nsample) {
+SEXP draw_asc_k_compositions(int n, int k, char layout, SEXP _index, SEXP _nsample) {
     int i, j;
     int nprotect = 0;
     int bigz = 0;
@@ -176,7 +165,7 @@ SEXP draw_replacement_combinations(int n, int k, SEXP labels, char layout, SEXP 
 
     double maxd;
     if (!bigz) {
-        maxd = choose(n + k - 1, k);
+        maxd = n_k_compositions(n, k);
         bigz = maxd > INT_MAX;
     }
 
@@ -190,7 +179,7 @@ SEXP draw_replacement_combinations(int n, int k, SEXP labels, char layout, SEXP 
         mpz_t maxz;
         mpz_init(z);
         mpz_init(maxz);
-        mpz_bin_uiui(maxz, n + k - 1 , k);
+        n_k_compositions_bigz(maxz, n, k);
 
         if (sampling) {
             GetRNGstate();
@@ -216,18 +205,9 @@ SEXP draw_replacement_combinations(int n, int k, SEXP labels, char layout, SEXP 
             } else { \
                 mpz_sub_ui(z, index[j], 1); \
             } \
-            nth_replacement_combination_bigz(ap, n, k, z);
+            nth_asc_k_composition_bigz(ap, n, k, z);
 
-        int labels_type = TYPEOF(labels);
-        if (labels_type == NILSXP) {
-            RESULT_NILSXP(k);
-        } else if (labels_type == INTSXP) {
-            RESULT_INTSXP(k);
-        } else if (labels_type == REALSXP) {
-            RESULT_REALSXP(k);
-        } else if (labels_type == STRSXP) {
-            RESULT_STRSXP(k);
-        }
+        RESULT_K_PART();
 
         mpz_clear(z);
         mpz_clear(maxz);
@@ -254,21 +234,12 @@ SEXP draw_replacement_combinations(int n, int k, SEXP labels, char layout, SEXP 
         #undef NEXT
         #define NEXT() \
             if (sampling) { \
-                nth_replacement_combination(ap, n, k, floor(maxd * unif_rand())); \
+                nth_asc_k_composition(ap, n, k, floor(maxd * unif_rand())); \
             } else { \
-                nth_replacement_combination(ap, n, k, index[j] - 1); \
+                nth_asc_k_composition(ap, n, k, index[j] - 1); \
             }
 
-        int labels_type = TYPEOF(labels);
-        if (labels_type == NILSXP) {
-            RESULT_NILSXP(k);
-        } else if (labels_type == INTSXP) {
-            RESULT_INTSXP(k);
-        } else if (labels_type == REALSXP) {
-            RESULT_REALSXP(k);
-        } else if (labels_type == STRSXP) {
-            RESULT_STRSXP(k);
-        }
+        RESULT_K_PART();
 
         if (sampling){
             PutRNGstate();

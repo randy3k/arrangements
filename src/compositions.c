@@ -1,8 +1,10 @@
 #include <gmp.h>
 #include "utils.h"
 #include "compositions.h"
-#include "compositions/compositions-ordinary.h"
-#include "compositions/compositions-k.h"
+#include "compositions/compositions-asc.h"
+#include "compositions/compositions-desc.h"
+#include "compositions/compositions-asc-k.h"
+#include "compositions/compositions-desc-k.h"
 
 
 SEXP ncompositions(SEXP _n, SEXP _k, SEXP _bigz) {

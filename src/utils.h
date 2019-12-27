@@ -29,14 +29,6 @@ int* as_uint_array(SEXP x);
 
 int* as_uint_index(SEXP x);
 
-double fact(int n);
-
-double fallfact(int n, int k);
-
-double choose(int n, int k);
-
-double multichoose(int* f, size_t flen);
-
 SEXP mpz_to_bigz1(mpz_t z);
 
 int as_mpz_array(mpz_t* a, size_t n, SEXP x);

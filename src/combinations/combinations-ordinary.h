@@ -6,6 +6,7 @@
 #include <gmp.h>
 #include "../macros.h"
 #include "../utils.h"
+#include "combinations-utils.h"
 
 
 // mirror of python itertools.combinations
