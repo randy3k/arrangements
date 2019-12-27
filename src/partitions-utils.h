@@ -126,21 +126,26 @@ void n_k_partitions_bigz(mpz_t z, int n, int k) {
 
 double nkm(int n, int k, int m) {
     // number of partitions of n into at most k parts of sizes <= m
-    // note that number of partitions of n into exactly k parts
+    //
+    // property 1: partitions of n into exactly k parts of sizes <= m
     // is p(n, k, m) - p(n, k-1, m) = p(n-k, k, m-1)
-
-    if (m > k) {
-        // nkm(n, k, m) = nkm(n, m, k)
-        int temp;
-        temp = k;
-        k = m;
-        m = temp;
-    }
+    // property 2: p(n, k, m) = p(n, m, k)
+    // property 3: p(n, k, m) = p(mk - n, k, m)
 
     if (n > m*k) {
         return 0;
     } else if (n == 0) {
         return 1;
+    }
+    if (n < m*k - n) {
+        n = m*k - n;
+    }
+    if (m > k) {
+        // p(n, k, m) = p(n, m, k)
+        int temp;
+        temp = k;
+        k = m;
+        m = temp;
     }
 
     int i, j, h;
