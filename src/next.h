@@ -8,7 +8,7 @@ unsigned int next_cartesian_product(unsigned int *ar, size_t len, const size_t *
 unsigned int next_combination(unsigned int *ar, size_t n, unsigned int k);
 
 unsigned int next_asc_composition(unsigned int *ar, int* kp);
-unsigned int next_desc_composition(unsigned int *ar, int* hp, int* kp);
+unsigned int next_desc_composition(unsigned int *ar, int* kp);
 
 unsigned int next_asc_k_composition(unsigned int *ar, size_t n, unsigned int k);
 unsigned int next_desc_k_composition(unsigned int *ar, size_t n, unsigned int k, int* tp);

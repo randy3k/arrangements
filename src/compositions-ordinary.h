@@ -23,12 +23,52 @@ void n_compositions_bigz(mpz_t z, int n) {
 
 
 void nth_asc_composition(unsigned int* ar, unsigned int n, unsigned int index) {
-
+    int i, j;
+    unsigned int s;
+    unsigned int n1 = n - 1;
+    // convert index to binary
+    int* bs;
+    bs = (int*) malloc(n1 * sizeof(int));
+    for (j = 0; j < n1; j++) {
+        bs[j] = (index >> j) & 1;
+    }
+    s = 0;
+    i = 0;
+    // compute successive diff
+    for (j = 0; j < n1; j++) {
+        if (bs[n1 - j - 1] == 1) continue;
+        ar[i] = j + 1 - s;
+        s = j + 1;
+        i++;
+    }
+    ar[i] = n1 - s + 1;
+    for (j = i + 1; j < n; j++) ar[j] = 0;
+    free(bs);
 }
 
 
 void nth_asc_composition_bigz(unsigned int* ar, unsigned int n, mpz_t index) {
-
+    int i, j;
+    unsigned int s;
+    unsigned int n1 = n - 1;
+    // convert index to binary
+    int* bs;
+    bs = (int*) malloc(n1 * sizeof(int));
+    for (j = 0; j < n1; j++) {
+        bs[j] = mpz_tstbit(index, j);
+    }
+    s = 0;
+    i = 0;
+    // compute successive diff
+    for (j = 0; j < n1; j++) {
+        if (bs[n1 - j - 1] == 1) continue;
+        ar[i] = j + 1 - s;
+        s = j + 1;
+        i++;
+    }
+    ar[i] = n1 - s + 1;
+    for (j = i + 1; j < n; j++) ar[j] = 0;
+    free(bs);
 }
 
 
@@ -241,12 +281,52 @@ SEXP catch_asc_compositions(int n, char layout, SEXP _index, SEXP _nsample) {
 
 
 void nth_desc_composition(unsigned int* ar, unsigned int n, unsigned int index) {
-
+    int i, j;
+    unsigned int s;
+    unsigned int n1 = n - 1;
+    // convert index to binary
+    int* bs;
+    bs = (int*) malloc(n1 * sizeof(int));
+    for (j = 0; j < n1; j++) {
+        bs[j] = (index >> j) & 1;
+    }
+    s = 0;
+    i = 0;
+    // compute successive diff
+    for (j = 0; j < n1; j++) {
+        if (bs[n1 - j - 1] == 0) continue;
+        ar[i] = j + 1 - s;
+        s = j + 1;
+        i++;
+    }
+    ar[i] = n1 - s + 1;
+    for (j = i + 1; j < n; j++) ar[j] = 0;
+    free(bs);
 }
 
 
 void nth_desc_composition_bigz(unsigned int* ar, unsigned int n, mpz_t index) {
-
+    int i, j;
+    unsigned int s;
+    unsigned int n1 = n - 1;
+    // convert index to binary
+    int* bs;
+    bs = (int*) malloc(n1 * sizeof(int));
+    for (j = 0; j < n1; j++) {
+        bs[j] = mpz_tstbit(index, j);
+    }
+    s = 0;
+    i = 0;
+    // compute successive diff
+    for (j = 0; j < n1; j++) {
+        if (bs[n1 - j - 1] == 0) continue;
+        ar[i] = j + 1 - s;
+        s = j + 1;
+        i++;
+    }
+    ar[i] = n1 - s + 1;
+    for (j = i + 1; j < n; j++) ar[j] = 0;
+    free(bs);
 }
 
 SEXP next_desc_compositions(int n, char layout, int d, SEXP _skip, SEXP state) {
@@ -266,7 +346,6 @@ SEXP next_desc_compositions(int n, char layout, int d, SEXP _skip, SEXP state) {
     d = verify_dimension(dd, n, layout);
 
     unsigned int* ap;
-    int* hp;
     int* kp;
 
     if (!variable_exists(state, (char*)"a", INTSXP, n, (void**) &ap)) {
@@ -302,20 +381,6 @@ SEXP next_desc_compositions(int n, char layout, int d, SEXP _skip, SEXP state) {
         status = 0;
     }
 
-    if (!variable_exists(state, (char*)"h", INTSXP, 1, (void**) &hp)) {
-        if (Rf_isNull(_skip)) {
-            hp[0] = 0;
-        } else  {
-            for (i = 0; i < n; i++) {
-                if (ap[i] <= 1) {
-                    break;
-                }
-            }
-            hp[0] = i - 1;
-        }
-        status = 0;
-    }
-
     if (!variable_exists(state, (char*)"k", INTSXP, 1, (void**) &kp)) {
         if (Rf_isNull(_skip)) {
             kp[0] = 1;
@@ -326,10 +391,6 @@ SEXP next_desc_compositions(int n, char layout, int d, SEXP _skip, SEXP state) {
                 }
             }
             kp[0] = i;
-            // for the algorithm
-            for (j = i; j < n; j++) {
-                ap[j] = 1;
-            }
         }
         status = 0;
     }
@@ -338,7 +399,7 @@ SEXP next_desc_compositions(int n, char layout, int d, SEXP _skip, SEXP state) {
     #define NEXT() \
         if (status == 0) { \
             status = 1; \
-        } else if (!next_desc_composition(ap, hp, kp)) { \
+        } else if (!next_desc_composition(ap, kp)) { \
             status = 0; \
             break; \
         } \
