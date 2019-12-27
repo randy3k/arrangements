@@ -1,7 +1,7 @@
-#ifndef _UTILS_H_
-#define _UTILS_H_ 1
+#ifndef PERMUTATIONS_UTILS_H__
+#define PERMUTATIONS_UTILS_H__
 
-#include <stddef.h>
+#include <stdlib.h>
 
 static void swap(unsigned int *ar, unsigned int first, unsigned int second)
 {
@@ -19,4 +19,5 @@ static void reverse(unsigned int *ar, size_t len)
     }
 }
 
-#endif
+
+#endif /* end of include guard: PERMUTATIONS_UTILS_H__ */

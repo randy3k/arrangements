@@ -2,84 +2,100 @@
 #include <R.h>
 #include <Rinternals.h>
 #include <gmp.h>
-#include <math.h>
-#include "next.h"
-#include "utils.h"
-#include "macros.h"
+#include "stdlib.h"
+#include "../utils.h"
+#include "../macros.h"
 
 
-double n_compositions(int n) {
-    return n ? pow(2, n - 1) : 1;
-}
-
-
-void n_compositions_bigz(mpz_t z, int n) {
-    if (n > 0) {
-        mpz_ui_pow_ui(z, 2, n - 1);
+double n_k_compositions(int n, int k) {
+    if (n < k) {
+        return 0;
+    } else if (k == 0) {
+        return n == 0;
     } else {
-        mpz_set_ui(z, 1);
+        return choose(n - 1, k - 1);
     }
 }
 
 
-void nth_asc_composition(unsigned int* ar, unsigned int n, unsigned int index) {
+void n_k_compositions_bigz(mpz_t z, int n, int k) {
+    if (n < k) {
+        mpz_set_ui(z, 0);
+    } else if (k == 0) {
+        mpz_set_ui(z, n == 0);
+    } else {
+        mpz_bin_uiui(z, n - 1, k - 1);
+    }
+}
+
+unsigned int next_asc_k_composition(unsigned int *ar, size_t n, unsigned int k) {
     int i, j;
-    unsigned int s;
-    int n1 = n - 1;
-    int* bs;
-
-    if (n == 0) return;
-
-    // convert index to binary
-    bs = (int*) malloc(n1 * sizeof(int));
-    for (j = 0; j < n1; j++) {
-        bs[j] = (index >> j) & 1;
+    unsigned int a;
+    for (i = k-1; i>= 0; i--) {
+        if (ar[i] > 1) {
+            a = ar[i];
+            break;
+        }
     }
-    s = 0;
-    i = 0;
-    // compute successive diff
-    for (j = 0; j < n1; j++) {
-        if (bs[n1 - j - 1] == 1) continue;
-        ar[i] = j + 1 - s;
-        s = j + 1;
-        i++;
+    if (i == 0) return 0;
+    ar[i - 1] = ar[i - 1] + 1;
+
+    for (j = i; j < k -1; j++) {
+        ar[j] = 1;
     }
-    ar[i] = n1 - s + 1;
-    for (j = i + 1; j < n; j++) ar[j] = 0;
-    free(bs);
+    ar[k - 1] = a - 1;
+    return 1;
 }
 
 
-void nth_asc_composition_bigz(unsigned int* ar, unsigned int n, mpz_t index) {
+void nth_asc_k_composition(unsigned int* ar, unsigned int n, unsigned int k, unsigned int index) {
+    unsigned int i, j;
+    unsigned int count, this_count;
+
+    for (i = 0; i < k; i++) {
+        count = 0;
+        for (j = 1; j <= n; j++) {
+            this_count = count + n_k_compositions(n - j, k - i - 1);
+            if (this_count > index) {
+                ar[i] = j;
+                n -= j;
+                index -= count;
+                break;
+            }
+            count = this_count;
+        }
+    }
+}
+
+
+void nth_asc_k_composition_bigz(unsigned int* ar, unsigned int n, unsigned int k, mpz_t index) {
+    unsigned int i, j;
+    mpz_t count, this_count;
+    mpz_init(count);
+    mpz_init(this_count);
+
+    for (i = 0; i < k; i++) {
+        mpz_set_ui(count, 0);
+        for (j = 1; j <= n; j++) {
+            n_k_compositions_bigz(this_count, n - j, k - i - 1);
+            mpz_add(this_count, this_count, count);
+            if (mpz_cmp(this_count, index) > 0) {
+                ar[i] = j;
+                n -= j;
+                mpz_sub(index, index, count);
+                break;
+            }
+            mpz_set(count, this_count);
+        }
+    }
+
+    mpz_clear(count);
+    mpz_clear(this_count);
+}
+
+
+SEXP next_asc_k_compositions(int n, int k, char layout, int d, SEXP _skip, SEXP state) {
     int i, j;
-    unsigned int s;
-    int n1 = n - 1;
-    int* bs;
-
-    if (n == 0) return;
-
-    // convert index to binary
-    bs = (int*) malloc(n1 * sizeof(int));
-    for (j = 0; j < n1; j++) {
-        bs[j] = mpz_tstbit(index, j);
-    }
-    s = 0;
-    i = 0;
-    // compute successive diff
-    for (j = 0; j < n1; j++) {
-        if (bs[n1 - j - 1] == 1) continue;
-        ar[i] = j + 1 - s;
-        s = j + 1;
-        i++;
-    }
-    ar[i] = n1 - s + 1;
-    for (j = i + 1; j < n; j++) ar[j] = 0;
-    free(bs);
-}
-
-
-SEXP next_asc_compositions(int n, char layout, int d, SEXP _skip, SEXP state) {
-    int i, j, k;
     int nprotect = 0;
     int status = 1;
     SEXP result;
@@ -88,26 +104,26 @@ SEXP next_asc_compositions(int n, char layout, int d, SEXP _skip, SEXP state) {
     double maxd;
     int bigz = TYPEOF(_skip) == RAWSXP && Rf_inherits(_skip, "bigz");
     if (d == -1 || !Rf_isNull(_skip)) {
-        maxd = n_compositions(n);
+        maxd = n_k_compositions(n, k);
         bigz = bigz || maxd >= INT_MAX;
     }
     dd = d == -1 ? maxd : d;
     d = verify_dimension(dd, n, layout);
 
     unsigned int* ap;
-    int* kp;
 
-    if (!variable_exists(state, (char*)"a", INTSXP, n, (void**) &ap)) {
+    if (!variable_exists(state, (char*)"a", INTSXP, k, (void**) &ap)) {
         mpz_t maxz;
         int skip;
         mpz_t skipz;
         if (Rf_isNull(_skip)) {
-            for(i=0; i<n; i++) ap[i] = 1;
+            for(i=0; i<k-1; i++) ap[i] = 1;
+            ap[k-1] = n - k + 1;
         } else {
             if (bigz) {
                 mpz_init(maxz);
                 mpz_init(skipz);
-                n_compositions_bigz(maxz, n);
+                n_k_compositions_bigz(maxz, n, k);
                 if (as_mpz_array(&skipz, 1, _skip) < 0 || mpz_sgn(skipz) < 0) {
                     mpz_clear(skipz);
                     mpz_clear(maxz);
@@ -116,29 +132,15 @@ SEXP next_asc_compositions(int n, char layout, int d, SEXP _skip, SEXP state) {
                     mpz_set(skipz, 0);
                 }
                 mpz_clear(maxz);
-                nth_asc_composition_bigz(ap, n, skipz);
+                nth_asc_k_composition_bigz(ap, n, k, skipz);
                 mpz_clear(skipz);
             } else {
                 skip = as_uint(_skip);
                 if (skip >= (int) maxd) {
                     skip = 0;
                 }
-                nth_asc_composition(ap, n, skip);
+                nth_asc_k_composition(ap, n, k, skip);
             }
-        }
-        status = 0;
-    }
-
-    if (!variable_exists(state, (char*)"k", INTSXP, 1, (void**) &kp)) {
-        if (Rf_isNull(_skip)) {
-            kp[0] = n - 1;
-        } else  {
-            for (i = 0; i < n; i++) {
-                if (ap[i] == 0) {
-                    break;
-                }
-            }
-            kp[0] = i - 1;
         }
         status = 0;
     }
@@ -147,13 +149,12 @@ SEXP next_asc_compositions(int n, char layout, int d, SEXP _skip, SEXP state) {
     #define NEXT() \
         if (status == 0) { \
             status = 1; \
-        } else if (!next_asc_composition(ap, kp)) { \
+        } else if (!next_asc_k_composition(ap, n, k)) { \
             status = 0; \
             break; \
-        } \
-        k = kp[0] + 1;
+        }
 
-    RESULT_PART();
+    RESULT_K_PART();
 
     if (status == 0) {
         result = PROTECT(resize_layout(result, j, layout));
@@ -164,7 +165,7 @@ SEXP next_asc_compositions(int n, char layout, int d, SEXP _skip, SEXP state) {
 }
 
 
-SEXP draw_asc_compositions(int n, char layout, SEXP _index, SEXP _nsample) {
+SEXP draw_asc_k_compositions(int n, int k, char layout, SEXP _index, SEXP _nsample) {
     int i, j;
     int nprotect = 0;
     int bigz = 0;
@@ -180,16 +181,16 @@ SEXP draw_asc_compositions(int n, char layout, SEXP _index, SEXP _nsample) {
     } else {
         dd = Rf_length(_index);
     }
-    int d = verify_dimension(dd, n, layout);
+    int d = verify_dimension(dd, k, layout);
 
     double maxd;
     if (!bigz) {
-        maxd = n_compositions(n);
+        maxd = n_k_compositions(n, k);
         bigz = maxd > INT_MAX;
     }
 
     unsigned int* ap;
-    ap = (unsigned int*) R_alloc(n, sizeof(int));
+    ap = (unsigned int*) R_alloc(k, sizeof(int));
 
     if (bigz) {
         mpz_t* index;
@@ -198,7 +199,7 @@ SEXP draw_asc_compositions(int n, char layout, SEXP _index, SEXP _nsample) {
         mpz_t maxz;
         mpz_init(z);
         mpz_init(maxz);
-        n_compositions_bigz(maxz, n);
+        n_k_compositions_bigz(maxz, n, k);
 
         if (sampling) {
             GetRNGstate();
@@ -217,8 +218,6 @@ SEXP draw_asc_compositions(int n, char layout, SEXP _index, SEXP _nsample) {
             }
         }
 
-        int k;
-
         #undef NEXT
         #define NEXT() \
             if (sampling) { \
@@ -226,15 +225,9 @@ SEXP draw_asc_compositions(int n, char layout, SEXP _index, SEXP _nsample) {
             } else { \
                 mpz_sub_ui(z, index[j], 1); \
             } \
-            nth_asc_composition_bigz(ap, n, z); \
-            for (i = 0; i < n; i++) { \
-                if (ap[i] == 0) { \
-                    break; \
-                } \
-            } \
-            k = i;
+            nth_asc_k_composition_bigz(ap, n, k, z);
 
-        RESULT_PART();
+        RESULT_K_PART();
 
         mpz_clear(z);
         mpz_clear(maxz);
@@ -258,23 +251,15 @@ SEXP draw_asc_compositions(int n, char layout, SEXP _index, SEXP _nsample) {
             }
         }
 
-        int k;
-
         #undef NEXT
         #define NEXT() \
             if (sampling) { \
-                nth_asc_composition(ap, n, floor(maxd * unif_rand())); \
+                nth_asc_k_composition(ap, n, k, floor(maxd * unif_rand())); \
             } else { \
-                nth_asc_composition(ap, n, index[j] - 1); \
-            } \
-            for (i = 0; i < n; i++) { \
-                if (ap[i] == 0) { \
-                    break; \
-                } \
-            } \
-            k = i;
+                nth_asc_k_composition(ap, n, k, index[j] - 1); \
+            }
 
-        RESULT_PART();
+        RESULT_K_PART();
 
         if (sampling){
             PutRNGstate();
@@ -286,63 +271,83 @@ SEXP draw_asc_compositions(int n, char layout, SEXP _index, SEXP _nsample) {
 }
 
 
-void nth_desc_composition(unsigned int* ar, unsigned int n, unsigned int index) {
+unsigned int next_desc_k_composition(unsigned int *ar, size_t n, unsigned int k, int* tp) {
     int i, j;
-    unsigned int s;
-    unsigned int n1 = n - 1;
-    int* bs;
+    int t = *tp;
 
-    if (n == 0) return;
+    for (i = k-1; i>= 1; i--) {
+        if (ar[i - 1] > 1) {
+            break;
+        }
+    }
+    if (i == 0) {
+        return 0;
+    }
+    if (t > 0) {
+        t--;
+    } else {
+        t = 0;
+        for (j = i; j < k - 1; j++) {
+            t += ar[j];
+        }
+    }
+    ar[i - 1] = ar[i - 1] - 1;
+    ar[i] = t + ar[k - 1] - (k - i - 1) + 1;
+    for (j = i+1; j < k; j++) ar[j] = 1;
 
-    // convert index to binary
-    bs = (int*) malloc(n1 * sizeof(int));
-    for (j = 0; j < n1; j++) {
-        bs[j] = (index >> j) & 1;
-    }
-    s = 0;
-    i = 0;
-    // compute successive diff
-    for (j = 0; j < n1; j++) {
-        if (bs[n1 - j - 1] == 0) continue;
-        ar[i] = j + 1 - s;
-        s = j + 1;
-        i++;
-    }
-    ar[i] = n1 - s + 1;
-    for (j = i + 1; j < n; j++) ar[j] = 0;
-    free(bs);
+    *tp = t;
+    return 1;
 }
 
 
-void nth_desc_composition_bigz(unsigned int* ar, unsigned int n, mpz_t index) {
-    int i, j;
-    unsigned int s;
-    int n1 = n - 1;
-    int* bs;
+void nth_desc_k_composition(unsigned int* ar, unsigned int n, unsigned int k, unsigned int index) {
+    unsigned int i, j;
+    unsigned int count, this_count;
 
-    if (n == 0) return;
-
-    // convert index to binary
-    bs = (int*) malloc(n1 * sizeof(int));
-    for (j = 0; j < n1; j++) {
-        bs[j] = mpz_tstbit(index, j);
+    for (i = 0; i < k; i++) {
+        count = 0;
+        for (j = n; j >= 1; j--) {
+            this_count = count + n_k_compositions(n - j, k - i - 1);
+            if (this_count > index) {
+                ar[i] = j;
+                n -= j;
+                index -= count;
+                break;
+            }
+            count = this_count;
+        }
     }
-    s = 0;
-    i = 0;
-    // compute successive diff
-    for (j = 0; j < n1; j++) {
-        if (bs[n1 - j - 1] == 0) continue;
-        ar[i] = j + 1 - s;
-        s = j + 1;
-        i++;
-    }
-    ar[i] = n1 - s + 1;
-    for (j = i + 1; j < n; j++) ar[j] = 0;
-    free(bs);
 }
 
-SEXP next_desc_compositions(int n, char layout, int d, SEXP _skip, SEXP state) {
-    int i, j, k;
+
+void nth_desc_k_composition_bigz(unsigned int* ar, unsigned int n, unsigned int k, mpz_t index) {
+    unsigned int i, j;
+    mpz_t count, this_count;
+    mpz_init(count);
+    mpz_init(this_count);
+
+    for (i = 0; i < k; i++) {
+        mpz_set_ui(count, 0);
+        for (j = n; j >= 1; j--) {
+            n_k_compositions_bigz(this_count, n - j, k - i - 1);
+            mpz_add(this_count, this_count, count);
+            if (mpz_cmp(this_count, index) > 0) {
+                ar[i] = j;
+                n -= j;
+                mpz_sub(index, index, count);
+                break;
+            }
+            mpz_set(count, this_count);
+        }
+    }
+
+    mpz_clear(count);
+    mpz_clear(this_count);
+}
+
+
+SEXP next_desc_k_compositions(int n, int k, char layout, int d, SEXP _skip, SEXP state) {
+    int i, j;
     int nprotect = 0;
     int status = 1;
     SEXP result;
@@ -351,27 +356,28 @@ SEXP next_desc_compositions(int n, char layout, int d, SEXP _skip, SEXP state) {
     double maxd;
     int bigz = TYPEOF(_skip) == RAWSXP && Rf_inherits(_skip, "bigz");
     if (d == -1 || !Rf_isNull(_skip)) {
-        maxd = n_compositions(n);
+        maxd = n_k_compositions(n, k);
         bigz = bigz || maxd >= INT_MAX;
     }
     dd = d == -1 ? maxd : d;
     d = verify_dimension(dd, n, layout);
 
     unsigned int* ap;
-    int* kp;
+    int* tp;
+    int t;
 
-    if (!variable_exists(state, (char*)"a", INTSXP, n, (void**) &ap)) {
+    if (!variable_exists(state, (char*)"a", INTSXP, k, (void**) &ap)) {
         mpz_t maxz;
         int skip;
         mpz_t skipz;
         if (Rf_isNull(_skip)) {
-            ap[0] = n;
-            for(i=1; i<n; i++) ap[i] = 1;
+            for(i=1; i<k; i++) ap[i] = 1;
+            ap[0] = n - k + 1;
         } else {
             if (bigz) {
                 mpz_init(maxz);
                 mpz_init(skipz);
-                n_compositions_bigz(maxz, n);
+                n_k_compositions_bigz(maxz, n, k);
                 if (as_mpz_array(&skipz, 1, _skip) < 0 || mpz_sgn(skipz) < 0) {
                     mpz_clear(skipz);
                     mpz_clear(maxz);
@@ -380,29 +386,30 @@ SEXP next_desc_compositions(int n, char layout, int d, SEXP _skip, SEXP state) {
                     mpz_set(skipz, 0);
                 }
                 mpz_clear(maxz);
-                nth_desc_composition_bigz(ap, n, skipz);
+                nth_desc_k_composition_bigz(ap, n, k, skipz);
                 mpz_clear(skipz);
             } else {
                 skip = as_uint(_skip);
                 if (skip >= (int) maxd) {
                     skip = 0;
                 }
-                nth_desc_composition(ap, n, skip);
+                nth_desc_k_composition(ap, n, k, skip);
             }
         }
         status = 0;
     }
-
-    if (!variable_exists(state, (char*)"k", INTSXP, 1, (void**) &kp)) {
+    if (!variable_exists(state, (char*)"t", INTSXP, 1, (void**) &tp)) {
         if (Rf_isNull(_skip)) {
-            kp[0] = 1;
+            tp[0] = k - 1;
         } else  {
-            for (i = 0; i < n; i++) {
-                if (ap[i] == 0) {
+            t = 0;
+            for (i = k-1; i>= 1; i--) {
+                if (ap[i - 1] > 1) {
                     break;
                 }
+                t += ap[i - 1];
             }
-            kp[0] = i;
+            tp[0] = t + 1;
         }
         status = 0;
     }
@@ -411,13 +418,12 @@ SEXP next_desc_compositions(int n, char layout, int d, SEXP _skip, SEXP state) {
     #define NEXT() \
         if (status == 0) { \
             status = 1; \
-        } else if (!next_desc_composition(ap, kp)) { \
+        } else if (!next_desc_k_composition(ap, n, k, tp)) { \
             status = 0; \
             break; \
-        } \
-        k = kp[0];
+        }
 
-    RESULT_PART();
+    RESULT_K_PART();
 
     if (status == 0) {
         result = PROTECT(resize_layout(result, j, layout));
@@ -428,7 +434,7 @@ SEXP next_desc_compositions(int n, char layout, int d, SEXP _skip, SEXP state) {
 }
 
 
-SEXP draw_desc_compositions(int n, char layout, SEXP _index, SEXP _nsample) {
+SEXP draw_desc_k_compositions(int n, int k, char layout, SEXP _index, SEXP _nsample) {
     int i, j;
     int nprotect = 0;
     int bigz = 0;
@@ -444,16 +450,16 @@ SEXP draw_desc_compositions(int n, char layout, SEXP _index, SEXP _nsample) {
     } else {
         dd = Rf_length(_index);
     }
-    int d = verify_dimension(dd, n, layout);
+    int d = verify_dimension(dd, k, layout);
 
     double maxd;
     if (!bigz) {
-        maxd = n_compositions(n);
+        maxd = n_k_compositions(n, k);
         bigz = maxd > INT_MAX;
     }
 
     unsigned int* ap;
-    ap = (unsigned int*) R_alloc(n, sizeof(int));
+    ap = (unsigned int*) R_alloc(k, sizeof(int));
 
     if (bigz) {
         mpz_t* index;
@@ -462,7 +468,7 @@ SEXP draw_desc_compositions(int n, char layout, SEXP _index, SEXP _nsample) {
         mpz_t maxz;
         mpz_init(z);
         mpz_init(maxz);
-        n_compositions_bigz(maxz, n);
+        n_k_compositions_bigz(maxz, n, k);
 
         if (sampling) {
             GetRNGstate();
@@ -481,8 +487,6 @@ SEXP draw_desc_compositions(int n, char layout, SEXP _index, SEXP _nsample) {
             }
         }
 
-        int k;
-
         #undef NEXT
         #define NEXT() \
             if (sampling) { \
@@ -490,15 +494,9 @@ SEXP draw_desc_compositions(int n, char layout, SEXP _index, SEXP _nsample) {
             } else { \
                 mpz_sub_ui(z, index[j], 1); \
             } \
-            nth_desc_composition_bigz(ap, n, z); \
-            for (i = 0; i < n; i++) { \
-                if (ap[i] == 0) { \
-                    break; \
-                } \
-            } \
-            k = i;
+            nth_desc_k_composition_bigz(ap, n, k, z);
 
-        RESULT_PART();
+        RESULT_K_PART();
 
         mpz_clear(z);
         mpz_clear(maxz);
@@ -522,23 +520,15 @@ SEXP draw_desc_compositions(int n, char layout, SEXP _index, SEXP _nsample) {
             }
         }
 
-        int k;
-
         #undef NEXT
         #define NEXT() \
             if (sampling) { \
-                nth_desc_composition(ap, n, floor(maxd * unif_rand())); \
+                nth_desc_k_composition(ap, n, k, floor(maxd * unif_rand())); \
             } else { \
-                nth_desc_composition(ap, n, index[j] - 1); \
-            } \
-            for (i = 0; i < n; i++) { \
-                if (ap[i] == 0) { \
-                    break; \
-                } \
-            } \
-            k = i;
+                nth_desc_k_composition(ap, n, k, index[j] - 1); \
+            }
 
-        RESULT_PART();
+        RESULT_K_PART();
 
         if (sampling){
             PutRNGstate();
