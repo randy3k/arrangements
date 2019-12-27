@@ -25,9 +25,12 @@ void n_compositions_bigz(mpz_t z, int n) {
 void nth_asc_composition(unsigned int* ar, unsigned int n, unsigned int index) {
     int i, j;
     unsigned int s;
-    unsigned int n1 = n - 1;
-    // convert index to binary
+    int n1 = n - 1;
     int* bs;
+
+    if (n == 0) return;
+
+    // convert index to binary
     bs = (int*) malloc(n1 * sizeof(int));
     for (j = 0; j < n1; j++) {
         bs[j] = (index >> j) & 1;
@@ -50,9 +53,12 @@ void nth_asc_composition(unsigned int* ar, unsigned int n, unsigned int index) {
 void nth_asc_composition_bigz(unsigned int* ar, unsigned int n, mpz_t index) {
     int i, j;
     unsigned int s;
-    unsigned int n1 = n - 1;
-    // convert index to binary
+    int n1 = n - 1;
     int* bs;
+
+    if (n == 0) return;
+
+    // convert index to binary
     bs = (int*) malloc(n1 * sizeof(int));
     for (j = 0; j < n1; j++) {
         bs[j] = mpz_tstbit(index, j);
@@ -284,8 +290,11 @@ void nth_desc_composition(unsigned int* ar, unsigned int n, unsigned int index) 
     int i, j;
     unsigned int s;
     unsigned int n1 = n - 1;
-    // convert index to binary
     int* bs;
+
+    if (n == 0) return;
+
+    // convert index to binary
     bs = (int*) malloc(n1 * sizeof(int));
     for (j = 0; j < n1; j++) {
         bs[j] = (index >> j) & 1;
@@ -308,9 +317,12 @@ void nth_desc_composition(unsigned int* ar, unsigned int n, unsigned int index) 
 void nth_desc_composition_bigz(unsigned int* ar, unsigned int n, mpz_t index) {
     int i, j;
     unsigned int s;
-    unsigned int n1 = n - 1;
-    // convert index to binary
+    int n1 = n - 1;
     int* bs;
+
+    if (n == 0) return;
+
+    // convert index to binary
     bs = (int*) malloc(n1 * sizeof(int));
     for (j = 0; j < n1; j++) {
         bs[j] = mpz_tstbit(index, j);
