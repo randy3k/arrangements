@@ -120,7 +120,7 @@ char layout_flag(SEXP _layout) {
 }
 
 int verify_dimension(double dd, int k, char layout) {
-    if (dd < 0) Rf_error("d should be positive");
+    if (dd <= 0) Rf_error("d should be positive");
     if (dd >= INT_MAX) Rf_error("too many results");
     if (layout != 'l') {
         if (dd * k >= R_XLEN_T_MAX) Rf_error("too many results");
