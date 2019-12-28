@@ -135,7 +135,7 @@ double nkm(int n, int k, int m) {
     } else if (k == 0 || m == 0) {
         return 0;
     }
-    if (n < m*k - n) {
+    if (n > m*k - n) {
         n = m*k - n;
     }
     if (m > k) {
@@ -179,7 +179,7 @@ void nkm_bigz(mpz_t z, int n, int k, int m) {
         mpz_set_ui(z, 0);
         return;
     }
-    if (n < m*k - n) {
+    if (n > m*k - n) {
         n = m*k - n;
     }
     if (m > k) {
