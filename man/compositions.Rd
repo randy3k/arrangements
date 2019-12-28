@@ -13,7 +13,7 @@ compositions(n, k = NULL, descending = FALSE, layout = NULL,
 
 \item{k}{number of parts}
 
-\item{descending}{logical to use reversed lexicographical order}
+\item{descending}{an logical to use reversed lexicographical order}
 
 \item{layout}{if "row", "column" or "list" is specified, the returned value would be a
 "row-major" matrix, a "column-major" matrix or a list respectively}

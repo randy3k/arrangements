@@ -1,14 +1,17 @@
 #include <gmp.h>
+#include "math.h"
 #include "utils.h"
 #include "partitions.h"
 #include "partitions/partitions-asc.c"
 #include "partitions/partitions-desc.c"
 #include "partitions/partitions-asc-k.c"
 #include "partitions/partitions-desc-k.c"
+#include "partitions/partitions-asc-k-distinct.c"
+#include "partitions/partitions-desc-k-distinct.c"
 #include "partitions/partitions-utils.c"
 
 
-SEXP npartitions(SEXP _n, SEXP _k, SEXP _bigz) {
+SEXP npartitions(SEXP _n, SEXP _k, SEXP _distinct, SEXP _bigz) {
     SEXP ans;
 
     int n = as_uint(_n);
@@ -17,19 +20,38 @@ SEXP npartitions(SEXP _n, SEXP _k, SEXP _bigz) {
     if (Rf_asLogical(_bigz)) {
         mpz_t z;
         mpz_init(z);
-        if (k == -1) {
-            n_partitions_bigz(z, n);
+        if (Rf_asLogical(_distinct)) {
+            if (k == -1) {
+                Rf_error("not yet implemented");
+                // n_distinct_partitions_bigz(z, n);
+            } else {
+                Rf_error("not yet implemented");
+                // n_k_distinct_partitions_bigz(z, n, k);
+            }
         } else {
-            n_k_partitions_bigz(z, n, k);
+            if (k == -1) {
+                n_partitions_bigz(z, n);
+            } else {
+                n_k_partitions_bigz(z, n, k);
+            }
         }
+
         ans = mpz_to_bigz1(z);
         mpz_clear(z);
     } else {
         double d;
-        if (k == -1) {
-            d = n_partitions(n);
+        if (Rf_asLogical(_distinct)) {
+            if (k == -1) {
+                d = n_distinct_partitions(n);
+            } else {
+                d = n_k_distinct_partitions(n, k);
+            }
         } else {
-            d = n_k_partitions(n, k);
+            if (k == -1) {
+                d = n_partitions(n);
+            } else {
+                d = n_k_partitions(n, k);
+            }
         }
         if (d > INT_MAX) {
             Rf_error("integer overflow: use bigz instead");
@@ -41,13 +63,14 @@ SEXP npartitions(SEXP _n, SEXP _k, SEXP _bigz) {
 }
 
 
-SEXP get_partitions(SEXP _n, SEXP _k, SEXP _descending, SEXP _layout, SEXP _d,
+SEXP get_partitions(SEXP _n, SEXP _k, SEXP _distinct, SEXP _descending, SEXP _layout, SEXP _d,
                     SEXP _index, SEXP _nsample, SEXP state, SEXP _skip, SEXP _drop) {
 
     SEXP ans = R_NilValue;
 
     int n = as_uint(_n);
     int k = Rf_isNull(_k) ? -1 : as_uint(_k);
+    int distinct = Rf_asInteger(_distinct);
     int descending = Rf_asInteger(_descending);
     char layout = layout_flag(_layout);
     int d = Rf_asInteger(_d);
@@ -65,10 +88,20 @@ SEXP get_partitions(SEXP _n, SEXP _k, SEXP _descending, SEXP _layout, SEXP _d,
                     SET_VECTOR_ELT(ans, 0, ansi);
                     UNPROTECT(2);
                 }
-            } else if (descending) {
-                ans = next_desc_partitions(n, layout, d, _skip, state);
+            } else if (distinct) {
+                if (descending) {
+                    Rf_error("not yet implemented");
+                    // ans = next_desc_distinct_partitions(n, layout, d, _skip, state);
+                } else {
+                    Rf_error("not yet implemented");
+                    // ans = next_asc_distinct_partitions(n, layout, d, _skip, state);
+                }
             } else {
-                ans = next_asc_partitions(n, layout, d, _skip, state);
+                if (descending) {
+                    ans = next_desc_partitions(n, layout, d, _skip, state);
+                } else {
+                    ans = next_asc_partitions(n, layout, d, _skip, state);
+                }
             }
         } else {
             if (n == 0 && k == 0) {
@@ -82,7 +115,7 @@ SEXP get_partitions(SEXP _n, SEXP _k, SEXP _descending, SEXP _layout, SEXP _d,
                     SET_VECTOR_ELT(ans, 0, ansi);
                     UNPROTECT(2);
                 }
-            } else if (k > n || k == 0) {
+            } else if (k > n || k == 0 || (distinct && n - choose(k, 2) < k)) {
                 if (layout == 'r') {
                     ans = Rf_allocMatrix(INTSXP, 0, k);
                 } else if (layout == 'c') {
@@ -90,24 +123,50 @@ SEXP get_partitions(SEXP _n, SEXP _k, SEXP _descending, SEXP _layout, SEXP _d,
                 } else if (layout == 'l') {
                     ans = Rf_allocVector(VECSXP, 0);
                 }
-            } else if (descending) {
-                ans = next_desc_k_partitions(n, k, layout, d, _skip, state);
+            } else if (distinct) {
+                if (descending) {
+                    ans = next_desc_k_distinct_partitions(n, k, layout, d, _skip, state);
+                } else {
+                    ans = next_asc_k_distinct_partitions(n, k, layout, d, _skip, state);
+                }
             } else {
-                ans = next_asc_k_partitions(n, k, layout, d, _skip, state);
+                if (descending) {
+                    ans = next_desc_k_partitions(n, k, layout, d, _skip, state);
+                } else {
+                    ans = next_asc_k_partitions(n, k, layout, d, _skip, state);
+                }
             }
         }
     } else {
-        if (k == -1) {
-            if (descending) {
-                ans = draw_desc_partitions(n, layout, _index, _nsample);
+        if (distinct) {
+            if (k == -1) {
+                if (descending) {
+                    Rf_error("not yet implemented");
+                    // ans = draw_desc_partitions(n, layout, _index, _nsample);
+                } else {
+                    Rf_error("not yet implemented");
+                    // ans = draw_asc_partitions(n, layout, _index, _nsample);
+                }
             } else {
-                ans = draw_asc_partitions(n, layout, _index, _nsample);
+                if (descending) {
+                    ans = draw_desc_k_distinct_partitions(n, k, layout, _index, _nsample);
+                } else {
+                    ans = draw_asc_k_distinct_partitions(n, k, layout, _index, _nsample);
+                }
             }
         } else {
-            if (descending) {
-                ans = draw_desc_k_partitions(n, k, layout, _index, _nsample);
+            if (k == -1) {
+                if (descending) {
+                    ans = draw_desc_partitions(n, layout, _index, _nsample);
+                } else {
+                    ans = draw_asc_partitions(n, layout, _index, _nsample);
+                }
             } else {
-                ans = draw_asc_k_partitions(n, k, layout, _index, _nsample);
+                if (descending) {
+                    ans = draw_desc_k_partitions(n, k, layout, _index, _nsample);
+                } else {
+                    ans = draw_asc_k_partitions(n, k, layout, _index, _nsample);
+                }
             }
         }
     }

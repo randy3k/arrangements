@@ -40,8 +40,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"npermutations", (DL_FUNC) &npermutations, 7},
     {"get_permutations", (DL_FUNC) &get_permutations, 13},
 
-    {"npartitions", (DL_FUNC) &npartitions, 3},
-    {"get_partitions", (DL_FUNC) &get_partitions, 10},
+    {"npartitions", (DL_FUNC) &npartitions, 4},
+    {"get_partitions", (DL_FUNC) &get_partitions, 11},
 
     {NULL, NULL, 0}
 };

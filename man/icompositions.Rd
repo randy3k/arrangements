@@ -16,7 +16,7 @@ icompositions(n, k = NULL, descending = FALSE, skip = NULL)
 
 \item{k}{number of parts}
 
-\item{descending}{logical to use reversed lexicographical order}
+\item{descending}{an logical to use reversed lexicographical order}
 
 \item{skip}{the number of compositions skipped}
 }

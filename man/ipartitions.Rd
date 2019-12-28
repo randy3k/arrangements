@@ -9,14 +9,17 @@
 \usage{
 Partitions
 
-ipartitions(n, k = NULL, descending = FALSE, skip = NULL)
+ipartitions(n, k = NULL, distinct = FALSE, descending = FALSE,
+  skip = NULL)
 }
 \arguments{
 \item{n}{an non-negative integer to be partitioned}
 
 \item{k}{number of parts}
 
-\item{descending}{logical to use reversed lexicographical order}
+\item{distinct}{an logical to restrict distinct values}
+
+\item{descending}{an logical to use reversed lexicographical order}
 
 \item{skip}{the number of partitions skipped}
 }

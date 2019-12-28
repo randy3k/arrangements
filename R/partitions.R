@@ -1,6 +1,7 @@
 #' Number of partitions
 #' @param n an non-negative integer to be partitioned
 #' @param k number of parts
+#' @param distinct an logical to restrict distinct values
 #' @param bigz an logical to use [gmp::bigz]
 #' @seealso [partitions] for generating all partitions and [ipartitions] for iterating partitions
 #' @examples
@@ -20,8 +21,8 @@
 #' npartitions(0, 0)
 #' npartitions(0, 1)
 #' @export
-npartitions <- function(n, k = NULL, bigz = FALSE) {
-    .Call(C_npartitions, n, k, bigz)
+npartitions <- function(n, k = NULL, distinct = FALSE, bigz = FALSE) {
+    .Call(C_npartitions, n, k, distinct, bigz)
 }
 
 
@@ -32,7 +33,8 @@ npartitions <- function(n, k = NULL, bigz = FALSE) {
 #'
 #' @param n an non-negative integer to be partitioned
 #' @param k number of parts
-#' @param descending logical to use reversed lexicographical order
+#' @param distinct an logical to restrict distinct values
+#' @param descending an logical to use reversed lexicographical order
 #' @template param_type
 #' @param nitem number of partitions required, usually used with \code{skip}
 #' @param skip the number of partitions skipped
@@ -67,10 +69,10 @@ npartitions <- function(n, k = NULL, bigz = FALSE) {
 #' dim(partitions(0, 1))
 #'
 #' @export
-partitions <- function(n, k = NULL, descending = FALSE, layout = NULL,
+partitions <- function(n, k = NULL, distinct = FALSE, descending = FALSE, layout = NULL,
                        nitem = -1L, skip = NULL, index = NULL, nsample = NULL, drop = NULL) {
     .Call(C_get_partitions,
-          n, k, descending, layout, nitem, index, nsample, NULL, skip, drop)
+          n, k, distinct, descending, layout, nitem, index, nsample, NULL, skip, drop)
 }
 
 
@@ -92,13 +94,15 @@ Partitions <- R6::R6Class(
     public = list(
         n = NULL,
         k = NULL,
+        distinct = NULL,
         descending = NULL,
         skip = NULL,
-        initialize = function(n, k = NULL, descending = FALSE, skip = NULL) {
+        initialize = function(n, k = NULL, distinct = FALSE, descending = FALSE, skip = NULL) {
             self$n <- as.integer(n)
             if (!is.null(k)) {
                 self$k <- as.integer(k)
             }
+            self$distinct <- distinct
             self$descending <- descending
             self$skip <- skip
             self$reset()
@@ -118,7 +122,7 @@ Partitions <- R6::R6Class(
                 self$reset()
             } else {
                 out <- .Call(C_get_partitions,
-                             self$n, self$k, self$descending, layout, d, NULL, NULL,
+                             self$n, self$k, self$distinct, self$descending, layout, d, NULL, NULL,
                              private$state, self$skip, drop)
                 is.null(out) && self$reset()
             }
@@ -144,7 +148,8 @@ Partitions <- R6::R6Class(
 #'
 #' @param n an non-negative integer to be partitioned
 #' @param k number of parts
-#' @param descending logical to use reversed lexicographical order
+#' @param distinct an logical to restrict distinct values
+#' @param descending an logical to use reversed lexicographical order
 #' @param skip the number of partitions skipped
 #' @seealso [partitions] for generating all partitions and [npartitions] to calculate number of partitions
 #' @examples
@@ -160,10 +165,10 @@ Partitions <- R6::R6Class(
 #'   prod(x)
 #' }
 #' @export
-ipartitions <- function(n, k = NULL, descending = FALSE, skip = NULL) {
+ipartitions <- function(n, k = NULL, distinct = FALSE, descending = FALSE, skip = NULL) {
     (n %% 1 == 0  && n >= 0) || stop("expect integer")
     if (!is.null(k)) {
         (k %% 1 == 0 && k >= 0) || stop("expect integer")
     }
-    Partitions$new(n, k, descending, skip)
+    Partitions$new(n, k, distinct, descending, skip)
 }

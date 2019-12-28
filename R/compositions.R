@@ -32,7 +32,7 @@ ncompositions <- function(n, k = NULL, bigz = FALSE) {
 #'
 #' @param n an non-negative integer to be partitioned
 #' @param k number of parts
-#' @param descending logical to use reversed lexicographical order
+#' @param descending an logical to use reversed lexicographical order
 #' @template param_type
 #' @param nitem number of compositions required, usually used with \code{skip}
 #' @param skip the number of compositions skipped
@@ -144,7 +144,7 @@ Compositions <- R6::R6Class(
 #'
 #' @param n an non-negative integer to be partitioned
 #' @param k number of parts
-#' @param descending logical to use reversed lexicographical order
+#' @param descending an logical to use reversed lexicographical order
 #' @param skip the number of compositions skipped
 #' @seealso [compositions] for generating all compositions and [ncompositions] to calculate number of compositions
 #' @examples

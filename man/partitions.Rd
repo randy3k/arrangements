@@ -4,16 +4,18 @@
 \alias{partitions}
 \title{Partitions generator}
 \usage{
-partitions(n, k = NULL, descending = FALSE, layout = NULL,
-  nitem = -1L, skip = NULL, index = NULL, nsample = NULL,
-  drop = NULL)
+partitions(n, k = NULL, distinct = FALSE, descending = FALSE,
+  layout = NULL, nitem = -1L, skip = NULL, index = NULL,
+  nsample = NULL, drop = NULL)
 }
 \arguments{
 \item{n}{an non-negative integer to be partitioned}
 
 \item{k}{number of parts}
 
-\item{descending}{logical to use reversed lexicographical order}
+\item{distinct}{an logical to restrict distinct values}
+
+\item{descending}{an logical to use reversed lexicographical order}
 
 \item{layout}{if "row", "column" or "list" is specified, the returned value would be a
 "row-major" matrix, a "column-major" matrix or a list respectively}

@@ -1,8 +1,11 @@
 #include "partitions-utils.h"
+#include "../math.h"
 
 double n_partitions(int n) {
-    if (n == 0) return 1;
+    // Hardy's p(n) function
+
     // find P(1),...,P(n) sequentially
+    if (n == 0) return 1;
     int i, j, k, s;
     double out;
     double* p = (double*) malloc((n+1) * sizeof(double));
@@ -281,4 +284,28 @@ double n_max_partitions(int n, int m) {
 
 void n_max_partitions_bigz(mpz_t z, int n, int m) {
     nkm_bigz(z, n, n, m);
+}
+
+double n_k_distinct_partitions(int n, int k) {
+    return n_k_partitions(n - choose(k, 2), k);
+}
+
+void n_k_distinct_partitions_bigz(mpz_t z, int n, int k) {
+    double k2 = choose(k, 2);
+    if (n < k2) return;
+    n_k_partitions_bigz(z, n - k2, k);
+}
+
+double n_distinct_partitions(int n) {
+    // Hardy's q(n) function
+    // it may be more efficient to use Georgiadis's formula
+    double t = 0;
+    double k2;
+    int k;
+    for (k = 0; k <= n; k++) {
+        k2 = choose(k, 2);
+        if (n < k2) break;
+        t += n_k_partitions(n - k2, k);
+    }
+    return t;
 }

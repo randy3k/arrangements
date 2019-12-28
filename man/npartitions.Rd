@@ -4,12 +4,14 @@
 \alias{npartitions}
 \title{Number of partitions}
 \usage{
-npartitions(n, k = NULL, bigz = FALSE)
+npartitions(n, k = NULL, distinct = FALSE, bigz = FALSE)
 }
 \arguments{
 \item{n}{an non-negative integer to be partitioned}
 
 \item{k}{number of parts}
+
+\item{distinct}{an logical to restrict distinct values}
 
 \item{bigz}{an logical to use \link[gmp:bigz]{gmp::bigz}}
 }
