@@ -1,4 +1,5 @@
 #include "partitions-utils.h"
+#include "../math.h"
 
 double n_partitions(int n) {
     if (n == 0) return 1;
@@ -135,16 +136,6 @@ double nkm(int n, int k, int m) {
     } else if (k == 0 || m == 0) {
         return 0;
     }
-    if (n < m*k - n) {
-        n = m*k - n;
-    }
-    if (m > k) {
-        // p(n, k, m) = p(n, m, k)
-        int temp;
-        temp = k;
-        k = m;
-        m = temp;
-    }
 
     int i, j, h;
     double* p = (double*) malloc((n + 1) * sizeof(double));
@@ -178,16 +169,6 @@ void nkm_bigz(mpz_t z, int n, int k, int m) {
     } else if (k == 0 || m == 0) {
         mpz_set_ui(z, 0);
         return;
-    }
-    if (n < m*k - n) {
-        n = m*k - n;
-    }
-    if (m > k) {
-        // p(n, k, m) = p(n, m, k)
-        int temp;
-        temp = k;
-        k = m;
-        m = temp;
     }
 
     int i, j, h;
@@ -281,4 +262,9 @@ double n_max_partitions(int n, int m) {
 
 void n_max_partitions_bigz(mpz_t z, int n, int m) {
     nkm_bigz(z, n, n, m);
+}
+
+
+double n_k_distinct_partitions(int n, int k) {
+    return n_k_partitions(n - choose(k, 2), k);
 }
