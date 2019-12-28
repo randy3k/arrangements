@@ -1,10 +1,11 @@
 #include <gmp.h>
 #include "utils.h"
 #include "partitions.h"
-#include "partitions/partitions-asc.h"
-#include "partitions/partitions-desc.h"
-#include "partitions/partitions-asc-k.h"
-#include "partitions/partitions-desc-k.h"
+#include "partitions/partitions-asc.c"
+#include "partitions/partitions-desc.c"
+#include "partitions/partitions-asc-k.c"
+#include "partitions/partitions-desc-k.c"
+#include "partitions/partitions-utils.c"
 
 
 SEXP npartitions(SEXP _n, SEXP _k, SEXP _bigz) {

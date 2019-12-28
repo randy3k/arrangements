@@ -3,13 +3,12 @@
 #include <Rinternals.h>
 #include <gmp.h>
 #include "stdlib.h"
-#include "../utils.h"
 #include "../macros.h"
-#include "permutations-utils.h"
+#include "../math.h"
+#include "../utils.h"
 
 
-unsigned int next_permutation(unsigned int *ar, size_t n)
-{
+unsigned int next_permutation(unsigned int *ar, size_t n) {
     unsigned int k, j;
     unsigned int result = 0;
 

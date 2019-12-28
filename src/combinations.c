@@ -2,9 +2,9 @@
 #include "macros.h"
 #include "utils.h"
 #include "combinations.h"
-#include "combinations/combinations-ordinary.h"
-#include "combinations/combinations-multiset.h"
-#include "combinations/combinations-replacement.h"
+#include "combinations/combinations-ordinary.c"
+#include "combinations/combinations-multiset.c"
+#include "combinations/combinations-replacement.c"
 
 
 SEXP ncombinations(SEXP _x, SEXP _k, SEXP _n, SEXP _v, SEXP _freq, SEXP _replace, SEXP _bigz) {

@@ -1,5 +1,19 @@
 #include "utils.h"
 
+void swap(unsigned int *ar, unsigned int first, unsigned int second) {
+    unsigned int temp = ar[first];
+    ar[first] = ar[second];
+    ar[second] = temp;
+}
+
+void reverse(unsigned int *ar, size_t len) {
+    unsigned int i, j;
+
+    for (i = 0, j = len - 1; i < j; i++, j--) {
+        swap(ar, i, j);
+    }
+}
+
 SEXP resize_row(SEXP x, size_t m, size_t n, size_t d) {
     if (TYPEOF(x) == INTSXP) {
         SEXP y = PROTECT(Rf_allocMatrix(INTSXP, d, n));

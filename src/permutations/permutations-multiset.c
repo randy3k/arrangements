@@ -3,9 +3,9 @@
 #include <Rinternals.h>
 #include <gmp.h>
 #include "stdlib.h"
-#include "../utils.h"
 #include "../macros.h"
-#include "permutations-utils.h"
+#include "../math.h"
+#include "../utils.h"
 
 
 double n_multiset_permutations(int* freq, size_t flen, size_t k) {

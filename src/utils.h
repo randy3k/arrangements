@@ -7,6 +7,10 @@
 #include <gmp.h>
 
 
+void swap(unsigned int *ar, unsigned int first, unsigned int second);
+
+void reverse(unsigned int *ar, size_t len);
+
 SEXP resize_row(SEXP x, size_t n, size_t k, size_t d);
 
 SEXP resize_col(SEXP x, size_t n, size_t k, size_t d);

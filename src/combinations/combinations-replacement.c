@@ -2,76 +2,92 @@
 #include <R.h>
 #include <Rinternals.h>
 #include <gmp.h>
-#include <math.h>
-#include "stdlib.h"
-#include "../utils.h"
 #include "../macros.h"
+#include "../math.h"
+#include "../utils.h"
 
 
-unsigned int next_cartesian_product(unsigned int *ar, size_t len, const size_t *sizes)
-{
-    unsigned int changed = 0;
-    unsigned int finished = 0;
+unsigned int next_multicombination(unsigned int *ar, size_t n, unsigned int k) {
     unsigned int i;
+    unsigned int j;
+    unsigned int temp;
 
-    for (i = len - 1; !changed && !finished; i--) {
-        if (ar[i] < sizes[i] - 1) {
+    for (i = k - 1; ; i--) {
+        if (ar[i] < n - 1) {
+            // increment this element
             ar[i]++;
-            changed = 1;
+            if (i < k - 1) {
+                // make the elements after it the same
+                temp = ar[i];
+                for (j = i + 1; j < k; j++) {
+                    ar[j] = temp;
+                }
+            }
+            return 1;
+        } else if (i == 0) {
+            return 0;
         }
-        else {
-            ar[i] = 0;
-        }
-        finished = i == 0;
     }
-
-    return changed;
 }
 
-void nth_replacement_permutation(unsigned int* ar, unsigned int n, unsigned int k, unsigned int index) {
+void nth_replacement_combination(unsigned int* ar, unsigned int n, unsigned int k, unsigned int index) {
     unsigned int i, j;
+    unsigned int start = 0;
+    unsigned int count, this_count;
 
     for (i = 0; i < k; i++) {
-        j = pow(n, k - 1 - i);
-        ar[i] = index / j;
-        index = index % j;
+        count = 0;
+        for (j = start; j < n; j++) {
+            this_count = count + choose(n - j + k - i - 1 - 1, k - i - 1);
+            if (this_count > index) {
+                ar[i] = j;
+                start = j;
+                index -= count;
+                break;
+            }
+            count = this_count;
+        }
     }
 }
 
-void nth_replacement_permutation_bigz(unsigned int* ar, unsigned int n, unsigned int k, mpz_t index) {
-    unsigned int i;
-
-    mpz_t q;
-    mpz_init(q);
-    mpz_t p;
-    mpz_init(p);
+void nth_replacement_combination_bigz(unsigned int* ar, unsigned int n, unsigned int k, mpz_t index) {
+    unsigned int i, j;
+    unsigned int start = 0;
+    mpz_t count, this_count;
+    mpz_init(count);
+    mpz_init(this_count);
 
     for (i = 0; i < k; i++) {
-        mpz_ui_pow_ui(p, n, k - 1 - i);
-        mpz_tdiv_qr(q, index, index, p);
-        ar[i] = mpz_get_ui(q);
+        mpz_set_ui(count, 0);
+        for (j = start; j < n; j++) {
+            mpz_bin_uiui(this_count, n - j + k - i - 1 - 1, k - i - 1);
+            mpz_add(this_count, this_count, count);
+            if (mpz_cmp(this_count, index) > 0) {
+                ar[i] = j;
+                start = j;
+                mpz_sub(index, index, count);
+                break;
+            }
+            mpz_set(count, this_count);
+        }
     }
 
-    mpz_clear(q);
-    mpz_clear(p);
+    mpz_clear(count);
+    mpz_clear(this_count);
 }
 
 
-SEXP next_replacement_permutations(int n, int k, SEXP labels, char layout, int d, SEXP _skip, SEXP state) {
+SEXP next_replacement_combinations(int n, int k, SEXP labels, char layout, int d, SEXP _skip, SEXP state) {
     int i, j;
     int nprotect = 0;
     int status = 1;
     SEXP result;
 
-    size_t *sizes;
-    sizes = (size_t*) R_alloc(k, sizeof(*sizes));
-    for(i=0; i<k; i++) sizes[i] = n;
-
     double dd;
     double maxd;
     int bigz = TYPEOF(_skip) == RAWSXP && Rf_inherits(_skip, "bigz");
     if (d == -1 || !Rf_isNull(_skip)) {
-        maxd = pow(n, k);
+        maxd = choose(n + k - 1, k);
         bigz = bigz || maxd >= INT_MAX;
     }
     dd = d == -1 ? maxd : d;
@@ -89,7 +105,7 @@ SEXP next_replacement_permutations(int n, int k, SEXP labels, char layout, int d
             if (bigz) {
                 mpz_init(maxz);
                 mpz_init(skipz);
-                mpz_ui_pow_ui(maxz, n, k);
+                mpz_bin_uiui(maxz, n + k - 1, k);
                 if (as_mpz_array(&skipz, 1, _skip) < 0 || mpz_sgn(skipz) < 0) {
                     mpz_clear(skipz);
                     mpz_clear(maxz);
@@ -98,14 +114,14 @@ SEXP next_replacement_permutations(int n, int k, SEXP labels, char layout, int d
                     mpz_set(skipz, 0);
                 }
                 mpz_clear(maxz);
-                nth_replacement_permutation_bigz(ap, n, k, skipz);
+                nth_replacement_combination_bigz(ap, n, k, skipz);
                 mpz_clear(skipz);
             } else {
                 skip = as_uint(_skip);
                 if (skip >= (int) maxd) {
                     skip = 0;
                 }
-                nth_replacement_permutation(ap, n, k, skip);
+                nth_replacement_combination(ap, n, k, skip);
             }
         }
         status = 0;
@@ -115,7 +131,7 @@ SEXP next_replacement_permutations(int n, int k, SEXP labels, char layout, int d
     #define NEXT() \
         if (status == 0) { \
             status = 1; \
-        } else if (!next_cartesian_product(ap, k, sizes)) { \
+        } else if (!next_multicombination(ap, n, k)) { \
             status = 0; \
             break; \
         }
@@ -140,7 +156,7 @@ SEXP next_replacement_permutations(int n, int k, SEXP labels, char layout, int d
 }
 
 
-SEXP draw_replacement_permutations(int n, int k, SEXP labels, char layout, SEXP _index, SEXP _nsample) {
+SEXP draw_replacement_combinations(int n, int k, SEXP labels, char layout, SEXP _index, SEXP _nsample) {
     int i, j;
     int nprotect = 0;
     int bigz = 0;
@@ -160,7 +176,7 @@ SEXP draw_replacement_permutations(int n, int k, SEXP labels, char layout, SEXP 
 
     double maxd;
     if (!bigz) {
-        maxd = pow(n, k);
+        maxd = choose(n + k - 1, k);
         bigz = maxd > INT_MAX;
     }
 
@@ -174,7 +190,7 @@ SEXP draw_replacement_permutations(int n, int k, SEXP labels, char layout, SEXP 
         mpz_t maxz;
         mpz_init(z);
         mpz_init(maxz);
-        mpz_ui_pow_ui(maxz, n, k);
+        mpz_bin_uiui(maxz, n + k - 1 , k);
 
         if (sampling) {
             GetRNGstate();
@@ -200,7 +216,7 @@ SEXP draw_replacement_permutations(int n, int k, SEXP labels, char layout, SEXP 
             } else { \
                 mpz_sub_ui(z, index[j], 1); \
             } \
-            nth_replacement_permutation_bigz(ap, n, k, z);
+            nth_replacement_combination_bigz(ap, n, k, z);
 
         int labels_type = TYPEOF(labels);
         if (labels_type == NILSXP) {
@@ -238,9 +254,9 @@ SEXP draw_replacement_permutations(int n, int k, SEXP labels, char layout, SEXP 
         #undef NEXT
         #define NEXT() \
             if (sampling) { \
-                nth_replacement_permutation(ap, n, k, floor(maxd * unif_rand())); \
+                nth_replacement_combination(ap, n, k, floor(maxd * unif_rand())); \
             } else { \
-                nth_replacement_permutation(ap, n, k, index[j] - 1); \
+                nth_replacement_combination(ap, n, k, index[j] - 1); \
             }
 
         int labels_type = TYPEOF(labels);

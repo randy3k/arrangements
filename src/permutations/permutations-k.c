@@ -1,87 +1,104 @@
 #define R_NO_REMAP
-#define R_NO_REMAP_RMATH
 #include <R.h>
 #include <Rinternals.h>
-#include <R_ext/Random.h>
 #include <gmp.h>
+#include "stdlib.h"
 #include "../macros.h"
+#include "../math.h"
 #include "../utils.h"
-#include "combinations-utils.h"
 
 
-// mirror of python itertools.combinations
-// https://docs.python.org/3/library/itertools.html#itertools.combinations
-unsigned int next_combination(unsigned int *ar, size_t n, unsigned int k)
-{
-    // ar = [0, 1, ..., r-1]
+// mirror of python itertools.permutations
+// https://docs.python.org/3/library/itertools.html#itertools.permutations
+unsigned int next_k_permutation(unsigned int *ar, unsigned int *cycle, size_t n, size_t k) {
+    // ar = [0, 1, ..., n], cycle = [n, n-1, ..., n-r+1]
     unsigned int i, j, temp;
 
     for (i = k-1; ; i--) {
-        if (ar[i] != i + n - k) {
-            break;
+        cycle[i] -= 1;
+        if (cycle[i] == 0) {
+            temp = ar[i];
+            for (j = i; j <= n - 2; j++) {
+                ar[j] = ar[j + 1];
+            }
+            ar[n - 1] = temp;
+            cycle[i] = n - i;
+        } else {
+            swap(ar, i, n - cycle[i]);
+            return 1;
         }
-        else if (i == 0) {
+        if (i == 0) {
             return 0;
         }
     }
-
-    // turn the elements after it into a linear sequence
-    temp = ar[i];
-    for (j = i; j < k; j++) {
-        temp += 1;
-        ar[j] = temp;
-    }
-    return 1;
 }
 
-void nth_ordinary_combination(unsigned int* ar, unsigned int n, unsigned int k, unsigned int index) {
+
+void n_k_permutations_bigz(mpz_t p, size_t n, size_t k) {
+    size_t i;
+    if (n < k) {
+        mpz_set_ui(p, 0);
+        return;
+    }
+    mpz_set_ui(p, 1);
+    for(i=0; i<k; i++) {
+        mpz_mul_ui(p, p, n - i);
+    }
+}
+
+
+void nth_k_permutation(unsigned int* ar, unsigned int n, unsigned int k, unsigned int index) {
     unsigned int i, j;
-    unsigned int start = 0;
-    unsigned int count, this_count;
 
     for (i = 0; i < k; i++) {
-        count = 0;
-        for (j = start; j < n; j++) {
-            this_count = count + choose(n - j - 1, k - i - 1);
-            if (this_count > index) {
-                ar[i] = j;
-                start = j + 1;
-                index -= count;
-                break;
+        j = fallfact(n - 1 - i, k - 1 - i);
+        ar[i] = index / j;
+        index = index % j;
+    }
+
+    if (k > 0) {
+        for (i = k - 1; i > 0; i--) {
+            j = i;
+            while (j-- > 0) {
+                if (ar[j] <= ar[i]) {
+                    ar[i]++;
+                }
             }
-            count = this_count;
         }
     }
 }
 
-void nth_ordinary_combination_bigz(unsigned int* ar, unsigned int n, unsigned int k, mpz_t index) {
+void nth_k_permutation_bigz(unsigned int* ar, unsigned int n, unsigned int k, mpz_t index) {
     unsigned int i, j;
-    unsigned int start = 0;
-    mpz_t count, this_count;
-    mpz_init(count);
-    mpz_init(this_count);
+
+    mpz_t q;
+    mpz_init(q);
+    mpz_t p;
+    mpz_init(p);
 
     for (i = 0; i < k; i++) {
-        mpz_set_ui(count, 0);
-        for (j = start; j < n; j++) {
-            mpz_bin_uiui(this_count, n - j - 1, k - i - 1);
-            mpz_add(this_count, this_count, count);
-            if (mpz_cmp(this_count, index) > 0) {
-                ar[i] = j;
-                start = j + 1;
-                mpz_sub(index, index, count);
-                break;
+        n_k_permutations_bigz(p, n - 1 - i, k - 1 - i);
+        mpz_tdiv_qr(q, index, index, p);
+        ar[i] = mpz_get_ui(q);
+    }
+
+    if (k > 0) {
+        for (i = k - 1; i > 0; i--) {
+            j = i;
+            while (j-- > 0) {
+                if (ar[j] <= ar[i]) {
+                    ar[i]++;
+                }
             }
-            mpz_set(count, this_count);
         }
     }
 
-    mpz_clear(count);
-    mpz_clear(this_count);
+    mpz_clear(q);
+    mpz_clear(p);
 }
 
 
-SEXP next_ordinary_combinations(int n, int k, SEXP labels, char layout, int d, SEXP _skip, SEXP state) {
+SEXP next_k_permutations(int n, int k, SEXP labels, char layout, int d, SEXP _skip, SEXP state) {
     int i, j;
     int nprotect = 0;
     int status = 1;
@@ -91,27 +108,26 @@ SEXP next_ordinary_combinations(int n, int k, SEXP labels, char layout, int d, S
     double maxd;
     int bigz = TYPEOF(_skip) == RAWSXP && Rf_inherits(_skip, "bigz");
     if (d == -1 || !Rf_isNull(_skip)) {
-        maxd = choose(n, k);
+        maxd = fallfact(n, k);
         bigz = bigz || maxd >= INT_MAX;
     }
     dd = d == -1 ? maxd : d;
     d = verify_dimension(dd, n, layout);
 
     unsigned int* ap;
+    unsigned int* cyclep;
 
-    if (!variable_exists(state, (char*)"a", INTSXP, k, (void**) &ap)) {
+    if (!variable_exists(state, (char*)"a", INTSXP, n, (void**) &ap)) {
         mpz_t maxz;
         int skip;
         mpz_t skipz;
         if (Rf_isNull(_skip)) {
-            for (i = 0; i < k; i++) {
-                ap[i] = i;
-            }
+            for(i=0; i<n; i++) ap[i] = i;
         } else {
             if (bigz) {
                 mpz_init(maxz);
                 mpz_init(skipz);
-                mpz_bin_uiui(maxz, n, k);
+                n_k_permutations_bigz(maxz, n, k);
                 if (as_mpz_array(&skipz, 1, _skip) < 0 || mpz_sgn(skipz) < 0) {
                     mpz_clear(skipz);
                     mpz_clear(maxz);
@@ -120,14 +136,38 @@ SEXP next_ordinary_combinations(int n, int k, SEXP labels, char layout, int d, S
                     mpz_set(skipz, 0);
                 }
                 mpz_clear(maxz);
-                nth_ordinary_combination_bigz(ap, n, k, skipz);
+                nth_k_permutation_bigz(ap, n, k, skipz);
                 mpz_clear(skipz);
             } else {
                 skip = as_uint(_skip);
                 if (skip >= (int) maxd) {
                     skip = 0;
                 }
-                nth_ordinary_combination(ap, n, k, skip);
+                nth_k_permutation(ap, n, k, skip);
+            }
+            int* count = (int*) malloc(n * sizeof(int));
+            for(i = 0; i < n; i++) count[i] = 1;
+            for(i = 0; i < k; i++) count[ap[i]] = 0;
+            j = 0;
+            for (i = k; i < n; i++) {
+                while (count[j] == 0) j++;
+                ap[i] = j++;
+            }
+            free(count);
+        }
+        status = 0;
+    }
+    if (!variable_exists(state, (char*)"cycle", INTSXP, k, (void**) &cyclep)) {
+        if (Rf_isNull(_skip)) {
+            for(i=0; i<k; i++) cyclep[i] = n - i;;
+        } else {
+            for(i=0; i<k; i++) {
+                cyclep[i] = n - ap[i];
+                for (j = 0; j < i; j++) {
+                    if (ap[j] > ap[i]) {
+                        cyclep[i]--;
+                    }
+                }
             }
         }
         status = 0;
@@ -137,7 +177,7 @@ SEXP next_ordinary_combinations(int n, int k, SEXP labels, char layout, int d, S
     #define NEXT() \
         if (status == 0) { \
             status = 1; \
-        } else if (!next_combination(ap, n, k)) { \
+        } else if (!next_k_permutation(ap, cyclep, n, k)) { \
             status = 0; \
             break; \
         }
@@ -162,7 +202,7 @@ SEXP next_ordinary_combinations(int n, int k, SEXP labels, char layout, int d, S
 }
 
 
-SEXP draw_ordinary_combinations(int n, int k, SEXP labels, char layout, SEXP _index, SEXP _nsample) {
+SEXP draw_k_permutations(int n, int k, SEXP labels, char layout, SEXP _index, SEXP _nsample) {
     int i, j;
     int nprotect = 0;
     int bigz = 0;
@@ -182,7 +222,7 @@ SEXP draw_ordinary_combinations(int n, int k, SEXP labels, char layout, SEXP _in
 
     double maxd;
     if (!bigz) {
-        maxd = choose(n, k);
+        maxd = fallfact(n, k);
         bigz = maxd > INT_MAX;
     }
 
@@ -196,7 +236,7 @@ SEXP draw_ordinary_combinations(int n, int k, SEXP labels, char layout, SEXP _in
         mpz_t maxz;
         mpz_init(z);
         mpz_init(maxz);
-        mpz_bin_uiui(maxz, n , k);
+        n_k_permutations_bigz(maxz, n , k);
 
         if (sampling) {
             GetRNGstate();
@@ -222,7 +262,7 @@ SEXP draw_ordinary_combinations(int n, int k, SEXP labels, char layout, SEXP _in
             } else { \
                 mpz_sub_ui(z, index[j], 1); \
             } \
-            nth_ordinary_combination_bigz(ap, n, k, z);
+            nth_k_permutation_bigz(ap, n, k, z);
 
         int labels_type = TYPEOF(labels);
         if (labels_type == NILSXP) {
@@ -260,9 +300,9 @@ SEXP draw_ordinary_combinations(int n, int k, SEXP labels, char layout, SEXP _in
         #undef NEXT
         #define NEXT() \
             if (sampling) { \
-                nth_ordinary_combination(ap, n, k, floor(maxd * unif_rand())); \
+                nth_k_permutation(ap, n, k, floor(maxd * unif_rand())); \
             } else { \
-                nth_ordinary_combination(ap, n, k, index[j] - 1); \
+                nth_k_permutation(ap, n, k, index[j] - 1); \
             }
 
         int labels_type = TYPEOF(labels);
