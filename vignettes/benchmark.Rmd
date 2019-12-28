@@ -35,6 +35,7 @@ library(RcppAlgos)
 library(arrangements)
 gtools.permutations <- gtools::permutations
 gtools.combinations <- gtools::combinations
+partitions.compositions <- partitions::compositions
 utils.combn <- utils::combn
 ```
 
@@ -45,8 +46,7 @@ options(digits = 3)
 knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 ```
 
-`gtools::permutations`, `gtools::combinations` and `utils::combn` are renamed because they are
-being overwritten by `arrangements::permutations`, `arrangements::combinations` and `combinat::combn` respectively.
+`gtools::permutations`, `gtools::combinations`, `partitions::compositions` and `utils::combn` are renamed because they are being overwritten by other packages.
 
 ### Permutations
 
@@ -187,5 +187,22 @@ gc()
 autoplot(microbenchmark(
     partitions = restrictedparts(50, 10, include.zero = FALSE),
     arrangements = partitions(50, 10)
+))
+```
+
+
+**Compositions of 8**
+```{r}
+autoplot(microbenchmark(
+    partitions = partitions.compositions(8, include.zero = FALSE),
+    arrangements = compositions(8)
+))
+```
+
+**Compositions of 20 into 5 parts**
+```{r}
+autoplot(microbenchmark(
+    partitions = partitions.compositions(20, 5, include.zero = FALSE),
+    arrangements = compositions(20, 5)
 ))
 ```

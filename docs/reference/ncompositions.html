@@ -6,8 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>arrangements: Fast Generators and Iterators for Permutations, Combinations, Integer
-    Partitions and Compositions — arrangements-package • arrangements</title>
+<title>Number of compositions — ncompositions • arrangements</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -33,15 +32,9 @@
 
 
 
-<meta property="og:title" content="arrangements: Fast Generators and Iterators for Permutations, Combinations, Integer
-    Partitions and Compositions — arrangements-package" />
+<meta property="og:title" content="Number of compositions — ncompositions" />
 
-<meta property="og:description" content="Fast generators and iterators for permutations, combinations,
-    integer partitions and compositions. The arrangements are in
-    lexicographical order and generated iteratively in a memory efficient manner. 
-    It has been demonstrated that 'arrangements' outperforms most existing
-    packages of similar kind. Benchmarks could be found at
-    &amp;lt;https://randy3k.github.io/arrangements/articles/benchmark.html&amp;gt;." />
+<meta property="og:description" content="Number of compositions" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -117,43 +110,62 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>arrangements: Fast Generators and Iterators for Permutations, Combinations, Integer
-    Partitions and Compositions</h1>
+    <h1>Number of compositions</h1>
     
-    <div class="hidden name"><code>arrangements-package.Rd</code></div>
+    <div class="hidden name"><code>ncompositions.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Fast generators and iterators for permutations, combinations,
-    integer partitions and compositions. The arrangements are in
-    lexicographical order and generated iteratively in a memory efficient manner. 
-    It has been demonstrated that 'arrangements' outperforms most existing
-    packages of similar kind. Benchmarks could be found at
-    &lt;https://randy3k.github.io/arrangements/articles/benchmark.html&gt;.</p>
+    <p>Number of compositions</p>
     
     </div>
 
-        
+    <pre class="usage"><span class='fu'>ncompositions</span>(<span class='no'>n</span>, <span class='kw'>k</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>bigz</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+    
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>n</th>
+      <td><p>an non-negative integer to be partitioned</p></td>
+    </tr>
+    <tr>
+      <th>k</th>
+      <td><p>number of parts</p></td>
+    </tr>
+    <tr>
+      <th>bigz</th>
+      <td><p>an logical to use <a href='https://rdrr.io/pkg/gmp/man/biginteger.html'>gmp::bigz</a></p></td>
+    </tr>
+    </table>
+    
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p>Useful links:</p><ul>
-<li><p><a href='https://randy3k.github.io/arrangements'>https://randy3k.github.io/arrangements</a></p></li>
-</ul>
-
-</div>
+    <div class='dont-index'><p><a href='compositions.html'>compositions</a> for generating all compositions and <a href='icompositions.html'>icompositions</a> for iterating compositions</p></div>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='co'># number of compositions of 10</span>
+<span class='fu'>ncompositions</span>(<span class='fl'>10</span>)</div><div class='output co'>#&gt; [1] 512</div><div class='input'><span class='co'># number of compositions of 10 into 5 parts</span>
+<span class='fu'>ncompositions</span>(<span class='fl'>10</span>, <span class='fl'>5</span>)</div><div class='output co'>#&gt; [1] 126</div><div class='input'>
+<span class='co'># integer overflow</span>
+<span class='kw'>if</span> (<span class='fl'>FALSE</span>) <span class='fu'>ncompositions</span>(<span class='fl'>160</span>)
+<span class='fu'>ncompositions</span>(<span class='fl'>160</span>, <span class='kw'>bigz</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; Big Integer ('bigz') :
+#&gt; [1] 730750818665451459101842416358141509827966271488</div><div class='input'>
+<span class='co'># zero sized compositions</span>
+<span class='fu'>ncompositions</span>(<span class='fl'>0</span>)</div><div class='output co'>#&gt; [1] 1</div><div class='input'><span class='fu'>ncompositions</span>(<span class='fl'>5</span>, <span class='fl'>0</span>)</div><div class='output co'>#&gt; [1] 0</div><div class='input'><span class='fu'>ncompositions</span>(<span class='fl'>5</span>, <span class='fl'>6</span>)</div><div class='output co'>#&gt; [1] 0</div><div class='input'><span class='fu'>ncompositions</span>(<span class='fl'>0</span>, <span class='fl'>0</span>)</div><div class='output co'>#&gt; [1] 1</div><div class='input'><span class='fu'>ncompositions</span>(<span class='fl'>0</span>, <span class='fl'>1</span>)</div><div class='output co'>#&gt; [1] 0</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
+      <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#see-also">See also</a></li>
-          </ul>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
-    <h2>Author</h2>
-    <p><strong>Maintainer</strong>: Randy Lai <a href='mailto:randy.cs.lai@gmail.com'>randy.cs.lai@gmail.com</a></p>
   </div>
 </div>
 

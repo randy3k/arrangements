@@ -5,21 +5,19 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Fast Generators and Iterators for Permutations, Combinations and
-    Partitions • arrangements</title>
+<title>Fast Generators and Iterators for Permutations, Combinations, Integer
+    Partitions and Compositions • arrangements</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
-<script src="pkgdown.js"></script><meta property="og:title" content="Fast Generators and Iterators for Permutations, Combinations and
-    Partitions">
-<meta property="og:description" content="Fast generators and iterators for permutations, combinations
-    and partitions. The iterators allow users to generate arrangements in
-    a memory efficient manner and the generated arrangements are in
-    lexicographical (dictionary) order. Permutations and combinations can
-    be drawn with/without replacement and support multisets. It has been
-    demonstrated that arrangements outperforms most of the existing
-    packages of similar kind. Some benchmarks could be found at
+<script src="pkgdown.js"></script><meta property="og:title" content="Fast Generators and Iterators for Permutations, Combinations, Integer
+    Partitions and Compositions">
+<meta property="og:description" content="Fast generators and iterators for permutations, combinations,
+    integer partitions and compositions. The arrangements are in
+    lexicographical order and generated iteratively in a memory efficient manner. 
+    It has been demonstrated that arrangements outperforms most existing
+    packages of similar kind. Benchmarks could be found at
     &lt;https://randy3k.github.io/arrangements/articles/benchmark.html&gt;.">
 <meta name="twitter:card" content="summary">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
@@ -80,13 +78,13 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-<div id="fast-generators-and-iterators-for-permutations-combinations-and-partitions" class="section level1">
+<div id="fast-generators-and-iterators-for-permutations-combinations-integer-partitions-and-compositions" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
-<a href="#fast-generators-and-iterators-for-permutations-combinations-and-partitions" class="anchor"></a>Fast Generators and Iterators for Permutations, Combinations and Partitions</h1></div>
+<a href="#fast-generators-and-iterators-for-permutations-combinations-integer-partitions-and-compositions" class="anchor"></a>Fast Generators and Iterators for Permutations, Combinations, Integer Partitions and Compositions</h1></div>
 
 <p>Github: <a href="https://github.com/randy3k/arrangements" class="uri">https://github.com/randy3k/arrangements</a></p>
 <p>Documentation: <a href="https://randy3k.github.io/arrangements">http://randy3k.github.io/arrangements</a></p>
-<p>Fast generators and iterators for permutations, combinations and partitions. The iterators allow users to generate arrangements in a memory efficient manner and the generated arrangements are in lexicographical (dictionary) order. Permutations and combinations can be drawn with/without replacement and support multisets. It has been demonstrated that ‘arrangements’ outperforms most of the existing packages of similar kind. Some benchmarks could be found at <a href="https://randy3k.github.io/arrangements/articles/benchmark.html" class="uri">https://randy3k.github.io/arrangements/articles/benchmark.html</a>.</p>
+<p>Fast generators and iterators for permutations, combinations, integer partitions and compositions. The arrangements are in lexicographical order and generated iteratively in a memory efficient manner. It has been demonstrated that ‘arrangements’ outperforms most existing packages of similar kind. Benchmarks could be found at <a href="https://randy3k.github.io/arrangements/articles/benchmark.html" class="uri">https://randy3k.github.io/arrangements/articles/benchmark.html</a>.</p>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>

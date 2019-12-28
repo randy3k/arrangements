@@ -10,6 +10,7 @@ reference:
       - combinations
       - permutations
       - partitions
+      - compositions
 
   - title: Iterating arrangements
     desc:
@@ -17,6 +18,7 @@ reference:
       - icombinations
       - ipermutations
       - ipartitions
+      - icompositions
 
   - title: Utilities
     desc:
@@ -24,3 +26,4 @@ reference:
       - ncombinations
       - npermutations
       - npartitions
+      - ncompositions

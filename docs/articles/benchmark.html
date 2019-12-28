@@ -109,8 +109,9 @@
 <span id="cb1-8"><a href="#cb1-8"></a><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(arrangements)</span>
 <span id="cb1-9"><a href="#cb1-9"></a>gtools.permutations &lt;-<span class="st"> </span>gtools<span class="op">::</span>permutations</span>
 <span id="cb1-10"><a href="#cb1-10"></a>gtools.combinations &lt;-<span class="st"> </span>gtools<span class="op">::</span>combinations</span>
-<span id="cb1-11"><a href="#cb1-11"></a>utils.combn &lt;-<span class="st"> </span>utils<span class="op">::</span>combn</span></code></pre></div>
-<p><code><a href="https://rdrr.io/pkg/gtools/man/combinations.html">gtools::permutations</a></code>, <code><a href="https://rdrr.io/pkg/gtools/man/combinations.html">gtools::combinations</a></code> and <code><a href="https://rdrr.io/r/utils/combn.html">utils::combn</a></code> are renamed because they are being overwritten by <code><a href="../reference/permutations.html">arrangements::permutations</a></code>, <code><a href="../reference/combinations.html">arrangements::combinations</a></code> and <code><a href="https://rdrr.io/pkg/combinat/man/combn.html">combinat::combn</a></code> respectively.</p>
+<span id="cb1-11"><a href="#cb1-11"></a>partitions.compositions &lt;-<span class="st"> </span>partitions<span class="op">::</span>compositions</span>
+<span id="cb1-12"><a href="#cb1-12"></a>utils.combn &lt;-<span class="st"> </span>utils<span class="op">::</span>combn</span></code></pre></div>
+<p><code><a href="https://rdrr.io/pkg/gtools/man/combinations.html">gtools::permutations</a></code>, <code><a href="https://rdrr.io/pkg/gtools/man/combinations.html">gtools::combinations</a></code>, <code><a href="https://rdrr.io/pkg/partitions/man/parts.html">partitions::compositions</a></code> and <code><a href="https://rdrr.io/r/utils/combn.html">utils::combn</a></code> are renamed because they are being overwritten by other packages.</p>
 <div id="permutations" class="section level3">
 <h3 class="hasAnchor">
 <a href="#permutations" class="anchor"></a>Permutations</h3>
@@ -187,6 +188,18 @@
 <span id="cb9-3"><a href="#cb9-3"></a>    <span class="dt">arrangements =</span> <span class="kw"><a href="../reference/partitions.html">partitions</a></span>(<span class="dv">50</span>, <span class="dv">10</span>)</span>
 <span id="cb9-4"><a href="#cb9-4"></a>))</span></code></pre></div>
 <p><img src="benchmark_files/figure-html/unnamed-chunk-20-1.png" width="700"></p>
+<p><strong>Compositions of 8</strong></p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="kw">autoplot</span>(<span class="kw">microbenchmark</span>(</span>
+<span id="cb10-2"><a href="#cb10-2"></a>    <span class="dt">partitions =</span> <span class="kw">partitions.compositions</span>(<span class="dv">8</span>, <span class="dt">include.zero =</span> <span class="ot">FALSE</span>),</span>
+<span id="cb10-3"><a href="#cb10-3"></a>    <span class="dt">arrangements =</span> <span class="kw"><a href="../reference/compositions.html">compositions</a></span>(<span class="dv">8</span>)</span>
+<span id="cb10-4"><a href="#cb10-4"></a>))</span></code></pre></div>
+<p><img src="benchmark_files/figure-html/unnamed-chunk-21-1.png" width="700"></p>
+<p><strong>Compositions of 20 into 5 parts</strong></p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="kw">autoplot</span>(<span class="kw">microbenchmark</span>(</span>
+<span id="cb11-2"><a href="#cb11-2"></a>    <span class="dt">partitions =</span> <span class="kw">partitions.compositions</span>(<span class="dv">20</span>, <span class="dv">5</span>, <span class="dt">include.zero =</span> <span class="ot">FALSE</span>),</span>
+<span id="cb11-3"><a href="#cb11-3"></a>    <span class="dt">arrangements =</span> <span class="kw"><a href="../reference/compositions.html">compositions</a></span>(<span class="dv">20</span>, <span class="dv">5</span>)</span>
+<span id="cb11-4"><a href="#cb11-4"></a>))</span></code></pre></div>
+<p><img src="benchmark_files/figure-html/unnamed-chunk-22-1.png" width="700"></p>
 </div>
   </div>
 

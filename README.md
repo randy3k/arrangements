@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# Fast Generators and Iterators for Permutations, Combinations and Partitions
+# Fast Generators and Iterators for Permutations, Combinations, Integer Partitions and Compositions
 
 [![Github
 Action](https://github.com/randy3k/arrangements/workflows/build/badge.svg?branch=master)](https://github.com/randy3k/arrangements)
@@ -13,13 +13,11 @@ Github: <https://github.com/randy3k/arrangements>
 Documentation:
 [http://randy3k.github.io/arrangements](https://randy3k.github.io/arrangements)
 
-Fast generators and iterators for permutations, combinations and
-partitions. The iterators allow users to generate arrangements in a
-memory efficient manner and the generated arrangements are in
-lexicographical (dictionary) order. Permutations and combinations can be
-drawn with/without replacement and support multisets. It has been
-demonstrated that ‘arrangements’ outperforms most of the existing
-packages of similar kind. Some benchmarks could be found at
+Fast generators and iterators for permutations, combinations, integer
+partitions and compositions. The arrangements are in lexicographical
+order and generated iteratively in a memory efficient manner. It has
+been demonstrated that ‘arrangements’ outperforms most existing packages
+of similar kind. Benchmarks could be found at
 <https://randy3k.github.io/arrangements/articles/benchmark.html>.
 
 ## Installation
