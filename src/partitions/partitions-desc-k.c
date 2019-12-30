@@ -16,6 +16,7 @@ void nth_desc_k_partition(unsigned int* ar, unsigned int n, unsigned int k, unsi
     for (i = 0; i < k; i++) {
         count = 0;
         for (j = start; j >= 1; j--) {
+            if (n < j) continue;
             this_count = count + n_k_max_partitions(n - j, k - i - 1, j);
             if (this_count > index) {
                 ar[i] = j;
@@ -81,6 +82,7 @@ void nth_desc_k_partition_bigz(unsigned int* ar, unsigned int n, unsigned int k,
     for (i = 0; i < k; i++) {
         mpz_set_ui(count, 0);
         for (j = start; j >= 1; j--) {
+            if (n < j) continue;
             n_k_max_partitions_bigz(this_count, n - j, k - i - 1, j);
             mpz_add(this_count, this_count, count);
             if (mpz_cmp(this_count, index) > 0) {

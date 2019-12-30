@@ -61,6 +61,7 @@ void nth_desc_partition(unsigned int* ar, unsigned int n, unsigned int index) {
         count = 0;
         if (sum > 0 && i < n - 1) {
             for (j = start; j >= 1; j--) {
+                if (sum < j) continue;
                 this_count = count + n_max_partitions(sum - j, j);
                 if (this_count > index) {
                     ar[i] = j;
@@ -92,6 +93,7 @@ void nth_desc_partition_bigz(unsigned int* ar, unsigned int n, mpz_t index) {
         mpz_set_ui(count, 0);
         if (sum > 0 && i < n - 1) {
             for (j = start; j >= 1; j--) {
+                if (sum < j) continue;
                 n_max_partitions_bigz(this_count, sum - j, j);
                 mpz_add(this_count, this_count, count);
                 if (mpz_cmp(this_count, index) > 0) {
