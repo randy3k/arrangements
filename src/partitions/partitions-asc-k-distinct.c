@@ -31,7 +31,7 @@ unsigned int next_asc_k_distinct_partition(unsigned int *ar, size_t n, unsigned 
     for (i=0; i<k-1; i++) {
         t += ar[i];
     }
-    ar[k - 1] = n1 - t + 2*k - 2;
+    ar[k - 1] = n - t;
     return 1;
 }
 
