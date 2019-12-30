@@ -209,7 +209,7 @@ SEXP next_desc_partitions(int n, char layout, int d, SEXP _skip, SEXP state) {
         } \
         k = kp[0];
 
-    RESULT_PART();
+    RESULT_PART(n, k);
 
     if (status == 0) {
         result = PROTECT(resize_layout(result, j, layout));
@@ -290,7 +290,7 @@ SEXP draw_desc_partitions(int n, char layout, SEXP _index, SEXP _nsample) {
             } \
             k = i;
 
-        RESULT_PART();
+        RESULT_PART(n, k);
 
         mpz_clear(z);
         mpz_clear(maxz);
@@ -330,7 +330,7 @@ SEXP draw_desc_partitions(int n, char layout, SEXP _index, SEXP _nsample) {
             } \
             k = i;
 
-        RESULT_PART();
+        RESULT_PART(n, k);
 
         if (sampling){
             PutRNGstate();

@@ -39,7 +39,7 @@
     k = Rf_isNull(_k) ? n : as_uint(_k);
 
 
-#define RESULT_PART() \
+#define RESULT_PART(n, k) \
     if (layout == 'r') { \
         result = PROTECT(Rf_allocMatrix(INTSXP, d, n)); \
         nprotect++; \

@@ -298,14 +298,100 @@ void n_k_distinct_partitions_bigz(mpz_t z, int n, int k) {
 
 double n_distinct_partitions(int n) {
     // Hardy's q(n) function
-    // it may be more efficient to use Georgiadis's formula
+    // From Evangelos Georgiadis, Andrew V. Sutherland, Kiran S. Kedlaya (egeorg(AT)mit.edu)
+    // http://www.numbertheory.org/gnubc/partition.bc
+    int i, j, k;
+    int a = 1;
+    int b = 2;
+    int d = 2;
+    int g = 1;
+    double s = 1;
+    double* q = (double*) malloc((n + 1) * sizeof(double));
+    q[0] = 1;
+    for (i = 1; i <= n; i++) {
+        s = 0;
+        for (k = 1, j = i - 1; j >= 0; k++, j -= 2 * k - 1) {
+            s = q[j] - s;
+        }
+        if (s < 0) s = -s;
+        s *= 2;
+        if (i == a) {
+            s += g = -g;
+        } else if (i == b) {
+            a += d += 2;
+            b += d += 1;
+            s += g;
+        }
+        q[i] = s;
+    }
+    free(q);
+    return s;
+}
+
+
+void n_distinct_partitions_bigz(mpz_t z, int n) {
+    int i, j, k;
+    int a = 1;
+    int b = 2;
+    int d = 2;
+    int g = 1;
+    mpz_t* q = (mpz_t*) malloc((n+1) * sizeof(mpz_t));
+    for (i=0; i<n+1; i++) mpz_init(q[i]);
+    mpz_set_ui(q[0], 1);
+    mpz_set_ui(z, 0);
+    for (i = 1; i <= n; i++) {
+        mpz_set_ui(z, 0);
+        for (k = 1, j = i - 1; j >= 0; k++, j -= 2 * k - 1) {
+            mpz_sub(z, q[j], z);
+        }
+        if (mpz_sgn(z) < 0) mpz_neg(z, z);
+        mpz_mul_ui(z, z, 2);
+        if (i == a) {
+            g = -g;
+            if (g > 0) {
+                mpz_add_ui(z, z, g);
+            } else {
+                mpz_sub_ui(z, z, -g);
+            }
+        } else if (i == b) {
+            a += d += 2;
+            b += d += 1;
+            if (g > 0) {
+                mpz_add_ui(z, z, g);
+            } else {
+                mpz_sub_ui(z, z, -g);
+            }
+        }
+        mpz_set(q[i], z);
+    }
+    for (i=0; i<n+1; i++) mpz_clear(q[i]);
+    free(q);
+}
+
+
+double n_min_distinct_partitions(int n, int m) {
     double t = 0;
     double k2;
     int k;
     for (k = 0; k <= n; k++) {
         k2 = choose(k, 2);
-        if (n < k2) break;
-        t += n_k_partitions(n - k2, k);
+        if (n < k2 + (m-1) * k) break;
+        t += n_k_partitions(n - k2 - (m-1) * k, k);
     }
     return t;
+}
+
+void n_min_distinct_partitions_bigz(mpz_t z, int n, int m) {
+    double k2;
+    int k;
+    mpz_t z0;
+    mpz_init(z0);
+    mpz_set_ui(z, 0);
+    for (k = 0; k <= n; k++) {
+        k2 = choose(k, 2);
+        if (n < k2 + (m-1) * k) break;
+        n_k_partitions_bigz(z0, n - k2 - (m-1) * k, k);
+        mpz_add(z, z, z0);
+    }
+    mpz_clear(z0);
 }
