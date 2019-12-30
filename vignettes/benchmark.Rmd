@@ -191,6 +191,17 @@ autoplot(microbenchmark(
 ```
 
 
+**Partitions of 50 into distinct parts**
+```{r}
+autoplot(microbenchmark(
+    partitions = diffparts(50),
+    arrangements = partitions(50, distinct = TRUE)
+))
+```
+
+
+### Compositions
+
 **Compositions of 8**
 ```{r}
 autoplot(microbenchmark(
