@@ -330,7 +330,8 @@ int as_mpz_array(mpz_t* a, size_t n, SEXP x) {
         int w;
         for (i = 0; i < n; i++) {
             w = (int) fabs(xp[i]);
-            mpz_set_ui(a[i], w == xp[i] ? w : 0);
+            if (w != xp[i]) return -1;
+            mpz_set_ui(a[i], w);
             if (xp[i] < 0) {
                 mpz_neg(a[i], a[i]);
             }
