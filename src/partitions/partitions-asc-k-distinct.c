@@ -92,7 +92,7 @@ SEXP next_asc_k_distinct_partitions(int n, int k, char layout, int d, SEXP _skip
                     mpz_clear(maxz);
                     Rf_error("expect integer");
                 } else if (mpz_cmp(skipz, maxz) >= 0) {
-                    mpz_set(skipz, 0);
+                    mpz_set_ui(skipz, 0);
                 }
                 mpz_clear(maxz);
                 nth_asc_k_distinct_partition_bigz(ap, n, k, skipz);

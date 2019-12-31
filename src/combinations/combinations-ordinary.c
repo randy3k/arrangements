@@ -116,7 +116,7 @@ SEXP next_ordinary_combinations(int n, int k, SEXP labels, char layout, int d, S
                     mpz_clear(maxz);
                     Rf_error("expect integer");
                 } else if (mpz_cmp(skipz, maxz) >= 0) {
-                    mpz_set(skipz, 0);
+                    mpz_set_ui(skipz, 0);
                 }
                 mpz_clear(maxz);
                 nth_ordinary_combination_bigz(ap, n, k, skipz);

@@ -120,7 +120,7 @@ SEXP next_desc_compositions(int n, char layout, int d, SEXP _skip, SEXP state) {
                     mpz_clear(maxz);
                     Rf_error("expect integer");
                 } else if (mpz_cmp(skipz, maxz) >= 0) {
-                    mpz_set(skipz, 0);
+                    mpz_set_ui(skipz, 0);
                 }
                 mpz_clear(maxz);
                 nth_desc_composition_bigz(ap, n, skipz);

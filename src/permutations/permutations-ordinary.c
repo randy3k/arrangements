@@ -162,7 +162,7 @@ SEXP next_ordinary_permutations(int n, int k, SEXP labels, SEXP freq, char layou
                     mpz_clear(maxz);
                     Rf_error("expect integer");
                 } else if (mpz_cmp(skipz, maxz) >= 0) {
-                    mpz_set(skipz, 0);
+                    mpz_set_ui(skipz, 0);
                 }
                 mpz_clear(maxz);
                 if (freq == R_NilValue) {

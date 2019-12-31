@@ -136,7 +136,7 @@ SEXP next_asc_distinct_partitions(int n, char layout, int d, SEXP _skip, SEXP st
                     mpz_clear(maxz);
                     Rf_error("expect integer");
                 } else if (mpz_cmp(skipz, maxz) >= 0) {
-                    mpz_set(skipz, 0);
+                    mpz_set_ui(skipz, 0);
                 }
                 mpz_clear(maxz);
                 nth_asc_distinct_partition_bigz(ap, m, n, skipz);

@@ -291,7 +291,7 @@ SEXP next_multiset_permutations(int* fp, size_t flen, int k, SEXP labels, char l
                     mpz_clear(maxz);
                     Rf_error("expect integer");
                 } else if (mpz_cmp(skipz, maxz) >= 0) {
-                    mpz_set(skipz, 0);
+                    mpz_set_ui(skipz, 0);
                 }
                 mpz_clear(maxz);
                 nth_multiset_permutation_bigz(ap, fp, flen, k, skipz);
