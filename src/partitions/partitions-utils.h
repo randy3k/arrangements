@@ -35,6 +35,10 @@ double n_min_distinct_partitions(int n, int m);
 
 void n_min_distinct_partitions_bigz(mpz_t z, int n, int m);
 
+double n_max_distinct_partitions(int n, int m);
+
+void n_max_distinct_partitions_bigz(mpz_t z, int n, int m);
+
 double n_k_distinct_partitions(int n, int k);
 
 void n_k_distinct_partitions_bigz(mpz_t z, int n, int k);

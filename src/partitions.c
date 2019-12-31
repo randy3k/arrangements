@@ -7,6 +7,7 @@
 #include "partitions/partitions-asc-k.c"
 #include "partitions/partitions-desc-k.c"
 #include "partitions/partitions-asc-distinct.c"
+#include "partitions/partitions-desc-distinct.c"
 #include "partitions/partitions-asc-k-distinct.c"
 #include "partitions/partitions-desc-k-distinct.c"
 #include "partitions/partitions-utils.c"
@@ -89,8 +90,7 @@ SEXP get_partitions(SEXP _n, SEXP _k, SEXP _distinct, SEXP _descending, SEXP _la
                 }
             } else if (distinct) {
                 if (descending) {
-                    Rf_error("not yet implemented");
-                    // ans = next_desc_distinct_partitions(n, layout, d, _skip, state);
+                    ans = next_desc_distinct_partitions(n, layout, d, _skip, state);
                 } else {
                     ans = next_asc_distinct_partitions(n, layout, d, _skip, state);
                 }
@@ -139,8 +139,7 @@ SEXP get_partitions(SEXP _n, SEXP _k, SEXP _distinct, SEXP _descending, SEXP _la
         if (distinct) {
             if (k == -1) {
                 if (descending) {
-                    Rf_error("not yet implemented");
-                    // ans = draw_desc_distinct_partitions(n, layout, _index, _nsample);
+                    ans = draw_desc_distinct_partitions(n, layout, _index, _nsample);
                 } else {
                     ans = draw_asc_distinct_partitions(n, layout, _index, _nsample);
                 }
