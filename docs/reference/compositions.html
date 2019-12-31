@@ -175,449 +175,81 @@ The results are in lexicographical or reversed lexicographical order.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># all compositions of 6</span>
-<span class='fu'>compositions</span>(<span class='fl'>6</span>)</div><div class='output co'>#&gt;       [,1] [,2] [,3] [,4] [,5] [,6]
-#&gt;  [1,]    1    1    1    1    1    1
-#&gt;  [2,]    1    1    1    1    2    0
-#&gt;  [3,]    1    1    1    2    1    0
-#&gt;  [4,]    1    1    1    3    0    0
-#&gt;  [5,]    1    1    2    1    1    0
-#&gt;  [6,]    1    1    2    2    0    0
-#&gt;  [7,]    1    1    3    1    0    0
-#&gt;  [8,]    1    1    4    0    0    0
-#&gt;  [9,]    1    2    1    1    1    0
-#&gt; [10,]    1    2    1    2    0    0
-#&gt; [11,]    1    2    2    1    0    0
-#&gt; [12,]    1    2    3    0    0    0
-#&gt; [13,]    1    3    1    1    0    0
-#&gt; [14,]    1    3    2    0    0    0
-#&gt; [15,]    1    4    1    0    0    0
-#&gt; [16,]    1    5    0    0    0    0
-#&gt; [17,]    2    1    1    1    1    0
-#&gt; [18,]    2    1    1    2    0    0
-#&gt; [19,]    2    1    2    1    0    0
-#&gt; [20,]    2    1    3    0    0    0
-#&gt; [21,]    2    2    1    1    0    0
-#&gt; [22,]    2    2    2    0    0    0
-#&gt; [23,]    2    3    1    0    0    0
-#&gt; [24,]    2    4    0    0    0    0
-#&gt; [25,]    3    1    1    1    0    0
-#&gt; [26,]    3    1    2    0    0    0
-#&gt; [27,]    3    2    1    0    0    0
-#&gt; [28,]    3    3    0    0    0    0
-#&gt; [29,]    4    1    1    0    0    0
-#&gt; [30,]    4    2    0    0    0    0
-#&gt; [31,]    5    1    0    0    0    0
-#&gt; [32,]    6    0    0    0    0    0</div><div class='input'><span class='co'># reversed lexicographical order</span>
-<span class='fu'>compositions</span>(<span class='fl'>6</span>, <span class='kw'>descending</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt;       [,1] [,2] [,3] [,4] [,5] [,6]
-#&gt;  [1,]    6    0    0    0    0    0
-#&gt;  [2,]    5    1    0    0    0    0
-#&gt;  [3,]    4    2    0    0    0    0
-#&gt;  [4,]    4    1    1    0    0    0
-#&gt;  [5,]    3    3    0    0    0    0
-#&gt;  [6,]    3    2    1    0    0    0
-#&gt;  [7,]    3    1    2    0    0    0
-#&gt;  [8,]    3    1    1    1    0    0
-#&gt;  [9,]    2    4    0    0    0    0
-#&gt; [10,]    2    3    1    0    0    0
-#&gt; [11,]    2    2    2    0    0    0
-#&gt; [12,]    2    2    1    1    0    0
-#&gt; [13,]    2    1    3    0    0    0
-#&gt; [14,]    2    1    2    1    0    0
-#&gt; [15,]    2    1    1    2    0    0
-#&gt; [16,]    2    1    1    1    1    0
-#&gt; [17,]    1    5    0    0    0    0
-#&gt; [18,]    1    4    1    0    0    0
-#&gt; [19,]    1    3    2    0    0    0
-#&gt; [20,]    1    3    1    1    0    0
-#&gt; [21,]    1    2    3    0    0    0
-#&gt; [22,]    1    2    2    1    0    0
-#&gt; [23,]    1    2    1    2    0    0
-#&gt; [24,]    1    2    1    1    1    0
-#&gt; [25,]    1    1    4    0    0    0
-#&gt; [26,]    1    1    3    1    0    0
-#&gt; [27,]    1    1    2    2    0    0
-#&gt; [28,]    1    1    2    1    1    0
-#&gt; [29,]    1    1    1    3    0    0
-#&gt; [30,]    1    1    1    2    1    0
-#&gt; [31,]    1    1    1    1    2    0
-#&gt; [32,]    1    1    1    1    1    1</div><div class='input'>
+    <pre class="examples"><div class='input'><span class='co'># all compositions of 4</span>
+<span class='fu'>compositions</span>(<span class='fl'>4</span>)</div><div class='output co'>#&gt;      [,1] [,2] [,3] [,4]
+#&gt; [1,]    1    1    1    1
+#&gt; [2,]    1    1    2    0
+#&gt; [3,]    1    2    1    0
+#&gt; [4,]    1    3    0    0
+#&gt; [5,]    2    1    1    0
+#&gt; [6,]    2    2    0    0
+#&gt; [7,]    3    1    0    0
+#&gt; [8,]    4    0    0    0</div><div class='input'><span class='co'># reversed lexicographical order</span>
+<span class='fu'>compositions</span>(<span class='fl'>4</span>, <span class='kw'>descending</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt;      [,1] [,2] [,3] [,4]
+#&gt; [1,]    4    0    0    0
+#&gt; [2,]    3    1    0    0
+#&gt; [3,]    2    2    0    0
+#&gt; [4,]    2    1    1    0
+#&gt; [5,]    1    3    0    0
+#&gt; [6,]    1    2    1    0
+#&gt; [7,]    1    1    2    0
+#&gt; [8,]    1    1    1    1</div><div class='input'>
 <span class='co'># fixed number of parts</span>
-<span class='fu'>compositions</span>(<span class='fl'>10</span>, <span class='fl'>5</span>)</div><div class='output co'>#&gt;        [,1] [,2] [,3] [,4] [,5]
-#&gt;   [1,]    1    1    1    1    6
-#&gt;   [2,]    1    1    1    2    5
-#&gt;   [3,]    1    1    1    3    4
-#&gt;   [4,]    1    1    1    4    3
-#&gt;   [5,]    1    1    1    5    2
-#&gt;   [6,]    1    1    1    6    1
-#&gt;   [7,]    1    1    2    1    5
-#&gt;   [8,]    1    1    2    2    4
-#&gt;   [9,]    1    1    2    3    3
-#&gt;  [10,]    1    1    2    4    2
-#&gt;  [11,]    1    1    2    5    1
-#&gt;  [12,]    1    1    3    1    4
-#&gt;  [13,]    1    1    3    2    3
-#&gt;  [14,]    1    1    3    3    2
-#&gt;  [15,]    1    1    3    4    1
-#&gt;  [16,]    1    1    4    1    3
-#&gt;  [17,]    1    1    4    2    2
-#&gt;  [18,]    1    1    4    3    1
-#&gt;  [19,]    1    1    5    1    2
-#&gt;  [20,]    1    1    5    2    1
-#&gt;  [21,]    1    1    6    1    1
-#&gt;  [22,]    1    2    1    1    5
-#&gt;  [23,]    1    2    1    2    4
-#&gt;  [24,]    1    2    1    3    3
-#&gt;  [25,]    1    2    1    4    2
-#&gt;  [26,]    1    2    1    5    1
-#&gt;  [27,]    1    2    2    1    4
-#&gt;  [28,]    1    2    2    2    3
-#&gt;  [29,]    1    2    2    3    2
-#&gt;  [30,]    1    2    2    4    1
-#&gt;  [31,]    1    2    3    1    3
-#&gt;  [32,]    1    2    3    2    2
-#&gt;  [33,]    1    2    3    3    1
-#&gt;  [34,]    1    2    4    1    2
-#&gt;  [35,]    1    2    4    2    1
-#&gt;  [36,]    1    2    5    1    1
-#&gt;  [37,]    1    3    1    1    4
-#&gt;  [38,]    1    3    1    2    3
-#&gt;  [39,]    1    3    1    3    2
-#&gt;  [40,]    1    3    1    4    1
-#&gt;  [41,]    1    3    2    1    3
-#&gt;  [42,]    1    3    2    2    2
-#&gt;  [43,]    1    3    2    3    1
-#&gt;  [44,]    1    3    3    1    2
-#&gt;  [45,]    1    3    3    2    1
-#&gt;  [46,]    1    3    4    1    1
-#&gt;  [47,]    1    4    1    1    3
-#&gt;  [48,]    1    4    1    2    2
-#&gt;  [49,]    1    4    1    3    1
-#&gt;  [50,]    1    4    2    1    2
-#&gt;  [51,]    1    4    2    2    1
-#&gt;  [52,]    1    4    3    1    1
-#&gt;  [53,]    1    5    1    1    2
-#&gt;  [54,]    1    5    1    2    1
-#&gt;  [55,]    1    5    2    1    1
-#&gt;  [56,]    1    6    1    1    1
-#&gt;  [57,]    2    1    1    1    5
-#&gt;  [58,]    2    1    1    2    4
-#&gt;  [59,]    2    1    1    3    3
-#&gt;  [60,]    2    1    1    4    2
-#&gt;  [61,]    2    1    1    5    1
-#&gt;  [62,]    2    1    2    1    4
-#&gt;  [63,]    2    1    2    2    3
-#&gt;  [64,]    2    1    2    3    2
-#&gt;  [65,]    2    1    2    4    1
-#&gt;  [66,]    2    1    3    1    3
-#&gt;  [67,]    2    1    3    2    2
-#&gt;  [68,]    2    1    3    3    1
-#&gt;  [69,]    2    1    4    1    2
-#&gt;  [70,]    2    1    4    2    1
-#&gt;  [71,]    2    1    5    1    1
-#&gt;  [72,]    2    2    1    1    4
-#&gt;  [73,]    2    2    1    2    3
-#&gt;  [74,]    2    2    1    3    2
-#&gt;  [75,]    2    2    1    4    1
-#&gt;  [76,]    2    2    2    1    3
-#&gt;  [77,]    2    2    2    2    2
-#&gt;  [78,]    2    2    2    3    1
-#&gt;  [79,]    2    2    3    1    2
-#&gt;  [80,]    2    2    3    2    1
-#&gt;  [81,]    2    2    4    1    1
-#&gt;  [82,]    2    3    1    1    3
-#&gt;  [83,]    2    3    1    2    2
-#&gt;  [84,]    2    3    1    3    1
-#&gt;  [85,]    2    3    2    1    2
-#&gt;  [86,]    2    3    2    2    1
-#&gt;  [87,]    2    3    3    1    1
-#&gt;  [88,]    2    4    1    1    2
-#&gt;  [89,]    2    4    1    2    1
-#&gt;  [90,]    2    4    2    1    1
-#&gt;  [91,]    2    5    1    1    1
-#&gt;  [92,]    3    1    1    1    4
-#&gt;  [93,]    3    1    1    2    3
-#&gt;  [94,]    3    1    1    3    2
-#&gt;  [95,]    3    1    1    4    1
-#&gt;  [96,]    3    1    2    1    3
-#&gt;  [97,]    3    1    2    2    2
-#&gt;  [98,]    3    1    2    3    1
-#&gt;  [99,]    3    1    3    1    2
-#&gt; [100,]    3    1    3    2    1
-#&gt; [101,]    3    1    4    1    1
-#&gt; [102,]    3    2    1    1    3
-#&gt; [103,]    3    2    1    2    2
-#&gt; [104,]    3    2    1    3    1
-#&gt; [105,]    3    2    2    1    2
-#&gt; [106,]    3    2    2    2    1
-#&gt; [107,]    3    2    3    1    1
-#&gt; [108,]    3    3    1    1    2
-#&gt; [109,]    3    3    1    2    1
-#&gt; [110,]    3    3    2    1    1
-#&gt; [111,]    3    4    1    1    1
-#&gt; [112,]    4    1    1    1    3
-#&gt; [113,]    4    1    1    2    2
-#&gt; [114,]    4    1    1    3    1
-#&gt; [115,]    4    1    2    1    2
-#&gt; [116,]    4    1    2    2    1
-#&gt; [117,]    4    1    3    1    1
-#&gt; [118,]    4    2    1    1    2
-#&gt; [119,]    4    2    1    2    1
-#&gt; [120,]    4    2    2    1    1
-#&gt; [121,]    4    3    1    1    1
-#&gt; [122,]    5    1    1    1    2
-#&gt; [123,]    5    1    1    2    1
-#&gt; [124,]    5    1    2    1    1
-#&gt; [125,]    5    2    1    1    1
-#&gt; [126,]    6    1    1    1    1</div><div class='input'><span class='co'># reversed lexicographical order</span>
-<span class='fu'>compositions</span>(<span class='fl'>10</span>, <span class='fl'>5</span>, <span class='kw'>descending</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt;        [,1] [,2] [,3] [,4] [,5]
-#&gt;   [1,]    6    1    1    1    1
-#&gt;   [2,]    5    2    1    1    1
-#&gt;   [3,]    5    1    2    1    1
-#&gt;   [4,]    5    1    1    2    1
-#&gt;   [5,]    5    1    1    1    2
-#&gt;   [6,]    4    3    1    1    1
-#&gt;   [7,]    4    2    2    1    1
-#&gt;   [8,]    4    2    1    2    1
-#&gt;   [9,]    4    2    1    1    2
-#&gt;  [10,]    4    1    3    1    1
-#&gt;  [11,]    4    1    2    2    1
-#&gt;  [12,]    4    1    2    1    2
-#&gt;  [13,]    4    1    1    3    1
-#&gt;  [14,]    4    1    1    2    2
-#&gt;  [15,]    4    1    1    1    3
-#&gt;  [16,]    3    4    1    1    1
-#&gt;  [17,]    3    3    2    1    1
-#&gt;  [18,]    3    3    1    2    1
-#&gt;  [19,]    3    3    1    1    2
-#&gt;  [20,]    3    2    3    1    1
-#&gt;  [21,]    3    2    2    2    1
-#&gt;  [22,]    3    2    2    1    2
-#&gt;  [23,]    3    2    1    3    1
-#&gt;  [24,]    3    2    1    2    2
-#&gt;  [25,]    3    2    1    1    3
-#&gt;  [26,]    3    1    4    1    1
-#&gt;  [27,]    3    1    3    2    1
-#&gt;  [28,]    3    1    3    1    2
-#&gt;  [29,]    3    1    2    3    1
-#&gt;  [30,]    3    1    2    2    2
-#&gt;  [31,]    3    1    2    1    3
-#&gt;  [32,]    3    1    1    4    1
-#&gt;  [33,]    3    1    1    3    2
-#&gt;  [34,]    3    1    1    2    3
-#&gt;  [35,]    3    1    1    1    4
-#&gt;  [36,]    2    5    1    1    1
-#&gt;  [37,]    2    4    2    1    1
-#&gt;  [38,]    2    4    1    2    1
-#&gt;  [39,]    2    4    1    1    2
-#&gt;  [40,]    2    3    3    1    1
-#&gt;  [41,]    2    3    2    2    1
-#&gt;  [42,]    2    3    2    1    2
-#&gt;  [43,]    2    3    1    3    1
-#&gt;  [44,]    2    3    1    2    2
-#&gt;  [45,]    2    3    1    1    3
-#&gt;  [46,]    2    2    4    1    1
-#&gt;  [47,]    2    2    3    2    1
-#&gt;  [48,]    2    2    3    1    2
-#&gt;  [49,]    2    2    2    3    1
-#&gt;  [50,]    2    2    2    2    2
-#&gt;  [51,]    2    2    2    1    3
-#&gt;  [52,]    2    2    1    4    1
-#&gt;  [53,]    2    2    1    3    2
-#&gt;  [54,]    2    2    1    2    3
-#&gt;  [55,]    2    2    1    1    4
-#&gt;  [56,]    2    1    5    1    1
-#&gt;  [57,]    2    1    4    2    1
-#&gt;  [58,]    2    1    4    1    2
-#&gt;  [59,]    2    1    3    3    1
-#&gt;  [60,]    2    1    3    2    2
-#&gt;  [61,]    2    1    3    1    3
-#&gt;  [62,]    2    1    2    4    1
-#&gt;  [63,]    2    1    2    3    2
-#&gt;  [64,]    2    1    2    2    3
-#&gt;  [65,]    2    1    2    1    4
-#&gt;  [66,]    2    1    1    5    1
-#&gt;  [67,]    2    1    1    4    2
-#&gt;  [68,]    2    1    1    3    3
-#&gt;  [69,]    2    1    1    2    4
-#&gt;  [70,]    2    1    1    1    5
-#&gt;  [71,]    1    6    1    1    1
-#&gt;  [72,]    1    5    2    1    1
-#&gt;  [73,]    1    5    1    2    1
-#&gt;  [74,]    1    5    1    1    2
-#&gt;  [75,]    1    4    3    1    1
-#&gt;  [76,]    1    4    2    2    1
-#&gt;  [77,]    1    4    2    1    2
-#&gt;  [78,]    1    4    1    3    1
-#&gt;  [79,]    1    4    1    2    2
-#&gt;  [80,]    1    4    1    1    3
-#&gt;  [81,]    1    3    4    1    1
-#&gt;  [82,]    1    3    3    2    1
-#&gt;  [83,]    1    3    3    1    2
-#&gt;  [84,]    1    3    2    3    1
-#&gt;  [85,]    1    3    2    2    2
-#&gt;  [86,]    1    3    2    1    3
-#&gt;  [87,]    1    3    1    4    1
-#&gt;  [88,]    1    3    1    3    2
-#&gt;  [89,]    1    3    1    2    3
-#&gt;  [90,]    1    3    1    1    4
-#&gt;  [91,]    1    2    5    1    1
-#&gt;  [92,]    1    2    4    2    1
-#&gt;  [93,]    1    2    4    1    2
-#&gt;  [94,]    1    2    3    3    1
-#&gt;  [95,]    1    2    3    2    2
-#&gt;  [96,]    1    2    3    1    3
-#&gt;  [97,]    1    2    2    4    1
-#&gt;  [98,]    1    2    2    3    2
-#&gt;  [99,]    1    2    2    2    3
-#&gt; [100,]    1    2    2    1    4
-#&gt; [101,]    1    2    1    5    1
-#&gt; [102,]    1    2    1    4    2
-#&gt; [103,]    1    2    1    3    3
-#&gt; [104,]    1    2    1    2    4
-#&gt; [105,]    1    2    1    1    5
-#&gt; [106,]    1    1    6    1    1
-#&gt; [107,]    1    1    5    2    1
-#&gt; [108,]    1    1    5    1    2
-#&gt; [109,]    1    1    4    3    1
-#&gt; [110,]    1    1    4    2    2
-#&gt; [111,]    1    1    4    1    3
-#&gt; [112,]    1    1    3    4    1
-#&gt; [113,]    1    1    3    3    2
-#&gt; [114,]    1    1    3    2    3
-#&gt; [115,]    1    1    3    1    4
-#&gt; [116,]    1    1    2    5    1
-#&gt; [117,]    1    1    2    4    2
-#&gt; [118,]    1    1    2    3    3
-#&gt; [119,]    1    1    2    2    4
-#&gt; [120,]    1    1    2    1    5
-#&gt; [121,]    1    1    1    6    1
-#&gt; [122,]    1    1    1    5    2
-#&gt; [123,]    1    1    1    4    3
-#&gt; [124,]    1    1    1    3    4
-#&gt; [125,]    1    1    1    2    5
-#&gt; [126,]    1    1    1    1    6</div><div class='input'>
+<span class='fu'>compositions</span>(<span class='fl'>6</span>, <span class='fl'>3</span>)</div><div class='output co'>#&gt;       [,1] [,2] [,3]
+#&gt;  [1,]    1    1    4
+#&gt;  [2,]    1    2    3
+#&gt;  [3,]    1    3    2
+#&gt;  [4,]    1    4    1
+#&gt;  [5,]    2    1    3
+#&gt;  [6,]    2    2    2
+#&gt;  [7,]    2    3    1
+#&gt;  [8,]    3    1    2
+#&gt;  [9,]    3    2    1
+#&gt; [10,]    4    1    1</div><div class='input'><span class='co'># reversed lexicographical order</span>
+<span class='fu'>compositions</span>(<span class='fl'>6</span>, <span class='fl'>3</span>, <span class='kw'>descending</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt;       [,1] [,2] [,3]
+#&gt;  [1,]    4    1    1
+#&gt;  [2,]    3    2    1
+#&gt;  [3,]    3    1    2
+#&gt;  [4,]    2    3    1
+#&gt;  [5,]    2    2    2
+#&gt;  [6,]    2    1    3
+#&gt;  [7,]    1    4    1
+#&gt;  [8,]    1    3    2
+#&gt;  [9,]    1    2    3
+#&gt; [10,]    1    1    4</div><div class='input'>
 <span class='co'># column major</span>
-<span class='fu'>compositions</span>(<span class='fl'>6</span>, <span class='kw'>layout</span> <span class='kw'>=</span> <span class='st'>"column"</span>)</div><div class='output co'>#&gt;      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12] [,13] [,14]
-#&gt; [1,]    1    1    1    1    1    1    1    1    1     1     1     1     1     1
-#&gt; [2,]    1    1    1    1    1    1    1    1    2     2     2     2     3     3
-#&gt; [3,]    1    1    1    1    2    2    3    4    1     1     2     3     1     2
-#&gt; [4,]    1    1    2    3    1    2    1    0    1     2     1     0     1     0
-#&gt; [5,]    1    2    1    0    1    0    0    0    1     0     0     0     0     0
-#&gt; [6,]    1    0    0    0    0    0    0    0    0     0     0     0     0     0
-#&gt;      [,15] [,16] [,17] [,18] [,19] [,20] [,21] [,22] [,23] [,24] [,25] [,26]
-#&gt; [1,]     1     1     2     2     2     2     2     2     2     2     3     3
-#&gt; [2,]     4     5     1     1     1     1     2     2     3     4     1     1
-#&gt; [3,]     1     0     1     1     2     3     1     2     1     0     1     2
-#&gt; [4,]     0     0     1     2     1     0     1     0     0     0     1     0
-#&gt; [5,]     0     0     1     0     0     0     0     0     0     0     0     0
-#&gt; [6,]     0     0     0     0     0     0     0     0     0     0     0     0
-#&gt;      [,27] [,28] [,29] [,30] [,31] [,32]
-#&gt; [1,]     3     3     4     4     5     6
-#&gt; [2,]     2     3     1     2     1     0
-#&gt; [3,]     1     0     1     0     0     0
-#&gt; [4,]     0     0     0     0     0     0
-#&gt; [5,]     0     0     0     0     0     0
-#&gt; [6,]     0     0     0     0     0     0</div><div class='input'><span class='fu'>compositions</span>(<span class='fl'>6</span>, <span class='fl'>3</span>, <span class='kw'>layout</span> <span class='kw'>=</span> <span class='st'>"column"</span>)</div><div class='output co'>#&gt;      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10]
+<span class='fu'>compositions</span>(<span class='fl'>4</span>, <span class='kw'>layout</span> <span class='kw'>=</span> <span class='st'>"column"</span>)</div><div class='output co'>#&gt;      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8]
+#&gt; [1,]    1    1    1    1    2    2    3    4
+#&gt; [2,]    1    1    2    3    1    2    1    0
+#&gt; [3,]    1    2    1    0    1    0    0    0
+#&gt; [4,]    1    0    0    0    0    0    0    0</div><div class='input'><span class='fu'>compositions</span>(<span class='fl'>6</span>, <span class='fl'>3</span>, <span class='kw'>layout</span> <span class='kw'>=</span> <span class='st'>"column"</span>)</div><div class='output co'>#&gt;      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10]
 #&gt; [1,]    1    1    1    1    2    2    2    3    3     4
 #&gt; [2,]    1    2    3    4    1    2    3    1    2     1
 #&gt; [3,]    4    3    2    1    3    2    1    2    1     1</div><div class='input'>
 <span class='co'># list output</span>
-<span class='fu'>compositions</span>(<span class='fl'>6</span>, <span class='kw'>layout</span> <span class='kw'>=</span> <span class='st'>"list"</span>)</div><div class='output co'>#&gt; [[1]]
-#&gt; [1] 1 1 1 1 1 1
+<span class='fu'>compositions</span>(<span class='fl'>4</span>, <span class='kw'>layout</span> <span class='kw'>=</span> <span class='st'>"list"</span>)</div><div class='output co'>#&gt; [[1]]
+#&gt; [1] 1 1 1 1
 #&gt; 
 #&gt; [[2]]
-#&gt; [1] 1 1 1 1 2
+#&gt; [1] 1 1 2
 #&gt; 
 #&gt; [[3]]
-#&gt; [1] 1 1 1 2 1
+#&gt; [1] 1 2 1
 #&gt; 
 #&gt; [[4]]
-#&gt; [1] 1 1 1 3
+#&gt; [1] 1 3
 #&gt; 
 #&gt; [[5]]
-#&gt; [1] 1 1 2 1 1
+#&gt; [1] 2 1 1
 #&gt; 
 #&gt; [[6]]
-#&gt; [1] 1 1 2 2
+#&gt; [1] 2 2
 #&gt; 
 #&gt; [[7]]
-#&gt; [1] 1 1 3 1
+#&gt; [1] 3 1
 #&gt; 
 #&gt; [[8]]
-#&gt; [1] 1 1 4
-#&gt; 
-#&gt; [[9]]
-#&gt; [1] 1 2 1 1 1
-#&gt; 
-#&gt; [[10]]
-#&gt; [1] 1 2 1 2
-#&gt; 
-#&gt; [[11]]
-#&gt; [1] 1 2 2 1
-#&gt; 
-#&gt; [[12]]
-#&gt; [1] 1 2 3
-#&gt; 
-#&gt; [[13]]
-#&gt; [1] 1 3 1 1
-#&gt; 
-#&gt; [[14]]
-#&gt; [1] 1 3 2
-#&gt; 
-#&gt; [[15]]
-#&gt; [1] 1 4 1
-#&gt; 
-#&gt; [[16]]
-#&gt; [1] 1 5
-#&gt; 
-#&gt; [[17]]
-#&gt; [1] 2 1 1 1 1
-#&gt; 
-#&gt; [[18]]
-#&gt; [1] 2 1 1 2
-#&gt; 
-#&gt; [[19]]
-#&gt; [1] 2 1 2 1
-#&gt; 
-#&gt; [[20]]
-#&gt; [1] 2 1 3
-#&gt; 
-#&gt; [[21]]
-#&gt; [1] 2 2 1 1
-#&gt; 
-#&gt; [[22]]
-#&gt; [1] 2 2 2
-#&gt; 
-#&gt; [[23]]
-#&gt; [1] 2 3 1
-#&gt; 
-#&gt; [[24]]
-#&gt; [1] 2 4
-#&gt; 
-#&gt; [[25]]
-#&gt; [1] 3 1 1 1
-#&gt; 
-#&gt; [[26]]
-#&gt; [1] 3 1 2
-#&gt; 
-#&gt; [[27]]
-#&gt; [1] 3 2 1
-#&gt; 
-#&gt; [[28]]
-#&gt; [1] 3 3
-#&gt; 
-#&gt; [[29]]
-#&gt; [1] 4 1 1
-#&gt; 
-#&gt; [[30]]
-#&gt; [1] 4 2
-#&gt; 
-#&gt; [[31]]
-#&gt; [1] 5 1
-#&gt; 
-#&gt; [[32]]
-#&gt; [1] 6
+#&gt; [1] 4
 #&gt; </div><div class='input'><span class='fu'>compositions</span>(<span class='fl'>6</span>, <span class='fl'>3</span>, <span class='kw'>layout</span> <span class='kw'>=</span> <span class='st'>"list"</span>)</div><div class='output co'>#&gt; [[1]]
 #&gt; [1] 1 1 4
 #&gt; 

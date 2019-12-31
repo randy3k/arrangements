@@ -41,22 +41,22 @@ ncompositions <- function(n, k = NULL, bigz = FALSE) {
 #' @param drop vectorize a matrix or unlist a list
 #' @seealso [icompositions] for iterating compositions and [ncompositions] to calculate number of compositions
 #' @examples
-#' # all compositions of 6
-#' compositions(6)
+#' # all compositions of 4
+#' compositions(4)
 #' # reversed lexicographical order
-#' compositions(6, descending = TRUE)
+#' compositions(4, descending = TRUE)
 #'
 #' # fixed number of parts
-#' compositions(10, 5)
+#' compositions(6, 3)
 #' # reversed lexicographical order
-#' compositions(10, 5, descending = TRUE)
+#' compositions(6, 3, descending = TRUE)
 #'
 #' # column major
-#' compositions(6, layout = "column")
+#' compositions(4, layout = "column")
 #' compositions(6, 3, layout = "column")
 #'
 #' # list output
-#' compositions(6, layout = "list")
+#' compositions(4, layout = "list")
 #' compositions(6, 3, layout = "list")
 #'
 #' # zero sized compositions
@@ -148,7 +148,7 @@ Compositions <- R6::R6Class(
 #' @param skip the number of compositions skipped
 #' @seealso [compositions] for generating all compositions and [ncompositions] to calculate number of compositions
 #' @examples
-#' ipart <- icompositions(10)
+#' ipart <- icompositions(4)
 #' ipart$getnext()
 #' ipart$getnext(2)
 #' ipart$getnext(layout = "column", drop = FALSE)

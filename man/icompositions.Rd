@@ -46,7 +46,7 @@ reset()
 }
 }
 \examples{
-ipart <- icompositions(10)
+ipart <- icompositions(4)
 ipart$getnext()
 ipart$getnext(2)
 ipart$getnext(layout = "column", drop = FALSE)
