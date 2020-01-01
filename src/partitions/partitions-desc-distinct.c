@@ -86,7 +86,7 @@ void nth_desc_distinct_partition_bigz(unsigned int* ar, unsigned int m, unsigned
     for (i = 0; i < m; i++) {
         mpz_set_ui(count, 0);
         if (n > 0 && i < m - 1) {
-            for (j = start; j >= 1; j++) {
+            for (j = start; j >= 1; j--) {
                 if (n < j) continue;
                 n_max_distinct_partitions_bigz(this_count, n - j, j - 1);
                 mpz_add(this_count, this_count, count);
@@ -167,7 +167,7 @@ SEXP next_desc_distinct_partitions(int n, char layout, int d, SEXP _skip, SEXP s
 
     if (!variable_exists(state, (char*)"k", INTSXP, 1, (void**) &kp)) {
         if (Rf_isNull(_skip)) {
-            kp[0] = m;
+            kp[0] = 1;
         } else  {
             for (i = 0; i < m; i++) {
                 if (ap[i] == 0) {
