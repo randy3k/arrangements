@@ -29,11 +29,11 @@ jobs:
           apt-get install libgmp3-dev -y
       - name: Install dependencies
         run: |
-          Rscript -e "install.packages(c('remotes', 'rcmdcheck'), repos = 'https://cloud.r-project.org')"
-          Rscript -e "remotes::install_deps(dependencies = TRUE)"
+          RDscript -e "install.packages(c('remotes', 'rcmdcheck'), repos = 'https://cloud.r-project.org')"
+          RDscript -e "remotes::install_deps(dependencies = TRUE)"
       - name: Running Tests
         run: |
-          Rscript -e "rcmdcheck::rcmdcheck(args = c('--as-cran', '--no-manual', '--timings'))"
+          RDscript -e "rcmdcheck::rcmdcheck(args = c('--as-cran', '--no-manual', '--timings'))"
 
   linux:
     if: contains(github.event.head_commit.message, '[ci skip]') == false
