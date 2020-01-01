@@ -491,11 +491,16 @@ void n_max_distinct_partitions_bigz(mpz_t z, int n, int m) {
 }
 
 double n_k_distinct_partitions(int n, int k) {
-    return n_k_partitions(n - choose(k, 2), k);
+    double k2 = choose(k, 2);
+    if (n < k2) return 0;
+    return n_k_partitions(n - k2, k);
 }
 
 void n_k_distinct_partitions_bigz(mpz_t z, int n, int k) {
     double k2 = choose(k, 2);
-    if (n < k2) return;
+    if (n < k2) {
+        mpz_set_ui(z, 0);
+        return;
+    }
     n_k_partitions_bigz(z, n - k2, k);
 }

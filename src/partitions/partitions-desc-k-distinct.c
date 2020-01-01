@@ -54,7 +54,7 @@ void nth_desc_k_partition_bigz(unsigned int* ar, unsigned int n, unsigned int k,
 void nth_desc_k_distinct_partition(unsigned int* ar, unsigned int n, unsigned int k, unsigned int index) {
     int i;
     double k2 = choose(k, 2);
-    if (n < k2) return;
+    if (n <= k2) return;
     nth_desc_k_partition(ar, n - k2, k, index);
     for (i = 0; i < k - 1; i++) ar[i] += k - i - 1;
 }
@@ -63,7 +63,7 @@ void nth_desc_k_distinct_partition(unsigned int* ar, unsigned int n, unsigned in
 void nth_desc_k_distinct_partition_bigz(unsigned int* ar, unsigned int n, unsigned int k, mpz_t index) {
     int i;
     double k2 = choose(k, 2);
-    if (n < k2) return;
+    if (n <= k2) return;
     nth_desc_k_partition_bigz(ar, n - k2, k, index);
     for (i = 0; i < k - 1; i++) ar[i] += k - i - 1;
 }
