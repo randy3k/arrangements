@@ -22,6 +22,13 @@ of similar kind. Benchmarks could be found at
 
 ## Installation
 
+You can install the released version of arrangements from
+[CRAN](https://CRAN.R-project.org) with:
+
+``` r
+install.packages("arrangements")
+```
+
 Install the latest development version using
 
 ``` r

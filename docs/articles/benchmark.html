@@ -6,19 +6,19 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Benchmarking 'arrangements' • arrangements</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><meta property="og:title" content="Benchmarking 'arrangements'">
-<meta property="og:description" content="">
-<meta name="twitter:card" content="summary">
+<meta property="og:description" content="arrangements">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 </head>
-<body>
+<body data-spy="scroll" data-target="#toc">
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -59,7 +59,14 @@
   </ul>
 </li>
       </ul>
-<ul class="nav navbar-nav navbar-right"></ul>
+<ul class="nav navbar-nav navbar-right">
+<li>
+  <a href="https://github.com/randy3k/arrangements/">
+    <span class="fab fa fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
 </div>
 <!--/.nav-collapse -->
   </div>
@@ -69,13 +76,13 @@
 
       
 
-      </header><div class="row">
+      </header><script src="benchmark_files/header-attrs-2.1/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1>Benchmarking ‘arrangements’</h1>
+      <h1 data-toc-skip>Benchmarking ‘arrangements’</h1>
             
       
-      
+      <small class="dont-index">Source: <a href="https://github.com/randy3k/arrangements/blob/master/vignettes/benchmark.Rmd"><code>vignettes/benchmark.Rmd</code></a></small>
       <div class="hidden name"><code>benchmark.Rmd</code></div>
 
     </div>
@@ -95,125 +102,126 @@
 <li>
 <a href="https://CRAN.R-project.org/package=permute">permute</a> 0.9-5</li>
 <li>
-<a href="https://CRAN.R-project.org/package=permutations">permutations</a> 1.0-5</li>
+<a href="https://CRAN.R-project.org/package=permutations">permutations</a> 1.0-6</li>
 <li>
-<a href="https://CRAN.R-project.org/package=RcppAlgos">RcppAlgos</a> 2.3.4</li>
+<a href="https://CRAN.R-project.org/package=RcppAlgos">RcppAlgos</a> 2.4.1</li>
 </ul>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(gtools)</span>
-<span id="cb1-2"><a href="#cb1-2"></a><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(combinat)</span>
-<span id="cb1-3"><a href="#cb1-3"></a><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(multicool)</span>
-<span id="cb1-4"><a href="#cb1-4"></a><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(partitions)</span>
-<span id="cb1-5"><a href="#cb1-5"></a><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(permute)</span>
-<span id="cb1-6"><a href="#cb1-6"></a><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(permutations)</span>
-<span id="cb1-7"><a href="#cb1-7"></a><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(RcppAlgos)</span>
-<span id="cb1-8"><a href="#cb1-8"></a><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(arrangements)</span>
-<span id="cb1-9"><a href="#cb1-9"></a>gtools.permutations &lt;-<span class="st"> </span>gtools<span class="op">::</span>permutations</span>
-<span id="cb1-10"><a href="#cb1-10"></a>gtools.combinations &lt;-<span class="st"> </span>gtools<span class="op">::</span>combinations</span>
-<span id="cb1-11"><a href="#cb1-11"></a>partitions.compositions &lt;-<span class="st"> </span>partitions<span class="op">::</span>compositions</span>
-<span id="cb1-12"><a href="#cb1-12"></a>utils.combn &lt;-<span class="st"> </span>utils<span class="op">::</span>combn</span></code></pre></div>
+<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">gtools</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">combinat</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">multicool</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">partitions</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">permute</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">permutations</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">RcppAlgos</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">arrangements</span>)
+<span class="no">gtools.permutations</span> <span class="kw">&lt;-</span> <span class="kw pkg">gtools</span><span class="kw ns">::</span><span class="no"><a href="https://rdrr.io/pkg/gtools/man/combinations.html">permutations</a></span>
+<span class="no">gtools.combinations</span> <span class="kw">&lt;-</span> <span class="kw pkg">gtools</span><span class="kw ns">::</span><span class="no"><a href="https://rdrr.io/pkg/gtools/man/combinations.html">combinations</a></span>
+<span class="no">partitions.compositions</span> <span class="kw">&lt;-</span> <span class="kw pkg">partitions</span><span class="kw ns">::</span><span class="no"><a href="https://rdrr.io/pkg/partitions/man/parts.html">compositions</a></span>
+<span class="no">utils.combn</span> <span class="kw">&lt;-</span> <span class="kw pkg">utils</span><span class="kw ns">::</span><span class="no"><a href="https://rdrr.io/r/utils/combn.html">combn</a></span></pre></body></html></div>
 <p><code><a href="https://rdrr.io/pkg/gtools/man/combinations.html">gtools::permutations</a></code>, <code><a href="https://rdrr.io/pkg/gtools/man/combinations.html">gtools::combinations</a></code>, <code><a href="https://rdrr.io/pkg/partitions/man/parts.html">partitions::compositions</a></code> and <code><a href="https://rdrr.io/r/utils/combn.html">utils::combn</a></code> are renamed because they are being overwritten by other packages.</p>
 <div id="permutations" class="section level3">
 <h3 class="hasAnchor">
 <a href="#permutations" class="anchor"></a>Permutations</h3>
 <p><strong>Permutations of 6 items</strong></p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">autoplot</span>(<span class="kw">microbenchmark</span>(</span>
-<span id="cb2-2"><a href="#cb2-2"></a>    <span class="dt">gtools =</span> <span class="kw">gtools.permutations</span>(<span class="dv">6</span>, <span class="dv">6</span>),</span>
-<span id="cb2-3"><a href="#cb2-3"></a>    <span class="dt">multicool =</span> <span class="kw"><a href="https://rdrr.io/pkg/multicool/man/allPerm.html">allPerm</a></span>(<span class="kw"><a href="https://rdrr.io/pkg/multicool/man/initMC.html">initMC</a></span>(<span class="dv">1</span><span class="op">:</span><span class="dv">6</span>)),</span>
-<span id="cb2-4"><a href="#cb2-4"></a>    <span class="dt">partitions =</span> partitions<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/partitions/man/perms.html">perms</a></span>(<span class="dv">6</span>),</span>
-<span id="cb2-5"><a href="#cb2-5"></a>    <span class="dt">permuate =</span> <span class="kw"><a href="https://rdrr.io/pkg/permute/man/allPerms.html">allPerms</a></span>(<span class="dv">6</span>),</span>
-<span id="cb2-6"><a href="#cb2-6"></a>    <span class="dt">permutations =</span> <span class="kw"><a href="https://rdrr.io/pkg/permutations/man/allperms.html">allperms</a></span>(<span class="dv">6</span>),</span>
-<span id="cb2-7"><a href="#cb2-7"></a>    <span class="dt">RcppAlgos =</span> <span class="kw"><a href="https://rdrr.io/pkg/RcppAlgos/man/combinatoricsGeneral.html">permuteGeneral</a></span>(<span class="dv">6</span>, <span class="dv">6</span>),</span>
-<span id="cb2-8"><a href="#cb2-8"></a>    <span class="dt">arrangements =</span> <span class="kw"><a href="../reference/permutations.html">permutations</a></span>(<span class="dv">6</span>)</span>
-<span id="cb2-9"><a href="#cb2-9"></a>))</span></code></pre></div>
+<div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="fu">autoplot</span>(<span class="fu">microbenchmark</span>(
+    <span class="kw">gtools</span> <span class="kw">=</span> <span class="fu">gtools.permutations</span>(<span class="fl">6</span>, <span class="fl">6</span>),
+    <span class="kw">multicool</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/pkg/multicool/man/allPerm.html">allPerm</a></span>(<span class="fu"><a href="https://rdrr.io/pkg/multicool/man/initMC.html">initMC</a></span>(<span class="fl">1</span>:<span class="fl">6</span>)),
+    <span class="kw">partitions</span> <span class="kw">=</span> <span class="kw pkg">partitions</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/partitions/man/perms.html">perms</a></span>(<span class="fl">6</span>),
+    <span class="kw">permuate</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/pkg/permute/man/allPerms.html">allPerms</a></span>(<span class="fl">6</span>),
+    <span class="kw">permutations</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/pkg/permutations/man/allperms.html">allperms</a></span>(<span class="fl">6</span>),
+    <span class="kw">RcppAlgos</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/pkg/RcppAlgos/man/combinatoricsGeneral.html">permuteGeneral</a></span>(<span class="fl">6</span>, <span class="fl">6</span>),
+    <span class="kw">arrangements</span> <span class="kw">=</span> <span class="fu"><a href="../reference/permutations.html">permutations</a></span>(<span class="fl">6</span>)
+))</pre></body></html></div>
 <p><img src="benchmark_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
 <p><strong>5-Permutations of 7 items</strong></p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="kw">autoplot</span>(<span class="kw">microbenchmark</span>(</span>
-<span id="cb3-2"><a href="#cb3-2"></a>    <span class="dt">gtools =</span> <span class="kw">gtools.permutations</span>(<span class="dv">7</span>, <span class="dv">5</span>),</span>
-<span id="cb3-3"><a href="#cb3-3"></a>    <span class="dt">RcppAlgos =</span> <span class="kw"><a href="https://rdrr.io/pkg/RcppAlgos/man/combinatoricsGeneral.html">permuteGeneral</a></span>(<span class="dv">7</span>, <span class="dv">5</span>),</span>
-<span id="cb3-4"><a href="#cb3-4"></a>    <span class="dt">arrangements =</span> <span class="kw"><a href="../reference/permutations.html">permutations</a></span>(<span class="dv">7</span>, <span class="dv">5</span>)</span>
-<span id="cb3-5"><a href="#cb3-5"></a>))</span></code></pre></div>
+<div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="fu">autoplot</span>(<span class="fu">microbenchmark</span>(
+    <span class="kw">gtools</span> <span class="kw">=</span> <span class="fu">gtools.permutations</span>(<span class="fl">7</span>, <span class="fl">5</span>),
+    <span class="kw">RcppAlgos</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/pkg/RcppAlgos/man/combinatoricsGeneral.html">permuteGeneral</a></span>(<span class="fl">7</span>, <span class="fl">5</span>),
+    <span class="kw">arrangements</span> <span class="kw">=</span> <span class="fu"><a href="../reference/permutations.html">permutations</a></span>(<span class="fl">7</span>, <span class="fl">5</span>)
+))</pre></body></html></div>
 <p><img src="benchmark_files/figure-html/unnamed-chunk-6-1.png" width="700"></p>
 <p><strong>Permutations of multiset</strong></p>
 <p><img src="benchmark_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
 <p><strong>K-Permutations of multiset</strong></p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>f &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/pkg/permutations/man/c.html">c</a></span>(<span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">2</span>)</span>
-<span id="cb4-2"><a href="#cb4-2"></a>x &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>, f)</span>
-<span id="cb4-3"><a href="#cb4-3"></a><span class="kw">autoplot</span>(<span class="kw">microbenchmark</span>(</span>
-<span id="cb4-4"><a href="#cb4-4"></a>    <span class="dt">multicool =</span> <span class="kw"><a href="https://rdrr.io/pkg/multicool/man/allPerm.html">allPerm</a></span>(<span class="kw"><a href="https://rdrr.io/pkg/multicool/man/initMC.html">initMC</a></span>(x)),</span>
-<span id="cb4-5"><a href="#cb4-5"></a>    <span class="dt">RcppAlgos =</span> <span class="kw"><a href="https://rdrr.io/pkg/RcppAlgos/man/combinatoricsGeneral.html">permuteGeneral</a></span>(<span class="dv">5</span>, <span class="dv">6</span>, <span class="dt">freqs =</span> f),</span>
-<span id="cb4-6"><a href="#cb4-6"></a>    <span class="dt">arrangements =</span> <span class="kw"><a href="../reference/permutations.html">permutations</a></span>(<span class="dt">k =</span> <span class="dv">6</span>, <span class="dt">freq =</span> f)</span>
-<span id="cb4-7"><a href="#cb4-7"></a>))</span></code></pre></div>
+<div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="no">f</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/permutations/man/c.html">c</a></span>(<span class="fl">2</span>, <span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">1</span>, <span class="fl">2</span>)
+<span class="no">x</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(<span class="fl">1</span>:<span class="fl">5</span>, <span class="no">f</span>)
+<span class="fu">autoplot</span>(<span class="fu">microbenchmark</span>(
+    <span class="kw">multicool</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/pkg/multicool/man/allPerm.html">allPerm</a></span>(<span class="fu"><a href="https://rdrr.io/pkg/multicool/man/initMC.html">initMC</a></span>(<span class="no">x</span>)),
+    <span class="kw">RcppAlgos</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/pkg/RcppAlgos/man/combinatoricsGeneral.html">permuteGeneral</a></span>(<span class="fl">5</span>, <span class="fl">6</span>, <span class="kw">freqs</span> <span class="kw">=</span> <span class="no">f</span>),
+    <span class="kw">arrangements</span> <span class="kw">=</span> <span class="fu"><a href="../reference/permutations.html">permutations</a></span>(<span class="kw">k</span> <span class="kw">=</span> <span class="fl">6</span>, <span class="kw">freq</span> <span class="kw">=</span> <span class="no">f</span>)
+))</pre></body></html></div>
 <p><img src="benchmark_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
 </div>
 <div id="combinations" class="section level3">
 <h3 class="hasAnchor">
 <a href="#combinations" class="anchor"></a>Combinations</h3>
 <p><strong>7-Combinations of 15 items</strong></p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="kw">autoplot</span>(<span class="kw">microbenchmark</span>(</span>
-<span id="cb5-2"><a href="#cb5-2"></a>    <span class="dt">gtools =</span> <span class="kw">gtools.combinations</span>(<span class="dv">15</span>, <span class="dv">7</span>),</span>
-<span id="cb5-3"><a href="#cb5-3"></a>    <span class="dt">combinat =</span> <span class="kw"><a href="https://rdrr.io/pkg/combinat/man/combn.html">combn</a></span>(<span class="dv">15</span>, <span class="dv">7</span>),</span>
-<span id="cb5-4"><a href="#cb5-4"></a>    <span class="dt">utils =</span> <span class="kw">utils.combn</span>(<span class="dv">15</span>, <span class="dv">7</span>),</span>
-<span id="cb5-5"><a href="#cb5-5"></a>    <span class="dt">RcppAlgos =</span> <span class="kw"><a href="https://rdrr.io/pkg/RcppAlgos/man/combinatoricsGeneral.html">comboGeneral</a></span>(<span class="dv">15</span>, <span class="dv">7</span>),</span>
-<span id="cb5-6"><a href="#cb5-6"></a>    <span class="dt">arrangements =</span> <span class="kw"><a href="../reference/combinations.html">combinations</a></span>(<span class="dv">15</span>, <span class="dv">7</span>)</span>
-<span id="cb5-7"><a href="#cb5-7"></a>))</span></code></pre></div>
+<div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="fu">autoplot</span>(<span class="fu">microbenchmark</span>(
+    <span class="kw">gtools</span> <span class="kw">=</span> <span class="fu">gtools.combinations</span>(<span class="fl">15</span>, <span class="fl">7</span>),
+    <span class="kw">combinat</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/pkg/combinat/man/combn.html">combn</a></span>(<span class="fl">15</span>, <span class="fl">7</span>),
+    <span class="kw">utils</span> <span class="kw">=</span> <span class="fu">utils.combn</span>(<span class="fl">15</span>, <span class="fl">7</span>),
+    <span class="kw">RcppAlgos</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/pkg/RcppAlgos/man/combinatoricsGeneral.html">comboGeneral</a></span>(<span class="fl">15</span>, <span class="fl">7</span>),
+    <span class="kw">arrangements</span> <span class="kw">=</span> <span class="fu"><a href="../reference/combinations.html">combinations</a></span>(<span class="fl">15</span>, <span class="fl">7</span>)
+))</pre></body></html></div>
 <p><img src="benchmark_files/figure-html/unnamed-chunk-12-1.png" width="700"></p>
 <p><strong>Combinations with replacement of 9 items</strong></p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="kw">autoplot</span>(<span class="kw">microbenchmark</span>(</span>
-<span id="cb6-2"><a href="#cb6-2"></a>    <span class="dt">gtools =</span> <span class="kw">gtools.combinations</span>(<span class="dv">9</span>, <span class="dv">6</span>, <span class="dt">repeats.allowed =</span> <span class="ot">TRUE</span>),</span>
-<span id="cb6-3"><a href="#cb6-3"></a>    <span class="dt">RcppAlgos =</span> <span class="kw"><a href="https://rdrr.io/pkg/RcppAlgos/man/combinatoricsGeneral.html">comboGeneral</a></span>(<span class="dv">9</span>, <span class="dv">6</span>, <span class="dt">repetition =</span> <span class="ot">TRUE</span>),</span>
-<span id="cb6-4"><a href="#cb6-4"></a>    <span class="dt">arrangements =</span> <span class="kw"><a href="../reference/combinations.html">combinations</a></span>(<span class="dv">9</span>, <span class="dv">6</span>, <span class="dt">replace =</span> <span class="ot">TRUE</span>)</span>
-<span id="cb6-5"><a href="#cb6-5"></a>))</span></code></pre></div>
+<div class="sourceCode" id="cb6"><html><body><pre class="r"><span class="fu">autoplot</span>(<span class="fu">microbenchmark</span>(
+    <span class="kw">gtools</span> <span class="kw">=</span> <span class="fu">gtools.combinations</span>(<span class="fl">9</span>, <span class="fl">6</span>, <span class="kw">repeats.allowed</span> <span class="kw">=</span> <span class="fl">TRUE</span>),
+    <span class="kw">RcppAlgos</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/pkg/RcppAlgos/man/combinatoricsGeneral.html">comboGeneral</a></span>(<span class="fl">9</span>, <span class="fl">6</span>, <span class="kw">repetition</span> <span class="kw">=</span> <span class="fl">TRUE</span>),
+    <span class="kw">arrangements</span> <span class="kw">=</span> <span class="fu"><a href="../reference/combinations.html">combinations</a></span>(<span class="fl">9</span>, <span class="fl">6</span>, <span class="kw">replace</span> <span class="kw">=</span> <span class="fl">TRUE</span>)
+))</pre></body></html></div>
 <p><img src="benchmark_files/figure-html/unnamed-chunk-14-1.png" width="700"></p>
 <p><strong>Combinations of multiset</strong></p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>f &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/pkg/permutations/man/c.html">c</a></span>(<span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">2</span>)</span>
-<span id="cb7-2"><a href="#cb7-2"></a>x &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(<span class="dv">1</span><span class="op">:</span><span class="dv">8</span>, f)</span>
-<span id="cb7-3"><a href="#cb7-3"></a><span class="kw">autoplot</span>(<span class="kw">microbenchmark</span>(</span>
-<span id="cb7-4"><a href="#cb7-4"></a>    <span class="dt">RcppAlgos =</span> <span class="kw"><a href="https://rdrr.io/pkg/RcppAlgos/man/combinatoricsGeneral.html">comboGeneral</a></span>(<span class="dv">8</span>, <span class="dv">6</span>, <span class="dt">freqs =</span> f),</span>
-<span id="cb7-5"><a href="#cb7-5"></a>    <span class="dt">arrangements =</span> <span class="kw"><a href="../reference/combinations.html">combinations</a></span>(<span class="dt">k =</span> <span class="dv">6</span>, <span class="dt">freq =</span> f)</span>
-<span id="cb7-6"><a href="#cb7-6"></a>))</span></code></pre></div>
+<div class="sourceCode" id="cb7"><html><body><pre class="r"><span class="no">f</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/permutations/man/c.html">c</a></span>(<span class="fl">2</span>, <span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">2</span>, <span class="fl">1</span>, <span class="fl">2</span>)
+<span class="no">x</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(<span class="fl">1</span>:<span class="fl">8</span>, <span class="no">f</span>)
+<span class="fu">autoplot</span>(<span class="fu">microbenchmark</span>(
+    <span class="kw">RcppAlgos</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/pkg/RcppAlgos/man/combinatoricsGeneral.html">comboGeneral</a></span>(<span class="fl">8</span>, <span class="fl">6</span>, <span class="kw">freqs</span> <span class="kw">=</span> <span class="no">f</span>),
+    <span class="kw">arrangements</span> <span class="kw">=</span> <span class="fu"><a href="../reference/combinations.html">combinations</a></span>(<span class="kw">k</span> <span class="kw">=</span> <span class="fl">6</span>, <span class="kw">freq</span> <span class="kw">=</span> <span class="no">f</span>)
+))</pre></body></html></div>
 <p><img src="benchmark_files/figure-html/unnamed-chunk-16-1.png" width="700"></p>
 </div>
 <div id="partitions" class="section level3">
 <h3 class="hasAnchor">
 <a href="#partitions" class="anchor"></a>Partitions</h3>
 <p><strong>Partitions of 30</strong></p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="kw">autoplot</span>(<span class="kw">microbenchmark</span>(</span>
-<span id="cb8-2"><a href="#cb8-2"></a>    <span class="dt">partitions =</span> <span class="kw"><a href="https://rdrr.io/pkg/partitions/man/parts.html">parts</a></span>(<span class="dv">30</span>),</span>
-<span id="cb8-3"><a href="#cb8-3"></a>    <span class="dt">arrangements =</span> <span class="kw"><a href="../reference/partitions.html">partitions</a></span>(<span class="dv">30</span>)</span>
-<span id="cb8-4"><a href="#cb8-4"></a>))</span></code></pre></div>
+<div class="sourceCode" id="cb8"><html><body><pre class="r"><span class="fu">autoplot</span>(<span class="fu">microbenchmark</span>(
+    <span class="kw">partitions</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/pkg/partitions/man/parts.html">parts</a></span>(<span class="fl">30</span>),
+    <span class="kw">arrangements</span> <span class="kw">=</span> <span class="fu"><a href="../reference/partitions.html">partitions</a></span>(<span class="fl">30</span>)
+))</pre></body></html></div>
 <p><img src="benchmark_files/figure-html/unnamed-chunk-18-1.png" width="700"></p>
 <p><strong>Partitions of 50 into 10 parts</strong></p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="kw">autoplot</span>(<span class="kw">microbenchmark</span>(</span>
-<span id="cb9-2"><a href="#cb9-2"></a>    <span class="dt">partitions =</span> <span class="kw"><a href="https://rdrr.io/pkg/partitions/man/parts.html">restrictedparts</a></span>(<span class="dv">50</span>, <span class="dv">10</span>, <span class="dt">include.zero =</span> <span class="ot">FALSE</span>),</span>
-<span id="cb9-3"><a href="#cb9-3"></a>    <span class="dt">arrangements =</span> <span class="kw"><a href="../reference/partitions.html">partitions</a></span>(<span class="dv">50</span>, <span class="dv">10</span>)</span>
-<span id="cb9-4"><a href="#cb9-4"></a>))</span></code></pre></div>
+<div class="sourceCode" id="cb9"><html><body><pre class="r"><span class="fu">autoplot</span>(<span class="fu">microbenchmark</span>(
+    <span class="kw">partitions</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/pkg/partitions/man/parts.html">restrictedparts</a></span>(<span class="fl">50</span>, <span class="fl">10</span>, <span class="kw">include.zero</span> <span class="kw">=</span> <span class="fl">FALSE</span>),
+    <span class="kw">arrangements</span> <span class="kw">=</span> <span class="fu"><a href="../reference/partitions.html">partitions</a></span>(<span class="fl">50</span>, <span class="fl">10</span>)
+))</pre></body></html></div>
 <p><img src="benchmark_files/figure-html/unnamed-chunk-20-1.png" width="700"></p>
 <p><strong>Partitions of 50 into distinct parts</strong></p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="kw">autoplot</span>(<span class="kw">microbenchmark</span>(</span>
-<span id="cb10-2"><a href="#cb10-2"></a>    <span class="dt">partitions =</span> <span class="kw"><a href="https://rdrr.io/pkg/partitions/man/parts.html">diffparts</a></span>(<span class="dv">50</span>),</span>
-<span id="cb10-3"><a href="#cb10-3"></a>    <span class="dt">arrangements =</span> <span class="kw"><a href="../reference/partitions.html">partitions</a></span>(<span class="dv">50</span>, <span class="dt">distinct =</span> <span class="ot">TRUE</span>)</span>
-<span id="cb10-4"><a href="#cb10-4"></a>))</span></code></pre></div>
+<div class="sourceCode" id="cb10"><html><body><pre class="r"><span class="fu">autoplot</span>(<span class="fu">microbenchmark</span>(
+    <span class="kw">partitions</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/pkg/partitions/man/parts.html">diffparts</a></span>(<span class="fl">50</span>),
+    <span class="kw">arrangements</span> <span class="kw">=</span> <span class="fu"><a href="../reference/partitions.html">partitions</a></span>(<span class="fl">50</span>, <span class="kw">distinct</span> <span class="kw">=</span> <span class="fl">TRUE</span>)
+))</pre></body></html></div>
 <p><img src="benchmark_files/figure-html/unnamed-chunk-21-1.png" width="700"></p>
 </div>
 <div id="compositions" class="section level3">
 <h3 class="hasAnchor">
 <a href="#compositions" class="anchor"></a>Compositions</h3>
 <p><strong>Compositions of 8</strong></p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="kw">autoplot</span>(<span class="kw">microbenchmark</span>(</span>
-<span id="cb11-2"><a href="#cb11-2"></a>    <span class="dt">partitions =</span> <span class="kw">partitions.compositions</span>(<span class="dv">8</span>, <span class="dt">include.zero =</span> <span class="ot">FALSE</span>),</span>
-<span id="cb11-3"><a href="#cb11-3"></a>    <span class="dt">arrangements =</span> <span class="kw"><a href="../reference/compositions.html">compositions</a></span>(<span class="dv">8</span>)</span>
-<span id="cb11-4"><a href="#cb11-4"></a>))</span></code></pre></div>
+<div class="sourceCode" id="cb11"><html><body><pre class="r"><span class="fu">autoplot</span>(<span class="fu">microbenchmark</span>(
+    <span class="kw">partitions</span> <span class="kw">=</span> <span class="fu">partitions.compositions</span>(<span class="fl">8</span>, <span class="kw">include.zero</span> <span class="kw">=</span> <span class="fl">FALSE</span>),
+    <span class="kw">arrangements</span> <span class="kw">=</span> <span class="fu"><a href="../reference/compositions.html">compositions</a></span>(<span class="fl">8</span>)
+))</pre></body></html></div>
 <p><img src="benchmark_files/figure-html/unnamed-chunk-22-1.png" width="700"></p>
 <p><strong>Compositions of 20 into 5 parts</strong></p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="kw">autoplot</span>(<span class="kw">microbenchmark</span>(</span>
-<span id="cb12-2"><a href="#cb12-2"></a>    <span class="dt">partitions =</span> <span class="kw">partitions.compositions</span>(<span class="dv">20</span>, <span class="dv">5</span>, <span class="dt">include.zero =</span> <span class="ot">FALSE</span>),</span>
-<span id="cb12-3"><a href="#cb12-3"></a>    <span class="dt">arrangements =</span> <span class="kw"><a href="../reference/compositions.html">compositions</a></span>(<span class="dv">20</span>, <span class="dv">5</span>)</span>
-<span id="cb12-4"><a href="#cb12-4"></a>))</span></code></pre></div>
+<div class="sourceCode" id="cb12"><html><body><pre class="r"><span class="fu">autoplot</span>(<span class="fu">microbenchmark</span>(
+    <span class="kw">partitions</span> <span class="kw">=</span> <span class="fu">partitions.compositions</span>(<span class="fl">20</span>, <span class="fl">5</span>, <span class="kw">include.zero</span> <span class="kw">=</span> <span class="fl">FALSE</span>),
+    <span class="kw">arrangements</span> <span class="kw">=</span> <span class="fu"><a href="../reference/compositions.html">compositions</a></span>(<span class="fl">20</span>, <span class="fl">5</span>)
+))</pre></body></html></div>
 <p><img src="benchmark_files/figure-html/unnamed-chunk-23-1.png" width="700"></p>
 </div>
   </div>
 
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+
       </div>
 
 </div>
@@ -225,7 +233,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.0.</p>
 </div>
 
       </footer>

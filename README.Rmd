@@ -10,7 +10,7 @@ d <- read.dcf("DESCRIPTION")
 ```
 
 ```{r results="asis", echo = FALSE, eval = TRUE}
-title <- d[colnames(d) == "Description"]
+title <- d[colnames(d) == "Title"]
 cat(c("# ", paste(trimws(strsplit(title, "\n")[[1]]), collapse = " ")))
 ```
 
