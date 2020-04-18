@@ -6,11 +6,12 @@ output:
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 ```{r results='asis', echo = FALSE, eval = TRUE}
-d <- packageDescription("arrangements")
+d <- read.dcf("DESCRIPTION")
 ```
 
 ```{r results="asis", echo = FALSE, eval = TRUE}
-cat(c("# ", paste(trimws(strsplit(d$Title, "\n")[[1]]), collapse=" ")))
+title <- d[colnames(d) == "Description"]
+cat(c("# ", paste(trimws(strsplit(title, "\n")[[1]]), collapse = " ")))
 ```
 
 [![Github Action](https://github.com/randy3k/arrangements/workflows/build/badge.svg?branch=master)](https://github.com/randy3k/arrangements)
@@ -23,7 +24,7 @@ Documentation: [http://randy3k.github.io/arrangements](https://randy3k.github.io
 
 
 ```{r results="asis", echo = FALSE, eval = TRUE}
-cat(d$Description)
+cat(d[colnames(d) == "Description"])
 ```
 
 ## Installation
