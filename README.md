@@ -5,13 +5,12 @@
 
 [![Github
 Action](https://github.com/randy3k/arrangements/workflows/build/badge.svg?branch=master)](https://github.com/randy3k/arrangements)
-[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/arrangements)](https://cran.r-project.org/package=arrangements)
-[![](http://cranlogs.r-pkg.org/badges/grand-total/arrangements)](https://cran.r-project.org/package=arrangements)
+[![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/arrangements)](https://cran.r-project.org/package=arrangements)
+[![](https://cranlogs.r-pkg.org/badges/grand-total/arrangements)](https://cran.r-project.org/package=arrangements)
 
 Github: <https://github.com/randy3k/arrangements>
 
-Documentation:
-[http://randy3k.github.io/arrangements](https://randy3k.github.io/arrangements)
+Documentation: <https://randy3k.github.io/arrangements>
 
 Fast generators and iterators for permutations, combinations, integer
 partitions and compositions. The arrangements are in lexicographical
