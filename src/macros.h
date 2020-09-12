@@ -267,3 +267,41 @@
     }
 
 #endif
+
+#define RESULT_LGLSXP(k) \
+    int* labelsp = LOGICAL(labels); \
+    if (layout == 'r') { \
+        result = PROTECT(Rf_allocMatrix(LGLSXP, d, k)); \
+        nprotect++; \
+        int* resultp = LOGICAL(result); \
+        for (j=0; j<d; j++) { \
+            NEXT(); \
+            for (i=0; i<k; i++) { \
+                resultp[j + i*d] = labelsp[ap[i]]; \
+            } \
+        } \
+    } else if (layout == 'c') { \
+        result = PROTECT(Rf_allocMatrix(LGLSXP, k, d)); \
+        nprotect++; \
+        int * resultp = LOGICAL(result); \
+        for (j=0; j<d; j++) { \
+            NEXT(); \
+            for (i=0; i<k; i++) { \
+                resultp[j * k + i] = labelsp[ap[i]]; \
+            } \
+        } \
+    } else if (layout == 'l') { \
+        result = PROTECT(Rf_allocVector(VECSXP, d)); \
+        nprotect++; \
+        SEXP resulti; \
+        int* resultp; \
+        for (j=0; j<d; j++) { \
+            NEXT(); \
+            resulti = Rf_allocVector(LGLSXP, k); \
+            resultp = LOGICAL(resulti); \
+            for (i=0; i<k; i++) { \
+                resultp[i] = labelsp[ap[i]]; \
+            } \
+            SET_VECTOR_ELT(result, j, resulti); \
+        } \
+    }

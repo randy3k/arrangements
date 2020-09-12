@@ -278,6 +278,10 @@ SEXP next_multiset_combinations(int* fp, size_t flen, int k, SEXP labels, char l
         RESULT_REALSXP(k);
     } else if (labels_type == STRSXP) {
         RESULT_STRSXP(k);
+    } else if (labels_type == LGLSXP) {
+        RESULT_LGLSXP(k);
+    } else {
+        Rf_error("label type not supported");
     }
 
     if (status == 0) {
@@ -360,6 +364,10 @@ SEXP draw_multiset_combinations(int* fp, size_t flen, int k, SEXP labels, char l
             RESULT_REALSXP(k);
         } else if (labels_type == STRSXP) {
             RESULT_STRSXP(k);
+        } else if (labels_type == LGLSXP) {
+            RESULT_LGLSXP(k);
+        } else {
+            Rf_error("label type not supported");
         }
 
         mpz_clear(z);
@@ -401,6 +409,10 @@ SEXP draw_multiset_combinations(int* fp, size_t flen, int k, SEXP labels, char l
             RESULT_REALSXP(k);
         } else if (labels_type == STRSXP) {
             RESULT_STRSXP(k);
+        } else if (labels_type == LGLSXP) {
+            RESULT_LGLSXP(k);
+        } else {
+            Rf_error("label type not supported");
         }
 
         if (sampling){

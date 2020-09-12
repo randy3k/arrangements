@@ -145,6 +145,10 @@ SEXP next_replacement_combinations(int n, int k, SEXP labels, char layout, int d
         RESULT_REALSXP(k);
     } else if (labels_type == STRSXP) {
         RESULT_STRSXP(k);
+    } else if (labels_type == LGLSXP) {
+        RESULT_LGLSXP(k);
+    } else {
+        Rf_error("label type not supported");
     }
 
     if (status == 0) {
@@ -227,6 +231,10 @@ SEXP draw_replacement_combinations(int n, int k, SEXP labels, char layout, SEXP 
             RESULT_REALSXP(k);
         } else if (labels_type == STRSXP) {
             RESULT_STRSXP(k);
+        } else if (labels_type == LGLSXP) {
+            RESULT_LGLSXP(k);
+        } else {
+            Rf_error("label type not supported");
         }
 
         mpz_clear(z);
@@ -268,6 +276,10 @@ SEXP draw_replacement_combinations(int n, int k, SEXP labels, char layout, SEXP 
             RESULT_REALSXP(k);
         } else if (labels_type == STRSXP) {
             RESULT_STRSXP(k);
+        } else if (labels_type == LGLSXP) {
+            RESULT_LGLSXP(k);
+        } else {
+            Rf_error("label type not supported");
         }
 
         if (sampling){

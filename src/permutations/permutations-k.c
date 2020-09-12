@@ -191,6 +191,10 @@ SEXP next_k_permutations(int n, int k, SEXP labels, char layout, int d, SEXP _sk
         RESULT_REALSXP(k);
     } else if (labels_type == STRSXP) {
         RESULT_STRSXP(k);
+    } else if (labels_type == LGLSXP) {
+        RESULT_LGLSXP(k);
+    } else {
+        Rf_error("label type not supported");
     }
 
     if (status == 0) {
@@ -273,6 +277,10 @@ SEXP draw_k_permutations(int n, int k, SEXP labels, char layout, SEXP _index, SE
             RESULT_REALSXP(k);
         } else if (labels_type == STRSXP) {
             RESULT_STRSXP(k);
+        } else if (labels_type == LGLSXP) {
+            RESULT_LGLSXP(k);
+        } else {
+            Rf_error("label type not supported");
         }
 
         mpz_clear(z);
@@ -314,6 +322,10 @@ SEXP draw_k_permutations(int n, int k, SEXP labels, char layout, SEXP _index, SE
             RESULT_REALSXP(k);
         } else if (labels_type == STRSXP) {
             RESULT_STRSXP(k);
+        } else if (labels_type == LGLSXP) {
+            RESULT_LGLSXP(k);
+        } else {
+            Rf_error("label type not supported");
         }
 
         if (sampling){

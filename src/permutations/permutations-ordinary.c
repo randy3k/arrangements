@@ -204,6 +204,10 @@ SEXP next_ordinary_permutations(int n, int k, SEXP labels, SEXP freq, char layou
         RESULT_REALSXP(n);
     } else if (labels_type == STRSXP) {
         RESULT_STRSXP(n);
+    } else if (labels_type == LGLSXP) {
+        RESULT_LGLSXP(n);
+    } else {
+        Rf_error("label type not supported");
     }
 
     if (status == 0) {
@@ -286,6 +290,10 @@ SEXP draw_ordinary_permutations(int n, SEXP labels, char layout, SEXP _index, SE
             RESULT_REALSXP(n);
         } else if (labels_type == STRSXP) {
             RESULT_STRSXP(n);
+        } else if (labels_type == LGLSXP) {
+            RESULT_LGLSXP(n);
+        } else {
+            Rf_error("label type not supported");
         }
 
         mpz_clear(z);
@@ -327,6 +335,10 @@ SEXP draw_ordinary_permutations(int n, SEXP labels, char layout, SEXP _index, SE
             RESULT_REALSXP(n);
         } else if (labels_type == STRSXP) {
             RESULT_STRSXP(n);
+        } else if (labels_type == LGLSXP) {
+            RESULT_LGLSXP(n);
+        } else {
+            Rf_error("label type not supported");
         }
 
         if (sampling){
