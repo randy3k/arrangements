@@ -10,8 +10,8 @@ jobs:
       NOT_CRAN: true
     steps:
       - uses: actions/checkout@v1
-      # - uses: r-lib/actions/run-rchk@master
-      - uses: randy3k/actions/run-rchk@rchk
+      - uses: r-lib/actions/run-rchk@master
+      # - uses: randy3k/actions/run-rchk@rchk
         with:
           apt: libgmp3-dev
 
