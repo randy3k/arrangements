@@ -25,9 +25,8 @@ Imports:
     R6
 Suggests:
     foreach,
-    knitr,
-    rmarkdown,
-    testthat
+    covr (>= 3.4.0),
+    testthat (>= 2.3.1)
 ByteCompile: yes
 Encoding: UTF-8
 NeedsCompilation: yes

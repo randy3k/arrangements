@@ -3,11 +3,20 @@ name: Main
 on: [push, pull_request]
 
 jobs:
+  cleanup:
+    name: Cancel Previous Runs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: styfle/cancel-workflow-action@0.9.0
+        with:
+          access_token: ${{ github.token }}
+
   rchk:
     if: contains(github.event.head_commit.message, '[ci skip]') == false
     runs-on: ubuntu-latest
     env:
       NOT_CRAN: true
+      _R_CHECK_CRAN_INCOMING_: false
     steps:
       - uses: actions/checkout@v1
       - uses: r-lib/actions/run-rchk@master
@@ -18,33 +27,46 @@ jobs:
   ubsan:
     if: contains(github.event.head_commit.message, '[ci skip]') == false
     runs-on: ubuntu-latest
-    container: rocker/r-devel-ubsan-clang
+    container:
+      image: rocker/r-devel-ubsan-clang
+      options: --cap-add=SYS_PTRACE
     env:
       NOT_CRAN: true
+      _R_CHECK_CRAN_INCOMING_: false
     steps:
       - uses: actions/checkout@v1
+      - name: Query dependencies
+        run: |
+          install.packages('remotes')
+          saveRDS(remotes::dev_package_deps(dependencies = TRUE), ".github/depends.Rds", version = 2)
+          writeLines(sprintf("R-%i.%i", getRversion()$major, getRversion()$minor), ".github/R-version")
+        shell: RDscript {0}
+      - name: Restore R package cache
+        uses: actions/cache@v2
+        with:
+          path: /usr/local/lib/R/site-library
+          key: ubsan-${{ hashFiles('.github/R-version') }}-1-${{ hashFiles('.github/depends.Rds') }}
+          restore-keys: ubsan-${{ hashFiles('.github/R-version') }}-1-
       - name: Install gmp
         run: |
           apt-get update
           apt-get install libgmp3-dev -y
       - name: Install dependencies
         run: |
-          RDscript -e "install.packages(c('remotes', 'rcmdcheck'), repos = 'https://cloud.r-project.org')"
-          RDscript -e "remotes::install_deps(dependencies = TRUE)"
+          remotes::install_deps(dependencies = TRUE)
+          remotes::install_cran(c("rcmdcheck", "codetools"))
+        shell: RDscript {0}
       - name: Running Tests
         run: |
-          RDscript -e "rcmdcheck::rcmdcheck(args = c('--as-cran', '--no-manual', '--timings'))"
+          RDscript -e "rcmdcheck::rcmdcheck(args = c('--as-cran', '--no-manual'), error_on = 'warning')"
 
   linux:
     if: contains(github.event.head_commit.message, '[ci skip]') == false
-    strategy:
-      matrix:
-        r: [latest]
-        # r: [3.5, latest, devel]
     runs-on: ubuntu-latest
-    container: rocker/tidyverse:${{ matrix.r }}
+    container: rocker/tidyverse:latest
     env:
       NOT_CRAN: true
+      _R_CHECK_CRAN_INCOMING_: false
     steps:
     - uses: actions/checkout@v1
     - name: Install gmp
@@ -57,26 +79,32 @@ jobs:
         Rscript -e "remotes::install_deps(dependencies = TRUE)"
     - name: Running Tests
       run: |
-        Rscript -e "rcmdcheck::rcmdcheck(args = c('--as-cran', '--no-manual', '--timings'))"
+        Rscript -e "rcmdcheck::rcmdcheck(args = c('--as-cran', '--no-manual'), error_on = 'warning')"
+    - name: Codecov
+      run: Rscript -e "covr::codecov()"
+      env:
+        CODECOV_TOKEN: ${{secrets.CODECOV_TOKEN}}
 
   macos:
     if: contains(github.event.head_commit.message, '[ci skip]') == false
-    strategy:
-      matrix:
-        r: [latest]
-        # r: [3.5, latest, devel]
     runs-on: macOS-latest
     env:
       NOT_CRAN: true
+      _R_CHECK_CRAN_INCOMING_: false
     steps:
       - uses: actions/checkout@v1
       - uses: r-lib/actions/setup-r@v1
-      - name: Install gmp
-        run: brew install gmp
+        with:
+          r-version: latest
       - name: Install dependencies
         run: |
-          Rscript -e "install.packages(c('remotes', 'rcmdcheck'), repos = 'https://cloud.r-project.org', type = 'mac.binary')"
-          Rscript -e "remotes::install_deps(dependencies = TRUE, type = 'mac.binary.el-capitan')"
+          Rscript -e "install.packages(c('remotes', 'rcmdcheck'), repos = 'https://cloud.r-project.org')"
+          Rscript -e "install.packages('gmp', type = 'source')"
+          Rscript -e "remotes::install_deps(dependencies = TRUE)"
       - name: Running Tests
         run: |
-          Rscript -e "rcmdcheck::rcmdcheck(args = c('--as-cran', '--no-manual', '--timings'))"
+          Rscript -e "rcmdcheck::rcmdcheck(args = c('--as-cran', '--no-manual'), error_on = 'warning')"
+      - name: Codecov
+        run: Rscript -e "covr::codecov()"
+        env:
+          CODECOV_TOKEN: ${{secrets.CODECOV_TOKEN}}

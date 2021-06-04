@@ -5,7 +5,8 @@
 
 [![Github
 Action](https://github.com/randy3k/arrangements/workflows/build/badge.svg?branch=master)](https://github.com/randy3k/arrangements)
-[![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/arrangements)](https://cran.r-project.org/package=arrangements)
+[![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/arrangements)](https://cran.r-project.org/package=arrangements)
+[![codecov](https://codecov.io/gh/randy3k/arrangements/branch/master/graph/badge.svg)](https://codecov.io/gh/randy3k/arrangements)
 [![](https://cranlogs.r-pkg.org/badges/grand-total/arrangements)](https://cran.r-project.org/package=arrangements)
 
 Github: <https://github.com/randy3k/arrangements>
