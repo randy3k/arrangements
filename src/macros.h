@@ -266,8 +266,6 @@
         } \
     }
 
-#endif
-
 #define RESULT_LGLSXP(k) \
     int* labelsp = LOGICAL(labels); \
     if (layout == 'r') { \
@@ -305,3 +303,5 @@
             SET_VECTOR_ELT(result, j, resulti); \
         } \
     }
+
+#endif
