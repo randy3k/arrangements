@@ -20,7 +20,6 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - uses: r-lib/actions/run-rchk@master
-      # - uses: randy3k/actions/run-rchk@rchk
         with:
           apt: libgmp3-dev
 
@@ -47,47 +46,27 @@ jobs:
           path: /usr/local/lib/R/site-library
           key: ubsan-${{ hashFiles('.github/R-version') }}-1-${{ hashFiles('.github/depends.Rds') }}
           restore-keys: ubsan-${{ hashFiles('.github/R-version') }}-1-
-      - name: Install gmp
+      - name: Install libgmp3-dev
         run: |
           apt-get update
           apt-get install libgmp3-dev -y
+      - name: Install codetools
+        run: RDscript -e "remotes::install_cran('codetools')"
       - name: Install dependencies
         run: |
-          remotes::install_deps(dependencies = TRUE)
-          remotes::install_cran(c("rcmdcheck", "codetools"))
-        shell: RDscript {0}
+          Rscript -e "remotes::install_deps(dependencies = TRUE)"
+          Rscript -e "remotes::install_cran('rcmdcheck')"
       - name: Running Tests
         run: |
           RDscript -e "rcmdcheck::rcmdcheck(args = c('--as-cran', '--no-manual'), error_on = 'warning')"
 
-  linux:
+  rcmdcheck:
     if: contains(github.event.head_commit.message, '[ci skip]') == false
-    runs-on: ubuntu-latest
-    container: rocker/tidyverse:latest
-    env:
-      NOT_CRAN: true
-      _R_CHECK_CRAN_INCOMING_: false
-    steps:
-    - uses: actions/checkout@v1
-    - name: Install gmp
-      run: |
-        apt-get update
-        apt-get install libgmp3-dev -y
-    - name: Install dependencies
-      run: |
-        Rscript -e "install.packages(c('remotes', 'rcmdcheck'), repos = 'https://cloud.r-project.org')"
-        Rscript -e "remotes::install_deps(dependencies = TRUE)"
-    - name: Running Tests
-      run: |
-        Rscript -e "rcmdcheck::rcmdcheck(args = c('--as-cran', '--no-manual'), error_on = 'warning')"
-    - name: Codecov
-      run: Rscript -e "covr::codecov()"
-      env:
-        CODECOV_TOKEN: ${{secrets.CODECOV_TOKEN}}
-
-  macos:
-    if: contains(github.event.head_commit.message, '[ci skip]') == false
-    runs-on: macOS-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
     env:
       NOT_CRAN: true
       _R_CHECK_CRAN_INCOMING_: false
@@ -96,11 +75,33 @@ jobs:
       - uses: r-lib/actions/setup-r@v1
         with:
           r-version: latest
+      - name: Query dependencies
+        run: |
+          install.packages('remotes')
+          saveRDS(remotes::dev_package_deps(dependencies = TRUE), ".github/depends.Rds", version = 2)
+          writeLines(sprintf("R-%i.%i", getRversion()$major, getRversion()$minor), ".github/R-version")
+        shell: Rscript {0}
+      - name: Restore R package cache
+        uses: actions/cache@v2
+        with:
+          path: ${{ env.R_LIBS_USER }}
+          key: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-${{ hashFiles('.github/depends.Rds') }}
+          restore-keys: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-
+      - name: Install system dependencies
+        if: runner.os == 'Linux'
+        run: |
+          while read -r cmd
+          do
+            eval sudo $cmd
+          done < <(Rscript -e 'writeLines(remotes::system_requirements("ubuntu", "20.04"))')
+      - name: Install R package gmp on macOS
+        # need this or test fails
+        if: runner.os == 'macOS'
+        run: Rscript -e "remotes::install_cran('gmp', type = 'source')"
       - name: Install dependencies
         run: |
-          Rscript -e "install.packages(c('remotes', 'rcmdcheck'), repos = 'https://cloud.r-project.org')"
-          Rscript -e "install.packages('gmp', type = 'source')"
           Rscript -e "remotes::install_deps(dependencies = TRUE)"
+          Rscript -e "remotes::install_cran('rcmdcheck')"
       - name: Running Tests
         run: |
           Rscript -e "rcmdcheck::rcmdcheck(args = c('--as-cran', '--no-manual'), error_on = 'warning')"
