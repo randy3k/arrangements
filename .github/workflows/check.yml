@@ -55,10 +55,6 @@ jobs:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v2
-      - name: Install libgmp3-dev
-        run: |
-          apt-get update
-          apt-get install libgmp3-dev -y
       - uses: randy3k/gh-actions/r-ubsan@main
 
   coverage:
