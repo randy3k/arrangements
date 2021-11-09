@@ -3,10 +3,9 @@
 
 # Fast Generators and Iterators for Permutations, Combinations, Integer Partitions and Compositions
 
-[![Github
-Action](https://github.com/randy3k/arrangements/workflows/build/badge.svg?branch=master)](https://github.com/randy3k/arrangements)
-[![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/arrangements)](https://cran.r-project.org/package=arrangements)
+[![check](https://github.com/randy3k/arrangements/actions/workflows/check.yaml/badge.svg)](https://github.com/randy3k/arrangements/actions/workflows/check.yaml)
 [![codecov](https://codecov.io/gh/randy3k/arrangements/branch/master/graph/badge.svg)](https://codecov.io/gh/randy3k/arrangements)
+[![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/arrangements)](https://cran.r-project.org/package=arrangements)
 [![](https://cranlogs.r-pkg.org/badges/grand-total/arrangements)](https://cran.r-project.org/package=arrangements)
 
 Github: <https://github.com/randy3k/arrangements>
