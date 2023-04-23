@@ -73,12 +73,13 @@
         int* resultp; \
         for (j=0; j<d; j++) { \
             NEXT(); \
-            resulti = Rf_allocVector(INTSXP, k); \
+            resulti = PROTECT(Rf_allocVector(INTSXP, k)); \
             resultp = INTEGER(resulti); \
             for (i=0; i<k; i++) { \
                 resultp[i] = ap[i]; \
             } \
             SET_VECTOR_ELT(result, j, resulti); \
+            UNPROTECT(1); \
         } \
     }
 
@@ -110,12 +111,13 @@
         int* resultp; \
         for (j=0; j<d; j++) { \
             NEXT(); \
-            resulti = Rf_allocVector(INTSXP, k); \
+            resulti = PROTECT(Rf_allocVector(INTSXP, k)); \
             resultp = INTEGER(resulti); \
             for (i=0; i<k; i++) { \
                 resultp[i] = ap[i]; \
             } \
             SET_VECTOR_ELT(result, j, resulti); \
+            UNPROTECT(1); \
         } \
     }
 
@@ -148,12 +150,13 @@
         int* resultp; \
         for (j=0; j<d; j++) { \
             NEXT(); \
-            resulti = Rf_allocVector(INTSXP, k); \
+            resulti = PROTECT(Rf_allocVector(INTSXP, k)); \
             resultp = INTEGER(resulti); \
             for (i=0; i<k; i++) { \
                 resultp[i] = ap[i] + 1; \
             } \
             SET_VECTOR_ELT(result, j, resulti); \
+            UNPROTECT(1); \
         } \
     }
 
@@ -186,12 +189,13 @@
         int* resultp; \
         for (j=0; j<d; j++) { \
             NEXT(); \
-            resulti = Rf_allocVector(INTSXP, k); \
+            resulti = PROTECT(Rf_allocVector(INTSXP, k)); \
             resultp = INTEGER(resulti); \
             for (i=0; i<k; i++) { \
                 resultp[i] = labelsp[ap[i]]; \
             } \
             SET_VECTOR_ELT(result, j, resulti); \
+            UNPROTECT(1); \
         } \
     }
 
@@ -224,12 +228,13 @@
         double* resultp; \
         for (j=0; j<d; j++) { \
             NEXT(); \
-            resulti = Rf_allocVector(REALSXP, k); \
+            resulti = PROTECT(Rf_allocVector(REALSXP, k)); \
             resultp = REAL(resulti); \
             for (i=0; i<k; i++) { \
                 resultp[i] = labelsp[ap[i]]; \
             } \
             SET_VECTOR_ELT(result, j, resulti); \
+            UNPROTECT(1); \
         } \
     }
 
@@ -258,11 +263,12 @@
         SEXP resulti; \
         for (j=0; j<d; j++) { \
             NEXT(); \
-            resulti = Rf_allocVector(STRSXP, k); \
+            resulti = PROTECT(Rf_allocVector(STRSXP, k)); \
             for (i=0; i<k; i++) { \
                 SET_STRING_ELT(resulti, i, STRING_ELT(labels, ap[i])); \
             } \
             SET_VECTOR_ELT(result, j, resulti); \
+            UNPROTECT(1); \
         } \
     }
 
@@ -295,12 +301,13 @@
         int* resultp; \
         for (j=0; j<d; j++) { \
             NEXT(); \
-            resulti = Rf_allocVector(LGLSXP, k); \
+            resulti = PROTECT(Rf_allocVector(LGLSXP, k)); \
             resultp = LOGICAL(resulti); \
             for (i=0; i<k; i++) { \
                 resultp[i] = labelsp[ap[i]]; \
             } \
             SET_VECTOR_ELT(result, j, resulti); \
+            UNPROTECT(1); \
         } \
     }
 
