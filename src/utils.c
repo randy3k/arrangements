@@ -85,7 +85,9 @@ SEXP resize_list(SEXP x, size_t m, size_t d) {
     SEXP y = PROTECT(Rf_allocVector(VECSXP, d));
     size_t i;
     for(i=0; i<d; i++) {
-        SET_VECTOR_ELT(y, i, VECTOR_ELT(x, i));
+        SEXP xi = PROTECT(VECTOR_ELT(x, i));
+        SET_VECTOR_ELT(y, i, xi);
+        UNPROTECT(1);
     }
     UNPROTECT(2);
     return y;
