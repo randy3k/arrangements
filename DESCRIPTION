@@ -2,8 +2,8 @@ Type: Package
 Package: arrangements
 Title: Fast Generators and Iterators for Permutations, Combinations, Integer
     Partitions and Compositions
-Version: 1.1.9
-Date: 2020-09-12
+Version: 1.1.10
+Date: 2026-03-21
 Authors@R: 
     person(given = "Randy",
            family = "Lai",
