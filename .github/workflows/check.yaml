@@ -55,7 +55,7 @@ jobs:
 
       - uses: r-lib/actions/check-r-package@v2
         with:
-          upload-snapshots: true
+          upload-snapshots: false
 
   coverage:
     runs-on: ubuntu-latest
