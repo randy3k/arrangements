@@ -12,3 +12,4 @@ vignettes
 ^.github$
 .ccls
 ^CRAN-SUBMISSION$
+^codecov\.yml$
