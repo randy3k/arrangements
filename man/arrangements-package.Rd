@@ -17,7 +17,7 @@ Fast generators and iterators for permutations, combinations,
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://randy3k.github.io/arrangements}
+  \item \url{https://randy3k.github.io/arrangements/}
 }
 
 }
