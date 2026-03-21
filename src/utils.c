@@ -1,4 +1,13 @@
 #include "utils.h"
+#include <Rversion.h>
+
+/* Backfill for R < 4.5.0 */
+#if R_VERSION < R_Version(4, 5, 0)
+static inline SEXP R_getVarEx(SEXP symbol, SEXP rho, int inherits, SEXP deflt) {
+    SEXP ans = inherits ? Rf_findVar(symbol, rho) : Rf_findVarInFrame(rho, symbol);
+    return (ans == R_UnboundValue) ? deflt : ans;
+}
+#endif
 
 void swap(unsigned int *ar, unsigned int first, unsigned int second) {
     unsigned int temp = ar[first];
@@ -150,7 +159,7 @@ int variable_exists(SEXP state, char* name, int TYPE, int k, void** p) {
     if (state == R_NilValue) {
         v = R_UnboundValue;
     } else {
-        v = Rf_findVarInFrame(state, Rf_install(name));
+        v = R_getVarEx(Rf_install(name), state, 0, R_UnboundValue);
     }
 
     if (v == R_UnboundValue) {
@@ -357,7 +366,7 @@ int as_mpz_array(mpz_t* a, size_t n, SEXP x) {
 // from RNG.c
 static SEXP GetSeedsFromVar(void)
 {
-    SEXP seeds = Rf_findVarInFrame(R_GlobalEnv, R_SeedsSymbol);
+    SEXP seeds = R_getVarEx(R_SeedsSymbol, R_GlobalEnv, 0, R_UnboundValue);
     if (TYPEOF(seeds) == PROMSXP)
     seeds = Rf_eval(R_SeedsSymbol, R_GlobalEnv);
     return seeds;
