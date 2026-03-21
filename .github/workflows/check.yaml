@@ -31,8 +31,9 @@ jobs:
         if: runner.os == 'macOS'
         run: |
           brew install gmp
-          echo "CPPFLAGS=-I$(brew --prefix gmp)/include" >> $GITHUB_ENV
-          echo "LDFLAGS=-L$(brew --prefix gmp)/lib" >> $GITHUB_ENV
+          mkdir -p ~/.R
+          echo "CPPFLAGS += -I$(brew --prefix gmp)/include" >> ~/.R/Makevars
+          echo "LDFLAGS += -L$(brew --prefix gmp)/lib" >> ~/.R/Makevars
 
       - name: Install system dependencies on Linux
         if: runner.os == 'Linux'
