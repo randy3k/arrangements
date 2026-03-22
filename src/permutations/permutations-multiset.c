@@ -82,13 +82,13 @@ void n_multiset_permutations_bigz(mpz_t z, int* freq, size_t flen, size_t k) {
     mpz_fac_ui(rfact, k);
 
     size_t factlen = (k < maxf ? k : maxf) + 1;
-    mpz_t* fact = (mpz_t*) malloc(factlen * sizeof(mpz_t));
+    mpz_t fact[factlen];
     for (j=0; j< factlen; j++) mpz_init(fact[j]);
 
     mpz_set_ui(fact[0], 1);
     for (j=1; j< factlen; j++) mpz_mul_ui(fact[j], fact[j-1], j);
 
-    mpz_t* p = (mpz_t*) malloc((k+1) * sizeof(mpz_t));
+    mpz_t p[k+1];
     for (j=0; j<=k; j++) mpz_init(p[j]);
 
     mpz_t ptemp;
@@ -120,8 +120,6 @@ void n_multiset_permutations_bigz(mpz_t z, int* freq, size_t flen, size_t k) {
 
     for (j=0; j< factlen; j++) mpz_clear(fact[j]);
     for (j=0; j<=k; j++) mpz_clear(p[j]);
-    free(fact);
-    free(p);
     mpz_clear(rfact);
     mpz_clear(ptemp);
 }
@@ -218,7 +216,7 @@ void nth_multiset_permutation_bigz(unsigned int* ar, int* freq, size_t flen, siz
     mpz_t this_count;
     mpz_init(this_count);
 
-    int* subfreq = (int*) malloc(flen * sizeof(int));
+    int subfreq[flen];
 
     for (i = 0; i < flen; i++) subfreq[i] = freq[i];
 
@@ -239,7 +237,6 @@ void nth_multiset_permutation_bigz(unsigned int* ar, int* freq, size_t flen, siz
         }
     }
 
-    free(subfreq);
     mpz_clear(count);
     mpz_clear(this_count);
 }

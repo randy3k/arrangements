@@ -58,15 +58,12 @@ double n_multiset_combinations(int* fp, size_t flen, size_t k) {
             }
             ptemp = p[k];
         } else if (i < flen - 1){
-            double S[k + 1];
-            S[0] = p[0];
-            for (j=1; j<=k; j++) S[j] = S[j-1] + p[j];
             for (j=k; j>0; j--) {
-                if (j <= fp[i]) {
-                    p[j] = S[j];
-                } else {
-                    p[j] = S[j] - S[j - fp[i] - 1];
+                ptemp = 0;
+                for(h=0; h<=fp[i] && h<=j; h++) {
+                    ptemp += p[j-h];
                 }
+                p[j] = ptemp;
             }
         } else {
             ptemp = 0;
@@ -89,7 +86,7 @@ void n_multiset_combinations_bigz(mpz_t z, int* fp, size_t flen, size_t k) {
         return;
     }
 
-    mpz_t* p = (mpz_t*) malloc((k+1) * sizeof(mpz_t));
+    mpz_t p[k + 1];
     for (j=0; j<=k; j++) mpz_init(p[j]);
 
     for (i=0; i<flen; i++) {
@@ -99,18 +96,13 @@ void n_multiset_combinations_bigz(mpz_t z, int* fp, size_t flen, size_t k) {
             }
             mpz_set(z, p[k]);
         } else if (i < flen - 1){
-            mpz_t S[k + 1];
-            for (j=0; j<=k; j++) mpz_init(S[j]);
-            mpz_set(S[0], p[0]);
-            for (j=1; j<=k; j++) mpz_add(S[j], S[j-1], p[j]);
             for (j=k; j>0; j--) {
-                if (j <= fp[i]) {
-                    mpz_set(p[j], S[j]);
-                } else {
-                    mpz_sub(p[j], S[j], S[j - fp[i] - 1]);
+                mpz_set_ui(z, 0);
+                for(h=0; h<=fp[i] && h<=j; h++) {
+                    mpz_add(z, z, p[j-h]);
                 }
+                mpz_set(p[j], z);
             }
-            for (j=0; j<=k; j++) mpz_clear(S[j]);
         } else {
             mpz_set_ui(z, 0);
             for(h=0; h<=fp[i] && h<=k; h++) {
@@ -118,9 +110,10 @@ void n_multiset_combinations_bigz(mpz_t z, int* fp, size_t flen, size_t k) {
             }
         }
     }
+
     for (j=0; j<=k; j++) mpz_clear(p[j]);
-    free(p);
 }
+
 
 
 void nth_multiset_combination(unsigned int* ar, int* fp, size_t flen, size_t k, unsigned int index) {
@@ -158,7 +151,7 @@ void nth_multiset_combination_bigz(unsigned int* ar, int* fp, size_t flen, size_
     mpz_t this_count;
     mpz_init(this_count);
 
-    int* subfreq = (int*) malloc(flen * sizeof(int));
+    int subfreq[flen];
 
     for (i = 0; i < flen; i++) subfreq[i] = fp[i];
 
@@ -180,7 +173,6 @@ void nth_multiset_combination_bigz(unsigned int* ar, int* fp, size_t flen, size_
         }
     }
 
-    free(subfreq);
     mpz_clear(count);
     mpz_clear(this_count);
 }

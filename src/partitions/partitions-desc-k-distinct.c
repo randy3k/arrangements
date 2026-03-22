@@ -52,20 +52,20 @@ void nth_desc_k_partition(unsigned int* ar, unsigned int n, unsigned int k, unsi
 void nth_desc_k_partition_bigz(unsigned int* ar, unsigned int n, unsigned int k, mpz_t index);
 
 void nth_desc_k_distinct_partition(unsigned int* ar, unsigned int n, unsigned int k, unsigned int index) {
-    int i;
-    double k2 = choose(k, 2);
-    if (n <= k2) return;
-    nth_desc_k_partition(ar, n - k2, k, index);
-    for (i = 0; i < k - 1; i++) ar[i] += k - i - 1;
+    double* table = (double*) malloc((n + 1) * (n + 1) * (n + 1) * sizeof(double));
+    make_nkm_table(table, n);
+    nth_desc_k_distinct_partition_table(ar, n, k, index, table, n);
+    free(table);
 }
 
 
 void nth_desc_k_distinct_partition_bigz(unsigned int* ar, unsigned int n, unsigned int k, mpz_t index) {
+    mpz_t* table = (mpz_t*) malloc((n + 1) * (n + 1) * (n + 1) * sizeof(mpz_t));
+    make_nkm_table_bigz(table, n);
+    nth_desc_k_distinct_partition_table_bigz(ar, n, k, index, table, n);
     int i;
-    double k2 = choose(k, 2);
-    if (n <= k2) return;
-    nth_desc_k_partition_bigz(ar, n - k2, k, index);
-    for (i = 0; i < k - 1; i++) ar[i] += k - i - 1;
+    for (i = 0; i < (n + 1) * (n + 1) * (n + 1); i++) mpz_clear(table[i]);
+    free(table);
 }
 
 

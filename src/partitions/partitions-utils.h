@@ -27,6 +27,30 @@ void make_nkm_table(double* table, int n_max);
 
 void make_nkm_table_bigz(mpz_t* table, int n_max);
 
+void nth_asc_partition_table(unsigned int* ar, unsigned int n, unsigned int index, double* table, int table_n);
+void nth_asc_partition_table_bigz(unsigned int* ar, unsigned int n, mpz_t index, mpz_t* table, int table_n);
+
+void nth_desc_partition_table(unsigned int* ar, unsigned int n, unsigned int index, double* table, int table_n);
+void nth_desc_partition_table_bigz(unsigned int* ar, unsigned int n, mpz_t index, mpz_t* table, int table_n);
+
+void nth_asc_k_partition_table(unsigned int* ar, unsigned int n, unsigned int k, unsigned int index, double* table, int table_k);
+void nth_asc_k_partition_table_bigz(unsigned int* ar, unsigned int n, unsigned int k, mpz_t index, mpz_t* table, int table_k);
+
+void nth_desc_k_partition_table(unsigned int* ar, unsigned int n, unsigned int k, unsigned int index, double* table, int table_n);
+void nth_desc_k_partition_table_bigz(unsigned int* ar, unsigned int n, unsigned int k, mpz_t index, mpz_t* table, int table_n);
+
+void nth_asc_distinct_partition_table(unsigned int* ar, unsigned int m, unsigned int n, unsigned int index, double* table, int table_n);
+void nth_asc_distinct_partition_table_bigz(unsigned int* ar, unsigned int m, unsigned int n, mpz_t index, mpz_t* table, int table_n);
+
+void nth_desc_distinct_partition_table(unsigned int* ar, unsigned int m, unsigned int n, unsigned int index, double* table, int table_n);
+void nth_desc_distinct_partition_table_bigz(unsigned int* ar, unsigned int m, unsigned int n, mpz_t index, mpz_t* table, int table_n);
+
+void nth_asc_k_distinct_partition_table(unsigned int* ar, unsigned int n, unsigned int k, unsigned int index, double* table, int table_k);
+void nth_asc_k_distinct_partition_table_bigz(unsigned int* ar, unsigned int n, unsigned int k, mpz_t index, mpz_t* table, int table_k);
+
+void nth_desc_k_distinct_partition_table(unsigned int* ar, unsigned int n, unsigned int k, unsigned int index, double* table, int table_n);
+void nth_desc_k_distinct_partition_table_bigz(unsigned int* ar, unsigned int n, unsigned int k, mpz_t index, mpz_t* table, int table_n);
+
 double n_partitions(int n);
 
 void n_partitions_bigz(mpz_t z, int n);

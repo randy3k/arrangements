@@ -37,64 +37,20 @@ unsigned int next_asc_distinct_partition(unsigned int *ar, int* kp) {
 }
 
 void nth_asc_distinct_partition(unsigned int* ar, unsigned int m, unsigned int n, unsigned int index) {
-    unsigned int i, j;
-    unsigned int start = 1;
-    unsigned int count, this_count;
-
-    for (i = 0; i < m; i++) {
-        count = 0;
-        if (n > 0 && i < m - 1) {
-            for (j = start; j <= n; j++) {
-                this_count = count + n_min_distinct_partitions(n - j, j + 1);
-                if (this_count > index) {
-                    ar[i] = j;
-                    start = j + 1;
-                    n -= j;
-                    index -= count;
-                    break;
-                }
-                count = this_count;
-            }
-        } else if (i == m - 1) {
-            ar[i] = n;
-        } else {
-            ar[i] = 0;
-        }
-    }
+    double* table = (double*) malloc((n + 1) * (n + 2) * sizeof(double));
+    make_distinct_partition_table(table, n);
+    nth_asc_distinct_partition_table(ar, m, n, index, table, n);
+    free(table);
 }
 
 
 void nth_asc_distinct_partition_bigz(unsigned int* ar, unsigned int m, unsigned int n, mpz_t index) {
-    unsigned int i, j;
-    unsigned int start = 1;
-    mpz_t count, this_count;
-    mpz_init(count);
-    mpz_init(this_count);
-
-    for (i = 0; i < m; i++) {
-        mpz_set_ui(count, 0);
-        if (n > 0 && i < m - 1) {
-            for (j = start; j <= n; j++) {
-                n_min_distinct_partitions_bigz(this_count, n - j, j + 1);
-                mpz_add(this_count, this_count, count);
-                if (mpz_cmp(this_count, index) > 0) {
-                    ar[i] = j;
-                    start = j + 1;
-                    n -= j;
-                    mpz_sub(index, index, count);
-                    break;
-                }
-                mpz_set(count, this_count);
-            }
-        } else if (i == m - 1) {
-            ar[i] = n;
-        } else {
-            ar[i] = 0;
-        }
-    }
-
-    mpz_clear(count);
-    mpz_clear(this_count);
+    mpz_t* table = (mpz_t*) malloc((n + 1) * (n + 2) * sizeof(mpz_t));
+    make_distinct_partition_table_bigz(table, n);
+    nth_asc_distinct_partition_table_bigz(ar, m, n, index, table, n);
+    int i;
+    for (i = 0; i < (n + 1) * (n + 2); i++) mpz_clear(table[i]);
+    free(table);
 }
 
 

@@ -9,26 +9,10 @@
 
 
 void nth_desc_k_partition(unsigned int* ar, unsigned int n, unsigned int k, unsigned int index) {
-    unsigned int i, j;
-    unsigned int start = n - k + 1;
-    unsigned int count, this_count;
-
-    for (i = 0; i < k; i++) {
-        count = 0;
-        for (j = start; j >= 1; j--) {
-            if (n < j) continue;
-            this_count = count + n_k_max_partitions(n - j, k - i - 1, j);
-            if (this_count > index) {
-                ar[i] = j;
-                n -= j;
-                start = n - (k - i - 2);
-                start = start > j? j : start;
-                index -= count;
-                break;
-            }
-            count = this_count;
-        }
-    }
+    double* table = (double*) malloc((n + 1) * (n + 1) * (n + 1) * sizeof(double));
+    make_nkm_table(table, n);
+    nth_desc_k_partition_table(ar, n, k, index, table, n);
+    free(table);
 }
 
 
@@ -73,32 +57,12 @@ unsigned int next_desc_k_partition(unsigned int *ar, size_t n, unsigned int k) {
 }
 
 void nth_desc_k_partition_bigz(unsigned int* ar, unsigned int n, unsigned int k, mpz_t index) {
-    unsigned int i, j;
-    unsigned int start = n - k + 1;
-    mpz_t count, this_count;
-    mpz_init(count);
-    mpz_init(this_count);
-
-    for (i = 0; i < k; i++) {
-        mpz_set_ui(count, 0);
-        for (j = start; j >= 1; j--) {
-            if (n < j) continue;
-            n_k_max_partitions_bigz(this_count, n - j, k - i - 1, j);
-            mpz_add(this_count, this_count, count);
-            if (mpz_cmp(this_count, index) > 0) {
-                ar[i] = j;
-                n -= j;
-                start = n - (k - i - 2);
-                start = start > j? j : start;
-                mpz_sub(index, index, count);
-                break;
-            }
-            mpz_set(count, this_count);
-        }
-    }
-
-    mpz_clear(count);
-    mpz_clear(this_count);
+    mpz_t* table = (mpz_t*) malloc((n + 1) * (n + 1) * (n + 1) * sizeof(mpz_t));
+    make_nkm_table_bigz(table, n);
+    nth_desc_k_partition_table_bigz(ar, n, k, index, table, n);
+    int i;
+    for (i = 0; i < (n + 1) * (n + 1) * (n + 1); i++) mpz_clear(table[i]);
+    free(table);
 }
 
 
