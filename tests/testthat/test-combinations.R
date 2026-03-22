@@ -220,4 +220,14 @@ test_that("Combinations - Empty and edge cases", {
     expect_error(combinations(NULL, 2), "n is missing")
     expect_equal(nrow(combinations(1:3, k = 4)), 0)
     expect_error(combinations(n = 5, v = 1:4, k = 2), "n != length(v)", fixed = TRUE)
+
+    # NA in x
+    expect_equal(combinations(x = c(1, NA), k = 1), matrix(c(1, NA), nc = 1))
+    
+    # freq with zeros
+    expect_equal(combinations(freq = c(1, 0, 1), k = 2), matrix(c(1, 3), nr = 1))
+    
+    # nsample with k=0
+    expect_equal(combinations(5, 0, nsample = 1), integer(0))
+    expect_equal(dim(combinations(5, 0, nsample = 1, drop = FALSE)), c(1, 0))
 })

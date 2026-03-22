@@ -148,3 +148,15 @@ test_that("Permutations - Factors", {
     expect_true(is.matrix(perm))
     expect_equal(levels(perm), levels(f))
 })
+
+test_that("Permutations - Empty and edge cases", {
+    # NA in x
+    expect_equal(permutations(x = c(1, NA), k = 1), matrix(c(1, NA), nc = 1))
+
+    # freq with zeros
+    expect_equal(permutations(freq = c(1, 0, 1), k = 2), matrix(c(1, 3, 3, 1), nc = 2, byrow = TRUE))
+
+    # nsample with k=0
+    expect_equal(permutations(5, 0, nsample = 1), integer(0))
+    expect_equal(dim(permutations(5, 0, nsample = 1, drop = FALSE)), c(1, 0))
+})
