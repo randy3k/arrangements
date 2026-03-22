@@ -28,7 +28,7 @@ double nkm(int n, int k, int m) {
         m = temp;
     }
 
-    int i, j, h;
+    int i, j;
     double* p = (double*) malloc((n + 1) * sizeof(double));
     for (j = 1; j <= n; j++) {
         p[j] = 0;
@@ -38,10 +38,8 @@ double nkm(int n, int k, int m) {
         for (j = n; j >= k + i; j--) {
             p[j] -= p[j - k - i];
         }
-        for (j = n; j >= 0; j--) {
-            for (h = i; h <= j; h += i) {
-                p[j] += p[j - h];
-            }
+        for (j = i; j <= n; j++) {
+            p[j] += p[j - i];
         }
     }
     double pn = p[n];
@@ -72,7 +70,7 @@ void nkm_bigz(mpz_t z, int n, int k, int m) {
         m = temp;
     }
 
-    int i, j, h;
+    int i, j;
     mpz_t* p = (mpz_t*) malloc((n+1) * sizeof(mpz_t));
     for (j = 0; j <= n; j++) mpz_init(p[j]);
     for (j = 1; j <= n; j++) {
@@ -83,10 +81,8 @@ void nkm_bigz(mpz_t z, int n, int k, int m) {
         for (j = n; j >= k + i; j--) {
             mpz_sub(p[j], p[j], p[j - k - i]);
         }
-        for (j = n; j >= 0; j--) {
-            for (h = i; h <= j; h += i) {
-                mpz_add(p[j], p[j], p[j - h]);
-            }
+        for (j = i; j <= n; j++) {
+            mpz_add(p[j], p[j], p[j - i]);
         }
     }
     mpz_set(z, p[n]);
@@ -157,17 +153,15 @@ double n_min_partitions(int n, int m) {
         return m != 0;
     }
 
-    int i, j, h;
+    int i, j;
     double* p = (double*) malloc((n + 1) * sizeof(double));
     for (j = 1; j <= n; j++) {
         p[j] = 0;
     }
     p[0] = 1;
     for (i = m; i <= n; i++) {
-        for (j = n; j >= i; j--) {
-            for (h = i; h <= j; h += i) {
-                p[j] += p[j - h];
-            }
+        for (j = i; j <= n; j++) {
+            p[j] += p[j - i];
         }
     }
     double pn = p[n];
@@ -178,9 +172,10 @@ double n_min_partitions(int n, int m) {
 void n_min_partitions_bigz(mpz_t z, int n, int m) {
     if (n == 0) {
         mpz_set_ui(z, m != 0);
+        return;
     }
 
-    int i, j, h;
+    int i, j;
     mpz_t* p = (mpz_t*) malloc((n+1) * sizeof(mpz_t));
     for (j = 0; j <= n; j++) mpz_init(p[j]);
     for (j = 1; j <= n; j++) {
@@ -188,10 +183,8 @@ void n_min_partitions_bigz(mpz_t z, int n, int m) {
     }
     mpz_set_ui(p[0], 1);
     for (i = m; i <= n; i++) {
-        for (j = n; j >= i; j--) {
-            for (h = i; h <= j; h += i) {
-                mpz_add(p[j], p[j], p[j - h]);
-            }
+        for (j = i; j <= n; j++) {
+            mpz_add(p[j], p[j], p[j - i]);
         }
     }
     mpz_set(z, p[n]);
@@ -204,17 +197,15 @@ double n_max_partitions(int n, int m) {
         return 1;
     }
 
-    int i, j, h;
+    int i, j;
     double* p = (double*) malloc((n + 1) * sizeof(double));
     for (j = 1; j <= n; j++) {
         p[j] = 0;
     }
     p[0] = 1;
     for (i = 1; i <= m; i++) {
-        for (j = n; j >= i; j--) {
-            for (h = i; h <= j; h += i) {
-                p[j] += p[j - h];
-            }
+        for (j = i; j <= n; j++) {
+            p[j] += p[j - i];
         }
     }
     double pn = p[n];
@@ -225,9 +216,10 @@ double n_max_partitions(int n, int m) {
 void n_max_partitions_bigz(mpz_t z, int n, int m) {
     if (n == 0) {
         mpz_set_ui(z, 1);
+        return;
     }
 
-    int i, j, h;
+    int i, j;
     mpz_t* p = (mpz_t*) malloc((n+1) * sizeof(mpz_t));
     for (j = 0; j <= n; j++) mpz_init(p[j]);
     for (j = 1; j <= n; j++) {
@@ -235,10 +227,8 @@ void n_max_partitions_bigz(mpz_t z, int n, int m) {
     }
     mpz_set_ui(p[0], 1);
     for (i = 1; i <= m; i++) {
-        for (j = n; j >= i; j--) {
-            for (h = i; h <= j; h += i) {
-                mpz_add(p[j], p[j], p[j - h]);
-            }
+        for (j = i; j <= n; j++) {
+            mpz_add(p[j], p[j], p[j - i]);
         }
     }
     mpz_set(z, p[n]);

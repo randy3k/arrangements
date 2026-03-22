@@ -64,15 +64,20 @@ void nth_ordinary_combination(unsigned int* ar, unsigned int n, unsigned int k, 
 void nth_ordinary_combination_bigz(unsigned int* ar, unsigned int n, unsigned int k, mpz_t index) {
     unsigned int i, j;
     unsigned int start = 0;
-    mpz_t count, this_count;
+    mpz_t count, this_count, c;
     mpz_init(count);
     mpz_init(this_count);
+    mpz_init(c);
+
+    unsigned int N, K;
 
     for (i = 0; i < k; i++) {
         mpz_set_ui(count, 0);
+        K = k - 1 - i;
+        N = n - 1 - start;
+        mpz_bin_uiui(c, N, K);
         for (j = start; j < n; j++) {
-            mpz_bin_uiui(this_count, n - j - 1, k - i - 1);
-            mpz_add(this_count, this_count, count);
+            mpz_add(this_count, count, c);
             if (mpz_cmp(this_count, index) > 0) {
                 ar[i] = j;
                 start = j + 1;
@@ -80,11 +85,19 @@ void nth_ordinary_combination_bigz(unsigned int* ar, unsigned int n, unsigned in
                 break;
             }
             mpz_set(count, this_count);
+            if (N > 0) {
+                mpz_mul_ui(c, c, N - K);
+                mpz_tdiv_q_ui(c, c, N);
+                N--;
+            } else {
+                mpz_set_ui(c, 0);
+            }
         }
     }
 
     mpz_clear(count);
     mpz_clear(this_count);
+    mpz_clear(c);
 }
 
 

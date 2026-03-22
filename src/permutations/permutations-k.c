@@ -49,11 +49,15 @@ void n_k_permutations_bigz(mpz_t p, size_t n, size_t k) {
 
 void nth_k_permutation(unsigned int* ar, unsigned int n, unsigned int k, unsigned int index) {
     unsigned int i, j;
+    unsigned int N = n;
+
+    j = fallfact(n, k);
 
     for (i = 0; i < k; i++) {
-        j = fallfact(n - 1 - i, k - 1 - i);
+        j /= N;
         ar[i] = index / j;
         index = index % j;
+        N--;
     }
 
     if (k > 0) {
@@ -70,16 +74,20 @@ void nth_k_permutation(unsigned int* ar, unsigned int n, unsigned int k, unsigne
 
 void nth_k_permutation_bigz(unsigned int* ar, unsigned int n, unsigned int k, mpz_t index) {
     unsigned int i, j;
+    unsigned int N = n;
 
     mpz_t q;
     mpz_init(q);
     mpz_t p;
     mpz_init(p);
 
+    n_k_permutations_bigz(p, n, k);
+
     for (i = 0; i < k; i++) {
-        n_k_permutations_bigz(p, n - 1 - i, k - 1 - i);
+        mpz_tdiv_q_ui(p, p, N);
         mpz_tdiv_qr(q, index, index, p);
         ar[i] = mpz_get_ui(q);
+        N--;
     }
 
     if (k > 0) {
@@ -145,7 +153,7 @@ SEXP next_k_permutations(int n, int k, SEXP labels, char layout, int d, SEXP _sk
                 }
                 nth_k_permutation(ap, n, k, skip);
             }
-            int* count = (int*) malloc(n * sizeof(int));
+            int count[n];
             for(i = 0; i < n; i++) count[i] = 1;
             for(i = 0; i < k; i++) count[ap[i]] = 0;
             j = 0;
@@ -153,7 +161,6 @@ SEXP next_k_permutations(int n, int k, SEXP labels, char layout, int d, SEXP _sk
                 while (count[j] == 0) j++;
                 ap[i] = j++;
             }
-            free(count);
         }
         status = 0;
     }
