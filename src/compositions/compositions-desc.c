@@ -33,27 +33,20 @@ void nth_desc_composition(unsigned int* ar, unsigned int n, unsigned int index) 
     int i, j;
     unsigned int s;
     unsigned int n1 = n - 1;
-    int* bs;
 
     if (n == 0) return;
 
-    // convert index to binary
-    bs = (int*) malloc(n1 * sizeof(int));
-    for (j = 0; j < n1; j++) {
-        bs[j] = (index >> j) & 1;
-    }
     s = 0;
     i = 0;
     // compute successive diff
     for (j = 0; j < n1; j++) {
-        if (bs[n1 - j - 1] == 0) continue;
+        if (((index >> (n1 - j - 1)) & 1) == 0) continue;
         ar[i] = j + 1 - s;
         s = j + 1;
         i++;
     }
     ar[i] = n1 - s + 1;
     for (j = i + 1; j < n; j++) ar[j] = 0;
-    free(bs);
 }
 
 
@@ -61,27 +54,20 @@ void nth_desc_composition_bigz(unsigned int* ar, unsigned int n, mpz_t index) {
     int i, j;
     unsigned int s;
     int n1 = n - 1;
-    int* bs;
 
     if (n == 0) return;
 
-    // convert index to binary
-    bs = (int*) malloc(n1 * sizeof(int));
-    for (j = 0; j < n1; j++) {
-        bs[j] = mpz_tstbit(index, j);
-    }
     s = 0;
     i = 0;
     // compute successive diff
     for (j = 0; j < n1; j++) {
-        if (bs[n1 - j - 1] == 0) continue;
+        if (mpz_tstbit(index, n1 - j - 1) == 0) continue;
         ar[i] = j + 1 - s;
         s = j + 1;
         i++;
     }
     ar[i] = n1 - s + 1;
     for (j = i + 1; j < n; j++) ar[j] = 0;
-    free(bs);
 }
 
 SEXP next_desc_compositions(int n, char layout, int d, SEXP _skip, SEXP state) {

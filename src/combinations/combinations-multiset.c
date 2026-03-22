@@ -46,7 +46,7 @@ double n_multiset_combinations(int* fp, size_t flen, size_t k) {
         return 0;
     }
 
-    double* p = (double*) malloc((k+1) * sizeof(double));
+    double p[k + 1];
     for (j=0; j<=k; j++) p[j] = 0;
 
     double ptemp;
@@ -73,7 +73,6 @@ double n_multiset_combinations(int* fp, size_t flen, size_t k) {
         }
     }
 
-    free(p);
     return ptemp;
 }
 
@@ -120,7 +119,7 @@ void nth_multiset_combination(unsigned int* ar, int* fp, size_t flen, size_t k, 
     unsigned int i, j;
     unsigned int start = 0;
     unsigned int count, this_count;
-    int* subfreq = (int*) malloc(flen * sizeof(int));
+    int subfreq[flen];
 
     for (i = 0; i < flen; i++) subfreq[i] = fp[i];
 
@@ -140,8 +139,6 @@ void nth_multiset_combination(unsigned int* ar, int* fp, size_t flen, size_t k, 
             subfreq[j] = 0;
         }
     }
-
-    free(subfreq);
 }
 
 

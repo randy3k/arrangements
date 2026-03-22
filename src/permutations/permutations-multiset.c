@@ -27,11 +27,11 @@ double n_multiset_permutations(int* freq, size_t flen, size_t k) {
         rfact = rfact*j;
     }
     size_t factlen = (k < maxf ? k : maxf) + 1;
-    double* fact = (double*) malloc(factlen * sizeof(double));
+    double fact[factlen];
     fact[0] = 1;
     for (j=1; j< factlen; j++) fact[j] = j * fact[j-1];
 
-    double* p = (double*) malloc((k+1) * sizeof(double));
+    double p[k+1];
     for (j=0; j<=k; j++) p[j] = 0;
 
     double ptemp;
@@ -58,8 +58,6 @@ double n_multiset_permutations(int* freq, size_t flen, size_t k) {
         }
     }
 
-    free(fact);
-    free(p);
     return ptemp;
 }
 
@@ -191,7 +189,7 @@ unsigned int next_multiset_permutation(unsigned int *ar, size_t n, size_t k)
 void nth_multiset_permutation(unsigned int* ar, int* freq, size_t flen, size_t k, unsigned int index) {
     unsigned int i, j;
     unsigned int count, this_count;
-    int* subfreq = (int*) malloc(flen * sizeof(int));
+    int subfreq[flen];
 
     for (i = 0; i < flen; i++) subfreq[i] = freq[i];
 
@@ -210,8 +208,6 @@ void nth_multiset_permutation(unsigned int* ar, int* freq, size_t flen, size_t k
             subfreq[j]++;
         }
     }
-
-    free(subfreq);
 }
 
 
