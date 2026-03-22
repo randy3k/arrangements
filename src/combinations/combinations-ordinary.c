@@ -12,10 +12,18 @@
 // mirror of python itertools.combinations
 // https://docs.python.org/3/library/itertools.html#itertools.combinations
 unsigned int next_combination(unsigned int *ar, size_t n, unsigned int k) {
+    if (k == 0) return 0;
+    if (ar[k - 1] < n - 1) {
+        ar[k - 1]++;
+        return 1;
+    }
+
+    if (k == 1) return 0;
+
     // ar = [0, 1, ..., r-1]
     unsigned int i, j, temp;
 
-    for (i = k-1; ; i--) {
+    for (i = k - 2; ; i--) {
         if (ar[i] != i + n - k) {
             break;
         }

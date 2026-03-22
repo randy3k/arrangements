@@ -9,13 +9,20 @@
 
 
 unsigned int next_permutation(unsigned int *ar, size_t n) {
+    if (n <= 1) {
+        return 0;
+    }
+
+    if (ar[n - 2] < ar[n - 1]) {
+        unsigned int temp = ar[n - 2];
+        ar[n - 2] = ar[n - 1];
+        ar[n - 1] = temp;
+        return 1;
+    }
+
     unsigned int k, j;
     unsigned int result = 0;
 
-    // trival for only one element
-    if (n == 1) {
-        return result;
-    }
     // find the largest k such that a[k] < a[k + 1]
     for (k = n - 1; k && ar[k - 1] >= ar[k]; k--);
 
@@ -38,7 +45,7 @@ void nth_ordinary_permutation(unsigned int* ar, unsigned int n, unsigned int ind
     int i, j;
     if (n == 0) return;
 
-    unsigned int* fact = (unsigned int*) malloc(n * sizeof(unsigned int));
+    unsigned int fact[13];
 
     fact[0] = 1;
     for (i = 1; i < n; i++) {
@@ -57,8 +64,6 @@ void nth_ordinary_permutation(unsigned int* ar, unsigned int n, unsigned int ind
             }
         }
     }
-
-    free(fact);
 }
 
 

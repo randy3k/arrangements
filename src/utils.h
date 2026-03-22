@@ -6,10 +6,19 @@
 #include <Rinternals.h>
 #include <gmp.h>
 
+static inline void swap(unsigned int *ar, unsigned int first, unsigned int second) {
+    unsigned int temp = ar[first];
+    ar[first] = ar[second];
+    ar[second] = temp;
+}
 
-void swap(unsigned int *ar, unsigned int first, unsigned int second);
-
-void reverse(unsigned int *ar, size_t len);
+static inline void reverse(unsigned int *ar, size_t len) {
+    unsigned int i, j;
+    if (len <= 1) return;
+    for (i = 0, j = len - 1; i < j; i++, j--) {
+        swap(ar, i, j);
+    }
+}
 
 SEXP resize_row(SEXP x, size_t n, size_t k, size_t d);
 
