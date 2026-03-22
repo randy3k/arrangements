@@ -12,6 +12,11 @@ unsigned int next_multicombination(unsigned int *ar, size_t n, unsigned int k) {
     unsigned int j;
     unsigned int temp;
 
+    if (k > 0 && ar[k - 1] < n - 1) {
+        ar[k - 1]++;
+        return 1;
+    }
+
     for (i = k - 1; ; i--) {
         if (ar[i] < n - 1) {
             // increment this element
@@ -34,11 +39,16 @@ void nth_replacement_combination(unsigned int* ar, unsigned int n, unsigned int 
     unsigned int i, j;
     unsigned int start = 0;
     unsigned int count, this_count;
+    double c;
+    unsigned int N, K;
 
     for (i = 0; i < k; i++) {
         count = 0;
+        K = k - i - 1;
+        N = n - start + K - 1;
+        c = choose(N, K);
         for (j = start; j < n; j++) {
-            this_count = count + choose(n - j + k - i - 1 - 1, k - i - 1);
+            this_count = count + c;
             if (this_count > index) {
                 ar[i] = j;
                 start = j;
@@ -46,6 +56,12 @@ void nth_replacement_combination(unsigned int* ar, unsigned int n, unsigned int 
                 break;
             }
             count = this_count;
+            if (N > K) {
+                c = c * (N - K) / N;
+                N--;
+            } else {
+                c = 0;
+            }
         }
     }
 }
@@ -53,15 +69,20 @@ void nth_replacement_combination(unsigned int* ar, unsigned int n, unsigned int 
 void nth_replacement_combination_bigz(unsigned int* ar, unsigned int n, unsigned int k, mpz_t index) {
     unsigned int i, j;
     unsigned int start = 0;
-    mpz_t count, this_count;
+    mpz_t count, this_count, c;
     mpz_init(count);
     mpz_init(this_count);
+    mpz_init(c);
+
+    unsigned int N, K;
 
     for (i = 0; i < k; i++) {
         mpz_set_ui(count, 0);
+        K = k - i - 1;
+        N = n - start + K - 1;
+        mpz_bin_uiui(c, N, K);
         for (j = start; j < n; j++) {
-            mpz_bin_uiui(this_count, n - j + k - i - 1 - 1, k - i - 1);
-            mpz_add(this_count, this_count, count);
+            mpz_add(this_count, count, c);
             if (mpz_cmp(this_count, index) > 0) {
                 ar[i] = j;
                 start = j;
@@ -69,11 +90,19 @@ void nth_replacement_combination_bigz(unsigned int* ar, unsigned int n, unsigned
                 break;
             }
             mpz_set(count, this_count);
+            if (N > K) {
+                mpz_mul_ui(c, c, N - K);
+                mpz_tdiv_q_ui(c, c, N);
+                N--;
+            } else {
+                mpz_set_ui(c, 0);
+            }
         }
     }
 
     mpz_clear(count);
     mpz_clear(this_count);
+    mpz_clear(c);
 }
 
 
