@@ -159,4 +159,9 @@ test_that("Permutations - Empty and edge cases", {
     # nsample with k=0
     expect_equal(permutations(5, 0, nsample = 1), integer(0))
     expect_equal(dim(permutations(5, 0, nsample = 1, drop = FALSE)), c(1, 0))
+
+    # bigz skip in iterator
+    n <- npermutations(13, bigz = TRUE)
+    iperm <- ipermutations(13, skip = n - 1)
+    expect_equal(iperm$getnext(), 13:1)
 })

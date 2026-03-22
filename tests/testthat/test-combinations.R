@@ -223,11 +223,17 @@ test_that("Combinations - Empty and edge cases", {
 
     # NA in x
     expect_equal(combinations(x = c(1, NA), k = 1), matrix(c(1, NA), nc = 1))
-    
+
     # freq with zeros
     expect_equal(combinations(freq = c(1, 0, 1), k = 2), matrix(c(1, 3), nr = 1))
-    
+
     # nsample with k=0
     expect_equal(combinations(5, 0, nsample = 1), integer(0))
     expect_equal(dim(combinations(5, 0, nsample = 1, drop = FALSE)), c(1, 0))
+
+    # bigz skip in iterator
+    n <- ncombinations(50, 25, bigz = TRUE)
+    icomb <- icombinations(50, 25, skip = n - 1)
+    expect_equal(icomb$getnext(), 26:50)
 })
+

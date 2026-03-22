@@ -249,7 +249,19 @@ test_that("Integer partitions - small cases", {
     expect_equal(ipart$getnext(), NULL)
 })
 
-test_that("Integer partitions - nsample", {
-    expect_equal(nrow(partitions(10, nsample = 5)), 5)
-    expect_equal(nrow(partitions(10, 5, nsample = 5)), 5)
+test_that("Integer partitions - bigz index/nsample", {
+    # npartitions(300, bigz = TRUE) is large
+    n_total <- npartitions(300, bigz = TRUE)
+    idx <- gmp::as.bigz("12345678901")
+    if (n_total > idx) {
+        part <- partitions(300, index = idx)
+        expect_equal(length(part), 300)
+        expect_equal(sum(part), 300)
+    }
+
+    # nsample with large n
+    set.seed(1)
+    part_sample <- partitions(300, nsample = 2)
+    expect_equal(nrow(part_sample), 2)
+    expect_equal(ncol(part_sample), 300)
 })

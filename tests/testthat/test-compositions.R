@@ -248,7 +248,19 @@ test_that("Integer compositions - small cases", {
     expect_equal(icomp$getnext(), NULL)
 })
 
-test_that("Integer compositions - nsample", {
-    expect_equal(nrow(compositions(10, nsample = 5)), 5)
-    expect_equal(nrow(compositions(10, 3, nsample = 5)), 5)
+test_that("Integer compositions - bigz index/nsample", {
+    # 2^100 is very large
+    n_total <- ncompositions(100, bigz = TRUE)
+    idx <- gmp::as.bigz("123456789012345678901234567890")
+    if (n_total > idx) {
+        comp <- compositions(100, index = idx)
+        expect_equal(length(comp), 100)
+        expect_equal(sum(comp), 100)
+    }
+
+    # nsample with large n
+    set.seed(1)
+    comp_sample <- compositions(100, nsample = 2)
+    expect_equal(nrow(comp_sample), 2)
+    expect_equal(ncol(comp_sample), 100)
 })
