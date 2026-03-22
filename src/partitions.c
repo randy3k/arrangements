@@ -136,7 +136,29 @@ SEXP get_partitions(SEXP _n, SEXP _k, SEXP _distinct, SEXP _descending, SEXP _la
             }
         }
     } else {
-        if (distinct) {
+        if (distinct && k != -1 && n - choose(k, 2) < k) {
+            if (_index == R_NilValue) {
+                if (layout == 'r') {
+                    ans = Rf_allocMatrix(INTSXP, 0, k);
+                } else if (layout == 'c') {
+                    ans = Rf_allocMatrix(INTSXP, k, 0);
+                } else {
+                    ans = Rf_allocVector(VECSXP, 0);
+                }
+            } else {
+                if (Rf_length(_index) == 0) {
+                    if (layout == 'r') {
+                        ans = Rf_allocMatrix(INTSXP, 0, k);
+                    } else if (layout == 'c') {
+                        ans = Rf_allocMatrix(INTSXP, k, 0);
+                    } else {
+                        ans = Rf_allocVector(VECSXP, 0);
+                    }
+                } else {
+                    Rf_error("invalid index");
+                }
+            }
+        } else if (distinct) {
             if (k == -1) {
                 if (descending) {
                     ans = draw_desc_distinct_partitions(n, layout, _index, _nsample);
