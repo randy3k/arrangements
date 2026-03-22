@@ -58,12 +58,15 @@ double n_multiset_combinations(int* fp, size_t flen, size_t k) {
             }
             ptemp = p[k];
         } else if (i < flen - 1){
+            double S[k + 1];
+            S[0] = p[0];
+            for (j=1; j<=k; j++) S[j] = S[j-1] + p[j];
             for (j=k; j>0; j--) {
-                ptemp = 0;
-                for(h=0; h<=fp[i] && h<=j; h++) {
-                    ptemp += p[j-h];
+                if (j <= fp[i]) {
+                    p[j] = S[j];
+                } else {
+                    p[j] = S[j] - S[j - fp[i] - 1];
                 }
-                p[j] = ptemp;
             }
         } else {
             ptemp = 0;
@@ -96,13 +99,18 @@ void n_multiset_combinations_bigz(mpz_t z, int* fp, size_t flen, size_t k) {
             }
             mpz_set(z, p[k]);
         } else if (i < flen - 1){
+            mpz_t S[k + 1];
+            for (j=0; j<=k; j++) mpz_init(S[j]);
+            mpz_set(S[0], p[0]);
+            for (j=1; j<=k; j++) mpz_add(S[j], S[j-1], p[j]);
             for (j=k; j>0; j--) {
-                mpz_set_ui(z, 0);
-                for(h=0; h<=fp[i] && h<=j; h++) {
-                    mpz_add(z, z, p[j-h]);
+                if (j <= fp[i]) {
+                    mpz_set(p[j], S[j]);
+                } else {
+                    mpz_sub(p[j], S[j], S[j - fp[i] - 1]);
                 }
-                mpz_set(p[j], z);
             }
+            for (j=0; j<=k; j++) mpz_clear(S[j]);
         } else {
             mpz_set_ui(z, 0);
             for(h=0; h<=fp[i] && h<=k; h++) {
