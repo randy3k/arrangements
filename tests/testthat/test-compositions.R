@@ -247,3 +247,8 @@ test_that("Integer compositions - small cases", {
     expect_equal(icomp$getnext(), NULL)
     expect_equal(icomp$getnext(), NULL)
 })
+
+test_that("Integer compositions - nsample", {
+    expect_equal(nrow(compositions(10, nsample = 5)), 5)
+    expect_equal(nrow(compositions(10, 3, nsample = 5)), 5)
+})

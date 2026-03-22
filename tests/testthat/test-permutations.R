@@ -129,3 +129,22 @@ test_that("Permutations - small cases", {
     expect_equal(iperm$getnext(), integer(0))
     expect_equal(iperm$getnext(), NULL)
 })
+
+test_that("Permutations - nsample", {
+    expect_equal(nrow(permutations(5, nsample = 5)), 5)
+    expect_equal(ncol(permutations(5, nsample = 5)), 5)
+
+    set.seed(1)
+    res1 <- permutations(5, nsample = 5)
+    set.seed(1)
+    res2 <- permutations(5, nsample = 5)
+    expect_equal(res1, res2)
+})
+
+test_that("Permutations - Factors", {
+    f <- factor(c("a", "b", "c"), levels = c("a", "b", "c"))
+    perm <- permutations(x = f, k = 2)
+    expect_true(is.factor(perm))
+    expect_true(is.matrix(perm))
+    expect_equal(levels(perm), levels(f))
+})

@@ -248,3 +248,8 @@ test_that("Integer partitions - small cases", {
     expect_equal(ipart$getnext(), NULL)
     expect_equal(ipart$getnext(), NULL)
 })
+
+test_that("Integer partitions - nsample", {
+    expect_equal(nrow(partitions(10, nsample = 5)), 5)
+    expect_equal(nrow(partitions(10, 5, nsample = 5)), 5)
+})

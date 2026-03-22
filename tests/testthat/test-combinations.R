@@ -178,3 +178,46 @@ test_that("Combinations - small cases", {
     expect_equal(icomb$getnext(), integer(0))
     expect_equal(icomb$getnext(), NULL)
 })
+
+test_that("Combinations - nsample", {
+    expect_equal(nrow(combinations(10, 3, nsample = 5)), 5)
+    expect_equal(ncol(combinations(10, 3, nsample = 5)), 3)
+
+    set.seed(1)
+    res1 <- combinations(10, 3, nsample = 5)
+    set.seed(1)
+    res2 <- combinations(10, 3, nsample = 5)
+    expect_equal(res1, res2)
+
+    # nsample with multisets
+    expect_equal(nrow(combinations(freq = c(2, 2, 2), k = 3, nsample = 5)), 5)
+})
+
+test_that("Combinations - drop", {
+    expect_equal(combinations(5, 2, nitem = 1, drop = TRUE), 1:2)
+    expect_is(combinations(5, 2, nitem = 1, drop = FALSE), "matrix")
+    expect_equal(dim(combinations(5, 2, nitem = 1, drop = FALSE)), c(1, 2))
+
+    expect_equal(combinations(5, 2, index = 1, drop = TRUE), 1:2)
+    expect_is(combinations(5, 2, index = 1, drop = FALSE), "matrix")
+
+    set.seed(1)
+    s1 <- combinations(5, 2, nsample = 1, drop = TRUE)
+    set.seed(1)
+    s2 <- combinations(5, 2, nsample = 1, drop = FALSE)
+    expect_equal(s1, as.vector(s2))
+})
+
+test_that("Combinations - Factors", {
+    f <- factor(c("a", "b", "c"), levels = c("a", "b", "c"))
+    comb <- combinations(x = f, k = 2)
+    expect_true(is.matrix(comb))
+    expect_true(is.factor(comb))
+    expect_equal(levels(comb), levels(f))
+})
+
+test_that("Combinations - Empty and edge cases", {
+    expect_error(combinations(NULL, 2), "n is missing")
+    expect_equal(nrow(combinations(1:3, k = 4)), 0)
+    expect_error(combinations(n = 5, v = 1:4, k = 2), "n != length(v)", fixed = TRUE)
+})

@@ -119,3 +119,18 @@ test_that("Multiset Combinations - skip", {
     expect_equal(combinations(freq = c(2, 3, 3, 4), k = 4, skip = 3, nitem = 4), combinations(freq = c(2, 3, 3, 4), k = 4)[4:7, ])
     expect_equal(combinations(freq = c(2, 3, 3, 4), k = 4, skip = gmp::as.bigz(3), nitem = 4), combinations(freq = c(2, 3, 3, 4), k = 4)[4:7, ])
 })
+
+test_that("Multiset Combinations - Large and BigZ", {
+    # ncombinations(freq = rep(10, 100), k = 50, bigz = TRUE)
+    # This should not overflow and return a bigz
+    n <- ncombinations(freq = rep(10, 20), k = 10, bigz = TRUE)
+    expect_is(n, "bigz")
+
+    # Check index with bigz
+    idx <- gmp::as.bigz("1234567890123456789")
+    n_total <- npermutations(20, 20, bigz = TRUE)
+    if (n_total > idx) {
+        p <- permutations(20, 20, index = idx)
+        expect_equal(length(p), 20)
+    }
+})

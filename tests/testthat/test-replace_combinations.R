@@ -123,3 +123,14 @@ test_that("Combinations with replacement - skip", {
     expect_equal(combinations(5, 3, replace = TRUE, skip = 3, nitem = 4), combinations(5, 3, replace = TRUE)[4:7, ])
     expect_equal(combinations(5, 3, replace = TRUE, skip = gmp::as.bigz(3), nitem = 4), combinations(5, 3, replace = TRUE)[4:7, ])
 })
+
+test_that("Combinations with replacement - multiset", {
+    # ncombinations uses flen (number of distinct items)
+    # ncombinations(freq = c(2, 2), k = 2, replace = TRUE)
+    # should be choose(2 + 2 - 1, 2) = 3
+    n <- ncombinations(freq = c(2, 2), k = 2, replace = TRUE)
+    expect_equal(n, 3)
+
+    expect_equal(nrow(combinations(freq = c(2, 2), k = 2, replace = TRUE)), n)
+    expect_equal(combinations(freq = c(2, 2), k = 2, replace = TRUE, index = 3), c(2, 2))
+})

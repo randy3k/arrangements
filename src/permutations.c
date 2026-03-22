@@ -91,6 +91,10 @@ SEXP get_permutations(SEXP _x, SEXP _k, SEXP _n, SEXP _v, SEXP _freq, SEXP _repl
 
     VALIDATE_ARGUMENTS();
 
+    if (multiset && replace) {
+        n = flen;
+    }
+
     char layout = layout_flag(_layout);
     int d = Rf_asInteger(_d) == -1 ? -1 : as_uint(_d);
 

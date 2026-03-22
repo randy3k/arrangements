@@ -122,3 +122,12 @@ test_that("Permutations with replacement - skip", {
     expect_equal(permutations(5, 3, replace = TRUE, skip = 3, nitem = 4), permutations(5, 3, replace = TRUE)[4:7, ])
     expect_equal(permutations(5, 3, replace = TRUE, skip = gmp::as.bigz(3), nitem = 4), permutations(5, 3, replace = TRUE)[4:7, ])
 })
+
+test_that("Permutations with replacement - multiset", {
+    # npermutations(freq = c(2, 2), k = 2, replace = TRUE)
+    # should be 2^2 = 4
+    n <- npermutations(freq = c(2, 2), k = 2, replace = TRUE)
+    expect_equal(n, 4)
+
+    expect_equal(nrow(permutations(freq = c(2, 2), k = 2, replace = TRUE)), n)
+})
