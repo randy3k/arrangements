@@ -1,0 +1,46 @@
+Benchmarking combinations(20, 10)
+Unit: milliseconds
+                 expr      min       lq     mean  median       uq      max
+ combinations(20, 10) 4.095226 4.129366 4.213188 4.15553 4.216221 4.469598
+ neval
+     5
+
+Benchmarking permutations(10)
+Unit: milliseconds
+             expr      min       lq     mean   median      uq      max neval
+ permutations(10) 91.79078 92.30499 95.38801 93.79941 94.8073 104.2375     5
+
+Benchmarking combinations(300, 150, nsample = 100)
+Unit: milliseconds
+                                  expr      min       lq     mean   median
+ combinations(300, 150, nsample = 100) 4.657859 4.735142 4.746928 4.775628
+       uq      max neval
+ 4.777945 4.788064     5
+
+Benchmarking partitions(100, nsample = 100)
+Unit: microseconds
+                           expr   min     lq    mean median     uq     max
+ partitions(100, nsample = 100) 53.34 53.846 73.5294 56.357 57.855 146.249
+ neval
+     5
+
+Benchmarking combinations(1000, 500, index = <middle>) (BigZ case)
+Unit: microseconds
+                                     expr    min    lq    mean median     uq
+ combinations(1000, 500, index = idx_str) 82.212 82.41 89.8376 84.003 85.528
+     max neval
+ 115.035     5
+
+Benchmarking compositions(100, 10, nsample = 100)
+Unit: microseconds
+                                 expr     min      lq     mean  median      uq
+ compositions(100, 10, nsample = 100) 817.076 827.939 889.1728 884.006 909.287
+      max neval
+ 1007.556     5
+
+Benchmarking combinations(k = 30, freq = rep(2, 30), nsample = 100)
+Unit: milliseconds
+                                                   expr      min       lq
+ combinations(k = 30, freq = rep(2, 30), nsample = 100) 41.42167 41.55944
+     mean   median       uq      max neval
+ 41.65842 41.66243 41.80522 41.84333     5
