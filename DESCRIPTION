@@ -16,7 +16,8 @@ Description: Fast generators and iterators for permutations, combinations,
     packages of similar kind. Benchmarks could be found at
     <https://randy3k.github.io/arrangements/articles/benchmark.html>.
 License: MIT + file LICENSE
-URL: https://github.com/randy3k/arrangements/
+URL: https://github.com/randy3k/arrangements, https://randy3k.github.io/arrangements/
+BugReports: https://github.com/randy3k/arrangements/issues
 Depends:
     R (>= 3.4.0)
 Imports: 
