@@ -3,6 +3,7 @@
 #include <Rinternals.h>
 #include <gmp.h>
 #include "stdlib.h"
+#include "../math.h"
 #include "../utils.h"
 #include "../macros.h"
 #include "compositions-utils.h"
@@ -40,11 +41,33 @@ unsigned int next_desc_k_composition(unsigned int *ar, size_t n, unsigned int k,
 void nth_desc_k_composition(unsigned int* ar, unsigned int n, unsigned int k, unsigned int index) {
     unsigned int i, j;
     unsigned int count, this_count;
+    double c;
+    unsigned int N, K;
 
     for (i = 0; i < k; i++) {
         count = 0;
+        if (i == k - 1) {
+            ar[i] = n;
+            break;
+        }
+        K = k - i - 2;
+        N = -1;
+        c = 0;
         for (j = n; j >= 1; j--) {
-            this_count = count + n_k_compositions(n - j, k - i - 1);
+            if (N == -1) {
+                if (n - j - 1 == -1) c = (K == -1); // n_k_compositions(0, K+1)
+                else c = choose(n - j - 1, K);
+            } else {
+                if (N < K) {
+                    if (N + 1 == K) c = 1;
+                    else c = 0;
+                } else {
+                    c = c * (N + 1) / (N + 1 - K);
+                }
+            }
+            N = n - j - 1;
+
+            this_count = count + c;
             if (this_count > index) {
                 ar[i] = j;
                 n -= j;
@@ -59,15 +82,38 @@ void nth_desc_k_composition(unsigned int* ar, unsigned int n, unsigned int k, un
 
 void nth_desc_k_composition_bigz(unsigned int* ar, unsigned int n, unsigned int k, mpz_t index) {
     unsigned int i, j;
-    mpz_t count, this_count;
+    mpz_t count, this_count, c;
     mpz_init(count);
     mpz_init(this_count);
+    mpz_init(c);
+
+    unsigned int N, K;
 
     for (i = 0; i < k; i++) {
         mpz_set_ui(count, 0);
+        if (i == k - 1) {
+            ar[i] = n;
+            break;
+        }
+        K = k - i - 2;
+        N = -1;
+        mpz_set_ui(c, 0);
         for (j = n; j >= 1; j--) {
-            n_k_compositions_bigz(this_count, n - j, k - i - 1);
-            mpz_add(this_count, this_count, count);
+            if (N == -1) {
+                if (n - j - 1 == -1) mpz_set_ui(c, K == -1);
+                else mpz_bin_uiui(c, n - j - 1, K);
+            } else {
+                if (N < K) {
+                    if (N + 1 == K) mpz_set_ui(c, 1);
+                    else mpz_set_ui(c, 0);
+                } else {
+                    mpz_mul_ui(c, c, N + 1);
+                    mpz_tdiv_q_ui(c, c, N + 1 - K);
+                }
+            }
+            N = n - j - 1;
+
+            mpz_add(this_count, count, c);
             if (mpz_cmp(this_count, index) > 0) {
                 ar[i] = j;
                 n -= j;
@@ -80,6 +126,7 @@ void nth_desc_k_composition_bigz(unsigned int* ar, unsigned int n, unsigned int 
 
     mpz_clear(count);
     mpz_clear(this_count);
+    mpz_clear(c);
 }
 
 
