@@ -2,6 +2,240 @@
 #include "../math.h"
 
 
+void make_partition_table(double* table, int n) {
+    int i, j;
+    for (j = 0; j <= n; j++) table[0 * (n + 1) + j] = 1;
+    for (i = 1; i <= n; i++) {
+        for (j = i + 1; j <= n; j++) table[i * (n + 1) + j] = 0;
+        table[i * (n + 1) + i] = 1;
+        for (j = i - 1; j >= 1; j--) {
+            table[i * (n + 1) + j] = table[i * (n + 1) + j + 1] + table[(i - j) * (n + 1) + j];
+        }
+        table[i * (n + 1) + 0] = table[i * (n + 1) + 1];
+    }
+}
+
+void make_partition_table_bigz(mpz_t* table, int n) {
+    int i, j;
+    for (i = 0; i <= n; i++) {
+        for (j = 0; j <= n; j++) {
+            mpz_init(table[i * (n + 1) + j]);
+        }
+    }
+    for (j = 0; j <= n; j++) mpz_set_ui(table[0 * (n + 1) + j], 1);
+    for (i = 1; i <= n; i++) {
+        for (j = i + 1; j <= n; j++) mpz_set_ui(table[i * (n + 1) + j], 0);
+        mpz_set_ui(table[i * (n + 1) + i], 1);
+        for (j = i - 1; j >= 1; j--) {
+            mpz_add(table[i * (n + 1) + j], table[i * (n + 1) + j + 1], table[(i - j) * (n + 1) + j]);
+        }
+        mpz_set(table[i * (n + 1) + 0], table[i * (n + 1) + 1]);
+    }
+}
+
+void make_partition_max_table(double* table, int n) {
+    int i, j;
+    for (j = 0; j <= n; j++) table[0 * (n + 1) + j] = 1;
+    for (i = 1; i <= n; i++) table[i * (n + 1) + 0] = 0;
+    for (i = 1; i <= n; i++) {
+        for (j = 1; j <= n; j++) {
+            table[i * (n + 1) + j] = table[i * (n + 1) + j - 1];
+            if (i >= j) {
+                table[i * (n + 1) + j] += table[(i - j) * (n + 1) + j];
+            }
+        }
+    }
+}
+
+void make_partition_max_table_bigz(mpz_t* table, int n) {
+    int i, j;
+    for (i = 0; i <= n; i++) {
+        for (j = 0; j <= n; j++) {
+            mpz_init(table[i * (n + 1) + j]);
+        }
+    }
+    for (j = 0; j <= n; j++) mpz_set_ui(table[0 * (n + 1) + j], 1);
+    for (i = 1; i <= n; i++) mpz_set_ui(table[i * (n + 1) + 0], 0);
+    for (i = 1; i <= n; i++) {
+        for (j = 1; j <= n; j++) {
+            mpz_set(table[i * (n + 1) + j], table[i * (n + 1) + j - 1]);
+            if (i >= j) {
+                mpz_add(table[i * (n + 1) + j], table[i * (n + 1) + j], table[(i - j) * (n + 1) + j]);
+            }
+        }
+    }
+}
+
+void make_distinct_partition_table(double* table, int n) {
+    int i, j;
+    for (j = 0; j <= n + 1; j++) table[0 * (n + 2) + j] = 1;
+    for (i = 1; i <= n; i++) {
+        table[i * (n + 2) + n + 1] = 0;
+        table[i * (n + 2) + i] = 1;
+        for (j = i + 1; j <= n; j++) table[i * (n + 2) + j] = 0;
+        for (j = i - 1; j >= 1; j--) {
+            table[i * (n + 2) + j] = table[i * (n + 2) + j + 1];
+            if (i >= j) {
+                table[i * (n + 2) + j] += table[(i - j) * (n + 2) + j + 1];
+            }
+        }
+        table[i * (n + 2) + 0] = table[i * (n + 2) + 1];
+    }
+}
+
+void make_distinct_partition_table_bigz(mpz_t* table, int n) {
+    int i, j;
+    for (i = 0; i <= n; i++) {
+        for (j = 0; j <= n + 1; j++) {
+            mpz_init(table[i * (n + 2) + j]);
+        }
+    }
+    for (j = 0; j <= n + 1; j++) mpz_set_ui(table[0 * (n + 2) + j], 1);
+    for (i = 1; i <= n; i++) {
+        mpz_set_ui(table[i * (n + 2) + n + 1], 0);
+        mpz_set_ui(table[i * (n + 2) + i], 1);
+        for (j = i + 1; j <= n; j++) mpz_set_ui(table[i * (n + 2) + j], 0);
+        for (j = i - 1; j >= 1; j--) {
+            mpz_set(table[i * (n + 2) + j], table[i * (n + 2) + j + 1]);
+            if (i >= j) {
+                mpz_add(table[i * (n + 2) + j], table[i * (n + 2) + j], table[(i - j) * (n + 2) + j + 1]);
+            }
+        }
+        mpz_set(table[i * (n + 2) + 0], table[i * (n + 2) + 1]);
+    }
+}
+
+void make_distinct_partition_max_table(double* table, int n) {
+    int i, j;
+    for (j = 0; j <= n; j++) table[0 * (n + 1) + j] = 1;
+    for (i = 1; i <= n; i++) table[i * (n + 1) + 0] = 0;
+    for (i = 1; i <= n; i++) {
+        for (j = 1; j <= n; j++) {
+            table[i * (n + 1) + j] = table[i * (n + 1) + j - 1];
+            if (i >= j) {
+                table[i * (n + 1) + j] += table[(i - j) * (n + 1) + j - 1];
+            }
+        }
+    }
+}
+
+void make_distinct_partition_max_table_bigz(mpz_t* table, int n) {
+    int i, j;
+    for (i = 0; i <= n; i++) {
+        for (j = 0; j <= n; j++) {
+            mpz_init(table[i * (n + 1) + j]);
+        }
+    }
+    for (j = 0; j <= n; j++) mpz_set_ui(table[0 * (n + 1) + j], 1);
+    for (i = 1; i <= n; i++) mpz_set_ui(table[i * (n + 1) + 0], 0);
+    for (i = 1; i <= n; i++) {
+        for (j = 1; j <= n; j++) {
+            mpz_set(table[i * (n + 1) + j], table[i * (n + 1) + j - 1]);
+            if (i >= j) {
+                mpz_add(table[i * (n + 1) + j], table[i * (n + 1) + j], table[(i - j) * (n + 1) + j - 1]);
+            }
+        }
+    }
+}
+
+void make_k_partition_table(double* table, int n, int k) {
+    int i, j;
+    for (j = 0; j <= k; j++) table[0 * (k + 1) + j] = (j == 0);
+    for (i = 1; i <= n; i++) table[i * (k + 1) + 0] = 0;
+    for (i = 1; i <= n; i++) {
+        for (j = 1; j <= k; j++) {
+            table[i * (k + 1) + j] = table[(i - 1) * (k + 1) + j - 1];
+            if (i >= j) {
+                table[i * (k + 1) + j] += table[(i - j) * (k + 1) + j];
+            }
+        }
+    }
+}
+
+void make_k_partition_table_bigz(mpz_t* table, int n, int k) {
+    int i, j;
+    for (i = 0; i <= n; i++) {
+        for (j = 0; j <= k; j++) {
+            mpz_init(table[i * (k + 1) + j]);
+        }
+    }
+    for (j = 0; j <= k; j++) mpz_set_ui(table[0 * (k + 1) + j], (j == 0));
+    for (i = 1; i <= n; i++) mpz_set_ui(table[i * (k + 1) + 0], 0);
+    for (i = 1; i <= n; i++) {
+        for (j = 1; j <= k; j++) {
+            mpz_set(table[i * (k + 1) + j], table[(i - 1) * (k + 1) + j - 1]);
+            if (i >= j) {
+                mpz_add(table[i * (k + 1) + j], table[i * (k + 1) + j], table[(i - j) * (k + 1) + j]);
+            }
+        }
+    }
+}
+
+void make_nkm_table(double* table, int n_max) {
+    int i, j, k;
+    int n1 = n_max + 1;
+    int n2 = n1 * n1;
+    for (k = 0; k <= n_max; k++) {
+        for (j = 0; j <= n_max; j++) {
+            table[0 * n2 + k * n1 + j] = 1;
+        }
+    }
+    for (i = 1; i <= n_max; i++) {
+        for (k = 0; k <= n_max; k++) {
+            table[i * n2 + k * n1 + 0] = 0;
+        }
+        for (j = 1; j <= n_max; j++) {
+            table[i * n2 + 0 * n1 + j] = 0;
+        }
+    }
+    for (i = 1; i <= n_max; i++) {
+        for (k = 1; k <= n_max; k++) {
+            for (j = 1; j <= n_max; j++) {
+                table[i * n2 + k * n1 + j] = table[i * n2 + k * n1 + j - 1];
+                if (i >= j) {
+                    table[i * n2 + k * n1 + j] += table[(i - j) * n2 + (k - 1) * n1 + j];
+                }
+            }
+        }
+    }
+}
+
+void make_nkm_table_bigz(mpz_t* table, int n_max) {
+    int i, j, k;
+    int n1 = n_max + 1;
+    int n2 = n1 * n1;
+    for (i = 0; i <= n_max; i++) {
+        for (k = 0; k <= n_max; k++) {
+            for (j = 0; j <= n_max; j++) {
+                mpz_init(table[i * n2 + k * n1 + j]);
+            }
+        }
+    }
+    for (k = 0; k <= n_max; k++) {
+        for (j = 0; j <= n_max; j++) {
+            mpz_set_ui(table[0 * n2 + k * n1 + j], 1);
+        }
+    }
+    for (i = 1; i <= n_max; i++) {
+        for (k = 0; k <= n_max; k++) {
+            mpz_set_ui(table[i * n2 + k * n1 + 0], 0);
+        }
+        for (j = 1; j <= n_max; j++) {
+            mpz_set_ui(table[i * n2 + 0 * n1 + j], 0);
+        }
+    }
+    for (i = 1; i <= n_max; i++) {
+        for (k = 1; k <= n_max; k++) {
+            for (j = 1; j <= n_max; j++) {
+                mpz_set(table[i * n2 + k * n1 + j], table[i * n2 + k * n1 + j - 1]);
+                if (i >= j) {
+                    mpz_add(table[i * n2 + k * n1 + j], table[i * n2 + k * n1 + j], table[(i - j) * n2 + (k - 1) * n1 + j]);
+                }
+            }
+        }
+    }
+}
+
 double nkm(int n, int k, int m) {
     // number of partitions of n into at most k parts of sizes <= m
     //

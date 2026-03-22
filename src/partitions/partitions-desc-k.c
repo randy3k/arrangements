@@ -102,6 +102,95 @@ void nth_desc_k_partition_bigz(unsigned int* ar, unsigned int n, unsigned int k,
 }
 
 
+void nth_desc_k_partition_table(unsigned int* ar, unsigned int n, unsigned int k, unsigned int index, double* table, int table_n) {
+    unsigned int i, j;
+    unsigned int start = n - k + 1;
+    unsigned int count, this_count;
+    int n1 = table_n + 1;
+    int n2 = n1 * n1;
+
+    for (i = 0; i < k; i++) {
+        count = 0;
+        unsigned int k_rem = k - i - 1;
+        for (j = start; j >= 1; j--) {
+            if (n < j) continue;
+            double val = 0;
+            if (k_rem == 0) {
+                val = (n == j);
+            } else {
+                int n_new = n - j - k_rem;
+                int m_new = j - 1;
+                if (n_new >= 0) {
+                    if (n_new == 0) val = 1;
+                    else {
+                        int k_idx = k_rem < n_new ? k_rem : n_new;
+                        int m_idx = m_new < n_new ? m_new : n_new;
+                        val = table[n_new * n2 + k_idx * n1 + m_idx];
+                    }
+                }
+            }
+            this_count = count + val;
+            if (this_count > index) {
+                ar[i] = j;
+                n -= j;
+                start = n - (k - i - 2);
+                start = start > j? j : start;
+                index -= count;
+                break;
+            }
+            count = this_count;
+        }
+    }
+}
+
+
+void nth_desc_k_partition_table_bigz(unsigned int* ar, unsigned int n, unsigned int k, mpz_t index, mpz_t* table, int table_n) {
+    unsigned int i, j;
+    unsigned int start = n - k + 1;
+    mpz_t count, this_count;
+    mpz_init(count);
+    mpz_init(this_count);
+    int n1 = table_n + 1;
+    int n2 = n1 * n1;
+
+    for (i = 0; i < k; i++) {
+        mpz_set_ui(count, 0);
+        unsigned int k_rem = k - i - 1;
+        for (j = start; j >= 1; j--) {
+            if (n < j) continue;
+            if (k_rem == 0) {
+                mpz_add_ui(this_count, count, n == j);
+            } else {
+                int n_new = n - j - k_rem;
+                int m_new = j - 1;
+                if (n_new >= 0) {
+                    if (n_new == 0) mpz_add_ui(this_count, count, 1);
+                    else {
+                        int k_idx = k_rem < n_new ? k_rem : n_new;
+                        int m_idx = m_new < n_new ? m_new : n_new;
+                        mpz_add(this_count, count, table[n_new * n2 + k_idx * n1 + m_idx]);
+                    }
+                } else {
+                    mpz_set(this_count, count);
+                }
+            }
+            if (mpz_cmp(this_count, index) > 0) {
+                ar[i] = j;
+                n -= j;
+                start = n - (k - i - 2);
+                start = start > j? j : start;
+                mpz_sub(index, index, count);
+                break;
+            }
+            mpz_set(count, this_count);
+        }
+    }
+
+    mpz_clear(count);
+    mpz_clear(this_count);
+}
+
+
 SEXP next_desc_k_partitions(int n, int k, char layout, int d, SEXP _skip, SEXP state) {
     int i, j;
     int nprotect = 0;
@@ -207,7 +296,14 @@ SEXP draw_desc_k_partitions(int n, int k, char layout, SEXP _index, SEXP _nsampl
         mpz_t maxz;
         mpz_init(z);
         mpz_init(maxz);
-        n_k_partitions_bigz(maxz, n, k);
+
+        mpz_t* table = (mpz_t*) R_alloc((n + 1) * (n + 1) * (n + 1), sizeof(mpz_t));
+        make_nkm_table_bigz(table, n);
+        int n1 = n + 1;
+        int n2 = n1 * n1;
+        int n_idx = n - k;
+        int k_idx = k > n_idx ? n_idx : k;
+        mpz_set(maxz, table[n_idx * n2 + k_idx * n1 + n_idx]);
 
         if (sampling) {
             GetRNGstate();
@@ -219,6 +315,7 @@ SEXP draw_desc_k_partitions(int n, int k, char layout, SEXP _index, SEXP _nsampl
             for(i = 0; i < d; i++) {
                 if (status < 0 || mpz_sgn(index[i]) <= 0 || mpz_cmp(index[i], maxz) > 0) {
                     for (i = 0; i < d; i++) mpz_clear(index[i]);
+                    for (i = 0; i < (n+1)*(n+1)*(n+1); i++) mpz_clear(table[i]);
                     mpz_clear(maxz);
                     mpz_clear(z);
                     Rf_error("invalid index");
@@ -233,12 +330,13 @@ SEXP draw_desc_k_partitions(int n, int k, char layout, SEXP _index, SEXP _nsampl
             } else { \
                 mpz_sub_ui(z, index[j], 1); \
             } \
-            nth_desc_k_partition_bigz(ap, n, k, z);
+            nth_desc_k_partition_table_bigz(ap, n, k, z, table, n);
 
         RESULT_K_PART();
 
         mpz_clear(z);
         mpz_clear(maxz);
+        for (i = 0; i < (n+1)*(n+1)*(n+1); i++) mpz_clear(table[i]);
         if (sampling){
             gmp_randclear(randstate);
             PutRNGstate();
@@ -248,6 +346,9 @@ SEXP draw_desc_k_partitions(int n, int k, char layout, SEXP _index, SEXP _nsampl
 
     } else {
         int* index;
+        double* table = (double*) R_alloc((n + 1) * (n + 1) * (n + 1), sizeof(double));
+        make_nkm_table(table, n);
+
         if (sampling) {
             GetRNGstate();
         } else {
@@ -262,9 +363,9 @@ SEXP draw_desc_k_partitions(int n, int k, char layout, SEXP _index, SEXP _nsampl
         #undef NEXT
         #define NEXT() \
             if (sampling) { \
-                nth_desc_k_partition(ap, n, k, floor(maxd * unif_rand())); \
+                nth_desc_k_partition_table(ap, n, k, floor(maxd * unif_rand()), table, n); \
             } else { \
-                nth_desc_k_partition(ap, n, k, index[j] - 1); \
+                nth_desc_k_partition_table(ap, n, k, index[j] - 1, table, n); \
             }
 
         RESULT_K_PART();

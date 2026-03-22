@@ -3,6 +3,30 @@
 #include <gmp.h>
 #include <stdlib.h>
 
+void make_partition_table(double* table, int n);
+
+void make_partition_table_bigz(mpz_t* table, int n);
+
+void make_partition_max_table(double* table, int n);
+
+void make_partition_max_table_bigz(mpz_t* table, int n);
+
+void make_distinct_partition_table(double* table, int n);
+
+void make_distinct_partition_table_bigz(mpz_t* table, int n);
+
+void make_distinct_partition_max_table(double* table, int n);
+
+void make_distinct_partition_max_table_bigz(mpz_t* table, int n);
+
+void make_k_partition_table(double* table, int n, int k);
+
+void make_k_partition_table_bigz(mpz_t* table, int n, int k);
+
+void make_nkm_table(double* table, int n_max);
+
+void make_nkm_table_bigz(mpz_t* table, int n_max);
+
 double n_partitions(int n);
 
 void n_partitions_bigz(mpz_t z, int n);
