@@ -30,5 +30,5 @@ ByteCompile: yes
 Encoding: UTF-8
 NeedsCompilation: yes
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 6.1.1
+RoxygenNote: 7.3.3
 SystemRequirements: gmp (>= 4.2.3)
